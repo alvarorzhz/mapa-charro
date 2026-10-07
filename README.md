@@ -27,9 +27,15 @@ js/provincia.js       Pestaña Provincia
 js/enlaces.js         Enlaces directos (#tejares, #via/a-62, #provincia/ledesma) y botón Compartir
 js/inicio.js          Arranque
 img/, icons/          Fotos e iconos
+sw.js                 Service worker: la web funciona sin conexión
+herramientas/         Scripts de mantenimiento (version.js)
 ```
 
-Los scripts son clásicos (no módulos) y comparten el ámbito global, así que **el orden de carga en `index.html` importa**: utilidades, datos, estado y después el resto. Al cambiar un archivo, sube el número `?v=` en `index.html` para que los navegadores no usen la versión vieja.
+Los scripts son clásicos (no módulos) y comparten el ámbito global, así que **el orden de carga en `index.html` importa**: utilidades, datos, estado y después el resto. Al cambiar cualquier archivo, ejecuta `node herramientas/version.js`: sube el número `?v=` en `index.html` y actualiza `sw.js` para que los navegadores (y la copia sin conexión) no usen la versión vieja.
+
+## Sin conexión
+
+En la web, la primera visita guarda la app completa (unos 1,3 MB con las fotos) y a partir de ahí funciona sin cobertura. La página se pide primero a la red para ver siempre la última versión; si no hay red en 4 segundos, se usa la copia guardada. Dentro de Claude no se activa.
 
 ## Enlaces directos
 
