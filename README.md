@@ -24,11 +24,16 @@ js/logros.js          Logros
 js/vistas.js          Pestañas, lista, buscador, copia de seguridad, teclado
 js/ubicacion.js       Botón Estoy aquí
 js/provincia.js       Pestaña Provincia
+js/enlaces.js         Enlaces directos (#tejares, #via/a-62, #provincia/ledesma) y botón Compartir
 js/inicio.js          Arranque
 img/, icons/          Fotos e iconos
 ```
 
 Los scripts son clásicos (no módulos) y comparten el ámbito global, así que **el orden de carga en `index.html` importa**: utilidades, datos, estado y después el resto. Al cambiar un archivo, sube el número `?v=` en `index.html` para que los navegadores no usen la versión vieja.
+
+## Enlaces directos
+
+Cada ficha tiene su dirección: `#<id de zona>` (p. ej. `#tenerias`), `#via/<carretera>` (`#via/a-62`), las pestañas `#lista` y `#provincia`, y un pueblo de la provincia `#provincia/<nombre>` (`#provincia/alba-de-tormes`). Abrir una ficha añade una entrada al historial, así que el botón «atrás» la cierra. El botón Compartir usa siempre la dirección de la web pública.
 
 ## Datos y licencias
 

@@ -37,6 +37,7 @@ button:focus-visible,summary:focus-visible{outline:3px solid var(--vit);outline-
 .sh h2{font:22px 'Alfa Slab One',Georgia,serif;margin:0;color:var(--vit)}.sh small{font-size:13px}.sh p{margin:6px 0;font-size:15px}
 #x{position:absolute;right:10px;top:8px;padding:2px 10px;font-size:22px;border:0}
 .bt{display:flex;gap:10px;margin-top:10px}.bt button{flex:1}
+.bt .cmp{flex:0 0 auto;padding-left:12px;padding-right:12px;font-size:14px}
 .bt .on[data-s=v]{background:var(--vit);border-color:var(--vit);color:#fff}.bt .on[data-s=w]{background:var(--gold);border-color:var(--gold);color:var(--card)}
 #ts{position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);left:50%;transform:translateX(-50%);background:var(--vit);color:#fff;padding:8px 18px;border-radius:99px;font:16px 'Alfa Slab One',Georgia,serif;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}#ts.on{opacity:1}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}

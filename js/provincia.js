@@ -55,7 +55,7 @@ function selP(m,zoom){psel=m;const sb=$('#psb');sb.textContent='';const t=docume
 if(LOC&&LOC.pid==m.k&&Date.now()-LOC.t<18e5){const h=document.createElement('p');h.className='here';h.style.margin='6px 0';h.textContent='Estás en el término de '+m.n+'.';sb.appendChild(h)}
 if(m.cap){const p=document.createElement('p');p.className='mu';p.style.margin='4px 0 0';p.textContent='La capital se marca por barrios en la pestaña Mapa.';sb.appendChild(p)}
 else{const w=btns(()=>stM(m),k=>markM(m,k));w.classList.add('big');sb.appendChild(w);paintBtns(w);PV.selW=w}
-PV.paths.forEach((p,mm)=>p.classList.toggle('sel',mm==m));if(zoom){PV.zoomTo(m);$('#pm').scrollIntoView({behavior:'smooth',block:'center'})}}
+PV.paths.forEach((p,mm)=>p.classList.toggle('sel',mm==m));enlaceVista();if(zoom){PV.zoomTo(m);$('#pm').scrollIntoView({behavior:'smooth',block:'center'})}}
 function rowMatch(st){return pflt=='all'||(pflt=='n'?!st:st==pflt)}
 function applyPF(){if(!PV)return;PV.fb.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.f==pflt));
 const gs=new Map();PV.rows.forEach(r=>{const st=r.w._get(),ok=rowMatch(st);r.el.hidden=!ok;if(ok)gs.set(r.g,1)});
