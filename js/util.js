@@ -221,7 +221,7 @@ function activarGestos(
     const t = performance.now();
     let vx = 0,
       vy = 0;
-    if (muestras.length > 1 && t - muestras[muestras.length - 1].t < 50) {
+    if (muestras.length > 1 && t - muestras[muestras.length - 1].t < 80) {
       const dt = Math.max(16, t - muestras[0].t);
       vx = muestras.reduce((s, m) => s + m.dx, 0) / dt;
       vy = muestras.reduce((s, m) => s + m.dy, 0) / dt;

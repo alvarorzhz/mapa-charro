@@ -82,7 +82,21 @@ prueba('Arrastrar y acercar el mapa', async p => {
   await p.mouse.wheel(0, -300);
   await p.waitForTimeout(400);
   cierto(+(await vb()).split(' ')[2] < w0, 'la rueda acerca');
-  await p.mouse.click(r[0], r[1]);
+  // Un punto cerca del centro que caiga en una zona (no encima de una avenida o un pictograma)
+  const punto = await p.evaluate(([x, y]) => {
+    for (let d = 0; d < 120; d += 6)
+      for (const [dx, dy] of [
+        [d, 0],
+        [-d, 0],
+        [0, d],
+        [0, -d]
+      ]) {
+        const e = document.elementFromPoint(x + dx, y + dy);
+        if (e && e.parentNode.id == 'zg') return [x + dx, y + dy];
+      }
+    return [x, y];
+  }, r);
+  await p.mouse.click(punto[0], punto[1]);
   cierto(await fichaAbierta(p), 'un toque abre la zona');
   cierto((await p.$eval('.lim.sel', e => e.getAttribute('d'))).length > 10, 'se marca el límite de la zona');
 });
@@ -114,15 +128,15 @@ prueba('Zoom suave y deslizamiento', async p => {
   await p.mouse.move(r[0], r[1]);
   await p.mouse.down();
   for (let i = 1; i <= 5; i++) {
+    if (i > 1) await p.waitForTimeout(16);
     await p.mouse.move(r[0] - i * 12, r[1]);
-    await p.waitForTimeout(16);
   }
   await p.mouse.up();
-  await p.waitForTimeout(30);
-  cierto(await p.evaluate(() => !!animacionMapa), 'sigue deslizándose al soltar');
+  const xSoltar = await p.evaluate(() => vistaMapa.x);
   await quieto();
   const x1 = await p.$eval('#m', e => +e.getAttribute('viewBox').split(' ')[0]);
   cierto(x1 > x0, 'el mapa ha avanzado hacia donde se arrastró');
+  cierto(x1 > xSoltar + 0.5, 'y sigue deslizándose después de soltar');
   igual(await p.evaluate(() => animacionMapa), null, 'la animación termina');
 });
 
