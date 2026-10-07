@@ -319,6 +319,9 @@ function ajustarVista() {
     visible.style.fontSize = tam * u + 'px';
     visible.style.strokeWidth = 2.5 * u + 'px';
     visible.style.fontWeight = z.t ? 800 : 600;
+    z.etiqueta = mostrar
+      ? { el: visible, tam, lineas: dosLineas ? 2 : 1, ancho: dosLineas ? z.w2 : z.w1 }
+      : null;
     z.sg.setAttribute('transform', escalaFija(z.x, z.y, u));
     z.so.setAttribute(
       'transform',
@@ -332,12 +335,14 @@ function ajustarVista() {
     try {
       largo = t._p.getTotalLength() / u;
     } catch (e) {}
-    t.style.display = v.w <= 130 && largo > t._n * 8.5 * 0.52 + 6 ? '' : 'none';
+    t.style.display = v.w <= 90 && largo > t._n * 8.5 * 0.52 * 1.3 + 12 ? '' : 'none';
     t.style.fontSize = 8.5 * u + 'px';
     t.style.strokeWidth = 2.5 * u + 'px';
   });
   $('#rl').style.fontSize = 11 * u + 'px';
   escudosEscalables.forEach(q => q.g.setAttribute('transform', escalaFija(q.x, q.y, u)));
+  // monumentos.js carga después: en la primera llamada puede no existir aún
+  if (typeof colocarMonumentos == 'function') colocarMonumentos(u);
   // marcaPosicion se declara en ubicacion.js, que carga después: aquí puede no existir aún
   if (typeof marcaPosicion != 'undefined' && marcaPosicion)
     marcaPosicion.m.setAttribute('transform', escalaFija(marcaPosicion.x, marcaPosicion.y, u));

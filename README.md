@@ -13,6 +13,7 @@ js/util.js            Utilidades: proyección, geometría, textos, DOM/SVG, filt
 js/datos/             Solo datos, sin lógica (cada archivo explica su formato al principio)
   zonas.js            Barrios y pueblos del mapa, uno por línea
   contenido.js        Curiosidades, leyendas, fotos y dónde comer
+  monumentos.js       Monumentos: datos clave, curiosidades y fuente de cada uno
   geometria.js        Límites de barrios, ciudad, río y provincia
   carreteras.js       Carreteras, rondas y avenidas
   provincia.js        Municipios, comarcas y pedanías
@@ -24,6 +25,7 @@ js/logros.js          Logros
 js/vistas.js          Marcador, pestañas, lista, buscador, copia de seguridad, teclado
 js/ubicacion.js       Botón Estoy aquí
 js/provincia.js       Pestaña Provincia
+js/monumentos.js      Pictogramas de monumentos en el mapa y su mini infografía
 js/enlaces.js         Enlaces directos (#tejares, #via/a-62, #provincia/ledesma) y botón Compartir
 js/inicio.js          Arranque y registro del modo sin conexión
 img/, icons/          Fotos e iconos
@@ -43,7 +45,7 @@ En la web, la primera visita guarda la app completa (unos 1,3 MB con las fotos) 
 
 ## Enlaces directos
 
-Cada ficha tiene su dirección: `#<id de zona>` (p. ej. `#tenerias`), `#via/<carretera>` (`#via/a-62`), las pestañas `#lista` y `#provincia`, y un pueblo de la provincia `#provincia/<nombre>` (`#provincia/alba-de-tormes`). Abrir una ficha añade una entrada al historial, así que el botón «atrás» la cierra. El botón Compartir usa siempre la dirección de la web pública.
+Cada ficha tiene su dirección: `#<id de zona>` (p. ej. `#tenerias`), `#via/<carretera>` (`#via/a-62`), `#monumento/<id>` (`#monumento/catedrales`), las pestañas `#lista` y `#provincia`, y un pueblo de la provincia `#provincia/<nombre>` (`#provincia/alba-de-tormes`). Abrir una ficha añade una entrada al historial, así que el botón «atrás» la cierra. El botón Compartir usa siempre la dirección de la web pública.
 
 ## Datos y licencias
 

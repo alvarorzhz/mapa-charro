@@ -37,7 +37,8 @@ const CURIOSIDADES = {
   ],
   sancristobal: [
     'La iglesia de San Cristóbal es de 1128 y desde 1145 fue de la Orden de San Juan de Jerusalén. En 1919 se convirtió en colegio, cerró en 1960 y se restauró a partir de 1991.',
-    'Bajo su ábside apareció una necrópolis con tumbas excavadas en la roca, y dentro se guarda el Cristo de los Carboneros, una talla románica.'
+    'Bajo su ábside apareció una necrópolis con tumbas excavadas en la roca, y dentro se guarda el Cristo de los Carboneros, una talla románica.',
+    'En el convento de Santa Clara, en febrero de 1973, unos obreros que arreglaban el tejado encontraron un artesonado mudéjar de los siglos XIV y XV, oculto unos 250 años sobre la bóveda barroca. Hoy se visita por pasarelas.'
   ],
   sanesteban: [
     'En 1527 encarcelaron aquí a Ignacio de Loyola, y Colón se alojó con los dominicos mientras buscaba apoyo para su viaje. La fachada del convento es plateresca.',
@@ -211,15 +212,42 @@ const CURIOSIDADES = {
   castvilliquera: [
     'Lo repoblaron hacia el año 975 castellanos del ejército de Ramiro II. «Villiquera» podría venir del latín villicus, el administrador de una finca romana.',
     'A sus vecinos los llaman «cucos», por los dos cucos de su escudo.'
+  ],
+  fontana: [
+    'Del monasterio de Santa María de la Vega, de hacia 1150 y después de los canónigos de San Agustín, quedan cinco arcos del claustro con 16 capiteles de escenas de caza, bailes y animales.'
+  ],
+  teso: [
+    'Aquí, junto al Puente Romano, se celebraba la feria de ganado de septiembre, que arranca el día de la Virgen de la Vega, el 8.'
+  ],
+  carmen: [
+    'Nació para sacar de las chabolas a vecinos de Pizarrales: en 1948 el Ayuntamiento creó el Patronato Benéfico Nuestra Señora del Carmen y en 1950 entregó las primeras casas, unifamiliares, del arquitecto Fernando Población.',
+    'Se hizo en tres fases, de 118, 230 y 222 viviendas. La segunda estuvo sin servicios mínimos hasta los años sesenta.'
+  ],
+  chamberi: [
+    'Nació a principios del siglo XX dentro del término de Tejares, con casas levantadas a mano en solares que vendía un hombre apodado «el zamorano». En 1969 ya dependía de Salamanca.',
+    'El 27 de mayo de 1976 una tormenta convirtió la calle Mayor en un río. Meses después, unos 300 vecinos se encerraron 26 horas en su capilla para pedir soluciones.'
+  ],
+  buenosaires: [
+    'Nació en 1983 en la periferia, entre la vía del tren, la autovía y el río.',
+    'Aquí nació, con ASDECOBA, el catering Algo Nuevo, que da de comer a más de mil personas al día.'
+  ],
+  montalvos: [
+    'Su gran edificio fue el Sanatorio Antituberculoso de los Montalvos, impulsado por el doctor Filiberto Villalobos: primera piedra en 1935, 500 camas y 13 años de obras. Se anunció como el mayor de España y hoy es el Hospital de los Montalvos.'
+  ],
+  moriscos: [
+    'Su nombre se debe a que lo poblaron moriscos; antes se decía «Morisco». En el siglo XIV formaba parte de la región de Villoria.',
+    'En 1877 se inauguró su estación, en la línea de Salamanca a Medina del Campo.'
   ]
 };
 // Leyendas: { idZona: [párrafo, ...] }
 const LEYENDAS = {
   centro: [
-    'Se cuenta que, para acabar con las luchas entre nobles, se mandaron recortar las torres de los palacios salmantinos; por eso la Casa de las Conchas no tiene torre. Se salvaron la del Clavero y la del Aire.'
+    'Se cuenta que, para acabar con las luchas entre nobles, se mandaron recortar las torres de los palacios salmantinos; por eso la Casa de las Conchas no tiene torre. Se salvaron la del Clavero y la del Aire.',
+    'San Martín partió su capa para compartirla con un mendigo y esa noche soñó con Cristo vestido con esa mitad. La media capa se guardó como reliquia y de ella vendría la palabra «capilla». La escena está sobre la puerta del Obispo de la Plaza Mayor, junto a su iglesia del Corrillo.',
+    'El milagro del Pozo Amarillo: en esta calle, san Juan de Sahagún salvó a un niño que se había caído a un pozo. Una lápida lo recuerda.',
+    'Cuenta la tradición que en 1706, en la Guerra de Sucesión, los salmantinos se encomendaron a la Virgen de la Vega y rechazaron a las tropas portuguesas; como premio, Felipe V habría concedido a la ciudad su Plaza Mayor.'
   ],
   univ: [
-    'La Cueva de Salamanca: en la cripta de la antigua iglesia de San Cebrián, el diablo enseñaba magia a grupos de siete alumnos durante siete años, y uno debía quedarse a su servicio. El marqués de Villena escapó, pero perdió su sombra.',
     'La Casa de las Conchas: dicen que bajo una de sus conchas hay escondido un tesoro en monedas de oro.',
     'Calle Tentenecio: un toro bravo escapado iba a embestir a san Juan de Sahagún, patrón de la ciudad, que le dijo «Tente, necio» y el animal se amansó.',
     'El Huerto de Calixto y Melibea, junto a la Casa Lis, es el jardín donde la tradición sitúa los amores de «La Celestina».'
@@ -229,14 +257,16 @@ const LEYENDAS = {
   ],
   sanjuan: [
     'María la Brava: en el siglo XV la ciudad estaba partida en dos bandos. Cuando mataron a los dos hijos de María de Monroy, ella persiguió a los asesinos hasta Portugal y volvió con sus cabezas para dejarlas en la tumba de sus hijos. Su casa está en la plaza de los Bandos.',
-    'La tradición dice que san Vicente Ferrer predicó en esta iglesia, desde un púlpito que ya no existe.'
+    'La tradición dice que san Vicente Ferrer predicó en esta iglesia, desde un púlpito que ya no existe.',
+    'Santa Teresa vivió entre 1570 y 1574 en la casa de la calle Condes de Crespo Rascón, mientras fundaba aquí su séptimo convento de carmelitas descalzas. La tradición la tiene por el lugar donde se inspiró el «Vivo sin vivir en mí».'
   ],
   tenerias: [
     'La Puerta de los Milagros: se creía que el agua de su arroyo curaba el mal de ojo, y que allí rondaba un fantasma.',
     'En la Peña Celestina estuvo el alcázar de la ciudad y, junto a él, el barrio judío medieval.'
   ],
   ursulas: [
-    'La Casa de las Muertes: sus calaveras de la fachada y un crimen de cuatro personas en el siglo XIX le dieron nombre; la calle Bordadores llegó a llamarse «de las Muertes».'
+    'La Casa de las Muertes: sus calaveras de la fachada y un crimen de cuatro personas en el siglo XIX le dieron nombre; la calle Bordadores llegó a llamarse «de las Muertes».',
+    'Se dice que el conde de Monterrey mandó excavar un túnel bajo la plaza hasta el convento de las Agustinas para visitar en secreto a su hija, priora de clausura. Nunca se ha demostrado.'
   ],
   arrabal: [
     'El Lazarillo y el verraco: en el primer capítulo de la novela, el ciego manda al niño acercar la oreja al toro de piedra del Puente Romano y le golpea la cabeza contra él.',
@@ -245,6 +275,12 @@ const LEYENDAS = {
   tejares: [
     'Lunes de Aguas: según la tradición, en Cuaresma las mujeres de la mancebía eran desterradas a Tejares; el lunes tras la Pascua los estudiantes cruzaban a recibirlas y merendaban hornazo. Así nació la fiesta.',
     'El Lazarillo dice que nació «dentro del río Tormes», en una aceña de Tejares donde trabajaba su padre.'
+  ],
+  sanesteban: [
+    'La Cueva de Salamanca: en la cripta de la antigua iglesia de San Cebrián, el diablo enseñaba magia a grupos de siete alumnos durante siete años, y uno debía quedarse a su servicio. El marqués de Villena escapó, pero perdió su sombra.'
+  ],
+  fontana: [
+    'Cuenta la leyenda que la talla de la Virgen de la Vega, patrona de Salamanca, llegó desde Constantinopla. Era la titular del monasterio de Santa María de la Vega, cuyas ruinas están en este barrio; desde 1904 preside el altar mayor de la Catedral Vieja.'
   ]
 };
 // Fotos: { idZona: [ruta en img/, pie con autor y licencia] }. El texto hasta «. Foto» se usa como texto alternativo.
@@ -521,6 +557,252 @@ const DONDE_COMER = {
       t: 'Cocina tradicional',
       a: 'Calle Constitución 17',
       p: 'Muy valorado por su menú degustación: 9,2 en Google con unas 890 opiniones.',
+      s: 'Gastroranking, oct. 2026'
+    }
+  ],
+  sancristobal: [
+    {
+      n: 'Sibuya Urban Sushi Bar',
+      t: 'Japonesa',
+      a: 'Gran Vía, 58',
+      p: 'El mejor valorado de la zona en Gastroranking: 8,8 sobre 10 con unas 5.200 opiniones. Precio medio: 20 a 30 €.',
+      s: 'Gastroranking, oct. 2026'
+    },
+    {
+      n: 'El Alquimista',
+      t: 'Restaurante',
+      a: 'Plaza de San Cristóbal, 6',
+      p: 'Otro de los mejor valorados de la zona en Gastroranking: 8,6 sobre 10 con unas 2.500 opiniones.',
+      s: 'Gastroranking, oct. 2026'
+    }
+  ],
+  montalvos: [
+    {
+      n: 'Arroceria restaurante Eider',
+      t: 'Restaurante',
+      a: 'Calle Laguna Negra, 1',
+      p: 'El mejor valorado de la zona en Gastroranking: 8,6 sobre 10 con unas 1.200 opiniones.',
+      s: 'Gastroranking, oct. 2026'
+    }
+  ],
+  carmelitas: [
+    {
+      n: 'La Tertulia Venezolana',
+      t: 'Bar de copas',
+      a: 'Avenida de Portugal, 131',
+      p: 'El mejor valorado de la zona en Gastroranking: 8,5 sobre 10 con unas 710 opiniones.',
+      s: 'Gastroranking, oct. 2026'
+    }
+  ],
+  blanco: [
+    {
+      n: 'Bar Hamburgo II',
+      t: 'Bar',
+      a: 'Calle Bachiller Sansón Carrasco, 12',
+      p: 'El mejor valorado de la zona en Gastroranking: 8,5 sobre 10 con unas 300 opiniones.',
+      s: 'Gastroranking, oct. 2026'
+    }
+  ],
+  arrabal: [
+    {
+      n: 'Baobar SteakHouse',
+      t: 'Asador',
+      a: 'A unos 100 m del Puente Romano',
+      p: 'El mejor valorado de la zona en Gastroranking: 8,5 sobre 10 con unas 980 opiniones.',
+      s: 'Gastroranking, oct. 2026'
+    }
+  ],
+  sanjose: [
+    {
+      n: 'Restaurante Guinaldo',
+      t: 'Restaurante',
+      a: 'Avenida Hilario Goyenechea, 17',
+      p: 'El mejor valorado de la zona en Gastroranking: 8,5 sobre 10 con unas 1.800 opiniones.',
+      s: 'Gastroranking, oct. 2026'
+    }
+  ],
+  sanbernardo: [
+    {
+      n: 'La Tabernita',
+      t: 'Bar',
+      a: 'Calle Arapiles, 47',
+      p: 'El mejor valorado de la zona en Gastroranking: 8,4 sobre 10 con unas 520 opiniones.',
+      s: 'Gastroranking, oct. 2026'
+    }
+  ],
+  labradores: [
+    {
+      n: 'Mey Wei Yuan',
+      t: 'China',
+      a: 'Calle Dimas Madariaga, 38',
+      p: 'El mejor valorado de la zona en Gastroranking: 8,2 sobre 10 con unas 970 opiniones.',
+      s: 'Gastroranking, oct. 2026'
+    },
+    {
+      n: 'Angus Deli',
+      t: 'Restaurante',
+      a: 'Calle Río Tormes',
+      p: 'Otro de los mejor valorados de la zona en Gastroranking: 8,3 sobre 10 con unas 440 opiniones.',
+      s: 'Gastroranking, oct. 2026'
+    }
+  ],
+  sanjuan: [
+    {
+      n: "Restaurante Veggie Sue's",
+      t: 'Restaurante',
+      a: 'Calle Condes de Crespo Rascón, 12',
+      p: 'El mejor valorado de la zona en Gastroranking: 8,3 sobre 10 con unas 410 opiniones.',
+      s: 'Gastroranking, oct. 2026'
+    },
+    {
+      n: '269 Gastro Vegan',
+      t: 'Restaurante',
+      a: 'Calle Condes de Crespo Rascón, 11',
+      p: 'Otro de los mejor valorados de la zona en Gastroranking: 8,1 sobre 10 con unas 1.400 opiniones. Precio medio: 30 a 45 €.',
+      s: 'Gastroranking, oct. 2026'
+    }
+  ],
+  tormes: [
+    {
+      n: 'Bar Torres II',
+      t: 'Cafetería',
+      a: 'Plaza Maestro Tárrega, 7',
+      p: 'El mejor valorado de la zona en Gastroranking: 8,3 sobre 10 con unas 220 opiniones.',
+      s: 'Gastroranking, oct. 2026'
+    }
+  ],
+  vidal: [
+    {
+      n: 'Creperia Volare',
+      t: 'Restaurante',
+      a: 'Paseo Doctor Torres Villarroel 37',
+      p: 'El mejor valorado de la zona en Gastroranking: 8,0 sobre 10 con unas 460 opiniones.',
+      s: 'Gastroranking, oct. 2026'
+    }
+  ],
+  rollo: [
+    {
+      n: 'OS-DA-MA',
+      t: 'Restaurante',
+      a: 'Calle Pintor González Ubierna, 1',
+      p: 'El mejor valorado de la zona en Gastroranking: 7,9 sobre 10 con unas 160 opiniones.',
+      s: 'Gastroranking, oct. 2026'
+    }
+  ],
+  delicias: [
+    {
+      n: 'Café Bar Jintena´s',
+      t: 'Bar',
+      a: 'Calle Bolivia, 21',
+      p: 'El mejor valorado de la zona en Gastroranking: 7,9 sobre 10 con unas 220 opiniones.',
+      s: 'Gastroranking, oct. 2026'
+    }
+  ],
+  prosperidad: [
+    {
+      n: 'MOMO',
+      t: 'Restaurante',
+      a: 'La Aldehuela, s/n',
+      p: 'El mejor valorado de la zona en Gastroranking: 7,8 sobre 10 con unas 870 opiniones. Precio medio: menos de 20 €.',
+      s: 'Gastroranking, oct. 2026'
+    }
+  ],
+  fontana: [
+    {
+      n: 'Cafetería Con Pan y Vino',
+      t: 'Bar',
+      a: 'Calle Jardines, 12-22',
+      p: 'El mejor valorado de la zona en Gastroranking: 7,8 sobre 10 con unas 200 opiniones.',
+      s: 'Gastroranking, oct. 2026'
+    }
+  ],
+  glorieta: [
+    {
+      n: 'Tristan',
+      t: 'Restaurante',
+      a: 'Avenida Agustinos Recoletos, 44',
+      p: 'El mejor valorado de la zona en Gastroranking: 7,7 sobre 10 con unas 2.700 opiniones.',
+      s: 'Gastroranking, oct. 2026'
+    }
+  ],
+  pizarrales: [
+    {
+      n: 'La Plazzoletta de Merino',
+      t: 'Restaurante',
+      a: 'Calle Federico de Onís, 42',
+      p: 'El mejor valorado de la zona en Gastroranking: 7,6 sobre 10 con unas 130 opiniones.',
+      s: 'Gastroranking, oct. 2026'
+    }
+  ],
+  garridonorte: [
+    {
+      n: 'Café Bar Japonés Aí',
+      t: 'Bar',
+      a: 'Calle Pozo Hilera, 8',
+      p: 'El mejor valorado de la zona en Gastroranking: 7,5 sobre 10 con unas 2.300 opiniones.',
+      s: 'Gastroranking, oct. 2026'
+    }
+  ],
+  chamberi: [
+    {
+      n: 'Restaurante El Caracol del Bierzo',
+      t: 'Restaurante',
+      a: 'Avenida de Lasalle, 91',
+      p: 'El mejor valorado de la zona en Gastroranking: 7,4 sobre 10 con unas 1.900 opiniones.',
+      s: 'Gastroranking, oct. 2026'
+    }
+  ],
+  santotomas: [
+    {
+      n: 'Bar Le Cantine',
+      t: 'Bar',
+      a: 'Paseo de Canalejas, 103',
+      p: 'El mejor valorado de la zona en Gastroranking: 7,4 sobre 10 con unas 73 opiniones.',
+      s: 'Gastroranking, oct. 2026'
+    }
+  ],
+  chinchibarra: [
+    {
+      n: 'Bar El Duende',
+      t: 'Bar',
+      a: 'Avenida de Federico Anaya, 49',
+      p: 'El mejor valorado de la zona en Gastroranking: 7,4 sobre 10 con unas 320 opiniones.',
+      s: 'Gastroranking, oct. 2026'
+    }
+  ],
+  sanisidro: [
+    {
+      n: 'Bar San-mar',
+      t: 'Bar de copas',
+      a: 'Paseo del Rollo, 44',
+      p: 'El mejor valorado de la zona en Gastroranking: 7,0 sobre 10 con unas 74 opiniones.',
+      s: 'Gastroranking, oct. 2026'
+    }
+  ],
+  villamayor: [
+    {
+      n: 'Bar La Fragua',
+      t: 'Bar',
+      a: 'Carretera SA-300, 25',
+      p: 'El mejor valorado de la zona en Gastroranking: 7,8 sobre 10 con unas 220 opiniones.',
+      s: 'Gastroranking, oct. 2026'
+    }
+  ],
+  carbajosa: [
+    {
+      n: 'El Montalvo',
+      t: 'Restaurante',
+      a: 'Calle Newton, 36',
+      p: 'El mejor valorado de la zona en Gastroranking: 8,1 sobre 10 con unas 990 opiniones.',
+      s: 'Gastroranking, oct. 2026'
+    }
+  ],
+  castmoriscos: [
+    {
+      n: 'Mesón Castellano',
+      t: 'Restaurante',
+      a: 'Carretera de Valladolid, 4-6',
+      p: 'El mejor valorado de la zona en Gastroranking: 8,3 sobre 10 con unas 2.800 opiniones. Precio medio: 30 a 45 €.',
       s: 'Gastroranking, oct. 2026'
     }
   ]

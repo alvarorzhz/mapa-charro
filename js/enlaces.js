@@ -1,6 +1,7 @@
 // Enlaces directos: cada ficha, pueblo y pestaña tiene su propia dirección
 //   #tejares                  ficha de un barrio o pueblo del mapa (id de la zona)
 //   #via/a-62                 ficha de una carretera o avenida
+//   #monumento/catedrales     mini infografía de un monumento
 //   #lista  #provincia        pestañas
 //   #provincia/alba-de-tormes pueblo seleccionado en la pestaña Provincia
 // Abrir una ficha añade una entrada al historial, así el botón «atrás» del móvil la cierra.
@@ -12,7 +13,8 @@ let aplicandoEnlace = false; // true mientras se aplica la dirección, para no r
 let nombreFicha = '';
 
 const hashActual = () => decodeURIComponent(location.hash.slice(1));
-const esHashDeFicha = h => h.startsWith('via/') || todasLasZonas.some(z => z.id == h);
+const esHashDeFicha = h =>
+  h.startsWith('via/') || h.startsWith('monumento/') || todasLasZonas.some(z => z.id == h);
 
 function hashDeVista() {
   if (pestana == 'prov' && puebloSeleccionado) return 'provincia/' + slug(puebloSeleccionado.n);
@@ -59,7 +61,9 @@ function aplicarEnlace() {
   const fichaAbierta = $('#sh').classList.contains('o');
   aplicandoEnlace = true;
   try {
-    if (a == 'via' && b) {
+    if (a == 'monumento' && b) {
+      if (buscarMonumento(b) && (monumentoAbierto != b || !fichaAbierta)) abrirMonumento(b);
+    } else if (a == 'via' && b) {
       const t = Object.keys(INFO_VIAS).find(k => slug(k) == b);
       if (t) abrirFichaVia(t);
     } else if (a && todasLasZonas.some(z => z.id == a)) {

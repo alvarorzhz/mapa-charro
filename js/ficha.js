@@ -14,7 +14,7 @@ function pintarCuriosidades(z) {
 function pintarLeyendas(z) {
   $('#hl').hidden = z.id == 'resto';
   if (z.ly.length) pintarParrafos($('#ri'), z.ly);
-  else pintarParrafos($('#ri'), [z.id == 'resto' ? '' : 'Aún sin leyenda: la iremos recopilando.'], 'mu');
+  else pintarParrafos($('#ri'), [z.id == 'resto' ? '' : 'Sin leyenda conocida.'], 'mu');
 }
 
 function pintarFoto(id) {
@@ -51,7 +51,7 @@ function pintarDondeComer(id) {
       );
     });
   } else if (id != 'resto') {
-    el.appendChild(crear('p', 'mu', 'Aún sin recomendación para este barrio.'));
+    el.appendChild(crear('p', 'mu', 'Ningún sitio con buena nota y bastantes opiniones en Gastroranking.'));
   }
 }
 
@@ -73,6 +73,12 @@ function pintarCercanas(z) {
     });
 }
 
+// Botones de abajo: en una zona, He estado / Quiero ir / Compartir; en una vía o un monumento, solo Compartir
+function modoBotonesFicha(modo) {
+  document.querySelector('.bt').style.display = '';
+  document.querySelectorAll('.bt button[data-s]').forEach(b => (b.hidden = modo != 'zona'));
+}
+
 function mostrarFicha() {
   ajustarVista();
   $('#sh').classList.add('o');
@@ -83,11 +89,13 @@ function mostrarFicha() {
 function abrirFicha(id) {
   const z = buscarZona(id);
   zonaAbierta = id;
-  document.querySelector('.bt').style.display = '';
+  olvidarMonumento();
+  modoBotonesFicha('zona');
   mostrarAvisoAqui(id);
   $('#k').textContent = NOMBRES_GRUPOS[z.g];
   $('#nm').textContent = z.n;
   $('#hc').hidden = false;
+  pintarMonumentosDeZona(z);
   pintarCuriosidades(z);
   pintarLeyendas(z);
   $('#ap').textContent =
@@ -114,6 +122,8 @@ function abrirFicha(id) {
 function abrirFichaVia(nombre) {
   const [tipo, nombreLargo, descripcion] = INFO_VIAS[nombre];
   zonaAbierta = null;
+  olvidarMonumento();
+  $('#mz').hidden = true;
   $('#here').hidden = true;
   $('#k').textContent = tipo;
   $('#nm').textContent = nombre;
@@ -123,7 +133,7 @@ function abrirFichaVia(nombre) {
   $('#ap').textContent = 'Trazado real de OpenStreetMap, simplificado.';
   $('#cu').textContent = nombreLargo;
   $('#ri').textContent = descripcion;
-  document.querySelector('.bt').style.display = 'none';
+  modoBotonesFicha('via');
   resaltarVia(nombre);
   // Las avenidas se encuadran en el punto medio de su primer tramo
   const avenida = AVENIDAS.find(a => a[0] == nombre);
@@ -165,6 +175,7 @@ function pintarBotonesFicha() {
 function cerrarFicha() {
   resaltarVia(null);
   zonaAbierta = null;
+  olvidarMonumento();
   $('#sh').classList.remove('o');
   $('#mn').classList.remove('o');
   todasLasZonas.forEach(pintarZona);
