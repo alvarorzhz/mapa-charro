@@ -1,0 +1,16 @@
+{
+  "name": "mapa-charro",
+  "private": true,
+  "description": "Mapa charro de Salamanca: barrios, pueblos, monumentos y ruta a pie",
+  "scripts": {
+    "version-nueva": "node herramientas/version.js",
+    "comprobar": "node herramientas/comprobar-datos.js",
+    "pruebas": "node herramientas/pruebas.js",
+    "antes-del-commit": "node herramientas/version.js && node herramientas/comprobar-datos.js && node herramientas/pruebas.js",
+    "formato": "prettier --write \"js/**/*.js\" sw.js \"herramientas/*.js\""
+  },
+  "devDependencies": {
+    "playwright": "^1.56.0",
+    "prettier": "^3.6.2"
+  }
+}

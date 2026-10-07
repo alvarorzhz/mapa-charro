@@ -214,6 +214,7 @@ function construirComarcas(contenedor) {
       if (m.cap) fila.appendChild(crear('small', 'mu', 'la capital: se marca por barrios en el mapa'));
       else {
         if (m.z) nombreBoton.appendChild(crear('small', 'tagm', 'en el mapa'));
+        if (PUEBLOS[m.n]) nombreBoton.appendChild(crear('small', 'tagm tagf', 'con ficha'));
         const botones = botonesMunicipio(m);
         fila.appendChild(botones);
         vistaProvincia.filas.push({ botones, el: fila, grupo });
@@ -301,6 +302,9 @@ function seleccionarPueblo(m, encuadrar) {
     pintarBotonesMarcar(botones);
     vistaProvincia.botonesSeleccion = botones;
   }
+  // pueblos.js carga después, pero esto solo se llama al usar la pestaña
+  const ficha = botonFichaPueblo(m);
+  if (ficha) barra.appendChild(ficha);
   vistaProvincia.caminos.forEach((p, mm) => p.classList.toggle('sel', mm == m));
   enlaceVista();
   if (encuadrar) {

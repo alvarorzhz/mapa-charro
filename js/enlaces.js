@@ -2,6 +2,8 @@
 //   #tejares                  ficha de un barrio o pueblo del mapa (id de la zona)
 //   #via/a-62                 ficha de una carretera o avenida
 //   #monumento/catedrales     mini infografía de un monumento
+//   #ruta  #ruta/3            ruta a pie: resumen y cada parada
+//   #pueblo/la-alberca        ficha de un pueblo de la provincia
 //   #lista  #provincia        pestañas
 //   #provincia/alba-de-tormes pueblo seleccionado en la pestaña Provincia
 // Abrir una ficha añade una entrada al historial, así el botón «atrás» del móvil la cierra.
@@ -14,7 +16,12 @@ let nombreFicha = '';
 
 const hashActual = () => decodeURIComponent(location.hash.slice(1));
 const esHashDeFicha = h =>
-  h.startsWith('via/') || h.startsWith('monumento/') || todasLasZonas.some(z => z.id == h);
+  h.startsWith('via/') ||
+  h.startsWith('monumento/') ||
+  h == 'ruta' ||
+  h.startsWith('ruta/') ||
+  h.startsWith('pueblo/') ||
+  todasLasZonas.some(z => z.id == h);
 
 function hashDeVista() {
   if (pestana == 'prov' && puebloSeleccionado) return 'provincia/' + slug(puebloSeleccionado.n);
@@ -61,7 +68,15 @@ function aplicarEnlace() {
   const fichaAbierta = $('#sh').classList.contains('o');
   aplicandoEnlace = true;
   try {
-    if (a == 'monumento' && b) {
+    if (a == 'pueblo' && b) {
+      const m = PROVINCIA.m.find(m => slug(m.n) == b);
+      if (m && PUEBLOS[m.n] && (puebloAbierto != m || !fichaAbierta)) abrirPueblo(m);
+    } else if (a == 'ruta') {
+      const i = parseInt(b) - 1;
+      if (i >= 0 && i < RUTA.paradas.length) {
+        if (paradaActual != i || !fichaAbierta) abrirParada(i);
+      } else if (paradaActual >= 0 || !fichaAbierta || !rutaActiva) abrirRuta();
+    } else if (a == 'monumento' && b) {
       if (buscarMonumento(b) && (monumentoAbierto != b || !fichaAbierta)) abrirMonumento(b);
     } else if (a == 'via' && b) {
       const t = Object.keys(INFO_VIAS).find(k => slug(k) == b);

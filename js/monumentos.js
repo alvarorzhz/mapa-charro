@@ -19,6 +19,8 @@ const PICTOGRAMAS = {
   jardin: 'M12 22v-6M12 16a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM9.5 11.5l2.5 2 2.5-2M7 22h10',
   cueva: 'M2 21c2-9 6-15 10-15s8 6 10 15zM8 21c1-4 2.5-7 4-7s3 3 4 7',
   museo: 'M5 22V10a7 7 0 0 1 14 0v12zM12 3v19M5 14h14M8.5 9.5a3.5 3.5 0 0 1 7 0',
+  presa: 'M2 6h20M5 6l2 14h10l2-14M8 10h8M8.5 14h7M3 21h18',
+  roca: 'M2 20l3-9 5-4 5 2 4-2 3 13zM8 15l2-3 3 1 2-2M9.5 17.5h4',
   mercado: 'M3 9l2-5h14l2 5zM3 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0M5 12v10h14V12M10 22v-5h4v5'
 };
 
@@ -72,13 +74,16 @@ function colocarMonumentos(u) {
       py = (m.y - v.y) / u,
       tocaZoom = v.w <= (m.top ? ANCHO_MAX_IMPRESCINDIBLES : ANCHO_MAX_RESTO),
       libre = !puestos.some(p => Math.abs(p[0] - px) < SEPARACION_PX && Math.abs(p[1] - py) < SEPARACION_PX),
-      ver = (tocaZoom && libre) || m.id == monumentoAbierto;
+      enRuta = typeof rutaActiva != 'undefined' && rutaActiva && RUTA.paradas.includes(m.id),
+      ver = (tocaZoom && libre) || m.id == monumentoAbierto || enRuta;
     m.g.style.display = ver ? '' : 'none';
     if (!ver) return;
     puestos.push([px, py]);
     m.g.setAttribute('transform', escalaFija(m.x, m.y, u));
   });
   apartarEtiquetas(puestos, u);
+  // ruta.js carga después: en la primera llamada puede no existir aún
+  if (typeof colocarRuta == 'function') colocarRuta(u);
 }
 
 // Si un pictograma tapa el nombre de una zona, aparta el nombre justo por encima o por debajo;
@@ -180,7 +185,8 @@ function pintarInfografia(m) {
   nb.append(barrio, llegar);
 }
 
-function abrirMonumento(id) {
+// parada: índice en la ruta a pie si se abre como parada de la ruta
+function abrirMonumento(id, parada) {
   const m = buscarMonumento(id),
     zona = buscarZona(m.zona);
   zonaAbierta = null;
@@ -195,16 +201,21 @@ function abrirMonumento(id) {
   $('#ap').textContent = '';
   pintarFoto(m.foto);
   pintarInfografia(m);
+  const comoParada = typeof parada == 'number';
+  if (comoParada) pintarNavegacionRuta(parada);
+  else if (typeof paradaActual != 'undefined') paradaActual = -1;
   modoBotonesFicha('monumento');
   resaltarVia(null);
   centrarMapaEn(m.x, m.y, Math.min(vistaMapa.w, 70));
   mostrarFicha();
-  enlaceFicha('monumento/' + id, m.n);
+  enlaceFicha(comoParada ? 'ruta/' + (parada + 1) : 'monumento/' + id, m.n);
 }
 
 // Quita la selección de monumento (al abrir otra ficha o cerrar)
 function olvidarMonumento() {
   monumentoAbierto = null;
+  if (typeof puebloAbierto != 'undefined') puebloAbierto = null;
+  if (typeof paradaActual != 'undefined') paradaActual = -1;
   $('#info').hidden = true;
   MONUMENTOS.forEach(o => o.g.classList.remove('sel'));
 }

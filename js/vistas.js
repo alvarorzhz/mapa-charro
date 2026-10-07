@@ -123,6 +123,12 @@ function buscar() {
     ...Object.entries(DONDE_COMER).flatMap(([id, sitios]) =>
       sitios.map(s => [s.n, 'Dónde comer · ' + buscarZona(id).n, () => abrirFicha(id)])
     ),
+    ...Object.keys(PUEBLOS).map(n => [
+      n,
+      'Pueblo · ' + PROVINCIA.com[municipioPorNombre(n).c],
+      () => abrirPueblo(municipioPorNombre(n))
+    ]),
+    [RUTA.nombre + ' a pie', 'Ruta · ' + RUTA.paradas.length + ' paradas', () => abrirRuta()],
     ...MONUMENTOS.map(m => [m.n, 'Monumento · ' + buscarZona(m.zona).n, () => abrirMonumento(m.id)]),
     ...Object.keys(INFO_VIAS).map(k => [k + ' · ' + INFO_VIAS[k][1], INFO_VIAS[k][0], () => abrirFichaVia(k)])
   ];

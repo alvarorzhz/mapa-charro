@@ -26,17 +26,16 @@ function pintarFoto(id) {
   $('#pc').textContent = foto[1];
 }
 
-function pintarDondeComer(id) {
-  const el = $('#eat'),
-    sitios = DONDE_COMER[id];
+// sitios: [{ n, t, a, p, s }]; lugar: para buscarlos en Google Maps
+function pintarSitiosComer(sitios, lugar, vacio) {
+  const el = $('#eat');
   el.textContent = '';
-  $('#he').hidden = id == 'resto';
   if (sitios && sitios.length) {
     sitios.forEach(s => {
       const mapa = crear('a', '', 'Ver en Google Maps');
       mapa.href =
         'https://www.google.com/maps/search/?api=1&query=' +
-        encodeURIComponent(s.n + ' ' + s.a + ' Salamanca');
+        encodeURIComponent(s.n + ' ' + s.a + ' ' + lugar);
       mapa.target = '_blank';
       mapa.rel = 'noopener';
       el.appendChild(
@@ -44,15 +43,22 @@ function pintarDondeComer(id) {
           'div',
           'er',
           crear('b', '', s.n),
-          ' · ' + s.t,
-          crear('p', '', s.a + '. ' + s.p + ' Fuente: ' + s.s + '.'),
+          s.t ? ' · ' + s.t : '',
+          crear('p', '', (s.a ? s.a + '. ' : '') + s.p + ' Fuente: ' + s.s + '.'),
           mapa
         )
       );
     });
-  } else if (id != 'resto') {
-    el.appendChild(crear('p', 'mu', 'Ningún sitio con buena nota y bastantes opiniones en Gastroranking.'));
-  }
+  } else if (vacio) el.appendChild(crear('p', 'mu', vacio));
+}
+
+function pintarDondeComer(id) {
+  $('#he').hidden = id == 'resto';
+  pintarSitiosComer(
+    DONDE_COMER[id],
+    'Salamanca',
+    id == 'resto' ? '' : 'Ningún sitio con buena nota y bastantes opiniones en Gastroranking.'
+  );
 }
 
 // Botones con las 4 zonas más cercanas
@@ -80,6 +86,7 @@ function modoBotonesFicha(modo) {
 }
 
 function mostrarFicha() {
+  document.querySelector('.sb').scrollTop = 0;
   ajustarVista();
   $('#sh').classList.add('o');
   $('#mn').classList.add('o');
@@ -166,10 +173,14 @@ function marcarZona(id, marca) {
   });
 }
 
+// En la ficha de un pueblo de la provincia (pueblos.js) los botones marcan el pueblo
+const fichaDePueblo = () => typeof puebloAbierto != 'undefined' && puebloAbierto;
+
 function pintarBotonesFicha() {
+  const marca = fichaDePueblo() ? estadoMunicipio(puebloAbierto) : progreso.z[zonaAbierta];
   document
     .querySelectorAll('.bt button[data-s]')
-    .forEach(b => b.classList.toggle('on', progreso.z[zonaAbierta] == b.dataset.s));
+    .forEach(b => b.classList.toggle('on', marca == b.dataset.s));
 }
 
 function cerrarFicha() {
@@ -182,9 +193,15 @@ function cerrarFicha() {
   ajustarVista();
 }
 
-document
-  .querySelectorAll('.bt button[data-s]')
-  .forEach(b => (b.onclick = () => marcarZona(zonaAbierta, b.dataset.s)));
+document.querySelectorAll('.bt button[data-s]').forEach(
+  b =>
+    (b.onclick = () => {
+      if (fichaDePueblo()) {
+        marcarMunicipio(puebloAbierto, b.dataset.s);
+        pintarBotonesFicha();
+      } else marcarZona(zonaAbierta, b.dataset.s);
+    })
+);
 $('#x').onclick = () => {
   cerrarFicha();
   volverEnlace();
