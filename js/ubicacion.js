@@ -1,28 +1,191 @@
-// Botón Estoy aquí (geolocalización)
-let LOC=null;
-function whereIs(la,lo){for(const id in POLY)if(inPoly(POLY[id],la,lo))return id;
-const near=g=>Z.filter(z=>g(z.g)).map(z=>[dkm(la,lo,z.la,z.lo),z.id]).sort((a,b)=>a[0]-b[0])[0];
-const c=near(g=>g<5);if(c&&c[0]<.4)return c[1];const p=near(g=>g==5);if(p&&p[0]<3.5)return p[1];return inPoly(PROV,la,lo)?'resto':null}
-function hereBanner(id){const h=$('#here'),live=LOC&&LOC.id==id&&Date.now()-LOC.t<18e5,gv=(S.gv||[]).includes(id);h.hidden=!(live||gv);if(!live&&!gv)return;
-if(live){h.className='here';h.textContent=(S.z[id]=='v'?'Estás aquí ahora mismo.':'Estás aquí ahora mismo: márcalo con «He estado» y quedará pisado con GPS.')+(LOC.acc>1500?' Ojo: la ubicación es poco precisa (±'+Math.round(LOC.acc/100)/10+' km).':'')}
-else{h.className='here ok';h.textContent='✓ Pisado estando allí, con GPS'}}
-function drawMe(la,lo,acc){const g=$('#me');g.textContent='';const[x,y]=pr(la,lo);if(x<0||x>400||y<0||y>480)return;const r=Math.max(.5,acc/1000*22);
-mk('circle',{cx:x,cy:y,r,fill:'var(--auv)','fill-opacity':.12,stroke:'var(--auv)','stroke-opacity':.5,'stroke-width':'1px','vector-effect':'non-scaling-stroke'},g);
-const m=mk('g',{},g);m.setAttribute('transform','translate('+x+' '+y+')');ME={m,x,y};mk('circle',{r:7,fill:'var(--auv)',class:'mepulse'},m);mk('circle',{r:5,fill:'var(--auv)',stroke:'#fff','stroke-width':2},m);vb()}
-let ME=null;
-function gmsg(t,tab){const e=$('#gm');e.hidden=!t;e.textContent=t||'';if(t&&tab&&/^https?:/.test(location.protocol)){const a=document.createElement('a');a.href=location.href;a.target='_blank';a.rel='noopener';a.className='gbtn';a.textContent='Abrir en una pestaña aparte';e.appendChild(document.createElement('br'));e.appendChild(a)}if(t)e.scrollIntoView({behavior:'smooth',block:'nearest'})}
-const FRAMED=(()=>{try{return window.self!==window.top}catch(e){return true}})();
-const GEO_BLOCKED=()=>{try{return !!(document.featurePolicy&&document.featurePolicy.allowsFeature&&!document.featurePolicy.allowsFeature('geolocation'))}catch(e){return false}};
-const MSG_FRAME='Dentro de Claude esta app todavía no puede usar tu ubicación: Claude aún no le da ese permiso. Ábrela en una pestaña aparte y la brújula funcionará. Lo que marques allí se guardará en ese navegador.';
-$('#zl').onclick=()=>{const b=$('#zl');gmsg('');if(GEO_BLOCKED()){toast('Aquí no puedo usar tu ubicación');gmsg(MSG_FRAME,true);return}if(!navigator.geolocation||!window.isSecureContext){gmsg('Este navegador no permite saber dónde estás.');return}
-b.classList.add('busy');b.disabled=true;
-navigator.geolocation.getCurrentPosition(p=>{b.classList.remove('busy');b.disabled=false;const la=p.coords.latitude,lo=p.coords.longitude,acc=p.coords.accuracy||0,id=whereIs(la,lo);
-let pm=null;if(id=='resto'){pm=PRV.m.find(m=>m.R.some(r=>inPoly(r,la,lo)))||null;if(pm&&pm.z)id=pm.z}
-LOC={id,t:Date.now(),acc,pid:pm&&!pm.z&&!pm.cap?pm.k:null};drawMe(la,lo,acc);
-if(LOC.pid){toast('Estás en '+pm.n);setView('prov');selP(pm,true);return}
-if(!id){gmsg('Estás fuera de la provincia de Salamanca. ¡Aquí te esperamos!');return}
-const z=ALL.find(q=>q.id==id);toast(id=='resto'?'Estás en la provincia, fuera del mapa':'Estás en '+z.n);pick(id);
-if(id=='resto'||z.g==5){if(ME){V.w=Math.min(V.w,id=='resto'?400:120);V.h=V.w*mapAR();V.x=ME.x-V.w/2;V.y=ME.y-V.h*.3;vb()}}},
-e=>{b.classList.remove('busy');b.disabled=false;LOC=null;
-toast('No te he podido localizar');if(e.code==1&&FRAMED){gmsg(MSG_FRAME,true);return}gmsg(e.code==1?'No hay permiso para usar tu ubicación. Actívalo en los ajustes de ubicación del navegador y vuelve a pulsar la brújula.':e.code==3?'Ha tardado demasiado en encontrarte. Prueba otra vez, mejor al aire libre.':'No se ha podido calcular tu posición. Prueba otra vez en un momento.')},
-{enableHighAccuracy:true,timeout:15000,maximumAge:60000})};
+// Botón «Estoy aquí» (geolocalización). La ubicación solo se usa en el dispositivo: no se guarda ni se envía.
+
+// Última ubicación: { id (zona del mapa, 'resto' o null), t (cuándo), acc (precisión en m), pid (clave del pueblo) }
+let ubicacion = null;
+let marcaPosicion = null; // { m (grupo SVG), x, y } del punto azul en el mapa
+const VIGENCIA_UBICACION = 30 * 60 * 1000; // durante 30 min, lo que marques cuenta como «pisado con GPS»
+const ubicacionReciente = () => !!ubicacion && Date.now() - ubicacion.t < VIGENCIA_UBICACION;
+
+// ¿En qué zona del mapa está el punto? Primero por límites oficiales y, si no, por cercanía.
+function zonaEnCoordenadas(la, lo) {
+  for (const id in LIMITES_BARRIOS) if (dentroDePoligono(LIMITES_BARRIOS[id], la, lo)) return id;
+  const masCercana = filtro =>
+    zonas
+      .filter(z => filtro(z.g))
+      .map(z => [distanciaKm(la, lo, z.la, z.lo), z.id])
+      .sort((a, b) => a[0] - b[0])[0];
+  const barrio = masCercana(g => g < 5);
+  if (barrio && barrio[0] < 0.4) return barrio[1];
+  const pueblo = masCercana(g => g == 5);
+  if (pueblo && pueblo[0] < 3.5) return pueblo[1];
+  return dentroDePoligono(LIMITE_PROVINCIA, la, lo) ? 'resto' : null;
+}
+
+// Aviso en la ficha: «Estás aquí ahora mismo» o «Pisado estando allí, con GPS»
+function mostrarAvisoAqui(id) {
+  const h = $('#here'),
+    ahora = ubicacionReciente() && ubicacion.id == id,
+    conGps = (progreso.gv || []).includes(id);
+  h.hidden = !(ahora || conGps);
+  if (ahora) {
+    h.className = 'here';
+    h.textContent =
+      (progreso.z[id] == 'v'
+        ? 'Estás aquí ahora mismo.'
+        : 'Estás aquí ahora mismo: márcalo con «He estado» y quedará pisado con GPS.') +
+      (ubicacion.acc > 1500
+        ? ' Ojo: la ubicación es poco precisa (±' + Math.round(ubicacion.acc / 100) / 10 + ' km).'
+        : '');
+  } else if (conGps) {
+    h.className = 'here ok';
+    h.textContent = '✓ Pisado estando allí, con GPS';
+  }
+}
+
+// Punto azul con su círculo de precisión
+function dibujarPosicion(la, lo, precision) {
+  const g = $('#me');
+  g.textContent = '';
+  const [x, y] = proyectar(la, lo);
+  if (x < 0 || x > ANCHO_MAPA || y < 0 || y > ALTO_MAPA) return;
+  crearSvg(
+    'circle',
+    {
+      cx: x,
+      cy: y,
+      r: Math.max(0.5, (precision / 1000) * 22),
+      fill: 'var(--auv)',
+      'fill-opacity': 0.12,
+      stroke: 'var(--auv)',
+      'stroke-opacity': 0.5,
+      'stroke-width': '1px',
+      'vector-effect': 'non-scaling-stroke'
+    },
+    g
+  );
+  const m = crearSvg('g', { transform: 'translate(' + x + ' ' + y + ')' }, g);
+  marcaPosicion = { m, x, y };
+  crearSvg('circle', { r: 7, fill: 'var(--auv)', class: 'mepulse' }, m);
+  crearSvg('circle', { r: 5, fill: 'var(--auv)', stroke: '#fff', 'stroke-width': 2 }, m);
+  ajustarVista();
+}
+
+// Mensaje bajo el mapa; con conPestana añade un botón para abrir la app fuera de Claude
+function mensajeUbicacion(texto, conPestana) {
+  const e = $('#gm');
+  e.hidden = !texto;
+  e.textContent = texto || '';
+  if (texto && conPestana && /^https?:/.test(location.protocol)) {
+    const a = crear('a', 'gbtn', 'Abrir en una pestaña aparte');
+    a.href = location.href;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    e.append(crear('br'), a);
+  }
+  if (texto) e.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ¿La app va dentro de un marco (el visor de Claude)?
+const EN_MARCO = (() => {
+  try {
+    return window.self !== window.top;
+  } catch (e) {
+    return true;
+  }
+})();
+const ubicacionBloqueada = () => {
+  try {
+    return !!(
+      document.featurePolicy &&
+      document.featurePolicy.allowsFeature &&
+      !document.featurePolicy.allowsFeature('geolocation')
+    );
+  } catch (e) {
+    return false;
+  }
+};
+const MENSAJE_EN_MARCO =
+  'Dentro de Claude esta app todavía no puede usar tu ubicación: Claude aún no le da ese permiso. Ábrela en una pestaña aparte y la brújula funcionará. Lo que marques allí se guardará en ese navegador.';
+
+function alLocalizar(pos) {
+  const la = pos.coords.latitude,
+    lo = pos.coords.longitude,
+    precision = pos.coords.accuracy || 0;
+  let id = zonaEnCoordenadas(la, lo),
+    municipio = null;
+  if (id == 'resto') {
+    municipio = PROVINCIA.m.find(m => m.R.some(r => dentroDePoligono(r, la, lo))) || null;
+    if (municipio && municipio.z) id = municipio.z; // pueblo del alfoz que está en el mapa
+  }
+  ubicacion = {
+    id,
+    t: Date.now(),
+    acc: precision,
+    pid: municipio && !municipio.z && !municipio.cap ? municipio.k : null
+  };
+  dibujarPosicion(la, lo, precision);
+  if (ubicacion.pid) {
+    aviso('Estás en ' + municipio.n);
+    cambiarPestana('prov');
+    seleccionarPueblo(municipio, true);
+    return;
+  }
+  if (!id) {
+    mensajeUbicacion('Estás fuera de la provincia de Salamanca. ¡Aquí te esperamos!');
+    return;
+  }
+  const z = buscarZona(id);
+  aviso(id == 'resto' ? 'Estás en la provincia, fuera del mapa' : 'Estás en ' + z.n);
+  abrirFicha(id);
+  // Fuera de la ciudad, encuadra el punto azul en lugar del centro de la zona
+  if ((id == 'resto' || z.g == 5) && marcaPosicion) {
+    centrarMapaEn(marcaPosicion.x, marcaPosicion.y, Math.min(vistaMapa.w, id == 'resto' ? 400 : 120));
+    ajustarVista();
+  }
+}
+
+function alFallarUbicacion(e) {
+  ubicacion = null;
+  aviso('No te he podido localizar');
+  if (e.code == 1 && EN_MARCO) {
+    mensajeUbicacion(MENSAJE_EN_MARCO, true);
+    return;
+  }
+  mensajeUbicacion(
+    e.code == 1
+      ? 'No hay permiso para usar tu ubicación. Actívalo en los ajustes de ubicación del navegador y vuelve a pulsar la brújula.'
+      : e.code == 3
+        ? 'Ha tardado demasiado en encontrarte. Prueba otra vez, mejor al aire libre.'
+        : 'No se ha podido calcular tu posición. Prueba otra vez en un momento.'
+  );
+}
+
+$('#zl').onclick = () => {
+  const boton = $('#zl');
+  mensajeUbicacion('');
+  if (ubicacionBloqueada()) {
+    aviso('Aquí no puedo usar tu ubicación');
+    mensajeUbicacion(MENSAJE_EN_MARCO, true);
+    return;
+  }
+  if (!navigator.geolocation || !window.isSecureContext) {
+    mensajeUbicacion('Este navegador no permite saber dónde estás.');
+    return;
+  }
+  const ocupado = si => {
+    boton.classList.toggle('busy', si);
+    boton.disabled = si;
+  };
+  ocupado(true);
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      ocupado(false);
+      alLocalizar(pos);
+    },
+    e => {
+      ocupado(false);
+      alFallarUbicacion(e);
+    },
+    { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
+  );
+};

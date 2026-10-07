@@ -1,6 +1,6 @@
 // Service worker: deja la app guardada en el móvil para que funcione sin conexión.
 // No edites VERSION ni ARCHIVOS a mano: los actualiza `node herramientas/version.js`.
-const VERSION = 3;
+const VERSION = 4;
 const CACHE = 'mapa-charro-v' + VERSION;
 // <archivos>
 const ARCHIVOS = [
@@ -9,23 +9,23 @@ const ARCHIVOS = [
   'manifest.webmanifest',
   'icons/icon-180.png',
   'icons/icon-192.png',
-  'css/estilos.css?v=3',
-  'js/util.js?v=3',
-  'js/datos/zonas.js?v=3',
-  'js/datos/contenido.js?v=3',
-  'js/datos/geometria.js?v=3',
-  'js/datos/carreteras.js?v=3',
-  'js/datos/provincia.js?v=3',
-  'js/estado.js?v=3',
-  'js/guardado.js?v=3',
-  'js/mapa.js?v=3',
-  'js/ficha.js?v=3',
-  'js/logros.js?v=3',
-  'js/vistas.js?v=3',
-  'js/ubicacion.js?v=3',
-  'js/provincia.js?v=3',
-  'js/enlaces.js?v=3',
-  'js/inicio.js?v=3',
+  'css/estilos.css?v=4',
+  'js/util.js?v=4',
+  'js/datos/zonas.js?v=4',
+  'js/datos/contenido.js?v=4',
+  'js/datos/geometria.js?v=4',
+  'js/datos/carreteras.js?v=4',
+  'js/datos/provincia.js?v=4',
+  'js/estado.js?v=4',
+  'js/guardado.js?v=4',
+  'js/mapa.js?v=4',
+  'js/ficha.js?v=4',
+  'js/logros.js?v=4',
+  'js/vistas.js?v=4',
+  'js/ubicacion.js?v=4',
+  'js/provincia.js?v=4',
+  'js/enlaces.js?v=4',
+  'js/inicio.js?v=4',
   'icons/icon-512.png',
   'img/alamedilla.jpg',
   'img/aldeatejada.jpg',
@@ -60,14 +60,22 @@ const ARCHIVOS = [
 const ESPERA_RED = 4000; // ms que se espera a la red antes de tirar de la copia guardada
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ARCHIVOS)).then(() => self.skipWaiting()));
+  e.waitUntil(
+    caches
+      .open(CACHE)
+      .then(c => c.addAll(ARCHIVOS))
+      .then(() => self.skipWaiting())
+  );
 });
 
 // Borra las copias de versiones anteriores
 self.addEventListener('activate', e => {
   e.waitUntil(
-    caches.keys()
-      .then(ks => Promise.all(ks.filter(k => k.startsWith('mapa-charro-') && k != CACHE).map(k => caches.delete(k))))
+    caches
+      .keys()
+      .then(ks =>
+        Promise.all(ks.filter(k => k.startsWith('mapa-charro-') && k != CACHE).map(k => caches.delete(k)))
+      )
       .then(() => self.clients.claim())
   );
 });
@@ -80,10 +88,20 @@ const guardar = (req, res) => {
   return res;
 };
 
-const conLimite = (p, ms) => new Promise((ok, mal) => {
-  const t = setTimeout(() => mal(new Error('tiempo')), ms);
-  p.then(r => { clearTimeout(t); ok(r) }, e => { clearTimeout(t); mal(e) });
-});
+const conLimite = (p, ms) =>
+  new Promise((ok, mal) => {
+    const t = setTimeout(() => mal(new Error('tiempo')), ms);
+    p.then(
+      r => {
+        clearTimeout(t);
+        ok(r);
+      },
+      e => {
+        clearTimeout(t);
+        mal(e);
+      }
+    );
+  });
 
 self.addEventListener('fetch', e => {
   const req = e.request;
@@ -104,7 +122,9 @@ self.addEventListener('fetch', e => {
   if (/^fonts\.(googleapis|gstatic)\.com$/.test(url.hostname)) {
     e.respondWith(
       caches.match(req).then(guardada => {
-        const red = fetch(req).then(res => guardar(req, res)).catch(() => guardada);
+        const red = fetch(req)
+          .then(res => guardar(req, res))
+          .catch(() => guardada);
         return guardada || red;
       })
     );

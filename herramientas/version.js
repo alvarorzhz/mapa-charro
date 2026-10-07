@@ -16,19 +16,34 @@ html = html.replace(/\?v=\d+"/g, '?v=' + v + '"');
 escribir('index.html', html);
 
 // 2. Lista de archivos para guardar sin conexión
-const locales = [...html.matchAll(/(?:src|href)="([^"]+)"/g)].map(m => m[1]).filter(u => !/^(https?:|data:|#)/.test(u));
-const carpeta = d => fs.readdirSync(path.join(RAIZ, d)).filter(f => !f.startsWith('.')).sort().map(f => d + '/' + f);
-const archivos = [...new Set(['./', 'index.html', 'manifest.webmanifest', ...locales, ...carpeta('icons'), ...carpeta('img')])];
+const locales = [...html.matchAll(/(?:src|href)="([^"]+)"/g)]
+  .map(m => m[1])
+  .filter(u => !/^(https?:|data:|#)/.test(u));
+const carpeta = d =>
+  fs
+    .readdirSync(path.join(RAIZ, d))
+    .filter(f => !f.startsWith('.'))
+    .sort()
+    .map(f => d + '/' + f);
+const archivos = [
+  ...new Set(['./', 'index.html', 'manifest.webmanifest', ...locales, ...carpeta('icons'), ...carpeta('img')])
+];
 
 for (const a of archivos) {
   const f = a.split('?')[0];
-  if (f != './' && !fs.existsSync(path.join(RAIZ, f))) throw new Error('No existe ' + f + ' (referenciado en index.html)');
+  if (f != './' && !fs.existsSync(path.join(RAIZ, f)))
+    throw new Error('No existe ' + f + ' (referenciado en index.html)');
 }
 
 // 3. sw.js
 let sw = leer('sw.js');
 sw = sw.replace(/const VERSION = \d+;/, 'const VERSION = ' + v + ';');
-sw = sw.replace(/\/\/ <archivos>[\s\S]*?\/\/ <\/archivos>/, '// <archivos>\nconst ARCHIVOS = [\n' + archivos.map(a => "  '" + a + "',").join('\n') + '\n];\n// </archivos>');
+sw = sw.replace(
+  /\/\/ <archivos>[\s\S]*?\/\/ <\/archivos>/,
+  '// <archivos>\nconst ARCHIVOS = [\n' +
+    archivos.map(a => "  '" + a + "',").join('\n') +
+    '\n];\n// </archivos>'
+);
 escribir('sw.js', sw);
 
 console.log('Versión ' + v + ': ' + archivos.length + ' archivos para usar sin conexión.');

@@ -1,63 +1,389 @@
-// Mapa principal: dibujo de zonas, carreteras, zoom y arrastre
-function paint(z){const s=S.z[z.id];
-if(z.id=='resto'){$('#rs').className='rs'+(s?' '+s:'');return}
-z.e.setAttribute('class','z c'+z.g+(SUB.has(z.id)?' sub':'')+(s?' '+s:'')+(cur==z.id?' sel':''));[z.tx,z.tx2].forEach(t=>t&&t.setAttribute('class','lb'+(s=='v'?' v':'')));z.dt.setAttribute('class','dt'+(s=='v'?' v':''));
-if(z.st&&s!='v'){z.st.remove();z.st=0}
-if(s=='v'&&!z.st){z.st=mk('g',{class:'st'},z.so);mk('circle',{r:5.5,fill:'none',stroke:'#fff','stroke-width':1.2},z.st);const v=mk('text',{y:2.7,'text-anchor':'middle','font-size':7.5,'font-weight':700,fill:'#fff'},z.st);v.textContent='V'}}
-function upd(){const v=Object.values(S.z).filter(x=>x=='v').length,w=Object.values(S.z).filter(x=>x=='w').length;
-$('#pg').style.width=v/ALL.length*100+'%';$('#cn').textContent=v+' de '+ALL.length+' zonas pisadas, '+w+' por visitar'+(S.f?'. Rana encontrada 🐸':'');
-$('#fr').style.opacity=S.f?1:.45;$('#cd').value=btoa(JSON.stringify(S));try{renderAch();if(vw=='list')renderList();if(vw=='prov')updProv()}catch(e){console.error(e)}}
-function vb(){const AR=mapAR(),mw=Math.max(400,480/AR);V.w=Math.min(mw,Math.max(16,V.w));V.h=V.w*AR;V.x=V.w>=400?(400-V.w)/2:Math.max(0,Math.min(400-V.w,V.x));V.y=V.h>=480?(480-V.h)/2:Math.max(0,Math.min(480-V.h,V.y));
-svg.setAttribute('viewBox',V.x+' '+V.y+' '+V.w+' '+V.h);const u=V.w/(svg.clientWidth||380);
-Z.forEach(z=>{const cw=z.cw/u,ch=z.ch/u,kc=z.t?.64:.6,mx=z.t?13.5:11,f1=Math.min(mx,cw*.92/(z.w1*kc),ch*.85/1.25),f2=z.tx2?Math.min(mx,cw*.92/(z.w2*kc),ch*.85/2.5):0,force=(z.t&&V.w<=260)||cur==z.id;
-let fs=Math.max(f1,f2),two=f2>f1;const sh=fs>=8||force;if(sh&&fs<8){fs=z.t?12:10.5;two=!!z.tx2}
-const a=two?z.tx2:z.tx,b=two?z.tx:z.tx2;a.style.display=sh?'':'none';if(b)b.style.display='none';z.dt.style.display=sh?'none':'';z.dt.setAttribute('r',2.8*u);
-a.style.fontSize=fs*u+'px';a.style.strokeWidth=2.5*u+'px';a.style.fontWeight=z.t?800:600;
-z.sg.setAttribute('transform','translate('+z.x.toFixed(2)+' '+z.y.toFixed(2)+') scale('+u+')');z.so.setAttribute('transform','translate(0 '+(sh?-((two?2:1)*fs*.6+6.5):-9)+')')});
-document.querySelectorAll('.avp').forEach(e=>e.style.display=V.w<=240?'':'none');AVL.forEach(t=>{let L=0;try{L=t._p.getTotalLength()/u}catch(e){}t.style.display=V.w<=130&&L>t._n*8.5*.52+6?'':'none';t.style.fontSize=8.5*u+'px';t.style.strokeWidth=2.5*u+'px'});
-$('#rl').style.fontSize=11*u+'px';SHL.forEach(q=>q.g.setAttribute('transform','translate('+q.x.toFixed(2)+' '+q.y.toFixed(2)+') scale('+u+')'));if(typeof ME!='undefined'&&ME)ME.m.setAttribute('transform','translate('+ME.x.toFixed(2)+' '+ME.y.toFixed(2)+') scale('+u+')')}
-function zoom(k,cx=V.x+V.w/2,cy=V.y+V.h/2){const w=Math.min(Math.max(400,480/mapAR()),Math.max(16,V.w/k)),r=w/V.w;V.x=cx-(cx-V.x)*r;V.y=cy-(cy-V.y)*r;V.w=w;vb()}
-function build(arr,base){arr.forEach(z=>{let P=base;if(POLY[z.id])P=POLY[z.id].map(q=>pr(q[0],q[1]));else arr.forEach(o=>{if(o!=z)P=clip(P,[z.x,z.y],[o.x,o.y])});
-const xs=P.map(q=>q[0]),ys=P.map(q=>q[1]);z.ch=Math.max(...ys)-Math.min(...ys);z.cw=Math.min(Math.max(...xs)-Math.min(...xs),z.ch*1.7);
-z.e=mk('polygon',{points:P.map(f1).join(' ').replace(/ (?=\d)/g,' ')},$('#zg'));z.e.setAttribute('points',P.map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join(' '));z.e.onclick=()=>{if(moved<=6)pick(z.id)};
-z.dt=mk('circle',{cx:z.x,cy:z.y},$('#dg'));const L=z.l.split('|');z.w1=L.join(' ').length;z.w2=L.length>1?Math.max(...L.map(w=>w.length)):0;
-z.tx=mk('text',{x:z.x,y:z.y},$('#lg'));mk('tspan',{x:z.x,dy:'.3em'},z.tx).textContent=L.join(' ');
-if(L.length>1){z.tx2=mk('text',{x:z.x,y:z.y},$('#lg'));L.forEach((w,i)=>{mk('tspan',{x:z.x,dy:i?'1.1em':'-.2em'},z.tx2).textContent=w})}
-z.sg=mk('g',{},$('#sg'));z.so=mk('g',{},z.sg);paint(z)})}
-build(Z.filter(z=>z.g==5),[[0,0],[400,0],[400,480],[0,480]]);
-build(Z.filter(z=>z.g<5),F.map(q=>pr(q[0],q[1])));
-OB.forEach(P=>mk('path',{d:'M'+P.map(q=>f1(pr(q[0],q[1]))).join('L')+'Z',fill:'none',stroke:'var(--line)','stroke-width':'1.8px','vector-effect':'non-scaling-stroke','stroke-linejoin':'round'},$('#ob')));
-$('#ol').setAttribute('d','M'+F.map(q=>f1(pr(q[0],q[1]))).join('L')+'Z');
-{const rp=RV.map(q=>pr(q[0],q[1]));let d='M'+f1(rp[0])+'L'+f1(mid(rp[0],rp[1]));for(let i=1;i<rp.length-1;i++)d+='Q'+f1(rp[i])+' '+f1(mid(rp[i],rp[i+1]));$('#rv').setAttribute('d',d+'L'+f1(rp[rp.length-1]));
-const q=pr(40.9615,-5.6175);$('#rl').setAttribute('x',q[0]);$('#rl').setAttribute('y',q[1])}
-const AVL=[],RP=[];
-Object.assign(RI,RIA);
-try{const sm=P=>{const r=P.map(q=>pr(q[0],q[1])),n=r.length;let d='M'+f1(r[0]);for(let i=0;i<n-1;i++){const a=r[i-1]||r[i],b=r[i],c=r[i+1],e=r[i+2]||c;d+='C'+f1([b[0]+(c[0]-a[0])/6,b[1]+(c[1]-a[1])/6])+' '+f1([c[0]-(e[0]-b[0])/6,c[1]-(e[1]-b[1])/6])+' '+f1(c)}return d};
-const at=(w,c,d,o,da)=>Object.assign({d,fill:'none',stroke:c,'stroke-width':w+'px','stroke-linecap':'round','stroke-linejoin':'round','vector-effect':'non-scaling-stroke',opacity:o},da?{'stroke-dasharray':da}:{});
-const CC={a:'var(--auv)',n:'var(--nac)',c:'var(--cl)'},W={a:[8,4.2],n:[5.5,2.8],c:[4.5,2.2]},OR=['c','n','a'];
-const AC=mk('g',{class:'avp'},$('#rd')),AF=mk('g',{class:'avp'},$('#rd')),AT=mk('g',{class:'avp'},$('#rd'));
-AVN.forEach(([nm,k,PS])=>{const els=[];let lid='',lp=null;PS.forEach((P,j)=>{const d=sm(P);els.push(mk('path',at(k=='t'?5.8:4.4,'var(--line)',d,.8),AC));const w=mk('path',at(k=='t'?3.8:2.6,k=='t'?'var(--ronda)':'var(--street)',d,1),k=='t'?AT:AF);els.push(w);if(!j){lid='av'+AVL.length;w.id=lid;lp=w}});
-if(nm){const t=mk('text',{class:'avl'},$('#al')),tp=mk('textPath',{startOffset:'50%','text-anchor':'middle'},t);tp.setAttribute('href','#'+lid);tp.textContent=nm.replace(/^Avenida /,'Av. ').replace(/^Paseo /,'P.º ');t._p=lp;t._n=tp.textContent.length;AVL.push(t)}RP.push({nm,els})});
-OR.forEach(k=>ROADS.filter(r=>r[0]==k).forEach(([,nm,P])=>{const d=sm(P);RP.push({nm,k,d,els:[mk('path',at(W[k][0],'var(--card)',d,.9),$('#rd'))]})}));
-OR.forEach(k=>RP.filter(r=>r.k==k).forEach(r=>r.els.push(mk('path',at(W[k][1],CC[k],r.d,1,k=='n'?'7 4':0),$('#rd')))))}catch(e){console.error(e)}
-const SHL=[];
-NDS.forEach(([p,k,r])=>{const[x,y]=pr(p[0],p[1]),g=mk('g',{},$('#sd'));mk('circle',{r,fill:'var(--card)',stroke:k=='a'?'var(--auv)':'var(--nac)','stroke-width':2.2},g);SHL.push({g,x,y})});
-SHD.forEach(([t,k,la,lo])=>{const[x,y]=pr(la,lo),g=mk('g',{},$('#sd')),w=t.length*5.4+8;mk('rect',{x:-w/2,y:-7,width:w,height:14,rx:3,fill:k=='a'?'var(--auv)':k=='c'?'var(--cl)':'var(--nac)',stroke:'#fff','stroke-width':1},g);
-const tx=mk('text',{y:3.3,'text-anchor':'middle','font-size':9,'font-weight':700,fill:'#fff'},g);tx.textContent=t;g.style.pointerEvents='auto';g.style.cursor='pointer';g.onclick=()=>pickRoad(t);SHL.push({g,x,y})});
-$('#rb').onclick=()=>{const on=$('#rd').style.display!='none';$('#rd').style.display=$('#al').style.display=$('#sd').style.display=on?'none':'';$('#rb').style.opacity=on?.5:1};
-paint(R);
-function hl(t){RP.forEach(r=>r.els.forEach(e=>{e.style.opacity=t&&r.nm!=t?.2:''}))}
-$('#zi').onclick=()=>zoom(1.6);
-$('#zo').onclick=()=>zoom(1/1.6);
-$('#zr').onclick=()=>{V=V.w<300?{x:0,y:0,w:9999,h:9999}:{x:131,y:200,w:DESK()?190:150,h:180};vb()};
-const pt=e=>{const r=svg.getBoundingClientRect();return[V.x+(e.clientX-r.left)/r.width*V.w,V.y+(e.clientY-r.top)/r.height*V.h]};
-svg.addEventListener('wheel',e=>{e.preventDefault();const p=pt(e);zoom(e.deltaY<0?1.25:1/1.25,p[0],p[1])},{passive:false});
-const PT=new Map();
-svg.addEventListener('pointerdown',e=>{PT.set(e.pointerId,[e.clientX,e.clientY]);moved=0;d0=0});
-svg.addEventListener('pointermove',e=>{if(!PT.has(e.pointerId))return;const o=PT.get(e.pointerId),n=[e.clientX,e.clientY],r=svg.getBoundingClientRect();
-if(PT.size==2){const q=[...PT.entries()].find(a=>a[0]!=e.pointerId)[1],d=Math.hypot(n[0]-q[0],n[1]-q[1]);if(d0){const p=pt({clientX:(n[0]+q[0])/2,clientY:(n[1]+q[1])/2});zoom(d/d0,p[0],p[1])}d0=d;moved=9}
-else{const dx=n[0]-o[0],dy=n[1]-o[1];moved+=Math.abs(dx)+Math.abs(dy);if(moved>6){V.x-=dx/r.width*V.w;V.y-=dy/r.height*V.h;vb()}}
-PT.set(e.pointerId,n)});
-const up=e=>{PT.delete(e.pointerId);d0=0};
-svg.addEventListener('pointerup',up);
-svg.addEventListener('pointercancel',up);
+// Mapa de la ciudad: dibujo de zonas, río y carreteras, encuadre, zoom y arrastre
+
+const ANCHO_MAPA = 400,
+  ALTO_MAPA = 480; // tamaño del viewBox completo
+const ANCHO_MINIMO = 16; // zoom máximo (ancho del encuadre en unidades del mapa)
+
+// --- Zonas ------------------------------------------------------------------
+
+// Colores y sello «V» de una zona según su marca
+function pintarZona(z) {
+  const marca = progreso.z[z.id];
+  if (z.id == 'resto') {
+    $('#rs').className = 'rs' + (marca ? ' ' + marca : '');
+    return;
+  }
+  const clase = 'z c' + z.g + (ZONAS_NO_OFICIALES.has(z.id) ? ' sub' : '');
+  z.e.setAttribute('class', clase + (marca ? ' ' + marca : '') + (zonaAbierta == z.id ? ' sel' : ''));
+  [z.tx, z.tx2].forEach(t => t && t.setAttribute('class', 'lb' + (marca == 'v' ? ' v' : '')));
+  z.dt.setAttribute('class', 'dt' + (marca == 'v' ? ' v' : ''));
+  if (z.st && marca != 'v') {
+    z.st.remove();
+    z.st = 0;
+  }
+  if (marca == 'v' && !z.st) {
+    z.st = crearSvg('g', { class: 'st' }, z.so);
+    crearSvg('circle', { r: 5.5, fill: 'none', stroke: '#fff', 'stroke-width': 1.2 }, z.st);
+    const v = crearSvg(
+      'text',
+      { y: 2.7, 'text-anchor': 'middle', 'font-size': 7.5, 'font-weight': 700, fill: '#fff' },
+      z.st
+    );
+    v.textContent = 'V';
+  }
+}
+
+// Dibuja los polígonos y etiquetas de un grupo de zonas. Las que tienen límite oficial lo usan;
+// las demás se reparten el polígono «base» por cercanía (cada punto va a la zona más próxima).
+function construirZonas(grupo, base) {
+  grupo.forEach(z => {
+    let P = base;
+    if (LIMITES_BARRIOS[z.id]) P = LIMITES_BARRIOS[z.id].map(q => proyectar(q[0], q[1]));
+    else grupo.forEach(o => o != z && (P = recortarSemiplano(P, [z.x, z.y], [o.x, o.y])));
+    const xs = P.map(q => q[0]),
+      ys = P.map(q => q[1]);
+    z.ch = Math.max(...ys) - Math.min(...ys);
+    z.cw = Math.min(Math.max(...xs) - Math.min(...xs), z.ch * 1.7);
+    z.e = crearSvg(
+      'polygon',
+      { points: P.map(q => q[0].toFixed(1) + ',' + q[1].toFixed(1)).join(' ') },
+      $('#zg')
+    );
+    z.e.onclick = () => {
+      if (gestosMapa.arrastre <= UMBRAL_TOQUE) abrirFicha(z.id);
+    };
+    z.dt = crearSvg('circle', { cx: z.x, cy: z.y }, $('#dg'));
+    // Etiqueta en una línea (tx) y, si tiene «|», también en dos (tx2); ajustarVista elige cuál cabe
+    const lineas = z.l.split('|');
+    z.w1 = lineas.join(' ').length;
+    z.w2 = lineas.length > 1 ? Math.max(...lineas.map(w => w.length)) : 0;
+    z.tx = crearSvg('text', { x: z.x, y: z.y }, $('#lg'));
+    crearSvg('tspan', { x: z.x, dy: '.3em' }, z.tx).textContent = lineas.join(' ');
+    if (lineas.length > 1) {
+      z.tx2 = crearSvg('text', { x: z.x, y: z.y }, $('#lg'));
+      lineas.forEach((w, i) => {
+        crearSvg('tspan', { x: z.x, dy: i ? '1.1em' : '-.2em' }, z.tx2).textContent = w;
+      });
+    }
+    z.sg = crearSvg('g', {}, $('#sg'));
+    z.so = crearSvg('g', {}, z.sg);
+    pintarZona(z);
+  });
+}
+
+// Pueblos de alrededor: se reparten todo el lienzo; barrios: el contorno de la ciudad
+construirZonas(
+  zonas.filter(z => z.g == 5),
+  [
+    [0, 0],
+    [ANCHO_MAPA, 0],
+    [ANCHO_MAPA, ALTO_MAPA],
+    [0, ALTO_MAPA]
+  ]
+);
+construirZonas(
+  zonas.filter(z => z.g < 5),
+  LIMITE_CIUDAD.map(q => proyectar(q[0], q[1]))
+);
+pintarZona(zonaResto);
+
+// --- Límites y río ----------------------------------------------------------
+
+const trazoPoligonal = P => 'M' + P.map(q => puntoTexto(proyectar(q[0], q[1]))).join('L') + 'Z';
+LINDES_OFICIALES.forEach(P =>
+  crearSvg(
+    'path',
+    {
+      d: trazoPoligonal(P),
+      fill: 'none',
+      stroke: 'var(--line)',
+      'stroke-width': '1.8px',
+      'vector-effect': 'non-scaling-stroke',
+      'stroke-linejoin': 'round'
+    },
+    $('#ob')
+  )
+);
+$('#ol').setAttribute('d', trazoPoligonal(LIMITE_CIUDAD));
+{
+  // El río, suavizado con curvas que pasan por el punto medio de cada tramo
+  const rp = RIO_TORMES.map(q => proyectar(q[0], q[1]));
+  let d = 'M' + puntoTexto(rp[0]) + 'L' + puntoTexto(puntoMedio(rp[0], rp[1]));
+  for (let i = 1; i < rp.length - 1; i++)
+    d += 'Q' + puntoTexto(rp[i]) + ' ' + puntoTexto(puntoMedio(rp[i], rp[i + 1]));
+  $('#rv').setAttribute('d', d + 'L' + puntoTexto(rp[rp.length - 1]));
+  const [x, y] = proyectar(40.9615, -5.6175);
+  $('#rl').setAttribute('x', x);
+  $('#rl').setAttribute('y', y);
+}
+
+// --- Carreteras y avenidas --------------------------------------------------
+
+const etiquetasAvenidas = []; // textos que siguen el trazado de las avenidas
+const trazosVias = []; // { nm, k, d, els } por cada tramo, para resaltarlos
+Object.assign(INFO_VIAS, INFO_AVENIDAS);
+
+// Curva suave (Catmull-Rom) que pasa por todos los puntos
+function trazoSuave(P) {
+  const r = P.map(q => proyectar(q[0], q[1]));
+  let d = 'M' + puntoTexto(r[0]);
+  for (let i = 0; i < r.length - 1; i++) {
+    const a = r[i - 1] || r[i],
+      b = r[i],
+      c = r[i + 1],
+      e = r[i + 2] || c;
+    d +=
+      'C' +
+      puntoTexto([b[0] + (c[0] - a[0]) / 6, b[1] + (c[1] - a[1]) / 6]) +
+      ' ' +
+      puntoTexto([c[0] - (e[0] - b[0]) / 6, c[1] - (e[1] - b[1]) / 6]) +
+      ' ' +
+      puntoTexto(c);
+  }
+  return d;
+}
+const atributosTrazo = (ancho, color, d, opacidad, discontinua) =>
+  Object.assign(
+    {
+      d,
+      fill: 'none',
+      stroke: color,
+      'stroke-width': ancho + 'px',
+      'stroke-linecap': 'round',
+      'stroke-linejoin': 'round',
+      'vector-effect': 'non-scaling-stroke',
+      opacity: opacidad
+    },
+    discontinua ? { 'stroke-dasharray': discontinua } : {}
+  );
+
+try {
+  // Avenidas y rondas (k = 't' ronda/acceso, otra cosa = avenida): borde + relleno; solo se ven de cerca
+  const capaBorde = crearSvg('g', { class: 'avp' }, $('#rd')),
+    capaAvenidas = crearSvg('g', { class: 'avp' }, $('#rd')),
+    capaRondas = crearSvg('g', { class: 'avp' }, $('#rd'));
+  AVENIDAS.forEach(([nombre, tipo, tramos]) => {
+    const ronda = tipo == 't',
+      els = [];
+    let primerTramo = null;
+    tramos.forEach(P => {
+      const d = trazoSuave(P);
+      els.push(crearSvg('path', atributosTrazo(ronda ? 5.8 : 4.4, 'var(--line)', d, 0.8), capaBorde));
+      const relleno = crearSvg(
+        'path',
+        atributosTrazo(ronda ? 3.8 : 2.6, ronda ? 'var(--ronda)' : 'var(--street)', d, 1),
+        ronda ? capaRondas : capaAvenidas
+      );
+      els.push(relleno);
+      if (!primerTramo) {
+        primerTramo = relleno;
+        relleno.id = 'av' + etiquetasAvenidas.length;
+      }
+    });
+    if (nombre) {
+      const t = crearSvg('text', { class: 'avl' }, $('#al')),
+        tp = crearSvg('textPath', { startOffset: '50%', 'text-anchor': 'middle' }, t);
+      tp.setAttribute('href', '#' + primerTramo.id);
+      tp.textContent = nombre.replace(/^Avenida /, 'Av. ').replace(/^Paseo /, 'P.º ');
+      t._p = primerTramo;
+      t._n = tp.textContent.length;
+      etiquetasAvenidas.push(t);
+    }
+    trazosVias.push({ nm: nombre, els });
+  });
+
+  // Carreteras: a = autovía, n = nacional, c = autonómica. Primero todos los bordes y luego los
+  // colores, de menor a mayor categoría, para que las autovías queden encima.
+  const COLOR = { a: 'var(--auv)', n: 'var(--nac)', c: 'var(--cl)' },
+    ANCHO = { a: [8, 4.2], n: [5.5, 2.8], c: [4.5, 2.2] }, // [borde, color]
+    ORDEN = ['c', 'n', 'a'];
+  ORDEN.forEach(k =>
+    CARRETERAS.filter(r => r[0] == k).forEach(([, nombre, P]) => {
+      const d = trazoSuave(P);
+      trazosVias.push({
+        nm: nombre,
+        k,
+        d,
+        els: [crearSvg('path', atributosTrazo(ANCHO[k][0], 'var(--card)', d, 0.9), $('#rd'))]
+      });
+    })
+  );
+  ORDEN.forEach(k =>
+    trazosVias
+      .filter(r => r.k == k)
+      .forEach(r =>
+        r.els.push(
+          crearSvg('path', atributosTrazo(ANCHO[k][1], COLOR[k], r.d, 1, k == 'n' ? '7 4' : 0), $('#rd'))
+        )
+      )
+  );
+} catch (e) {
+  console.error(e);
+}
+
+// Nudos (círculos en los enlaces) y escudos con el nombre de la carretera: no cambian de tamaño con el zoom
+const escudosEscalables = [];
+NUDOS.forEach(([p, k, r]) => {
+  const [x, y] = proyectar(p[0], p[1]),
+    g = crearSvg('g', {}, $('#sd'));
+  crearSvg(
+    'circle',
+    { r, fill: 'var(--card)', stroke: k == 'a' ? 'var(--auv)' : 'var(--nac)', 'stroke-width': 2.2 },
+    g
+  );
+  escudosEscalables.push({ g, x, y });
+});
+ESCUDOS.forEach(([nombre, k, la, lo]) => {
+  const [x, y] = proyectar(la, lo),
+    g = crearSvg('g', {}, $('#sd')),
+    w = nombre.length * 5.4 + 8;
+  crearSvg(
+    'rect',
+    {
+      x: -w / 2,
+      y: -7,
+      width: w,
+      height: 14,
+      rx: 3,
+      fill: k == 'a' ? 'var(--auv)' : k == 'c' ? 'var(--cl)' : 'var(--nac)',
+      stroke: '#fff',
+      'stroke-width': 1
+    },
+    g
+  );
+  const tx = crearSvg(
+    'text',
+    { y: 3.3, 'text-anchor': 'middle', 'font-size': 9, 'font-weight': 700, fill: '#fff' },
+    g
+  );
+  tx.textContent = nombre;
+  g.style.pointerEvents = 'auto';
+  g.style.cursor = 'pointer';
+  g.onclick = () => abrirFichaVia(nombre);
+  escudosEscalables.push({ g, x, y });
+});
+
+// Atenúa todas las vías menos la de nombre «nombre» (null: todas normales)
+function resaltarVia(nombre) {
+  trazosVias.forEach(r =>
+    r.els.forEach(e => {
+      e.style.opacity = nombre && r.nm != nombre ? 0.2 : '';
+    })
+  );
+}
+
+$('#rb').onclick = () => {
+  const visibles = $('#rd').style.display != 'none';
+  $('#rd').style.display = $('#al').style.display = $('#sd').style.display = visibles ? 'none' : '';
+  $('#rb').style.opacity = visibles ? 0.5 : 1;
+};
+
+// --- Encuadre ---------------------------------------------------------------
+
+const escalaFija = (x, y, u) => 'translate(' + x.toFixed(2) + ' ' + y.toFixed(2) + ') scale(' + u + ')';
+
+// Aplica vistaMapa al SVG (sin salirse del mapa) y recoloca lo que depende del zoom: qué etiquetas
+// caben y a qué tamaño, puntos, sellos, nombres de avenidas, escudos y la marca de «Estoy aquí».
+function ajustarVista() {
+  const AR = proporcionMapa(),
+    anchoMaximo = Math.max(ANCHO_MAPA, ALTO_MAPA / AR),
+    v = vistaMapa;
+  v.w = Math.min(anchoMaximo, Math.max(ANCHO_MINIMO, v.w));
+  v.h = v.w * AR;
+  v.x = v.w >= ANCHO_MAPA ? (ANCHO_MAPA - v.w) / 2 : Math.max(0, Math.min(ANCHO_MAPA - v.w, v.x));
+  v.y = v.h >= ALTO_MAPA ? (ALTO_MAPA - v.h) / 2 : Math.max(0, Math.min(ALTO_MAPA - v.h, v.y));
+  mapaSvg.setAttribute('viewBox', v.x + ' ' + v.y + ' ' + v.w + ' ' + v.h);
+  const u = v.w / (mapaSvg.clientWidth || 380); // unidades del mapa por píxel de pantalla
+
+  zonas.forEach(z => {
+    const anchoPx = z.cw / u,
+      altoPx = z.ch / u,
+      k = z.t ? 0.64 : 0.6, // ancho medio de una letra respecto a su tamaño
+      maximo = z.t ? 13.5 : 11,
+      tam1 = Math.min(maximo, (anchoPx * 0.92) / (z.w1 * k), (altoPx * 0.85) / 1.25),
+      tam2 = z.tx2 ? Math.min(maximo, (anchoPx * 0.92) / (z.w2 * k), (altoPx * 0.85) / 2.5) : 0,
+      forzar = (z.t && v.w <= 260) || zonaAbierta == z.id;
+    let tam = Math.max(tam1, tam2),
+      dosLineas = tam2 > tam1;
+    const mostrar = tam >= 8 || forzar;
+    if (mostrar && tam < 8) {
+      tam = z.t ? 12 : 10.5;
+      dosLineas = !!z.tx2;
+    }
+    const visible = dosLineas ? z.tx2 : z.tx,
+      oculta = dosLineas ? z.tx : z.tx2;
+    visible.style.display = mostrar ? '' : 'none';
+    if (oculta) oculta.style.display = 'none';
+    z.dt.style.display = mostrar ? 'none' : '';
+    z.dt.setAttribute('r', 2.8 * u);
+    visible.style.fontSize = tam * u + 'px';
+    visible.style.strokeWidth = 2.5 * u + 'px';
+    visible.style.fontWeight = z.t ? 800 : 600;
+    z.sg.setAttribute('transform', escalaFija(z.x, z.y, u));
+    z.so.setAttribute(
+      'transform',
+      'translate(0 ' + (mostrar ? -((dosLineas ? 2 : 1) * tam * 0.6 + 6.5) : -9) + ')'
+    );
+  });
+
+  document.querySelectorAll('.avp').forEach(e => (e.style.display = v.w <= 240 ? '' : 'none'));
+  etiquetasAvenidas.forEach(t => {
+    let largo = 0;
+    try {
+      largo = t._p.getTotalLength() / u;
+    } catch (e) {}
+    t.style.display = v.w <= 130 && largo > t._n * 8.5 * 0.52 + 6 ? '' : 'none';
+    t.style.fontSize = 8.5 * u + 'px';
+    t.style.strokeWidth = 2.5 * u + 'px';
+  });
+  $('#rl').style.fontSize = 11 * u + 'px';
+  escudosEscalables.forEach(q => q.g.setAttribute('transform', escalaFija(q.x, q.y, u)));
+  // marcaPosicion se declara en ubicacion.js, que carga después: aquí puede no existir aún
+  if (typeof marcaPosicion != 'undefined' && marcaPosicion)
+    marcaPosicion.m.setAttribute('transform', escalaFija(marcaPosicion.x, marcaPosicion.y, u));
+}
+
+// Encuadra el mapa con ancho «ancho» y el punto (x, y) centrado y un poco hacia arriba
+function centrarMapaEn(x, y, ancho) {
+  vistaMapa.w = ancho;
+  vistaMapa.h = vistaMapa.w * proporcionMapa();
+  vistaMapa.x = x - vistaMapa.w / 2;
+  vistaMapa.y = y - vistaMapa.h * 0.3;
+}
+
+// Acerca (factor > 1) o aleja alrededor del punto (cx, cy)
+function zoomMapa(factor, cx = vistaMapa.x + vistaMapa.w / 2, cy = vistaMapa.y + vistaMapa.h / 2) {
+  const w = Math.min(
+      Math.max(ANCHO_MAPA, ALTO_MAPA / proporcionMapa()),
+      Math.max(ANCHO_MINIMO, vistaMapa.w / factor)
+    ),
+    r = w / vistaMapa.w;
+  vistaMapa.x = cx - (cx - vistaMapa.x) * r;
+  vistaMapa.y = cy - (cy - vistaMapa.y) * r;
+  vistaMapa.w = w;
+  ajustarVista();
+}
+
+$('#zi').onclick = () => zoomMapa(1.6);
+$('#zo').onclick = () => zoomMapa(1 / 1.6);
+// Alterna entre la ciudad y el mapa entero
+$('#zr').onclick = () => {
+  vistaMapa = vistaMapa.w < 300 ? { x: 0, y: 0, w: 9999, h: 9999 } : encuadreInicial();
+  ajustarVista();
+};
+
+const gestosMapa = activarGestos(mapaSvg, {
+  aPunto: (cx, cy) => {
+    const r = mapaSvg.getBoundingClientRect();
+    return [
+      vistaMapa.x + ((cx - r.left) / r.width) * vistaMapa.w,
+      vistaMapa.y + ((cy - r.top) / r.height) * vistaMapa.h
+    ];
+  },
+  zoom: zoomMapa,
+  mover: (fx, fy) => {
+    vistaMapa.x -= fx * vistaMapa.w;
+    vistaMapa.y -= fy * vistaMapa.h;
+    ajustarVista();
+  }
+});

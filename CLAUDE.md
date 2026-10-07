@@ -8,3 +8,5 @@
 - `sw.js` hace que la web funcione sin conexión (solo fuera de Claude). Si añades un archivo nuevo, enlázalo desde `index.html` o ponlo en `img/` o `icons/` para que el script lo incluya.
 - La geolocalización no funciona dentro del visor de Claude (no hay permiso); sí en la web.
 - No inventes datos: curiosidades, restaurantes y leyendas llevan fuente verificable.
+- Estilo: nombres en español y descriptivos; formatea con Prettier (`.prettierrc.json`, sin tocar los datos de `.prettierignore`). Usa los ayudantes de `util.js` (`crear`, `crearSvg`, `crearBotonesFiltro`, `activarGestos`) en vez de repetir código.
+- No cambies los nombres de los campos del progreso (`z`, `p`, `gv`, `f`, `t`) ni los ids de zonas y logros: están en el progreso guardado de la gente y en los enlaces.

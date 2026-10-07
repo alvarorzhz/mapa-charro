@@ -1,23 +1,173 @@
-// Pestañas, lista, buscador, copia de seguridad y teclado
-function setView(v){vw=v;const m=v=='map',sm=m||DESK();document.querySelector('.mw').style.display=document.querySelector('.lg').style.display=sm?'':'none';$('#gm').hidden=sm?!$('#gm').textContent:true;$('#ls').style.display=v=='list'?'':'none';$('#pv').style.display=v=='prov'?'':'none';$('#vmap').classList.toggle('on',m);$('#vlist').classList.toggle('on',v=='list');$('#vprov').classList.toggle('on',v=='prov');if(v=='list')renderList();else if(v=='prov'){if(!PV)buildProv();else updProv()}else vb();if(DESK())vb();enlaceVista()}
-function renderList(){const box=$('#ls');box.textContent='';const fb=document.createElement('div');fb.className='fl';
-[['all','Todos'],['v','He estado'],['w','Quiero ir'],['n','Sin pisar']].forEach(([k,t])=>{const b=document.createElement('button');b.textContent=t;if(k==flt)b.className='on';b.onclick=()=>{flt=k;renderList()};fb.appendChild(b)});box.appendChild(fb);let any=0;
-ZN.forEach((zn,g)=>{const tot=ALL.filter(z=>z.g==g),zs=tot.filter(z=>flt=='all'||(flt=='n'?!S.z[z.id]:S.z[z.id]==flt)).sort((a,b)=>a.n.localeCompare(b.n,'es'));if(!zs.length)return;any=1;
-const h=document.createElement('div');h.className='lh';h.textContent=zn+' · '+tot.filter(z=>S.z[z.id]=='v').length+'/'+tot.length;box.appendChild(h);
-zs.forEach(z=>{const r=document.createElement('div'),n=document.createElement('button');r.className='lr';n.className='nm';n.textContent=z.n;n.onclick=()=>pick(z.id);r.appendChild(n);
-[['v','He estado'],['w','Quiero ir']].forEach(([k,t])=>{const q=document.createElement('button');q.className='q'+(S.z[z.id]==k?' on '+k:'');q.textContent=t;q.onclick=()=>mark(z.id,k);r.appendChild(q)});box.appendChild(r)})});
-if(!any){const p=document.createElement('p');p.className='mu';p.textContent='Nada que mostrar con este filtro.';box.appendChild(p)}}
-$('#vmap').onclick=()=>setView('map');
-$('#vprov').onclick=()=>setView('prov');
-$('#vlist').onclick=()=>setView('list');
-$('#cp').onclick=()=>{try{navigator.clipboard.writeText($('#cd').value);toast('Código copiado')}catch(e){$('#cd').select()}};
-$('#ld').onclick=()=>{try{const n=JSON.parse(atob($('#cd').value.trim()));if(!n||typeof n.z!='object')throw 0;S=clean(n);save();ALL.forEach(paint);upd();toast('Mapa cargado')}catch(e){toast('Código no válido')}};
-function srch(){const q=norm($('#q').value.trim()),box=$('#sr');box.textContent='';if(!q)return;
-const h=[...ALL.map(z=>[z.n,ZN[z.g],()=>pick(z.id)]),...Object.entries(EAT).flatMap(([id,a])=>a.map(e=>[e.n,'Dónde comer · '+ALL.find(z=>z.id==id).n,()=>pick(id)])),...Object.keys(RI).map(k=>[k+' · '+RI[k][1],RI[k][0],()=>pickRoad(k)])].map(a=>[norm(a[0]).indexOf(q),a]).filter(a=>a[0]>=0).sort((a,b)=>a[0]-b[0]).slice(0,6);
-if(!h.length){box.textContent='Sin resultados';return}
-h.forEach(([,a])=>{const b=document.createElement('button'),m=document.createElement('small');b.append(a[0]);m.textContent=a[1];b.append(m);b.onclick=()=>{a[2]();$('#q').value='';box.textContent='';document.querySelector('.mw').scrollIntoView({behavior:'smooth',block:'start'})};box.appendChild(b)})}
-$('#q').addEventListener('input',srch);
-$('#q').addEventListener('keydown',e=>{if(e.key=='Enter'){const b=document.querySelector('#sr button');b&&b.click()}});
-addEventListener('resize',vb);
-matchMedia('(min-width:900px)').addEventListener('change',()=>{setView(vw);vb()});
-addEventListener('keydown',e=>{if(e.key=='Escape'&&$('#sh').classList.contains('o'))$('#x').click();else if(e.target.tagName!='INPUT'&&e.target.tagName!='TEXTAREA'&&(vw=='map'||DESK())){if(e.key=='+'||e.key=='=')zoom(1.6);else if(e.key=='-')zoom(1/1.6)}});
+// Pestañas, marcador general, lista, buscador, copia de seguridad y teclado
+
+// Repinta todo lo que depende del progreso: barra y contador, rana, código de copia, logros y la pestaña abierta
+function actualizar() {
+  const marcas = Object.values(progreso.z),
+    pisadas = marcas.filter(x => x == 'v').length,
+    porVisitar = marcas.filter(x => x == 'w').length,
+    total = todasLasZonas.length;
+  $('#pg').style.width = (pisadas / total) * 100 + '%';
+  $('#cn').textContent =
+    pisadas +
+    ' de ' +
+    total +
+    ' zonas pisadas, ' +
+    porVisitar +
+    ' por visitar' +
+    (progreso.f ? '. Rana encontrada 🐸' : '');
+  $('#fr').style.opacity = progreso.f ? 1 : 0.45;
+  $('#cd').value = btoa(JSON.stringify(progreso));
+  try {
+    pintarLogros();
+    if (pestana == 'list') pintarLista();
+    if (pestana == 'prov') actualizarProvincia();
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+// En el móvil cada pestaña ocupa la pantalla; en escritorio el mapa se ve siempre a la izquierda
+function cambiarPestana(nueva) {
+  pestana = nueva;
+  const enMapa = nueva == 'map',
+    mapaVisible = enMapa || esEscritorio();
+  document.querySelector('.mw').style.display = document.querySelector('.lg').style.display = mapaVisible
+    ? ''
+    : 'none';
+  $('#gm').hidden = mapaVisible ? !$('#gm').textContent : true;
+  $('#ls').style.display = nueva == 'list' ? '' : 'none';
+  $('#pv').style.display = nueva == 'prov' ? '' : 'none';
+  $('#vmap').classList.toggle('on', enMapa);
+  $('#vlist').classList.toggle('on', nueva == 'list');
+  $('#vprov').classList.toggle('on', nueva == 'prov');
+  if (nueva == 'list') pintarLista();
+  else if (nueva == 'prov') {
+    if (!vistaProvincia) construirProvincia();
+    else actualizarProvincia();
+  } else ajustarVista();
+  if (esEscritorio()) ajustarVista();
+  enlaceVista();
+}
+
+// Pestaña Lista: zonas por grupo con sus botones
+function pintarLista() {
+  const caja = $('#ls');
+  caja.textContent = '';
+  caja.appendChild(
+    crearBotonesFiltro(filtroLista, clave => {
+      filtroLista = clave;
+      pintarLista();
+    })
+  );
+  let alguna = false;
+  NOMBRES_GRUPOS.forEach((nombreGrupo, g) => {
+    const delGrupo = todasLasZonas.filter(z => z.g == g),
+      visibles = delGrupo
+        .filter(z => cumpleFiltro(filtroLista, progreso.z[z.id]))
+        .sort((a, b) => a.n.localeCompare(b.n, 'es'));
+    if (!visibles.length) return;
+    alguna = true;
+    const pisadas = delGrupo.filter(z => progreso.z[z.id] == 'v').length;
+    caja.appendChild(crear('div', 'lh', nombreGrupo + ' · ' + pisadas + '/' + delGrupo.length));
+    visibles.forEach(z => {
+      const nombre = crear('button', 'nm', z.n),
+        fila = crear('div', 'lr', nombre);
+      nombre.onclick = () => abrirFicha(z.id);
+      ESTADOS_MARCA.forEach(([marca, texto]) => {
+        const b = crear('button', 'q' + (progreso.z[z.id] == marca ? ' on ' + marca : ''), texto);
+        b.onclick = () => marcarZona(z.id, marca);
+        fila.appendChild(b);
+      });
+      caja.appendChild(fila);
+    });
+  });
+  if (!alguna) caja.appendChild(crear('p', 'mu', 'Nada que mostrar con este filtro.'));
+}
+
+$('#vmap').onclick = () => cambiarPestana('map');
+$('#vprov').onclick = () => cambiarPestana('prov');
+$('#vlist').onclick = () => cambiarPestana('list');
+
+// --- Copia de seguridad: el progreso en base64 ------------------------------
+$('#cp').onclick = () => {
+  try {
+    navigator.clipboard.writeText($('#cd').value);
+    aviso('Código copiado');
+  } catch (e) {
+    $('#cd').select();
+  }
+};
+$('#ld').onclick = () => {
+  try {
+    const leido = JSON.parse(atob($('#cd').value.trim()));
+    if (!leido || typeof leido.z != 'object') throw 0;
+    progreso = limpiarProgreso(leido);
+    guardar();
+    todasLasZonas.forEach(pintarZona);
+    actualizar();
+    aviso('Mapa cargado');
+  } catch (e) {
+    aviso('Código no válido');
+  }
+};
+
+// --- Buscador principal: zonas, restaurantes y carreteras --------------------
+function buscar() {
+  const q = normalizar($('#q').value.trim()),
+    caja = $('#sr');
+  caja.textContent = '';
+  if (!q) return;
+  // Cada candidato: [texto, subtítulo, qué hacer al elegirlo]
+  const candidatos = [
+    ...todasLasZonas.map(z => [z.n, NOMBRES_GRUPOS[z.g], () => abrirFicha(z.id)]),
+    ...Object.entries(DONDE_COMER).flatMap(([id, sitios]) =>
+      sitios.map(s => [s.n, 'Dónde comer · ' + buscarZona(id).n, () => abrirFicha(id)])
+    ),
+    ...Object.keys(INFO_VIAS).map(k => [k + ' · ' + INFO_VIAS[k][1], INFO_VIAS[k][0], () => abrirFichaVia(k)])
+  ];
+  const encontrados = candidatos
+    .map(c => [normalizar(c[0]).indexOf(q), c])
+    .filter(a => a[0] >= 0)
+    .sort((a, b) => a[0] - b[0])
+    .slice(0, 6);
+  if (!encontrados.length) {
+    caja.textContent = 'Sin resultados';
+    return;
+  }
+  encontrados.forEach(([, [texto, subtitulo, abrir]]) => {
+    const b = crear('button', '', texto, crear('small', '', subtitulo));
+    b.onclick = () => {
+      abrir();
+      $('#q').value = '';
+      caja.textContent = '';
+      document.querySelector('.mw').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+    caja.appendChild(b);
+  });
+}
+$('#q').addEventListener('input', buscar);
+$('#q').addEventListener('keydown', e => {
+  if (e.key == 'Enter') {
+    const primero = document.querySelector('#sr button');
+    if (primero) primero.click();
+  }
+});
+
+// --- Tamaño de pantalla y teclado -------------------------------------------
+addEventListener('resize', ajustarVista);
+matchMedia('(min-width:900px)').addEventListener('change', () => {
+  cambiarPestana(pestana);
+  ajustarVista();
+});
+// Esc cierra la ficha; + y - acercan y alejan el mapa
+addEventListener('keydown', e => {
+  if (e.key == 'Escape' && $('#sh').classList.contains('o')) $('#x').click();
+  else if (
+    e.target.tagName != 'INPUT' &&
+    e.target.tagName != 'TEXTAREA' &&
+    (pestana == 'map' || esEscritorio())
+  ) {
+    if (e.key == '+' || e.key == '=') zoomMapa(1.6);
+    else if (e.key == '-') zoomMapa(1 / 1.6);
+  }
+});

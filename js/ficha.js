@@ -1,19 +1,182 @@
 // Ficha de zona y de carretera, y marcado He estado / Quiero ir
-function pick(id){document.querySelector('.bt').style.display='';cur=id;hereBanner(id);const z=ALL.find(q=>q.id==id);$('#k').textContent=ZN[z.g];$('#nm').textContent=z.n;$('#hc').hidden=$('#hl').hidden=false;{const cu=$('#cu');cu.textContent='';(z.cur&&z.cur.length?z.cur:[z.c]).forEach((t,i)=>{if(!t)return;const p=document.createElement('p');p.textContent=t;if(!i&&!(z.cur&&z.cur.length))p.className='ld';cu.appendChild(p)})}{const ri=$('#ri');ri.textContent='';(z.ly.length?z.ly:[id=='resto'?'':'Aún sin leyenda: la iremos recopilando.']).forEach(t=>{if(!t)return;const p=document.createElement('p');p.textContent=t;if(!z.ly.length)p.className='mu';ri.appendChild(p)})}$('#hl').hidden=id=='resto';
-$('#ap').textContent=REAL.has(id)||id=='resto'?'':'Posición aproximada: estimada, no de una coordenada exacta.';hl(null);
-{const ph=$('#ph'),fo=FOTO[id];ph.hidden=$('#pc').hidden=!fo;if(fo){ph.src=fo[0];ph.alt=fo[1].split('. Foto')[0];$('#pc').textContent=fo[1]}const e=EAT[id],el=$('#eat');el.textContent='';$('#he').hidden=id=='resto';
-if(e&&e.length){e.forEach(e=>{const w=document.createElement('div'),b=document.createElement('b'),p=document.createElement('p'),l=document.createElement('a');w.className='er';b.textContent=e.n;w.append(b,' · '+e.t);p.textContent=e.a+'. '+e.p+' Fuente: '+e.s+'.';w.appendChild(p);
-l.href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(e.n+' '+e.a+' Salamanca');l.target='_blank';l.rel='noopener';l.textContent='Ver en Google Maps';w.appendChild(l);el.appendChild(w)})}
-else if(id!='resto'){const p=document.createElement('p');p.className='mu';p.textContent='Aún sin recomendación para este barrio.';el.appendChild(p)}}
-{const nb=$('#nb');nb.textContent='';if(id!='resto'){nb.append('Cerca: ');ALL.filter(q=>q!=z&&q.id!='resto').map(q=>[Math.hypot(q.x-z.x,q.y-z.y),q]).sort((a,b)=>a[0]-b[0]).slice(0,4).forEach(([,q])=>{const b=document.createElement('button');b.textContent=q.n;b.onclick=()=>pick(q.id);nb.appendChild(b)})}}
-if(id!='resto'){V.w=Math.min(V.w,Math.max(16,Math.min(220,(svg.clientWidth||380)*z.cw/70)));V.h=V.w*mapAR();V.x=z.x-V.w/2;V.y=z.y-V.h*.3}
-vb();sheet();$('#sh').classList.add('o');$('#mn').classList.add('o');ALL.forEach(paint);enlaceFicha(id,z.n)}
-function pickRoad(t){cur=null;$('#here').hidden=true;const r=RI[t];$('#k').textContent=r[0];$('#nm').textContent=t;$('#hc').hidden=$('#hl').hidden=$('#he').hidden=$('#ph').hidden=$('#pc').hidden=true;$('#eat').textContent='';$('#ap').textContent='Trazado real de OpenStreetMap, simplificado.';hl(t);$('#nb').textContent='';$('#ri').className='';$('#cu').textContent=r[1];$('#ri').textContent=r[2];document.querySelector('.bt').style.display='none';{const av=AVN.find(a=>a[0]==t);if(av){const m=av[2][0][av[2][0].length>>1],q=pr(m[0],m[1]);V.w=Math.min(V.w,90);V.h=V.w*mapAR();V.x=q[0]-V.w/2;V.y=q[1]-V.h*.3}}vb();$('#sh').classList.add('o');$('#mn').classList.add('o');ALL.forEach(paint);enlaceFicha('via/'+slug(t),t)}
-function mark(id,s){const bf=ach().filter(a=>a.c>=a.m).map(a=>a.id);S.gv=S.gv||[];if(S.z[id]==s)delete S.z[id];else{S.z[id]=s;const live=LOC&&LOC.id==id&&Date.now()-LOC.t<18e5;if(s=='v'&&live&&!S.gv.includes(id))S.gv.push(id);toast(s=='v'?(live?'¡Vítor! Pisado con GPS':'¡Vítor!'):'Apuntada')}if(S.z[id]!='v')S.gv=S.gv.filter(k=>k!=id);
-save();paint(ALL.find(q=>q.id==id));sheet();hereBanner(id);upd();const nw=ach().filter(a=>a.c>=a.m&&!bf.includes(a.id));if(nw.length)setTimeout(()=>toast('Logro: '+nw[0].n),1900)}
-function sheet(){document.querySelectorAll('.bt button').forEach(b=>b.classList.toggle('on',S.z[cur]==b.dataset.s))}
-document.querySelectorAll('.bt button').forEach(b=>b.onclick=()=>mark(cur,b.dataset.s));
-function cerrarFicha(){hl(null);cur=null;$('#sh').classList.remove('o');$('#mn').classList.remove('o');ALL.forEach(paint);vb()}
-$('#x').onclick=()=>{cerrarFicha();volverEnlace()};
-$('#cmp').onclick=()=>compartir();
-$('#rs').onclick=()=>pick('resto');
+
+// Rellena el contenedor «el» con un párrafo por texto
+function pintarParrafos(el, textos, clase) {
+  el.textContent = '';
+  textos.filter(Boolean).forEach(t => el.appendChild(crear('p', clase, t)));
+}
+
+function pintarCuriosidades(z) {
+  if (z.cur && z.cur.length) pintarParrafos($('#cu'), z.cur);
+  else pintarParrafos($('#cu'), [z.c], 'ld'); // sin curiosidades: la frase corta, destacada
+}
+
+function pintarLeyendas(z) {
+  $('#hl').hidden = z.id == 'resto';
+  if (z.ly.length) pintarParrafos($('#ri'), z.ly);
+  else pintarParrafos($('#ri'), [z.id == 'resto' ? '' : 'Aún sin leyenda: la iremos recopilando.'], 'mu');
+}
+
+function pintarFoto(id) {
+  const foto = FOTOS[id]; // [ruta, pie de foto con autor y licencia]
+  $('#ph').hidden = $('#pc').hidden = !foto;
+  if (!foto) return;
+  $('#ph').src = foto[0];
+  $('#ph').alt = foto[1].split('. Foto')[0];
+  $('#pc').textContent = foto[1];
+}
+
+function pintarDondeComer(id) {
+  const el = $('#eat'),
+    sitios = DONDE_COMER[id];
+  el.textContent = '';
+  $('#he').hidden = id == 'resto';
+  if (sitios && sitios.length) {
+    sitios.forEach(s => {
+      const mapa = crear('a', '', 'Ver en Google Maps');
+      mapa.href =
+        'https://www.google.com/maps/search/?api=1&query=' +
+        encodeURIComponent(s.n + ' ' + s.a + ' Salamanca');
+      mapa.target = '_blank';
+      mapa.rel = 'noopener';
+      el.appendChild(
+        crear(
+          'div',
+          'er',
+          crear('b', '', s.n),
+          ' · ' + s.t,
+          crear('p', '', s.a + '. ' + s.p + ' Fuente: ' + s.s + '.'),
+          mapa
+        )
+      );
+    });
+  } else if (id != 'resto') {
+    el.appendChild(crear('p', 'mu', 'Aún sin recomendación para este barrio.'));
+  }
+}
+
+// Botones con las 4 zonas más cercanas
+function pintarCercanas(z) {
+  const nb = $('#nb');
+  nb.textContent = '';
+  if (z.id == 'resto') return;
+  nb.append('Cerca: ');
+  todasLasZonas
+    .filter(q => q != z && q.id != 'resto')
+    .map(q => [Math.hypot(q.x - z.x, q.y - z.y), q])
+    .sort((a, b) => a[0] - b[0])
+    .slice(0, 4)
+    .forEach(([, q]) => {
+      const b = crear('button', '', q.n);
+      b.onclick = () => abrirFicha(q.id);
+      nb.appendChild(b);
+    });
+}
+
+function mostrarFicha() {
+  ajustarVista();
+  $('#sh').classList.add('o');
+  $('#mn').classList.add('o');
+  todasLasZonas.forEach(pintarZona);
+}
+
+function abrirFicha(id) {
+  const z = buscarZona(id);
+  zonaAbierta = id;
+  document.querySelector('.bt').style.display = '';
+  mostrarAvisoAqui(id);
+  $('#k').textContent = NOMBRES_GRUPOS[z.g];
+  $('#nm').textContent = z.n;
+  $('#hc').hidden = false;
+  pintarCuriosidades(z);
+  pintarLeyendas(z);
+  $('#ap').textContent =
+    POSICION_EXACTA.has(id) || id == 'resto'
+      ? ''
+      : 'Posición aproximada: estimada, no de una coordenada exacta.';
+  resaltarVia(null);
+  pintarFoto(id);
+  pintarDondeComer(id);
+  pintarCercanas(z);
+  // Acerca el mapa a la zona, según su tamaño (sin alejarlo si ya estaba más cerca)
+  if (id != 'resto')
+    centrarMapaEn(
+      z.x,
+      z.y,
+      Math.min(vistaMapa.w, Math.max(16, Math.min(220, ((mapaSvg.clientWidth || 380) * z.cw) / 70)))
+    );
+  pintarBotonesFicha();
+  mostrarFicha();
+  enlaceFicha(id, z.n);
+}
+
+// INFO_VIAS[nombre] = [tipo, nombre largo, descripción]
+function abrirFichaVia(nombre) {
+  const [tipo, nombreLargo, descripcion] = INFO_VIAS[nombre];
+  zonaAbierta = null;
+  $('#here').hidden = true;
+  $('#k').textContent = tipo;
+  $('#nm').textContent = nombre;
+  $('#hc').hidden = $('#hl').hidden = $('#he').hidden = $('#ph').hidden = $('#pc').hidden = true;
+  $('#eat').textContent = '';
+  $('#nb').textContent = '';
+  $('#ap').textContent = 'Trazado real de OpenStreetMap, simplificado.';
+  $('#cu').textContent = nombreLargo;
+  $('#ri').textContent = descripcion;
+  document.querySelector('.bt').style.display = 'none';
+  resaltarVia(nombre);
+  // Las avenidas se encuadran en el punto medio de su primer tramo
+  const avenida = AVENIDAS.find(a => a[0] == nombre);
+  if (avenida) {
+    const tramo = avenida[2][0],
+      [x, y] = proyectar(...tramo[tramo.length >> 1]);
+    centrarMapaEn(x, y, Math.min(vistaMapa.w, 90));
+  }
+  mostrarFicha();
+  enlaceFicha('via/' + slug(nombre), nombre);
+}
+
+// Marca o desmarca (si ya lo estaba) una zona del mapa con 'v' (He estado) o 'w' (Quiero ir)
+function marcarZona(id, marca) {
+  conAvisoDeLogros(() => {
+    progreso.gv = progreso.gv || [];
+    if (progreso.z[id] == marca) delete progreso.z[id];
+    else {
+      progreso.z[id] = marca;
+      const conGps = ubicacionReciente() && ubicacion.id == id;
+      if (marca == 'v' && conGps && !progreso.gv.includes(id)) progreso.gv.push(id);
+      aviso(marca == 'v' ? (conGps ? '¡Vítor! Pisado con GPS' : '¡Vítor!') : 'Apuntada');
+    }
+    if (progreso.z[id] != 'v') progreso.gv = progreso.gv.filter(k => k != id);
+    guardar();
+    pintarZona(buscarZona(id));
+    pintarBotonesFicha();
+    mostrarAvisoAqui(id);
+    actualizar();
+  });
+}
+
+function pintarBotonesFicha() {
+  document
+    .querySelectorAll('.bt button[data-s]')
+    .forEach(b => b.classList.toggle('on', progreso.z[zonaAbierta] == b.dataset.s));
+}
+
+function cerrarFicha() {
+  resaltarVia(null);
+  zonaAbierta = null;
+  $('#sh').classList.remove('o');
+  $('#mn').classList.remove('o');
+  todasLasZonas.forEach(pintarZona);
+  ajustarVista();
+}
+
+document
+  .querySelectorAll('.bt button[data-s]')
+  .forEach(b => (b.onclick = () => marcarZona(zonaAbierta, b.dataset.s)));
+$('#x').onclick = () => {
+  cerrarFicha();
+  volverEnlace();
+};
+$('#cmp').onclick = () => compartir();
+$('#rs').onclick = () => abrirFicha('resto');

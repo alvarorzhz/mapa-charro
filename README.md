@@ -9,29 +9,33 @@ Web: https://alvarorzhz.github.io/mapa-charro/
 ```
 index.html            Solo la estructura de la página y la carga de scripts
 css/estilos.css       Estilos (móvil primero; a partir de 900 px, diseño de dos columnas)
-js/util.js            Utilidades: proyección, DOM, SVG, geometría
-js/datos/             Solo datos, sin lógica
-  zonas.js            Barrios y pueblos del mapa
+js/util.js            Utilidades: proyección, geometría, textos, DOM/SVG, filtros y gestos (arrastre, pinza, rueda)
+js/datos/             Solo datos, sin lógica (cada archivo explica su formato al principio)
+  zonas.js            Barrios y pueblos del mapa, uno por línea
   contenido.js        Curiosidades, leyendas, fotos y dónde comer
   geometria.js        Límites de barrios, ciudad, río y provincia
   carreteras.js       Carreteras, rondas y avenidas
   provincia.js        Municipios, comarcas y pedanías
-js/estado.js          Progreso del usuario y su validación
+js/estado.js          Zonas, municipios, progreso del usuario (y su formato) y vista actual
 js/guardado.js        Guardado en la cuenta (dentro de Claude) y copia local
-js/mapa.js            Dibujo del mapa, zoom y arrastre
-js/ficha.js           Ficha de zona y marcado
+js/mapa.js            Dibujo del mapa, encuadre, zoom y arrastre
+js/ficha.js           Ficha de zona y de carretera, y marcado
 js/logros.js          Logros
-js/vistas.js          Pestañas, lista, buscador, copia de seguridad, teclado
+js/vistas.js          Marcador, pestañas, lista, buscador, copia de seguridad, teclado
 js/ubicacion.js       Botón Estoy aquí
 js/provincia.js       Pestaña Provincia
 js/enlaces.js         Enlaces directos (#tejares, #via/a-62, #provincia/ledesma) y botón Compartir
-js/inicio.js          Arranque
+js/inicio.js          Arranque y registro del modo sin conexión
 img/, icons/          Fotos e iconos
 sw.js                 Service worker: la web funciona sin conexión
 herramientas/         Scripts de mantenimiento (version.js)
 ```
 
 Los scripts son clásicos (no módulos) y comparten el ámbito global, así que **el orden de carga en `index.html` importa**: utilidades, datos, estado y después el resto. Al cambiar cualquier archivo, ejecuta `node herramientas/version.js`: sube el número `?v=` en `index.html` y actualiza `sw.js` para que los navegadores (y la copia sin conexión) no usen la versión vieja.
+
+## Estilo del código
+
+Nombres en español y descriptivos. El código se formatea con Prettier (`.prettierrc.json`); los datos grandes de `geometria.js`, `carreteras.js` y `provincia.js` se dejan compactos (`.prettierignore`). Para crear elementos usa `crear()` (HTML) y `crearSvg()` (SVG) de `util.js`.
 
 ## Sin conexión
 

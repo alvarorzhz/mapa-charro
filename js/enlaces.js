@@ -12,11 +12,11 @@ let aplicandoEnlace = false; // true mientras se aplica la dirección, para no r
 let nombreFicha = '';
 
 const hashActual = () => decodeURIComponent(location.hash.slice(1));
-const esHashDeFicha = h => h.startsWith('via/') || ALL.some(z => z.id == h);
+const esHashDeFicha = h => h.startsWith('via/') || todasLasZonas.some(z => z.id == h);
 
 function hashDeVista() {
-  if (vw == 'prov' && psel) return 'provincia/' + slug(psel.n);
-  return HASH_PESTANA[vw] || '';
+  if (pestana == 'prov' && puebloSeleccionado) return 'provincia/' + slug(puebloSeleccionado.n);
+  return HASH_PESTANA[pestana] || '';
 }
 
 function escribirHash(h, nuevaEntrada) {
@@ -60,17 +60,20 @@ function aplicarEnlace() {
   aplicandoEnlace = true;
   try {
     if (a == 'via' && b) {
-      const t = Object.keys(RI).find(k => slug(k) == b);
-      if (t) pickRoad(t);
-    } else if (a && ALL.some(z => z.id == a)) {
-      if (cur != a || !fichaAbierta) pick(a);
+      const t = Object.keys(INFO_VIAS).find(k => slug(k) == b);
+      if (t) abrirFichaVia(t);
+    } else if (a && todasLasZonas.some(z => z.id == a)) {
+      if (zonaAbierta != a || !fichaAbierta) abrirFicha(a);
     } else {
-      if (fichaAbierta) { cerrarFicha(); nombreFicha = ''; }
+      if (fichaAbierta) {
+        cerrarFicha();
+        nombreFicha = '';
+      }
       const v = a == 'lista' ? 'list' : a == 'provincia' ? 'prov' : 'map';
-      if (v != vw) setView(v);
+      if (v != pestana) cambiarPestana(v);
       if (v == 'prov' && b) {
-        const m = PRV.m.find(m => slug(m.n) == b);
-        if (m && m != psel) selP(m, true);
+        const m = PROVINCIA.m.find(m => slug(m.n) == b);
+        if (m && m != puebloSeleccionado) seleccionarPueblo(m, true);
       }
     }
   } catch (e) {
@@ -82,17 +85,30 @@ function aplicarEnlace() {
 }
 
 addEventListener('popstate', aplicarEnlace);
-addEventListener('hashchange', () => { if (!aplicandoEnlace) aplicarEnlace() });
+addEventListener('hashchange', () => {
+  if (!aplicandoEnlace) aplicarEnlace();
+});
 
 // Botón Compartir de la ficha: siempre comparte la dirección de la web pública
 async function compartir() {
   const url = WEB + location.hash;
-  const datos = { title: document.title, text: nombreFicha ? nombreFicha + ', en el Mapa charro' : TITULO, url };
+  const datos = {
+    title: document.title,
+    text: nombreFicha ? nombreFicha + ', en el Mapa charro' : TITULO,
+    url
+  };
   try {
-    if (navigator.share) { await navigator.share(datos); return; }
+    if (navigator.share) {
+      await navigator.share(datos);
+      return;
+    }
   } catch (e) {
     if (e && e.name == 'AbortError') return;
   }
-  try { await navigator.clipboard.writeText(url); toast('Enlace copiado'); }
-  catch (e) { toast(url); }
+  try {
+    await navigator.clipboard.writeText(url);
+    aviso('Enlace copiado');
+  } catch (e) {
+    aviso(url);
+  }
 }
