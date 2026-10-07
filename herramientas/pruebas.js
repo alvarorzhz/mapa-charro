@@ -73,7 +73,8 @@ prueba('Arrastrar y acercar el mapa', async p => {
   await p.mouse.down();
   await p.mouse.move(r[0] + 60, r[1] + 30, { steps: 6 });
   await p.mouse.up();
-  await p.waitForTimeout(300);
+  // Al soltar puede seguir deslizándose un poco: se espera a que pare
+  await p.waitForFunction(() => !document.querySelector('#m').style.transform, null, { timeout: 3000 });
   cierto((await vb()) != antes, 'el arrastre mueve el mapa');
   igual(await p.$eval('#m', e => e.style.transform), '', 'al soltar no queda transformación');
   cierto(!(await fichaAbierta(p)), 'arrastrar no abre fichas');
@@ -84,6 +85,45 @@ prueba('Arrastrar y acercar el mapa', async p => {
   await p.mouse.click(r[0], r[1]);
   cierto(await fichaAbierta(p), 'un toque abre la zona');
   cierto((await p.$eval('.lim.sel', e => e.getAttribute('d'))).length > 10, 'se marca el límite de la zona');
+});
+
+prueba('Zoom suave y deslizamiento', async p => {
+  const ancho = () => p.$eval('#m', e => +e.getAttribute('viewBox').split(' ')[2]);
+  const quieto = () =>
+    p.waitForFunction(() => !document.querySelector('#m').style.transform, null, { timeout: 3000 });
+  const w0 = await ancho();
+  await p.click('#zi');
+  await p.waitForTimeout(60);
+  cierto((await p.$eval('#m', e => e.style.transform)) != '', 'el botón + acerca con animación');
+  await quieto();
+  cierto(Math.abs((await ancho()) - w0 / 1.6) < 1, 'acaba acercado 1,6 veces');
+  // Dos toques seguidos se suman
+  await p.click('#zo');
+  await p.click('#zo');
+  await quieto();
+  const maximo = await p.evaluate(() => Math.max(ANCHO_MAPA, ALTO_MAPA / proporcionMapa()));
+  cierto(Math.abs((await ancho()) - Math.min(w0 * 1.6, maximo)) < 1, 'dos «−» seguidos se suman');
+  // Un arrastre rápido sigue deslizándose después de soltar
+  const r = await p.$eval('#m', e => {
+    const b = e.getBoundingClientRect();
+    return [b.x + b.width / 2, b.y + b.height / 2];
+  });
+  await p.click('#zi');
+  await quieto();
+  const x0 = await p.$eval('#m', e => +e.getAttribute('viewBox').split(' ')[0]);
+  await p.mouse.move(r[0], r[1]);
+  await p.mouse.down();
+  for (let i = 1; i <= 5; i++) {
+    await p.mouse.move(r[0] - i * 12, r[1]);
+    await p.waitForTimeout(16);
+  }
+  await p.mouse.up();
+  await p.waitForTimeout(30);
+  cierto(await p.evaluate(() => !!animacionMapa), 'sigue deslizándose al soltar');
+  await quieto();
+  const x1 = await p.$eval('#m', e => +e.getAttribute('viewBox').split(' ')[0]);
+  cierto(x1 > x0, 'el mapa ha avanzado hacia donde se arrastró');
+  igual(await p.evaluate(() => animacionMapa), null, 'la animación termina');
 });
 
 prueba('Buscar, abrir ficha y marcar', async p => {

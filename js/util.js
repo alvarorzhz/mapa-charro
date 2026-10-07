@@ -132,63 +132,102 @@ function crearBotonesFiltro(actual, alElegir) {
 }
 
 // --- Gestos sobre un mapa SVG -----------------------------------------------
-// Rueda del ratón para acercar, arrastrar con un dedo o el ratón y pinza con dos dedos.
+// Arrastrar con un dedo o el ratón, pellizcar con dos dedos y rueda del ratón.
 //   aPunto(clientX, clientY) -> [x, y] en coordenadas del mapa
 //   zoom(factor, x, y)       acerca (factor > 1) o aleja alrededor de (x, y)
 //   mover(fx, fy)            desplaza el mapa una fracción fx/fy de su ancho/alto en pantalla
 //   puedeMover()             false si el mapa no se puede arrastrar ahora
-// Devuelve un objeto cuyo campo «arrastre» dice cuántos píxeles se ha movido el puntero desde que
-// se pulsó: sirve para no tomar un arrastre por un toque (ver UMBRAL_TOQUE).
+//   medir()                  rectángulo del mapa en pantalla (por defecto, el del elemento)
+//   rueda(deltaPx, x, y)     opcional: qué hacer con la rueda (si no, zoom a saltos)
+//   alTocar()                opcional: al apoyar un dedo (p. ej. para parar una animación)
+//   alSoltar(vx, vy)         opcional: al levantar el último dedo, con la velocidad del arrastre en px/ms
+// Devuelve { arrastre, dedos }: arrastre = píxeles movidos desde que se pulsó (para no tomar un
+// arrastre por un toque, ver UMBRAL_TOQUE) y dedos = punteros apoyados ahora.
 const UMBRAL_TOQUE = 6;
 function activarGestos(
   el,
-  { aPunto, zoom, mover, puedeMover = () => true, medir = () => el.getBoundingClientRect(), alSoltar }
+  {
+    aPunto,
+    zoom,
+    mover,
+    puedeMover = () => true,
+    medir = () => el.getBoundingClientRect(),
+    rueda,
+    alTocar,
+    alSoltar
+  }
 ) {
   const punteros = new Map(),
-    gestos = { arrastre: 0 };
-  let distanciaPinza = 0;
+    gestos = { arrastre: 0, dedos: 0 };
+  let muestras = []; // últimos movimientos { t, dx, dy } para calcular la velocidad al soltar
   el.addEventListener(
     'wheel',
     e => {
       e.preventDefault();
-      const [x, y] = aPunto(e.clientX, e.clientY);
-      zoom(e.deltaY < 0 ? 1.25 : 1 / 1.25, x, y);
+      const [x, y] = aPunto(e.clientX, e.clientY),
+        delta = e.deltaY * (e.deltaMode == 1 ? 16 : e.deltaMode == 2 ? 400 : 1);
+      if (rueda) rueda(delta, x, y);
+      else zoom(delta < 0 ? 1.25 : 1 / 1.25, x, y);
     },
     { passive: false }
   );
   el.addEventListener('pointerdown', e => {
     punteros.set(e.pointerId, [e.clientX, e.clientY]);
+    gestos.dedos = punteros.size;
     gestos.arrastre = 0;
-    distanciaPinza = 0;
+    muestras = [];
+    if (alTocar) alTocar();
   });
   el.addEventListener('pointermove', e => {
     if (!punteros.has(e.pointerId)) return;
     const antes = punteros.get(e.pointerId),
       ahora = [e.clientX, e.clientY];
     if (punteros.size == 2) {
+      // Pellizco: el punto del mapa que estaba entre los dedos sigue entre los dedos, acercándose
+      // o alejándose según cambia su separación, y moviéndose con ellos
       const otro = [...punteros.entries()].find(a => a[0] != e.pointerId)[1],
-        d = Math.hypot(ahora[0] - otro[0], ahora[1] - otro[1]);
-      if (distanciaPinza) {
-        const [x, y] = aPunto((ahora[0] + otro[0]) / 2, (ahora[1] + otro[1]) / 2);
-        zoom(d / distanciaPinza, x, y);
+        dAntes = Math.hypot(antes[0] - otro[0], antes[1] - otro[1]),
+        dAhora = Math.hypot(ahora[0] - otro[0], ahora[1] - otro[1]),
+        medioAntes = [(antes[0] + otro[0]) / 2, (antes[1] + otro[1]) / 2],
+        medioAhora = [(ahora[0] + otro[0]) / 2, (ahora[1] + otro[1]) / 2];
+      if (dAntes > 0 && dAhora > 0) {
+        const [x, y] = aPunto(medioAntes[0], medioAntes[1]);
+        zoom(dAhora / dAntes, x, y);
+        const r = medir();
+        mover((medioAhora[0] - medioAntes[0]) / r.width, (medioAhora[1] - medioAntes[1]) / r.height);
       }
-      distanciaPinza = d;
       gestos.arrastre = UMBRAL_TOQUE + 3;
-    } else {
+      muestras = [];
+    } else if (punteros.size == 1) {
       const dx = ahora[0] - antes[0],
         dy = ahora[1] - antes[1];
       gestos.arrastre += Math.abs(dx) + Math.abs(dy);
       if (gestos.arrastre > UMBRAL_TOQUE && puedeMover()) {
         const r = medir();
         mover(dx / r.width, dy / r.height);
+        const t = performance.now();
+        muestras.push({ t, dx, dy });
+        muestras = muestras.filter(m => t - m.t < 100);
       }
     }
     punteros.set(e.pointerId, ahora);
   });
   const soltar = e => {
+    if (!punteros.has(e.pointerId)) return;
     punteros.delete(e.pointerId);
-    distanciaPinza = 0;
-    if (!punteros.size && alSoltar) alSoltar();
+    gestos.dedos = punteros.size;
+    if (punteros.size) return;
+    // Velocidad media de los últimos 100 ms, si el dedo seguía moviéndose al soltar
+    const t = performance.now();
+    let vx = 0,
+      vy = 0;
+    if (muestras.length > 1 && t - muestras[muestras.length - 1].t < 50) {
+      const dt = Math.max(16, t - muestras[0].t);
+      vx = muestras.reduce((s, m) => s + m.dx, 0) / dt;
+      vy = muestras.reduce((s, m) => s + m.dy, 0) / dt;
+    }
+    muestras = [];
+    if (alSoltar) alSoltar(vx, vy);
   };
   el.addEventListener('pointerup', soltar);
   el.addEventListener('pointercancel', soltar);

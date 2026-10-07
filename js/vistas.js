@@ -177,7 +177,7 @@ addEventListener('keydown', e => {
     e.target.tagName != 'TEXTAREA' &&
     (pestana == 'map' || esEscritorio())
   ) {
-    if (e.key == '+' || e.key == '=') zoomMapa(1.6);
-    else if (e.key == '-') zoomMapa(1 / 1.6);
+    if (e.key == '+' || e.key == '=') zoomSuave(1.6);
+    else if (e.key == '-') zoomSuave(1 / 1.6);
   }
 });

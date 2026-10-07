@@ -336,9 +336,9 @@ function ajustarVista() {
   recolocarSegunZoom(true);
 }
 
-// Durante los gestos (arrastrar, pellizcar, rueda) no se redibuja el SVG: se desplaza y escala como
-// una imagen con transform de CSS, que mueve la tarjeta gráfica sin repintar. Al soltar (o tras una
-// pausa de la rueda) se aplica la vista de verdad y se recolocan etiquetas y pictogramas.
+// Durante los gestos y animaciones (arrastrar, pellizcar, rueda, deslizar, botones +/−) no se redibuja
+// el SVG: se desplaza y escala como una imagen con transform de CSS, que mueve la tarjeta gráfica sin
+// repintar. Al terminar se aplica la vista de verdad y se recolocan etiquetas y pictogramas.
 let vistaInicioGesto = null, // viewBox que está pintado mientras dura el gesto
   rectInicioGesto = null, // posición del mapa en pantalla sin transformar
   temporizadorGesto = 0;
@@ -357,12 +357,15 @@ function ajustarVistaPronto() {
     tx = ((a.x - v.x) / v.w) * (tamMapa.w || rectInicioGesto.width),
     ty = ((a.y - v.y) / v.h) * (tamMapa.h || rectInicioGesto.height);
   mapaSvg.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + s + ')';
+  // Con los dedos apoyados o una animación en marcha, se espera a que acaben; si no (rueda), a una pausa
   clearTimeout(temporizadorGesto);
-  temporizadorGesto = setTimeout(terminarGesto, ESPERA_FIN_GESTO);
+  const enCurso = (typeof gestosMapa != 'undefined' && gestosMapa.dedos) || animacionMapa;
+  if (!enCurso) temporizadorGesto = setTimeout(terminarGesto, ESPERA_FIN_GESTO);
 }
 
 function terminarGesto() {
   clearTimeout(temporizadorGesto);
+  if (animacionMapa) return; // la animación lo llamará al acabar
   if (!vistaInicioGesto) return;
   vistaInicioGesto = rectInicioGesto = null;
   mapaSvg.style.transform = '';
@@ -470,12 +473,98 @@ function zoomMapa(factor, cx = vistaMapa.x + vistaMapa.w / 2, cy = vistaMapa.y +
   }
 }
 
-$('#zi').onclick = () => zoomMapa(1.6);
-$('#zo').onclick = () => zoomMapa(1 / 1.6);
+// --- Movimiento suave --------------------------------------------------------
+// Una sola animación a la vez: o se va hacia un encuadre (zoom suave) o se sigue deslizando (inercia).
+let animacionMapa = null;
+
+function pararAnimacion() {
+  if (!animacionMapa) return;
+  cancelAnimationFrame(animacionMapa.marco);
+  animacionMapa = null;
+}
+
+// Lleva la vista al encuadre «destino» en «ms» milisegundos, frenando al final
+function animarVista(destino, ms = 260) {
+  pararAnimacion();
+  const desde = { ...vistaMapa },
+    inicio = performance.now(),
+    suave = t => 1 - Math.pow(1 - t, 3);
+  animacionMapa = { destino };
+  const paso = ahora => {
+    const t = Math.min(1, (ahora - inicio) / ms),
+      k = suave(t),
+      w = desde.w * Math.pow(destino.w / desde.w, k); // el zoom se interpola en escala logarítmica
+    // Con punto fijo, se acerca o aleja alrededor de él (no se mueve en pantalla); si al final no
+    // cae justo en el destino (p. ej. al encadenar dos zooms), la diferencia se reparte poco a poco
+    const fijo = destino.fijo;
+    if (fijo) {
+      const alrededor = (f, d, r) => f - (f - d) * r,
+        rFinal = destino.w / desde.w,
+        r = w / desde.w;
+      vistaMapa.x = alrededor(fijo[0], desde.x, r) + (destino.x - alrededor(fijo[0], desde.x, rFinal)) * k;
+      vistaMapa.y = alrededor(fijo[1], desde.y, r) + (destino.y - alrededor(fijo[1], desde.y, rFinal)) * k;
+    } else {
+      vistaMapa.x = desde.x + (destino.x - desde.x) * k;
+      vistaMapa.y = desde.y + (destino.y - desde.y) * k;
+    }
+    vistaMapa.w = w;
+    ajustarVistaPronto();
+    if (t < 1) animacionMapa.marco = requestAnimationFrame(paso);
+    else {
+      animacionMapa = null;
+      terminarGesto();
+    }
+  };
+  animacionMapa.marco = requestAnimationFrame(paso);
+}
+
+// Zoom animado alrededor de (cx, cy). Si ya había uno en marcha, se suma a su destino.
+function zoomSuave(factor, cx = vistaMapa.x + vistaMapa.w / 2, cy = vistaMapa.y + vistaMapa.h / 2, ms) {
+  const base = animacionMapa && animacionMapa.destino ? animacionMapa.destino : vistaMapa,
+    w = Math.min(Math.max(ANCHO_MAPA, ALTO_MAPA / proporcionMapa()), Math.max(ANCHO_MINIMO, base.w / factor)),
+    r = w / base.w;
+  animarVista({ x: cx - (cx - base.x) * r, y: cy - (cy - base.y) * r, w, fijo: [cx, cy] }, ms);
+}
+
+// Al soltar un arrastre rápido, el mapa sigue deslizándose y frena poco a poco
+function deslizar(vx, vy) {
+  if (Math.hypot(vx, vy) < 0.15) return terminarGesto(); // px/ms: si iba despacio, se para en seco
+  pararAnimacion();
+  const rapidez = Math.hypot(vx, vy),
+    tope = Math.min(1, 2.5 / rapidez); // no más de 2,5 px/ms, para que un tirón no lo mande lejos
+  vx *= tope;
+  vy *= tope;
+  let ultimo = performance.now();
+  animacionMapa = {};
+  const paso = ahora => {
+    const dt = Math.min(40, ahora - ultimo),
+      roce = Math.pow(0.92, dt / 16);
+    ultimo = ahora;
+    vistaMapa.x -= ((vx * dt) / (tamMapa.w || 380)) * vistaMapa.w;
+    vistaMapa.y -= ((vy * dt) / (tamMapa.h || 456)) * vistaMapa.h;
+    vx *= roce;
+    vy *= roce;
+    ajustarVistaPronto();
+    if (Math.hypot(vx, vy) > 0.04) animacionMapa.marco = requestAnimationFrame(paso);
+    else {
+      animacionMapa = null;
+      terminarGesto();
+    }
+  };
+  animacionMapa.marco = requestAnimationFrame(paso);
+}
+
+$('#zi').onclick = () => zoomSuave(1.6);
+$('#zo').onclick = () => zoomSuave(1 / 1.6);
 // Alterna entre la ciudad y el mapa entero
 $('#zr').onclick = () => {
-  vistaMapa = vistaMapa.w < 300 ? { x: 0, y: 0, w: 9999, h: 9999 } : encuadreInicial();
-  ajustarVista();
+  const AR = proporcionMapa(),
+    destino = vistaMapa.w < 300 ? { w: Math.max(ANCHO_MAPA, ALTO_MAPA / AR) } : encuadreInicial();
+  if (destino.x === undefined) {
+    destino.x = (ANCHO_MAPA - destino.w) / 2;
+    destino.y = (ALTO_MAPA - destino.w * AR) / 2;
+  }
+  animarVista(destino, 380);
 };
 
 const gestosMapa = activarGestos(mapaSvg, {
@@ -493,7 +582,15 @@ const gestosMapa = activarGestos(mapaSvg, {
     ajustarVistaPronto();
   },
   medir: () => rectInicioGesto || mapaSvg.getBoundingClientRect(),
-  alSoltar: terminarGesto
+  // Rueda: zoom animado proporcional al giro (suave con ratón y con el panel táctil del portátil)
+  rueda: (delta, x, y) => zoomSuave(Math.exp(-delta * 0.0022), x, y, 180),
+  alTocar: () => {
+    if (animacionMapa) {
+      pararAnimacion(); // apoyar el dedo para el deslizamiento o el zoom en marcha
+      terminarGesto();
+    }
+  },
+  alSoltar: deslizar
 });
 
 // Si cambia el tamaño del mapa en pantalla (girar el móvil, cambiar de pestaña…), se vuelve a medir
