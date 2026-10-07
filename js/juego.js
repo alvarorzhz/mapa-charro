@@ -111,7 +111,7 @@ const puntosPorDistancia = km => Math.round(80 * Math.exp(-km / 1.2));
 const formatoKm = km => (km < 1 ? Math.round(km * 1000) + ' m' : km.toFixed(1).replace('.', ',') + ' km');
 
 // --- Capa del mapa con la solución ------------------------------------------
-const capaJuego = crearSvg('g', { id: 'jgo', style: 'pointer-events:none' });
+const capaJuego = crearSvg('g', { id: 'jgo', style: 'pointer-events:none', 'aria-hidden': 'true' });
 mapaSvg.insertBefore(capaJuego, $('#rl'));
 
 function pintarSolucion(tocada, buena) {
@@ -163,6 +163,8 @@ function encuadrarCiudad() {
 const panelJuego = crear('aside', 'sh jg');
 panelJuego.id = 'jp';
 panelJuego.setAttribute('aria-live', 'polite');
+panelJuego.setAttribute('role', 'region');
+panelJuego.setAttribute('aria-label', 'Juego ¿Dónde está?');
 document.body.appendChild(panelJuego);
 
 function pintarPanelJuego() {
@@ -196,7 +198,13 @@ function pintarPanelJuego() {
     cuerpo.appendChild(img);
   } else cuerpo.appendChild(crear('p', 'jpista', q.texto));
   if (!juego.respondida)
-    cuerpo.appendChild(crear('p', 'mu', 'Toca en el mapa la zona. Puedes acercar y mover el mapa.'));
+    cuerpo.appendChild(
+      crear(
+        'p',
+        'mu',
+        'Toca en el mapa la zona (puedes acercar y mover el mapa). Con teclado: flechas para moverte e Intro para responder.'
+      )
+    );
   else {
     const r = juego.ultima;
     cuerpo.appendChild(
@@ -282,6 +290,7 @@ function empezarJuego(diario) {
   juego.ronda = juego.puntos = 0;
   juego.resultados = [];
   juego.respondida = false;
+  juego.porTeclado = false;
   juego.activo = true;
   capaJuego.textContent = '';
   document.body.classList.add('jugando');
@@ -292,7 +301,8 @@ function empezarJuego(diario) {
   // En el móvil, que el mapa quede arriba, a la vista
   if (!esEscritorio()) {
     const arriba = document.querySelector('.mw').getBoundingClientRect().top;
-    if (Math.abs(arriba - 8) > 4) window.scrollTo({ top: window.scrollY + arriba - 8, behavior: 'smooth' });
+    if (Math.abs(arriba - 8) > 4)
+      window.scrollTo({ top: window.scrollY + arriba - 8, behavior: comoDesplazar() });
   }
 }
 
@@ -318,6 +328,8 @@ function siguientePregunta() {
   capaJuego.textContent = '';
   pintarPanelJuego();
   panelJuego.querySelector('.sb').scrollTop = 0;
+  // Con teclado, de vuelta al mapa para responder la siguiente (mapa-teclado.js)
+  if (juego.porTeclado) zonaConFoco.e.focus({ preventScroll: true });
 }
 
 function terminarJuego() {
@@ -371,9 +383,14 @@ async function compartirResultadoJuego() {
   }
 }
 
-// Botón: el reto del día si aún no se ha jugado hoy; si ya, una partida libre
-$('#jug').onclick = () => {
+// Botón: el reto del día si aún no se ha jugado hoy; si ya, una partida libre.
+// Pulsado con el teclado (e.detail == 0), el foco pasa al mapa para responder con las flechas.
+$('#jug').onclick = e => {
   const yaHoy = (progreso.j || {}).d == fechaHoy();
   empezarJuego(true);
   if (yaHoy) aviso('Reto de hoy hecho: partida libre');
+  if (e.detail == 0) {
+    juego.porTeclado = true;
+    zonaConFoco.e.focus({ preventScroll: true });
+  }
 };

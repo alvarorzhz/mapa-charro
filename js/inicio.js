@@ -1,4 +1,9 @@
 // Arranque
+// Versión al pie de la página: el número ?v= que pone herramientas/version.js en cada cambio
+{
+  const v = (document.querySelector('script[src*="?v="]') || {}).src;
+  $('#ver').textContent = v ? 'Versión ' + v.split('?v=')[1] : '';
+}
 ajustarVista();
 actualizar();
 aplicarEnlace();
@@ -21,3 +26,6 @@ if (
     })
     .catch(e => console.warn('Sin modo sin conexión:', e));
 }
+
+// La primera vez, la bienvenida (bienvenida.js), cuando ya se ha pintado el mapa
+if (tocaBienvenida()) setTimeout(() => mostrarBienvenida(), 300);

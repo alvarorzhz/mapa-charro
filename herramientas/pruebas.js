@@ -167,6 +167,99 @@ prueba('Nombres de avenidas solo al pulsarlas', async p => {
   igual(await etiqueta(), '', 'al cerrar la ficha, el nombre desaparece');
 });
 
+prueba(
+  'Bienvenida la primera vez',
+  async (p, url) => {
+    await p.waitForSelector('.modal .bienvenida');
+    igual(await texto(p, '.modal h3'), '¡Bienvenido al Mapa charro!', 'sale al entrar la primera vez');
+    for (let i = 0; i < 3; i++) await p.click('.modal .botones button.on');
+    igual(await texto(p, '.modal .botones button.on'), '¡A pisar Salamanca!', 'cuatro pasos');
+    await p.click('.modal .botones button:first-child');
+    igual(await texto(p, '.modal h3'), 'Mucho por descubrir', '«Anterior» vuelve un paso');
+    await p.keyboard.press('Escape');
+    cierto(!(await p.$('.modal')), 'Esc la cierra');
+    await p.reload();
+    await p.waitForTimeout(600);
+    cierto(!(await p.$('.modal')), 'la segunda vez ya no sale');
+    await p.click('#ayuda');
+    cierto(!!(await p.$('.modal .bienvenida')), 'el botón «?» la vuelve a abrir');
+    await p.click('.modal .cerrar');
+    // Entrando por un enlace a una ficha, no tapa la ficha
+    await p.evaluate(() => localStorage.removeItem('charro-bienvenida'));
+    await p.goto(url + '#tejares');
+    await p.waitForTimeout(600);
+    cierto(!(await p.$('.modal')) && (await fichaAbierta(p)), 'con un enlace a una ficha no sale');
+  },
+  { conBienvenida: true }
+);
+
+prueba('Mapa con teclado y lector de pantalla', async p => {
+  const foco = () =>
+    p.evaluate(() => {
+      const e = document.activeElement,
+        z = zonas.find(q => q.e == e);
+      return z ? z.id : e.id || e.tagName;
+    });
+  igual(await p.$eval('#m', e => e.getAttribute('role')), 'group', 'el mapa no es una imagen opaca');
+  igual(await p.$$eval('#zg [role=button]', es => es.length), 59, 'cada zona es un botón');
+  igual(await p.$$eval('#zg [tabindex="0"]', es => es.length), 1, 'una sola parada de Tab');
+  cierto(
+    await p.evaluate(() => {
+      const orden = [...document.querySelectorAll('#zg polygon')].map(e => zonas.find(z => z.e == e).g),
+        ultimoPueblo = orden.lastIndexOf(5),
+        primerBarrio = orden.findIndex(g => g < 5);
+      return ultimoPueblo < primerBarrio;
+    }),
+    'los pueblos de alrededor se pintan debajo de los barrios'
+  );
+  // Con Tab desde el buscador se llega al mapa, y con un Tab más se sale
+  await p.focus('#q');
+  let i = 0;
+  while (
+    i++ < 15 &&
+    !(await p.evaluate(() => document.activeElement.closest && !!document.activeElement.closest('#zg')))
+  )
+    await p.keyboard.press('Tab');
+  igual(await foco(), 'centro', 'se entra en el mapa por el Centro');
+  igual(
+    await p.evaluate(() => document.activeElement.getAttribute('aria-label')),
+    'Centro, Centro histórico',
+    'el lector dice nombre y parte de la ciudad'
+  );
+  cierto(
+    (await p.$eval('.lim.foco', e => e.getAttribute('d'))).length > 10,
+    'se ve el contorno de la zona con el foco'
+  );
+  // Flecha a la derecha: a una vecina que está más al este
+  await p.keyboard.press('ArrowRight');
+  const este = await p.evaluate(() => {
+    const c = zonas.find(z => z.id == 'centro'),
+      z = zonas.find(q => q.e == document.activeElement);
+    return { id: z.id, alEste: z.x > c.x, vecina: c.vecinos.includes(z) };
+  });
+  cierto(este.alEste && este.vecina, 'la flecha lleva a la zona vecina en esa dirección');
+  // Intro abre la ficha con el foco en el título; Esc la cierra y el foco vuelve a la zona
+  await p.keyboard.press('Enter');
+  cierto(await fichaAbierta(p), 'Intro abre la ficha');
+  igual(await foco(), 'nm', 'el foco pasa al título de la ficha');
+  await p.keyboard.press('Escape');
+  cierto(!(await fichaAbierta(p)), 'Esc cierra la ficha');
+  igual(await foco(), este.id, 'y el foco vuelve a la zona');
+  await p.keyboard.press('Home');
+  igual(await foco(), 'centro', 'Inicio vuelve al Centro');
+  await p.keyboard.press('t');
+  cierto(
+    /^T/.test(await p.evaluate(() => zonas.find(q => q.e == document.activeElement).n)),
+    'una letra salta a una zona por esa letra'
+  );
+  // Un Tab más sale del mapa
+  await p.keyboard.press('Tab');
+  cierto(await p.evaluate(() => !document.activeElement.closest('#zg')), 'con Tab se sale del mapa');
+  // Versión al pie y sin el botón de «Resto de la provincia»
+  cierto(/^Versión \d+$/.test(await texto(p, '#ver')), 'versión al pie');
+  cierto(!(await p.$('#rs')), 'sin botón de Resto de la provincia');
+});
+
 prueba('Buscar, abrir ficha y marcar', async p => {
   await p.fill('#q', 'tejares');
   await p.press('#q', 'Enter');
@@ -257,6 +350,16 @@ prueba('Ruta a pie', async p => {
   await p.click('.navruta button.principal');
   igual(await p.evaluate(() => location.hash), '#ruta/2', 'siguiente parada');
   cierto(await p.$eval('#ruta', e => e.style.display != 'none'), 'camino dibujado');
+  // El botón la apaga, también con una parada abierta, y la vuelve a encender
+  await p.click('#rt');
+  cierto(await p.$eval('#ruta', e => e.style.display == 'none'), 'el botón quita la ruta');
+  cierto(!(await fichaAbierta(p)), 'y cierra la ficha de la parada');
+  igual(await p.$eval('#rt', e => e.getAttribute('aria-pressed')), 'false', 'botón desmarcado');
+  await p.click('#rt');
+  cierto(await p.$eval('#ruta', e => e.style.display != 'none'), 'otra vez se enciende');
+  await p.click('#x');
+  await p.click('#rt');
+  cierto(await p.$eval('#ruta', e => e.style.display == 'none'), 'con la ficha cerrada también se apaga');
 });
 
 prueba(
@@ -448,6 +551,9 @@ prueba(
       const errores = [];
       p.on('pageerror', e => errores.push(e.message));
       await p.route(/fonts\.(googleapis|gstatic)\.com/, r => r.abort());
+      // La bienvenida de la primera vez taparía la app: se da por vista salvo en su propia prueba
+      if (!opciones.conBienvenida)
+        await p.addInitScript(() => localStorage.setItem('charro-bienvenida', '1'));
       if (opciones.antes) await p.addInitScript(opciones.antes);
       try {
         await p.goto(url);

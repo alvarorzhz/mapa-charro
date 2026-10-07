@@ -6,13 +6,15 @@ const ANCHO_MINIMO = 16; // zoom máximo (ancho del encuadre en unidades del map
 
 // --- Zonas ------------------------------------------------------------------
 
+// Lo que dice un lector de pantalla al llegar a la zona: «Tejares, Zona oeste, pisada»
+const etiquetaAccesible = (z, marca) =>
+  z.n + ', ' + NOMBRES_GRUPOS[z.g] + (marca == 'v' ? ', pisada' : marca == 'w' ? ', quieres ir' : '');
+
 // Colores y sello «V» de una zona según su marca
 function pintarZona(z) {
   const marca = progreso.z[z.id];
-  if (z.id == 'resto') {
-    $('#rs').className = 'rs' + (marca ? ' ' + marca : '');
-    return;
-  }
+  if (z.id == 'resto') return; // sin dibujo en el mapa
+  z.e.setAttribute('aria-label', etiquetaAccesible(z, marca));
   const clase = 'z c' + z.g + (ZONAS_NO_OFICIALES.has(z.id) ? ' sub' : '');
   z.e.setAttribute(
     'class',
@@ -45,7 +47,8 @@ function pintarZona(z) {
 function construirZonas(grupo, base) {
   grupo.forEach(z => {
     let P = base;
-    if (LIMITES_BARRIOS[z.id]) P = LIMITES_BARRIOS[z.id].map(q => proyectar(q[0], q[1]));
+    const limite = LIMITES_BARRIOS[z.id] || LIMITES_ALFOZ[z.id]; // barrio oficial o término municipal
+    if (limite) P = limite.map(q => proyectar(q[0], q[1]));
     else grupo.forEach(o => o != z && (P = recortarSemiplano(P, [z.x, z.y], [o.x, o.y])));
     z.P = P;
     const xs = P.map(q => q[0]),
@@ -57,6 +60,9 @@ function construirZonas(grupo, base) {
       { points: P.map(q => q[0].toFixed(1) + ',' + q[1].toFixed(1)).join(' ') },
       $('#zg')
     );
+    // Cada zona es un botón para el teclado y los lectores de pantalla (mapa-teclado.js)
+    z.e.setAttribute('role', 'button');
+    z.e.setAttribute('tabindex', '-1');
     z.e.onclick = () => {
       if (gestosMapa.arrastre > UMBRAL_TOQUE) return;
       // Durante el juego «¿Dónde está?» (juego.js), tocar una zona es responder
@@ -82,7 +88,8 @@ function construirZonas(grupo, base) {
   });
 }
 
-// Pueblos de alrededor: se reparten todo el lienzo; barrios: el contorno de la ciudad
+// Pueblos de alrededor: su término municipal real (LIMITES_ALFOZ); barrios: el contorno de la ciudad.
+// (El lienzo entero solo hace falta como base si a algún pueblo le faltara su término.)
 construirZonas(
   zonas.filter(z => z.g == 5),
   [
@@ -100,11 +107,33 @@ pintarZona(zonaResto);
 
 // Tonos alternos: dos zonas vecinas nunca llevan el mismo tono (coloreado voraz con 4 tonos)
 {
+  // Son vecinas si al menos dos vértices de una caen sobre el borde de la otra (los términos municipales
+  // vienen simplificados por separado, así que sus vértices no coinciden: se mide hasta los lados)
+  const caja = P => {
+      const xs = P.map(q => q[0]),
+        ys = P.map(q => q[1]);
+      return [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)];
+    },
+    distanciaALado = (p, a, b) => {
+      const dx = b[0] - a[0],
+        dy = b[1] - a[1],
+        t = Math.max(0, Math.min(1, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / (dx * dx + dy * dy || 1)));
+      return Math.hypot(p[0] - a[0] - t * dx, p[1] - a[1] - t * dy);
+    },
+    TOLERANCIA = 0.8;
+  zonas.forEach(z => (z.caja = caja(z.P)));
   const cerca = (a, b) => {
+    const [ax0, ay0, ax1, ay1] = a.caja,
+      [bx0, by0, bx1, by1] = b.caja;
+    if (ax0 > bx1 + TOLERANCIA || bx0 > ax1 + TOLERANCIA || ay0 > by1 + TOLERANCIA || by0 > ay1 + TOLERANCIA)
+      return false;
     let comunes = 0;
     for (const p of a.P)
-      if (b.P.some(q => Math.abs(p[0] - q[0]) < 0.6 && Math.abs(p[1] - q[1]) < 0.6) && ++comunes >= 2)
-        return true;
+      for (let i = 0; i < b.P.length; i++)
+        if (distanciaALado(p, b.P[i], b.P[(i + 1) % b.P.length]) < TOLERANCIA) {
+          if (++comunes >= 2) return true;
+          break;
+        }
     return false;
   };
   const vecinos = new Map(zonas.map(z => [z, zonas.filter(o => o != z && cerca(z, o))]));
@@ -115,7 +144,16 @@ pintarZona(zonaResto);
       z.tono = [0, 1, 2, 3].find(t => !usados.has(t)) ?? 0;
       z.e.classList.add('t' + z.tono);
     });
+  zonas.forEach(z => (z.vecinos = vecinos.get(z))); // para moverse con las flechas
 }
+
+// Orden de las zonas en la página, que es el orden en que las recorre un lector de pantalla: por partes
+// de la ciudad y por nombre. Los pueblos de alrededor van primero porque su dibujo se extiende por
+// debajo de la ciudad (los barrios se pintan encima).
+const ordenGrupo = g => (g == 5 ? -1 : g);
+[...zonas]
+  .sort((a, b) => ordenGrupo(a.g) - ordenGrupo(b.g) || a.n.localeCompare(b.n, 'es'))
+  .forEach(z => $('#zg').appendChild(z.e));
 
 // --- Límites y río ----------------------------------------------------------
 // Los límites se dibujan encima de las carreteras (capa #lim), con un halo claro para que se lean
@@ -136,8 +174,9 @@ const trazoAnillo = P => 'M' + P.map(puntoTexto).join('L') + 'Z';
   trazo(repartos.map(z => trazoAnillo(z.P)).join(''), 'reparto');
   trazo(oficiales.map(z => trazoAnillo(z.P)).join('') + lindes, 'linde');
   trazo(ciudad, 'ciudad');
-  // Contorno de la zona seleccionada, encima de todo
-  var limiteSeleccion = trazo('', 'sel');
+  // Contorno de la zona seleccionada, encima de todo, y el de la zona con el foco del teclado
+  var limiteSeleccion = trazo('', 'sel'),
+    limiteFoco = trazo('', 'foco');
 }
 
 // --- Río ----------------------------------------------------------------------
@@ -518,6 +557,14 @@ function pararAnimacion() {
 // Lleva la vista al encuadre «destino» en «ms» milisegundos, frenando al final
 function animarVista(destino, ms = 260) {
   pararAnimacion();
+  if (movimientoReducido()) {
+    vistaMapa.x = destino.x;
+    vistaMapa.y = destino.y;
+    vistaMapa.w = destino.w;
+    terminarGesto();
+    ajustarVista();
+    return;
+  }
   const desde = { ...vistaMapa },
     inicio = performance.now(),
     suave = t => 1 - Math.pow(1 - t, 3);
@@ -560,7 +607,7 @@ function zoomSuave(factor, cx = vistaMapa.x + vistaMapa.w / 2, cy = vistaMapa.y 
 
 // Al soltar un arrastre rápido, el mapa sigue deslizándose y frena poco a poco
 function deslizar(vx, vy) {
-  if (Math.hypot(vx, vy) < 0.15) return terminarGesto(); // px/ms: si iba despacio, se para en seco
+  if (Math.hypot(vx, vy) < 0.15 || movimientoReducido()) return terminarGesto(); // px/ms: si iba despacio, se para en seco
   pararAnimacion();
   const rapidez = Math.hypot(vx, vy),
     tope = Math.min(1, 2.5 / rapidez); // no más de 2,5 px/ms, para que un tirón no lo mande lejos

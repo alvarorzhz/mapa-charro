@@ -81,19 +81,26 @@ function modoBotonesFicha(modo) {
   document.querySelectorAll('.bt button[data-s]').forEach(b => (b.hidden = modo != 'zona'));
 }
 
+// Dónde estaba el foco antes de abrir la ficha, para devolverlo al cerrarla
+let focoAntesDeFicha = null;
+
 function mostrarFicha() {
+  if (!$('#sh').classList.contains('o')) focoAntesDeFicha = document.activeElement;
   if (typeof juego != 'undefined' && juego.activo) salirJuego(); // abrir una ficha (p. ej. desde el buscador) deja el juego
   document.querySelector('.sb').scrollTop = 0;
   $('#sh').classList.remove('grande');
   // En el móvil, sube la página hasta el mapa para que se vea por encima del panel
   if (!esEscritorio() && pestana == 'map') {
     const arriba = document.querySelector('.mw').getBoundingClientRect().top;
-    if (Math.abs(arriba - 8) > 4) window.scrollTo({ top: window.scrollY + arriba - 8, behavior: 'smooth' });
+    if (Math.abs(arriba - 8) > 4)
+      window.scrollTo({ top: window.scrollY + arriba - 8, behavior: comoDesplazar() });
   }
   ajustarVista();
   $('#sh').classList.add('o');
   $('#mn').classList.add('o');
   todasLasZonas.forEach(pintarZona);
+  // El foco va al título: un lector de pantalla empieza a leer la ficha por ahí
+  $('#nm').focus({ preventScroll: true });
 }
 
 function abrirFicha(id) {
@@ -193,6 +200,9 @@ function pintarBotonesFicha() {
 }
 
 function cerrarFicha() {
+  const volver = focoAntesDeFicha,
+    focoEnFicha = $('#sh').contains(document.activeElement) || document.activeElement == document.body;
+  focoAntesDeFicha = null;
   resaltarVia(null);
   zonaAbierta = null;
   olvidarMonumento();
@@ -200,6 +210,9 @@ function cerrarFicha() {
   $('#mn').classList.remove('o');
   todasLasZonas.forEach(pintarZona);
   ajustarVista();
+  // El foco vuelve a donde estaba (la zona del mapa, el buscador…), si sigue en la página
+  if (focoEnFicha && volver && volver.isConnected && volver != document.body)
+    volver.focus({ preventScroll: true });
 }
 
 document.querySelectorAll('.bt button[data-s]').forEach(
@@ -216,7 +229,6 @@ $('#x').onclick = () => {
   volverEnlace();
 };
 $('#cmp').onclick = () => compartir();
-$('#rs').onclick = () => abrirFicha('resto');
 
 // Asa del panel en el móvil: tocarla o arrastrarla hacia arriba lo agranda; hacia abajo lo reduce o lo cierra
 {

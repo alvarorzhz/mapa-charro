@@ -49,6 +49,7 @@ function activarRuta(si) {
   rutaActiva = si;
   capaRuta.style.display = si ? '' : 'none';
   $('#rt').classList.toggle('on', si);
+  $('#rt').setAttribute('aria-pressed', si);
   if (!si) paradaActual = -1;
   ajustarVista();
 }
@@ -202,5 +203,10 @@ function empezarPorLaMasCercana() {
   );
 }
 
-$('#rt').onclick = () =>
-  rutaActiva && $('#sh').classList.contains('o') && paradaActual < 0 ? activarRuta(false) : abrirRuta();
+// El botón enciende y apaga la ruta. Al apagarla, si la ficha abierta es la de la ruta o una parada, se cierra.
+$('#rt').onclick = () => {
+  if (!rutaActiva) return abrirRuta();
+  const fichaDeRuta = $('#sh').classList.contains('o') && hashActual().split('/')[0] == 'ruta';
+  activarRuta(false);
+  if (fichaDeRuta) $('#x').click();
+};

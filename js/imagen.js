@@ -291,11 +291,14 @@ function cerrarVentana() {
   if (v) {
     if (v._url) URL.revokeObjectURL(v._url);
     v.remove();
+    // El foco vuelve al botón que la abrió
+    if (v._volverA && v._volverA.isConnected) v._volverA.focus({ preventScroll: true });
   }
 }
 
-// Ventana sencilla encima de todo: título, contenido y botones [[texto, al pulsar, clase]]
-function abrirVentana(titulo, contenido, botones) {
+// Ventana sencilla encima de todo: título, contenido y botones [[texto, al pulsar, clase]].
+// Es un diálogo: el foco entra en él, no sale con Tab mientras está abierto y vuelve a «volverA» al cerrar.
+function abrirVentana(titulo, contenido, botones, volverA = document.activeElement) {
   cerrarVentana();
   const cerrar = crear('button', 'cerrar', '×');
   cerrar.setAttribute('aria-label', 'Cerrar');
@@ -309,9 +312,31 @@ function abrirVentana(titulo, contenido, botones) {
       return b;
     })
   );
-  const v = crear('div', 'modal', crear('div', 'caja', cerrar, crear('h3', '', titulo), contenido, fila));
+  const h = crear('h3', '', titulo),
+    caja = crear('div', 'caja', cerrar, h, contenido, fila),
+    v = crear('div', 'modal', caja);
+  h.id = 'tv';
+  caja.setAttribute('role', 'dialog');
+  caja.setAttribute('aria-modal', 'true');
+  caja.setAttribute('aria-labelledby', 'tv');
+  v._volverA = volverA;
   v.onclick = e => e.target == v && cerrarVentana();
+  // Tab y Mayús+Tab dan la vuelta dentro de la ventana
+  caja.addEventListener('keydown', e => {
+    if (e.key != 'Tab') return;
+    const enfocables = [...caja.querySelectorAll('button')],
+      primero = enfocables[0],
+      ultimo = enfocables[enfocables.length - 1];
+    if (e.shiftKey && document.activeElement == primero) {
+      e.preventDefault();
+      ultimo.focus();
+    } else if (!e.shiftKey && document.activeElement == ultimo) {
+      e.preventDefault();
+      primero.focus();
+    }
+  });
   document.body.appendChild(v);
+  (fila.querySelector('button') || cerrar).focus({ preventScroll: true });
   return v;
 }
 
@@ -324,10 +349,15 @@ async function abrirMiSalamanca() {
       img = crear('img');
     img.src = url;
     img.alt = 'Tu mapa de Salamanca con las zonas que has pisado';
-    const v = abrirVentana('Tu Salamanca', img, [
-      ['Compartir', () => compartirImagen(blob), 'on'],
-      ['Guardar imagen', () => guardarImagen(blob)]
-    ]);
+    const v = abrirVentana(
+      'Tu Salamanca',
+      img,
+      [
+        ['Compartir', () => compartirImagen(blob), 'on'],
+        ['Guardar imagen', () => guardarImagen(blob)]
+      ],
+      boton
+    );
     v._url = url;
   } catch (e) {
     console.error(e);

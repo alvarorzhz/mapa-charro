@@ -309,7 +309,7 @@ function seleccionarPueblo(m, encuadrar) {
   enlaceVista();
   if (encuadrar) {
     vistaProvincia.encuadrar(m);
-    $('#pm').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    $('#pm').scrollIntoView({ behavior: comoDesplazar(), block: 'center' });
   }
 }
 

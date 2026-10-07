@@ -9,11 +9,21 @@ const leer = f => fs.readFileSync(path.join(RAIZ, f), 'utf8');
 const existe = f => fs.existsSync(path.join(RAIZ, f));
 
 // Carga los archivos de datos como lo haría el navegador (scripts clásicos que comparten ámbito)
-const datos = ['zonas', 'monumentos', 'ruta', 'pueblos', 'contenido', 'geometria', 'carreteras', 'provincia'];
+const datos = [
+  'zonas',
+  'monumentos',
+  'ruta',
+  'pueblos',
+  'contenido',
+  'geometria',
+  'alfoz',
+  'carreteras',
+  'provincia'
+];
 const codigo =
   datos.map(d => leer('js/datos/' + d + '.js')).join('\n;\n') +
   '\n;({ NOMBRES_GRUPOS, ZONAS_GRANDES, ZONAS, MONUMENTOS, RUTA, PUEBLOS, CURIOSIDADES, LEYENDAS, FOTOS, DONDE_COMER,' +
-  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ })';
+  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ })';
 const D = vm.runInNewContext(codigo, {});
 
 const errores = [],
@@ -33,6 +43,30 @@ D.ZONAS.forEach(([id, n, l, g, la, lo]) => {
 for (const conjunto of ['ZONAS_GRANDES', 'POSICION_EXACTA', 'ZONAS_NO_OFICIALES'])
   for (const id of D[conjunto]) comprobar(idsZona.has(id), `${conjunto}: «${id}» no es una zona`);
 for (const id in D.LIMITES_BARRIOS) comprobar(idsZona.has(id), `LIMITES_BARRIOS: «${id}» no es una zona`);
+// Pueblos de alrededor: cada uno con su término municipal, y el pueblo dentro de él
+const dentro = (P, la, lo) => {
+  let d = false;
+  for (let i = 0, j = P.length - 1; i < P.length; j = i++)
+    if (
+      P[i][0] > la != P[j][0] > la &&
+      lo < ((P[j][1] - P[i][1]) * (la - P[i][0])) / (P[j][0] - P[i][0]) + P[i][1]
+    )
+      d = !d;
+  return d;
+};
+Object.entries(D.ALFOZ).forEach(([nombre, id]) => {
+  const z = D.ZONAS.find(q => q[0] == id),
+    P = D.LIMITES_ALFOZ[id];
+  comprobar(z, `ALFOZ: «${id}» (${nombre}) no es una zona`);
+  comprobar(
+    P && P.length > 10,
+    `${nombre}: falta su término en LIMITES_ALFOZ (node herramientas/lindes-alfoz.js)`
+  );
+  if (z && P) comprobar(dentro(P, z[4], z[5]), `${nombre}: el pueblo queda fuera de su término municipal`);
+});
+D.ZONAS.filter(z => z[3] == 5).forEach(z =>
+  comprobar(Object.values(D.ALFOZ).includes(z[0]), `Zona ${z[0]}: pueblo de alrededor sin entrada en ALFOZ`)
+);
 
 // --- Contenido de las fichas ------------------------------------------------
 for (const obj of ['CURIOSIDADES', 'LEYENDAS', 'FOTOS', 'DONDE_COMER'])
@@ -125,6 +159,46 @@ enlazados
   .forEach(m =>
     comprobar(sw.includes("'" + m[1] + '?v=' + v + "'"), `sw.js no guarda ${m[1]} para usar sin conexión`)
   );
+// Y al revés: lo que guarda sw.js tiene que existir (si falta uno solo, el service worker no se
+// instala y la web se queda sin modo sin conexión, sin ningún error a la vista), y tiene que guardar
+// todo lo de img/ e icons/, las fotos de las fichas y los iconos del manifest
+const listaSw = (sw.match(/\/\/ <archivos>([\s\S]*?)\/\/ <\/archivos>/) || [, ''])[1],
+  enSw = new Set([...listaSw.matchAll(/'([^']+)'/g)].map(m => m[1]));
+comprobar(enSw.size > 0, 'sw.js no tiene lista de archivos: ejecuta node herramientas/version.js');
+enSw.forEach(a => {
+  const f = a.split('?')[0];
+  comprobar(f == './' || existe(f), `sw.js guarda ${f}, que no existe: ejecuta node herramientas/version.js`);
+});
+for (const d of ['img', 'icons'])
+  for (const f of fs.readdirSync(path.join(RAIZ, d)).filter(f => !f.startsWith('.')))
+    comprobar(enSw.has(d + '/' + f), `sw.js no guarda ${d}/${f}: ejecuta node herramientas/version.js`);
+const usadasEnDatos = [
+  ...Object.entries(D.FOTOS).map(([id, [ruta]]) => [ruta, 'la foto de ' + id]),
+  ...JSON.parse(leer('manifest.webmanifest')).icons.map(i => [i.src, 'el manifest'])
+];
+usadasEnDatos.forEach(([ruta, quien]) => {
+  if (/^(https?:|data:)/.test(ruta)) return;
+  comprobar(existe(ruta), `${quien} usa ${ruta}, que no existe`);
+  comprobar(enSw.has(ruta), `sw.js no guarda ${ruta} (${quien}) para usar sin conexión`);
+});
+
+// Tarjeta Open Graph: la imagen tiene que estar en el repositorio y medir 1200×630
+const imagenOg = (html.match(/property="og:image" content="https:\/\/[^/]+\/mapa-charro\/([^"]+)"/) || [])[1];
+comprobar(imagenOg, 'index.html no tiene og:image de la web pública');
+if (imagenOg) {
+  comprobar(
+    existe(imagenOg),
+    `og:image apunta a ${imagenOg}, que no existe: node herramientas/tarjeta-og.js`
+  );
+  if (existe(imagenOg)) {
+    const png = fs.readFileSync(path.join(RAIZ, imagenOg));
+    comprobar(
+      png.readUInt32BE(16) == 1200 && png.readUInt32BE(20) == 630,
+      `${imagenOg} debería medir 1200×630 para la tarjeta al compartir`
+    );
+  }
+}
+
 for (const f of fs.readdirSync(path.join(RAIZ, 'js')).filter(f => f.endsWith('.js')))
   comprobar(html.includes('js/' + f + '?'), `js/${f} no está enlazado en index.html`);
 for (const f of fs.readdirSync(path.join(RAIZ, 'js/datos')).filter(f => f.endsWith('.js')))

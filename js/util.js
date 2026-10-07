@@ -72,6 +72,9 @@ const $ = s => document.querySelector(s);
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const mapaSvg = $('#m');
 const esEscritorio = () => matchMedia('(min-width:900px)').matches;
+// La persona ha pedido menos animaciones en su sistema: los saltos de vista y desplazamientos van sin animar
+const movimientoReducido = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+const comoDesplazar = () => (movimientoReducido() ? 'auto' : 'smooth');
 
 // Alto/ancho del mapa en pantalla
 // Tamaño del mapa en pantalla, guardado para no forzar al navegador a medirlo en cada zoom
@@ -206,8 +209,9 @@ function activarGestos(
         const r = medir();
         mover(dx / r.width, dy / r.height);
         const t = performance.now();
+        // Los últimos movimientos (como mucho 5 y de los últimos 200 ms: en un móvil lento llegan espaciados)
         muestras.push({ t, dx, dy });
-        muestras = muestras.filter(m => t - m.t < 100);
+        muestras = muestras.filter(m => t - m.t < 200).slice(-5);
       }
     }
     punteros.set(e.pointerId, ahora);
@@ -217,14 +221,16 @@ function activarGestos(
     punteros.delete(e.pointerId);
     gestos.dedos = punteros.size;
     if (punteros.size) return;
-    // Velocidad media de los últimos 100 ms, si el dedo seguía moviéndose al soltar
+    // Velocidad de los últimos movimientos, si el dedo seguía moviéndose al soltar
     const t = performance.now();
     let vx = 0,
       vy = 0;
     if (muestras.length > 1 && t - muestras[muestras.length - 1].t < 80) {
-      const dt = Math.max(16, t - muestras[0].t);
-      vx = muestras.reduce((s, m) => s + m.dx, 0) / dt;
-      vy = muestras.reduce((s, m) => s + m.dy, 0) / dt;
+      // Distancia recorrida entre el primer movimiento guardado y el último, entre el tiempo que pasó
+      const despues = muestras.slice(1),
+        dt = Math.max(16, muestras[muestras.length - 1].t - muestras[0].t);
+      vx = despues.reduce((s, m) => s + m.dx, 0) / dt;
+      vy = despues.reduce((s, m) => s + m.dy, 0) / dt;
     }
     muestras = [];
     if (alSoltar) alSoltar(vx, vy);

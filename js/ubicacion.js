@@ -82,7 +82,7 @@ function mensajeUbicacion(texto, conPestana) {
     a.rel = 'noopener';
     e.append(crear('br'), a);
   }
-  if (texto) e.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  if (texto) e.scrollIntoView({ behavior: comoDesplazar(), block: 'nearest' });
 }
 
 // ¿La app va dentro de un marco (el visor de Claude)?

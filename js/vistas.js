@@ -148,7 +148,7 @@ function buscar() {
       abrir();
       $('#q').value = '';
       caja.textContent = '';
-      document.querySelector('.mw').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.querySelector('.mw').scrollIntoView({ behavior: comoDesplazar(), block: 'start' });
     };
     caja.appendChild(b);
   });
