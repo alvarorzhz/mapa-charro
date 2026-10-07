@@ -74,10 +74,15 @@ const mapaSvg = $('#m');
 const esEscritorio = () => matchMedia('(min-width:900px)').matches;
 
 // Alto/ancho del mapa en pantalla
+// Tamaño del mapa en pantalla, guardado para no forzar al navegador a medirlo en cada zoom
+const tamMapa = { w: 0, h: 0 };
+const medirMapa = () => {
+  tamMapa.w = mapaSvg.clientWidth;
+  tamMapa.h = mapaSvg.clientHeight;
+};
 const proporcionMapa = () => {
-  const w = mapaSvg.clientWidth,
-    h = mapaSvg.clientHeight;
-  return w && h ? h / w : 1.2;
+  if (!tamMapa.w) medirMapa();
+  return tamMapa.w && tamMapa.h ? tamMapa.h / tamMapa.w : 1.2;
 };
 
 // Crea un elemento HTML: crear('p', 'mu', 'texto') o crear('div', 'er', hijo1, hijo2...)
@@ -135,7 +140,10 @@ function crearBotonesFiltro(actual, alElegir) {
 // Devuelve un objeto cuyo campo «arrastre» dice cuántos píxeles se ha movido el puntero desde que
 // se pulsó: sirve para no tomar un arrastre por un toque (ver UMBRAL_TOQUE).
 const UMBRAL_TOQUE = 6;
-function activarGestos(el, { aPunto, zoom, mover, puedeMover = () => true }) {
+function activarGestos(
+  el,
+  { aPunto, zoom, mover, puedeMover = () => true, medir = () => el.getBoundingClientRect(), alSoltar }
+) {
   const punteros = new Map(),
     gestos = { arrastre: 0 };
   let distanciaPinza = 0;
@@ -171,7 +179,7 @@ function activarGestos(el, { aPunto, zoom, mover, puedeMover = () => true }) {
         dy = ahora[1] - antes[1];
       gestos.arrastre += Math.abs(dx) + Math.abs(dy);
       if (gestos.arrastre > UMBRAL_TOQUE && puedeMover()) {
-        const r = el.getBoundingClientRect();
+        const r = medir();
         mover(dx / r.width, dy / r.height);
       }
     }
@@ -180,6 +188,7 @@ function activarGestos(el, { aPunto, zoom, mover, puedeMover = () => true }) {
   const soltar = e => {
     punteros.delete(e.pointerId);
     distanciaPinza = 0;
+    if (!punteros.size && alSoltar) alSoltar();
   };
   el.addEventListener('pointerup', soltar);
   el.addEventListener('pointercancel', soltar);

@@ -11,10 +11,10 @@ function pintarCuriosidades(z) {
   else pintarParrafos($('#cu'), [z.c], 'ld'); // sin curiosidades: la frase corta, destacada
 }
 
+// Sin leyendas, el apartado no se muestra
 function pintarLeyendas(z) {
-  $('#hl').hidden = z.id == 'resto';
-  if (z.ly.length) pintarParrafos($('#ri'), z.ly);
-  else pintarParrafos($('#ri'), [z.id == 'resto' ? '' : 'Sin leyenda conocida.'], 'mu');
+  $('#hl').hidden = !z.ly.length;
+  pintarParrafos($('#ri'), z.ly);
 }
 
 function pintarFoto(id) {
@@ -26,10 +26,11 @@ function pintarFoto(id) {
   $('#pc').textContent = foto[1];
 }
 
-// sitios: [{ n, t, a, p, s }]; lugar: para buscarlos en Google Maps
-function pintarSitiosComer(sitios, lugar, vacio) {
+// sitios: [{ n, t, a, p, s }]; lugar: para buscarlos en Google Maps. Sin sitios, el apartado no se muestra.
+function pintarSitiosComer(sitios, lugar) {
   const el = $('#eat');
   el.textContent = '';
+  $('#he').hidden = !(sitios && sitios.length);
   if (sitios && sitios.length) {
     sitios.forEach(s => {
       const mapa = crear('a', '', 'Ver en Google Maps');
@@ -49,16 +50,11 @@ function pintarSitiosComer(sitios, lugar, vacio) {
         )
       );
     });
-  } else if (vacio) el.appendChild(crear('p', 'mu', vacio));
+  }
 }
 
 function pintarDondeComer(id) {
-  $('#he').hidden = id == 'resto';
-  pintarSitiosComer(
-    DONDE_COMER[id],
-    'Salamanca',
-    id == 'resto' ? '' : 'Ningún sitio con buena nota y bastantes opiniones en Gastroranking.'
-  );
+  pintarSitiosComer(DONDE_COMER[id], 'Salamanca');
 }
 
 // Botones con las 4 zonas más cercanas
@@ -87,6 +83,12 @@ function modoBotonesFicha(modo) {
 
 function mostrarFicha() {
   document.querySelector('.sb').scrollTop = 0;
+  $('#sh').classList.remove('grande');
+  // En el móvil, sube la página hasta el mapa para que se vea por encima del panel
+  if (!esEscritorio() && pestana == 'map') {
+    const arriba = document.querySelector('.mw').getBoundingClientRect().top;
+    if (Math.abs(arriba - 8) > 4) window.scrollTo({ top: window.scrollY + arriba - 8, behavior: 'smooth' });
+  }
   ajustarVista();
   $('#sh').classList.add('o');
   $('#mn').classList.add('o');
@@ -113,13 +115,17 @@ function abrirFicha(id) {
   pintarFoto(id);
   pintarDondeComer(id);
   pintarCercanas(z);
-  // Acerca el mapa a la zona, según su tamaño (sin alejarlo si ya estaba más cerca)
-  if (id != 'resto')
+  // Acerca el mapa a la zona, según su tamaño (sin alejarlo si ya estaba más cerca). En el móvil,
+  // además, que la zona quepa entera en el trozo de mapa que deja libre el panel.
+  if (id != 'resto') {
+    const W = tamMapa.w || 380,
+      cabe = esEscritorio() ? 0 : (z.ch * W) / (0.7 * mapaVisiblePx());
     centrarMapaEn(
       z.x,
       z.y,
-      Math.min(vistaMapa.w, Math.max(16, Math.min(220, ((mapaSvg.clientWidth || 380) * z.cw) / 70)))
+      Math.max(cabe, Math.min(vistaMapa.w, Math.max(16, Math.min(220, (W * z.cw) / 70))))
     );
+  }
   pintarBotonesFicha();
   mostrarFicha();
   enlaceFicha(id, z.n);
@@ -208,3 +214,30 @@ $('#x').onclick = () => {
 };
 $('#cmp').onclick = () => compartir();
 $('#rs').onclick = () => abrirFicha('resto');
+
+// Asa del panel en el móvil: tocarla o arrastrarla hacia arriba lo agranda; hacia abajo lo reduce o lo cierra
+{
+  const asa = $('#asa');
+  let inicio = null;
+  const alternar = () => $('#sh').classList.toggle('grande');
+  asa.addEventListener('pointerdown', e => {
+    inicio = e.clientY;
+    asa.setPointerCapture(e.pointerId);
+  });
+  asa.addEventListener('pointerup', e => {
+    if (inicio === null) return;
+    const dy = e.clientY - inicio;
+    inicio = null;
+    const sh = $('#sh');
+    if (Math.abs(dy) < 8) alternar();
+    else if (dy < 0) sh.classList.add('grande');
+    else if (sh.classList.contains('grande')) sh.classList.remove('grande');
+    else $('#x').click();
+  });
+  asa.addEventListener('keydown', e => {
+    if (e.key == 'Enter' || e.key == ' ') {
+      e.preventDefault();
+      alternar();
+    }
+  });
+}

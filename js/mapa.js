@@ -14,7 +14,14 @@ function pintarZona(z) {
     return;
   }
   const clase = 'z c' + z.g + (ZONAS_NO_OFICIALES.has(z.id) ? ' sub' : '');
-  z.e.setAttribute('class', clase + (marca ? ' ' + marca : '') + (zonaAbierta == z.id ? ' sel' : ''));
+  z.e.setAttribute(
+    'class',
+    clase + ' t' + (z.tono || 0) + (marca ? ' ' + marca : '') + (zonaAbierta == z.id ? ' sel' : '')
+  );
+  if (typeof limiteSeleccion != 'undefined') {
+    if (zonaAbierta == z.id) limiteSeleccion.setAttribute('d', trazoAnillo(z.P));
+    else if (!zonaAbierta) limiteSeleccion.setAttribute('d', '');
+  }
   [z.tx, z.tx2].forEach(t => t && t.setAttribute('class', 'lb' + (marca == 'v' ? ' v' : '')));
   z.dt.setAttribute('class', 'dt' + (marca == 'v' ? ' v' : ''));
   if (z.st && marca != 'v') {
@@ -40,6 +47,7 @@ function construirZonas(grupo, base) {
     let P = base;
     if (LIMITES_BARRIOS[z.id]) P = LIMITES_BARRIOS[z.id].map(q => proyectar(q[0], q[1]));
     else grupo.forEach(o => o != z && (P = recortarSemiplano(P, [z.x, z.y], [o.x, o.y])));
+    z.P = P;
     const xs = P.map(q => q[0]),
       ys = P.map(q => q[1]);
     z.ch = Math.max(...ys) - Math.min(...ys);
@@ -87,24 +95,50 @@ construirZonas(
 );
 pintarZona(zonaResto);
 
-// --- Límites y río ----------------------------------------------------------
+// Tonos alternos: dos zonas vecinas nunca llevan el mismo tono (coloreado voraz con 4 tonos)
+{
+  const cerca = (a, b) => {
+    let comunes = 0;
+    for (const p of a.P)
+      if (b.P.some(q => Math.abs(p[0] - q[0]) < 0.6 && Math.abs(p[1] - q[1]) < 0.6) && ++comunes >= 2)
+        return true;
+    return false;
+  };
+  const vecinos = new Map(zonas.map(z => [z, zonas.filter(o => o != z && cerca(z, o))]));
+  [...zonas]
+    .sort((a, b) => vecinos.get(b).length - vecinos.get(a).length)
+    .forEach(z => {
+      const usados = new Set(vecinos.get(z).map(o => o.tono));
+      z.tono = [0, 1, 2, 3].find(t => !usados.has(t)) ?? 0;
+      z.e.classList.add('t' + z.tono);
+    });
+}
 
-const trazoPoligonal = P => 'M' + P.map(q => puntoTexto(proyectar(q[0], q[1]))).join('L') + 'Z';
-LINDES_OFICIALES.forEach(P =>
-  crearSvg(
-    'path',
-    {
-      d: trazoPoligonal(P),
-      fill: 'none',
-      stroke: 'var(--line)',
-      'stroke-width': '1.8px',
-      'vector-effect': 'non-scaling-stroke',
-      'stroke-linejoin': 'round'
-    },
-    $('#ob')
-  )
-);
-$('#ol').setAttribute('d', trazoPoligonal(LIMITE_CIUDAD));
+// --- Límites y río ----------------------------------------------------------
+// Los límites se dibujan encima de las carreteras (capa #lim), con un halo claro para que se lean
+// sobre cualquier cosa: es lo más importante del mapa.
+const trazoAnillo = P => 'M' + P.map(puntoTexto).join('L') + 'Z';
+{
+  const capa = $('#lim'),
+    barrios = zonas.filter(z => z.g < 5),
+    oficiales = barrios.filter(z => !ZONAS_NO_OFICIALES.has(z.id)),
+    repartos = barrios.filter(z => ZONAS_NO_OFICIALES.has(z.id)),
+    alrededores = zonas.filter(z => z.g == 5),
+    lindes = LINDES_OFICIALES.map(P => trazoAnillo(P.map(q => proyectar(q[0], q[1])))).join(''),
+    ciudad = trazoAnillo(LIMITE_CIUDAD.map(q => proyectar(q[0], q[1]))),
+    trazo = (d, clase) =>
+      crearSvg('path', { d, class: 'lim ' + clase, 'vector-effect': 'non-scaling-stroke' }, capa);
+  trazo(alrededores.map(z => trazoAnillo(z.P)).join(''), 'alfoz');
+  trazo(oficiales.map(z => trazoAnillo(z.P)).join('') + lindes + ciudad, 'halo');
+  trazo(repartos.map(z => trazoAnillo(z.P)).join(''), 'reparto');
+  trazo(oficiales.map(z => trazoAnillo(z.P)).join('') + lindes, 'linde');
+  trazo(ciudad, 'ciudad');
+  // Contorno de la zona seleccionada, encima de todo
+  var limiteSeleccion = trazo('', 'sel');
+}
+
+// --- Río ----------------------------------------------------------------------
+
 {
   // El río, suavizado con curvas que pasan por el punto medio de cada tramo
   const rp = RIO_TORMES.map(q => proyectar(q[0], q[1]));
@@ -168,10 +202,12 @@ try {
     let primerTramo = null;
     tramos.forEach(P => {
       const d = trazoSuave(P);
-      els.push(crearSvg('path', atributosTrazo(ronda ? 5.8 : 4.4, 'var(--line)', d, 0.8), capaBorde));
+      els.push(
+        crearSvg('path', atributosTrazo(ronda ? 5.4 : 3.8, 'var(--line)', d, ronda ? 0.7 : 0.45), capaBorde)
+      );
       const relleno = crearSvg(
         'path',
-        atributosTrazo(ronda ? 3.8 : 2.6, ronda ? 'var(--ronda)' : 'var(--street)', d, 1),
+        atributosTrazo(ronda ? 3.4 : 2.2, ronda ? 'var(--ronda)' : 'var(--street)', d, ronda ? 1 : 0.85),
         ronda ? capaRondas : capaAvenidas
       );
       els.push(relleno);
@@ -282,9 +318,8 @@ $('#rb').onclick = () => {
 
 const escalaFija = (x, y, u) => 'translate(' + x.toFixed(2) + ' ' + y.toFixed(2) + ') scale(' + u + ')';
 
-// Aplica vistaMapa al SVG (sin salirse del mapa) y recoloca lo que depende del zoom: qué etiquetas
-// caben y a qué tamaño, puntos, sellos, nombres de avenidas, escudos y la marca de «Estoy aquí».
-function ajustarVista() {
+// Ajusta vistaMapa para no salirse del mapa y, si aplicar, la pone en el SVG
+function limitarVista(aplicar = true) {
   const AR = proporcionMapa(),
     anchoMaximo = Math.max(ANCHO_MAPA, ALTO_MAPA / AR),
     v = vistaMapa;
@@ -292,8 +327,56 @@ function ajustarVista() {
   v.h = v.w * AR;
   v.x = v.w >= ANCHO_MAPA ? (ANCHO_MAPA - v.w) / 2 : Math.max(0, Math.min(ANCHO_MAPA - v.w, v.x));
   v.y = v.h >= ALTO_MAPA ? (ALTO_MAPA - v.h) / 2 : Math.max(0, Math.min(ALTO_MAPA - v.h, v.y));
-  mapaSvg.setAttribute('viewBox', v.x + ' ' + v.y + ' ' + v.w + ' ' + v.h);
-  const u = v.w / (mapaSvg.clientWidth || 380); // unidades del mapa por píxel de pantalla
+  if (aplicar) mapaSvg.setAttribute('viewBox', v.x + ' ' + v.y + ' ' + v.w + ' ' + v.h);
+}
+
+// Encuadre completo: limita la vista y recoloca todo lo que depende del zoom
+function ajustarVista() {
+  limitarVista();
+  recolocarSegunZoom(true);
+}
+
+// Durante los gestos (arrastrar, pellizcar, rueda) no se redibuja el SVG: se desplaza y escala como
+// una imagen con transform de CSS, que mueve la tarjeta gráfica sin repintar. Al soltar (o tras una
+// pausa de la rueda) se aplica la vista de verdad y se recolocan etiquetas y pictogramas.
+let vistaInicioGesto = null, // viewBox que está pintado mientras dura el gesto
+  rectInicioGesto = null, // posición del mapa en pantalla sin transformar
+  temporizadorGesto = 0;
+const ESPERA_FIN_GESTO = 160; // ms sin movimiento para dar el gesto por terminado
+
+function ajustarVistaPronto() {
+  if (!vistaInicioGesto) {
+    rectInicioGesto = mapaSvg.getBoundingClientRect();
+    const vb = mapaSvg.viewBox.baseVal;
+    vistaInicioGesto = { x: vb.x, y: vb.y, w: vb.width, h: vb.height };
+  }
+  limitarVista(false);
+  const v = vistaMapa,
+    a = vistaInicioGesto,
+    s = a.w / v.w,
+    tx = ((a.x - v.x) / v.w) * (tamMapa.w || rectInicioGesto.width),
+    ty = ((a.y - v.y) / v.h) * (tamMapa.h || rectInicioGesto.height);
+  mapaSvg.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + s + ')';
+  clearTimeout(temporizadorGesto);
+  temporizadorGesto = setTimeout(terminarGesto, ESPERA_FIN_GESTO);
+}
+
+function terminarGesto() {
+  clearTimeout(temporizadorGesto);
+  if (!vistaInicioGesto) return;
+  vistaInicioGesto = rectInicioGesto = null;
+  mapaSvg.style.transform = '';
+  ajustarVista();
+}
+
+// Qué etiquetas caben y a qué tamaño, puntos, sellos, nombres de avenidas, escudos, monumentos y la
+// marca de «Estoy aquí». Con siempre=false no hace nada si la escala no ha cambiado.
+let ultimaEscala = 0;
+function recolocarSegunZoom(siempre) {
+  const v = vistaMapa,
+    u = v.w / (tamMapa.w || 380); // unidades del mapa por píxel de pantalla
+  if (!siempre && Math.abs(u - ultimaEscala) < 1e-9) return;
+  ultimaEscala = u;
 
   zonas.forEach(z => {
     const anchoPx = z.cw / u,
@@ -331,10 +414,13 @@ function ajustarVista() {
 
   document.querySelectorAll('.avp').forEach(e => (e.style.display = v.w <= 240 ? '' : 'none'));
   etiquetasAvenidas.forEach(t => {
-    let largo = 0;
-    try {
-      largo = t._p.getTotalLength() / u;
-    } catch (e) {}
+    if (t._largo === undefined)
+      try {
+        t._largo = t._p.getTotalLength(); // en unidades del mapa: no cambia con el zoom
+      } catch (e) {
+        t._largo = 0;
+      }
+    const largo = t._largo / u;
     t.style.display = v.w <= 90 && largo > t._n * 8.5 * 0.52 * 1.3 + 12 ? '' : 'none';
     t.style.fontSize = 8.5 * u + 'px';
     t.style.strokeWidth = 2.5 * u + 'px';
@@ -353,11 +439,22 @@ function centrarMapaEn(x, y, ancho) {
   vistaMapa.w = ancho;
   vistaMapa.h = vistaMapa.w * proporcionMapa();
   vistaMapa.x = x - vistaMapa.w / 2;
-  vistaMapa.y = y - vistaMapa.h * 0.3;
+  // En escritorio el panel va al lado y basta con subir un poco el punto; en el móvil el panel tapa
+  // la parte de abajo, así que el punto va al centro del trozo de mapa que queda a la vista
+  const fraccion = esEscritorio() || !tamMapa.h ? 0.3 : Math.min(0.5, mapaVisiblePx() / 2 / tamMapa.h);
+  vistaMapa.y = y - vistaMapa.h * fraccion;
+}
+
+// Alto en píxeles del mapa que se ve con la ficha abierta (en el móvil el panel ocupa la parte de abajo)
+const ALTO_PANEL_MOVIL = 0.46; // fracción de la pantalla; igual que .sh{max-height:46vh} en estilos.css
+function mapaVisiblePx() {
+  if (esEscritorio()) return tamMapa.h || 400;
+  return Math.max(120, Math.min(tamMapa.h || 400, innerHeight * (1 - ALTO_PANEL_MOVIL) - 16));
 }
 
 // Acerca (factor > 1) o aleja alrededor del punto (cx, cy)
-function zoomMapa(factor, cx = vistaMapa.x + vistaMapa.w / 2, cy = vistaMapa.y + vistaMapa.h / 2) {
+// diferido: desde un gesto (rueda o pinza), recolocando una vez por fotograma
+function zoomMapa(factor, cx = vistaMapa.x + vistaMapa.w / 2, cy = vistaMapa.y + vistaMapa.h / 2, diferido) {
   const w = Math.min(
       Math.max(ANCHO_MAPA, ALTO_MAPA / proporcionMapa()),
       Math.max(ANCHO_MINIMO, vistaMapa.w / factor)
@@ -366,7 +463,11 @@ function zoomMapa(factor, cx = vistaMapa.x + vistaMapa.w / 2, cy = vistaMapa.y +
   vistaMapa.x = cx - (cx - vistaMapa.x) * r;
   vistaMapa.y = cy - (cy - vistaMapa.y) * r;
   vistaMapa.w = w;
-  ajustarVista();
+  if (diferido) ajustarVistaPronto();
+  else {
+    terminarGesto();
+    ajustarVista();
+  }
 }
 
 $('#zi').onclick = () => zoomMapa(1.6);
@@ -379,16 +480,25 @@ $('#zr').onclick = () => {
 
 const gestosMapa = activarGestos(mapaSvg, {
   aPunto: (cx, cy) => {
-    const r = mapaSvg.getBoundingClientRect();
+    const r = rectInicioGesto || mapaSvg.getBoundingClientRect();
     return [
       vistaMapa.x + ((cx - r.left) / r.width) * vistaMapa.w,
       vistaMapa.y + ((cy - r.top) / r.height) * vistaMapa.h
     ];
   },
-  zoom: zoomMapa,
+  zoom: (factor, x, y) => zoomMapa(factor, x, y, true),
   mover: (fx, fy) => {
     vistaMapa.x -= fx * vistaMapa.w;
     vistaMapa.y -= fy * vistaMapa.h;
-    ajustarVista();
-  }
+    ajustarVistaPronto();
+  },
+  medir: () => rectInicioGesto || mapaSvg.getBoundingClientRect(),
+  alSoltar: terminarGesto
 });
+
+// Si cambia el tamaño del mapa en pantalla (girar el móvil, cambiar de pestaña…), se vuelve a medir
+new ResizeObserver(() => {
+  const antes = tamMapa.w + 'x' + tamMapa.h;
+  medirMapa();
+  if (tamMapa.w + 'x' + tamMapa.h != antes) ajustarVista();
+}).observe(mapaSvg);

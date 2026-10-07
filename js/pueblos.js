@@ -55,12 +55,7 @@ function abrirPueblo(m) {
   pintarParrafos($('#cu'), f.cur);
   $('#hl').hidden = true;
   $('#ri').textContent = '';
-  $('#he').hidden = false;
-  pintarSitiosComer(
-    f.comer,
-    m.n + ' Salamanca',
-    'Ningún sitio con buena nota y bastantes opiniones en Gastroranking.'
-  );
+  pintarSitiosComer(f.comer, m.n + ' Salamanca');
 
   // Fuente
   const ap = $('#ap');

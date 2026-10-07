@@ -161,7 +161,10 @@ $('#q').addEventListener('keydown', e => {
 });
 
 // --- Tamaño de pantalla y teclado -------------------------------------------
-addEventListener('resize', ajustarVista);
+addEventListener('resize', () => {
+  medirMapa();
+  ajustarVista();
+});
 matchMedia('(min-width:900px)').addEventListener('change', () => {
   cambiarPestana(pestana);
   ajustarVista();

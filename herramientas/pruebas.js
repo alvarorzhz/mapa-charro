@@ -62,6 +62,30 @@ prueba('Carga el mapa', async p => {
   );
 });
 
+prueba('Arrastrar y acercar el mapa', async p => {
+  const vb = () => p.$eval('#m', e => e.getAttribute('viewBox'));
+  const antes = await vb();
+  const r = await p.$eval('#m', e => {
+    const b = e.getBoundingClientRect();
+    return [b.x + b.width / 2, b.y + b.height / 2];
+  });
+  await p.mouse.move(r[0], r[1]);
+  await p.mouse.down();
+  await p.mouse.move(r[0] + 60, r[1] + 30, { steps: 6 });
+  await p.mouse.up();
+  await p.waitForTimeout(300);
+  cierto((await vb()) != antes, 'el arrastre mueve el mapa');
+  igual(await p.$eval('#m', e => e.style.transform), '', 'al soltar no queda transformación');
+  cierto(!(await fichaAbierta(p)), 'arrastrar no abre fichas');
+  const w0 = +(await vb()).split(' ')[2];
+  await p.mouse.wheel(0, -300);
+  await p.waitForTimeout(400);
+  cierto(+(await vb()).split(' ')[2] < w0, 'la rueda acerca');
+  await p.mouse.click(r[0], r[1]);
+  cierto(await fichaAbierta(p), 'un toque abre la zona');
+  cierto((await p.$eval('.lim.sel', e => e.getAttribute('d'))).length > 10, 'se marca el límite de la zona');
+});
+
 prueba('Buscar, abrir ficha y marcar', async p => {
   await p.fill('#q', 'tejares');
   await p.press('#q', 'Enter');
@@ -76,6 +100,20 @@ prueba('Buscar, abrir ficha y marcar', async p => {
   );
   await p.reload();
   igual(await texto(p, '#cn'), '1 de 60 zonas pisadas, 0 por visitar', 'sigue tras recargar');
+});
+
+prueba('Ficha sin apartados vacíos y panel del móvil', async (p, url) => {
+  await p.goto(url + '#platina');
+  cierto(await p.$eval('#hl', e => e.hidden), 'sin leyendas no sale el apartado Leyenda');
+  await p.goto(url + '#centro');
+  cierto(!(await p.$eval('#hl', e => e.hidden)), 'con leyendas sí sale');
+  if (!(await p.evaluate(() => esEscritorio()))) {
+    const alto = () => p.$eval('#sh', e => e.getBoundingClientRect().height);
+    const antes = await alto();
+    await p.click('#asa');
+    await p.waitForTimeout(400);
+    cierto((await alto()) > antes, 'el asa agranda el panel');
+  }
 });
 
 prueba('Enlaces y botón atrás', async (p, url) => {
