@@ -132,7 +132,8 @@ function abrirFicha(id) {
 }
 
 // INFO_VIAS[nombre] = [tipo, nombre largo, descripción]
-function abrirFichaVia(nombre) {
+// tramo: en una avenida, el tramo que se ha pulsado en el mapa (se encuadra ese)
+function abrirFichaVia(nombre, tramo = 0) {
   const [tipo, nombreLargo, descripcion] = INFO_VIAS[nombre];
   zonaAbierta = null;
   olvidarMonumento();
@@ -147,12 +148,13 @@ function abrirFichaVia(nombre) {
   $('#cu').textContent = nombreLargo;
   $('#ri').textContent = descripcion;
   modoBotonesFicha('via');
+  ponerEtiquetaAvenida(nombre, tramo);
   resaltarVia(nombre);
-  // Las avenidas se encuadran en el punto medio de su primer tramo
+  // Las avenidas se encuadran en el punto medio del tramo pulsado (o del primero)
   const avenida = AVENIDAS.find(a => a[0] == nombre);
   if (avenida) {
-    const tramo = avenida[2][0],
-      [x, y] = proyectar(...tramo[tramo.length >> 1]);
+    const P = avenida[2][tramo] || avenida[2][0],
+      [x, y] = proyectar(...P[P.length >> 1]);
     centrarMapaEn(x, y, Math.min(vistaMapa.w, 90));
   }
   mostrarFicha();

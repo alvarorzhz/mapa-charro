@@ -153,7 +153,8 @@ const trazoAnillo = P => 'M' + P.map(puntoTexto).join('L') + 'Z';
 
 // --- Carreteras y avenidas --------------------------------------------------
 
-const etiquetasAvenidas = []; // textos que siguen el trazado de las avenidas
+const tramosAvenidas = {}; // nombre -> trazos de sus tramos
+let viaResaltada = null; // nombre de la vía cuya ficha está abierta
 const trazosVias = []; // { nm, k, d, els } por cada tramo, para resaltarlos
 Object.assign(INFO_VIAS, INFO_AVENIDAS);
 
@@ -195,11 +196,13 @@ try {
   // Avenidas y rondas (k = 't' ronda/acceso, otra cosa = avenida): borde + relleno; solo se ven de cerca
   const capaBorde = crearSvg('g', { class: 'avp' }, $('#rd')),
     capaAvenidas = crearSvg('g', { class: 'avp' }, $('#rd')),
-    capaRondas = crearSvg('g', { class: 'avp' }, $('#rd'));
+    capaRondas = crearSvg('g', { class: 'avp' }, $('#rd')),
+    // Trazos invisibles y más anchos que la avenida, para poder pulsarla con el dedo
+    capaToque = crearSvg('g', { class: 'avp' }, $('#rd'));
   AVENIDAS.forEach(([nombre, tipo, tramos]) => {
     const ronda = tipo == 't',
-      els = [];
-    let primerTramo = null;
+      els = [],
+      rellenos = [];
     tramos.forEach(P => {
       const d = trazoSuave(P);
       els.push(
@@ -211,19 +214,22 @@ try {
         ronda ? capaRondas : capaAvenidas
       );
       els.push(relleno);
-      if (!primerTramo) {
-        primerTramo = relleno;
-        relleno.id = 'av' + etiquetasAvenidas.length;
-      }
+      rellenos.push(relleno);
     });
     if (nombre) {
-      const t = crearSvg('text', { class: 'avl' }, $('#al')),
-        tp = crearSvg('textPath', { startOffset: '50%', 'text-anchor': 'middle' }, t);
-      tp.setAttribute('href', '#' + primerTramo.id);
-      tp.textContent = nombre.replace(/^Avenida /, 'Av. ').replace(/^Paseo /, 'P.º ');
-      t._p = primerTramo;
-      t._n = tp.textContent.length;
-      etiquetasAvenidas.push(t);
+      tramosAvenidas[nombre] = rellenos;
+      rellenos.forEach((relleno, i) => {
+        const toque = crearSvg(
+          'path',
+          atributosTrazo(10, 'transparent', relleno.getAttribute('d'), 1),
+          capaToque
+        );
+        toque.style.pointerEvents = 'stroke';
+        toque.style.cursor = 'pointer';
+        toque.onclick = () => {
+          if (gestosMapa.arrastre <= UMBRAL_TOQUE) abrirFichaVia(nombre, i);
+        };
+      });
     }
     trazosVias.push({ nm: nombre, els });
   });
@@ -299,8 +305,41 @@ ESCUDOS.forEach(([nombre, k, la, lo]) => {
   escudosEscalables.push({ g, x, y });
 });
 
+// Nombre de la avenida seleccionada: no se pintan todos (lían el mapa), solo el de la que se pulsa,
+// en una etiqueta junto al tramo pulsado
+const etiquetaAvenida = { g: crearSvg('g', { class: 'ava' }, $('#sd')), x: 0, y: 0, nombre: null };
+etiquetaAvenida.fondo = crearSvg('rect', { y: -9, height: 18, rx: 9 }, etiquetaAvenida.g);
+etiquetaAvenida.texto = crearSvg('text', { y: 4, 'text-anchor': 'middle' }, etiquetaAvenida.g);
+etiquetaAvenida.g.style.display = 'none';
+
+function ponerEtiquetaAvenida(nombre, tramo = 0) {
+  const e = etiquetaAvenida,
+    rellenos = tramosAvenidas[nombre];
+  e.nombre = rellenos ? nombre : null;
+  if (!rellenos) return;
+  const trazo = rellenos[tramo] || rellenos[0],
+    q = trazo.getPointAtLength(trazo.getTotalLength() / 2);
+  e.x = q.x;
+  e.y = q.y;
+  e.texto.textContent = nombre.replace(/^Avenida /, 'Av. ').replace(/^Paseo /, 'P.º ');
+  e.g.style.display = '';
+  const ancho = (e.texto.getComputedTextLength() || e.texto.textContent.length * 6.2) + 16;
+  e.fondo.setAttribute('x', -ancho / 2);
+  e.fondo.setAttribute('width', ancho);
+}
+
+// u = unidades del mapa por píxel de pantalla
+function mostrarEtiquetaAvenida(u) {
+  const e = etiquetaAvenida,
+    ver = e.nombre && e.nombre == viaResaltada && vistaMapa.w <= 240;
+  e.g.style.display = ver ? '' : 'none';
+  if (ver) e.g.setAttribute('transform', escalaFija(e.x, e.y, u) + ' translate(0 -13)');
+}
+
 // Atenúa todas las vías menos la de nombre «nombre» (null: todas normales)
 function resaltarVia(nombre) {
+  viaResaltada = nombre;
+  if (ultimaEscala) mostrarEtiquetaAvenida(ultimaEscala);
   trazosVias.forEach(r =>
     r.els.forEach(e => {
       e.style.opacity = nombre && r.nm != nombre ? 0.2 : '';
@@ -416,18 +455,7 @@ function recolocarSegunZoom(siempre) {
   });
 
   document.querySelectorAll('.avp').forEach(e => (e.style.display = v.w <= 240 ? '' : 'none'));
-  etiquetasAvenidas.forEach(t => {
-    if (t._largo === undefined)
-      try {
-        t._largo = t._p.getTotalLength(); // en unidades del mapa: no cambia con el zoom
-      } catch (e) {
-        t._largo = 0;
-      }
-    const largo = t._largo / u;
-    t.style.display = v.w <= 90 && largo > t._n * 8.5 * 0.52 * 1.3 + 12 ? '' : 'none';
-    t.style.fontSize = 8.5 * u + 'px';
-    t.style.strokeWidth = 2.5 * u + 'px';
-  });
+  mostrarEtiquetaAvenida(u);
   $('#rl').style.fontSize = 11 * u + 'px';
   escudosEscalables.forEach(q => q.g.setAttribute('transform', escalaFija(q.x, q.y, u)));
   // monumentos.js carga después: en la primera llamada puede no existir aún

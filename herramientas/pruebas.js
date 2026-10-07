@@ -126,6 +126,33 @@ prueba('Zoom suave y deslizamiento', async p => {
   igual(await p.evaluate(() => animacionMapa), null, 'la animación termina');
 });
 
+prueba('Nombres de avenidas solo al pulsarlas', async p => {
+  const etiqueta = () => p.$eval('.ava', g => (g.style.display == 'none' ? '' : g.textContent));
+  // Cerca, sobre una avenida, sin nada pulsado: no hay ningún nombre
+  const nombre = await p.evaluate(() => {
+    const nombre = Object.keys(tramosAvenidas).find(n => /Mirat/.test(n)),
+      trazo = tramosAvenidas[nombre][0],
+      q = trazo.getPointAtLength(trazo.getTotalLength() / 2);
+    centrarMapaEn(q.x, q.y, 60);
+    ajustarVista();
+    return nombre;
+  });
+  igual(await etiqueta(), '', 'sin pulsar, no se ve ningún nombre de avenida');
+  // Pulsar en el centro del tramo
+  const xy = await p.evaluate(nombre => {
+    const trazo = tramosAvenidas[nombre][0],
+      q = trazo.getPointAtLength(trazo.getTotalLength() / 2),
+      m = trazo.getScreenCTM();
+    return [m.a * q.x + m.c * q.y + m.e, m.b * q.x + m.d * q.y + m.f];
+  }, nombre);
+  await p.mouse.click(xy[0], xy[1]);
+  await p.waitForTimeout(150);
+  igual(await texto(p, '#nm'), nombre, 'pulsar la avenida abre su ficha');
+  igual(await etiqueta(), 'Av. de Mirat', 'y se ve su nombre');
+  await p.click('#x');
+  igual(await etiqueta(), '', 'al cerrar la ficha, el nombre desaparece');
+});
+
 prueba('Buscar, abrir ficha y marcar', async p => {
   await p.fill('#q', 'tejares');
   await p.press('#q', 'Enter');
