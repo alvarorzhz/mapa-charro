@@ -1,0 +1,4 @@
+// Arranque
+vb();
+upd();
+cloudInit();
