@@ -58,7 +58,10 @@ function construirZonas(grupo, base) {
       $('#zg')
     );
     z.e.onclick = () => {
-      if (gestosMapa.arrastre <= UMBRAL_TOQUE) abrirFicha(z.id);
+      if (gestosMapa.arrastre > UMBRAL_TOQUE) return;
+      // Durante el juego «¿Dónde está?» (juego.js), tocar una zona es responder
+      if (typeof juego != 'undefined' && juego.activo) responderJuego(z);
+      else abrirFicha(z.id);
     };
     z.dt = crearSvg('circle', { cx: z.x, cy: z.y }, $('#dg'));
     // Etiqueta en una línea (tx) y, si tiene «|», también en dos (tx2); ajustarVista elige cuál cabe
@@ -375,27 +378,26 @@ function ajustarVista() {
   recolocarSegunZoom(true);
 }
 
-// Durante los gestos y animaciones (arrastrar, pellizcar, rueda, deslizar, botones +/−) no se redibuja
-// el SVG: se desplaza y escala como una imagen con transform de CSS, que mueve la tarjeta gráfica sin
-// repintar. Al terminar se aplica la vista de verdad y se recolocan etiquetas y pictogramas.
-let vistaInicioGesto = null, // viewBox que está pintado mientras dura el gesto
-  rectInicioGesto = null, // posición del mapa en pantalla sin transformar
+// Durante los gestos y animaciones (arrastrar, pellizcar, rueda, deslizar, botones +/−) el mapa se
+// redibuja en directo, como mucho una vez por fotograma: se aplica la vista y, si ha cambiado la
+// escala, se recolocan etiquetas y pictogramas. Al terminar se hace un encuadre completo.
+let enGesto = false, // hay un gesto o animación en marcha
+  rectInicioGesto = null, // posición del mapa en pantalla, medida una vez por gesto
+  marcoPendiente = 0,
   temporizadorGesto = 0;
 const ESPERA_FIN_GESTO = 160; // ms sin movimiento para dar el gesto por terminado
 
 function ajustarVistaPronto() {
-  if (!vistaInicioGesto) {
+  if (!enGesto) {
+    enGesto = true;
     rectInicioGesto = mapaSvg.getBoundingClientRect();
-    const vb = mapaSvg.viewBox.baseVal;
-    vistaInicioGesto = { x: vb.x, y: vb.y, w: vb.width, h: vb.height };
   }
-  limitarVista(false);
-  const v = vistaMapa,
-    a = vistaInicioGesto,
-    s = a.w / v.w,
-    tx = ((a.x - v.x) / v.w) * (tamMapa.w || rectInicioGesto.width),
-    ty = ((a.y - v.y) / v.h) * (tamMapa.h || rectInicioGesto.height);
-  mapaSvg.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + s + ')';
+  if (!marcoPendiente)
+    marcoPendiente = requestAnimationFrame(() => {
+      marcoPendiente = 0;
+      limitarVista();
+      recolocarSegunZoom(false);
+    });
   // Con los dedos apoyados o una animación en marcha, se espera a que acaben; si no (rueda), a una pausa
   clearTimeout(temporizadorGesto);
   const enCurso = (typeof gestosMapa != 'undefined' && gestosMapa.dedos) || animacionMapa;
@@ -405,9 +407,11 @@ function ajustarVistaPronto() {
 function terminarGesto() {
   clearTimeout(temporizadorGesto);
   if (animacionMapa) return; // la animación lo llamará al acabar
-  if (!vistaInicioGesto) return;
-  vistaInicioGesto = rectInicioGesto = null;
-  mapaSvg.style.transform = '';
+  if (!enGesto) return;
+  enGesto = false;
+  rectInicioGesto = null;
+  cancelAnimationFrame(marcoPendiente);
+  marcoPendiente = 0;
   ajustarVista();
 }
 

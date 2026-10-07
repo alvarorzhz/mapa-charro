@@ -74,9 +74,9 @@ prueba('Arrastrar y acercar el mapa', async p => {
   await p.mouse.move(r[0] + 60, r[1] + 30, { steps: 6 });
   await p.mouse.up();
   // Al soltar puede seguir deslizándose un poco: se espera a que pare
-  await p.waitForFunction(() => !document.querySelector('#m').style.transform, null, { timeout: 3000 });
+  await p.waitForFunction(() => !enGesto && !animacionMapa, null, { timeout: 3000 });
   cierto((await vb()) != antes, 'el arrastre mueve el mapa');
-  igual(await p.$eval('#m', e => e.style.transform), '', 'al soltar no queda transformación');
+  cierto(await p.evaluate(() => !enGesto), 'al soltar se da el gesto por terminado');
   cierto(!(await fichaAbierta(p)), 'arrastrar no abre fichas');
   const w0 = +(await vb()).split(' ')[2];
   await p.mouse.wheel(0, -300);
@@ -89,12 +89,12 @@ prueba('Arrastrar y acercar el mapa', async p => {
 
 prueba('Zoom suave y deslizamiento', async p => {
   const ancho = () => p.$eval('#m', e => +e.getAttribute('viewBox').split(' ')[2]);
-  const quieto = () =>
-    p.waitForFunction(() => !document.querySelector('#m').style.transform, null, { timeout: 3000 });
+  const quieto = () => p.waitForFunction(() => !enGesto && !animacionMapa, null, { timeout: 3000 });
   const w0 = await ancho();
   await p.click('#zi');
-  await p.waitForTimeout(60);
-  cierto((await p.$eval('#m', e => e.style.transform)) != '', 'el botón + acerca con animación');
+  await p.waitForTimeout(90);
+  const aMedias = await ancho();
+  cierto(aMedias < w0 && aMedias > w0 / 1.6 + 0.5, 'el botón + acerca poco a poco, viéndose en directo');
   await quieto();
   cierto(Math.abs((await ancho()) - w0 / 1.6) < 1, 'acaba acercado 1,6 veces');
   // Dos toques seguidos se suman
@@ -290,6 +290,102 @@ prueba(
     }
   }
 );
+
+prueba('Imagen «Mi Salamanca»', async p => {
+  await p.evaluate(() => {
+    progreso.z.centro = progreso.z.tejares = 'v';
+    progreso.z.vidal = 'w';
+    guardar();
+    actualizar();
+  });
+  const info = await p.evaluate(async () => {
+    const b = await crearImagenMiSalamanca(),
+      img = await createImageBitmap(b);
+    return { tipo: b.type, ancho: img.width, alto: img.height, resumen: resumenProgreso() };
+  });
+  igual([info.tipo, info.ancho, info.alto], ['image/png', 1080, 1350], 'imagen PNG de 1080×1350');
+  igual([info.resumen.pisadas, info.resumen.porVisitar], [2, 1], 'cuenta lo pisado y lo pendiente');
+  await p.click('#foto');
+  await p.waitForSelector('.modal img');
+  cierto(
+    await p.$eval('.modal img', i => i.complete && i.naturalWidth == 1080),
+    'vista previa en la ventana'
+  );
+  igual(
+    await p.$$eval('.modal .botones button', bs => bs.map(b => b.textContent)),
+    ['Compartir', 'Guardar imagen'],
+    'botones'
+  );
+  await p.click('.modal .cerrar');
+  cierto(!(await p.$('.modal')), 'la ventana se cierra');
+});
+
+prueba('Juego «¿Dónde está?»', async p => {
+  // El reto del día es el mismo para todos: mismas pistas con la misma fecha
+  const mismas = await p.evaluate(() => {
+    const a = elegirPistas(azarConSemilla(semillaDeTexto('2026-10-07'))),
+      b = elegirPistas(azarConSemilla(semillaDeTexto('2026-10-07')));
+    return [
+      a.length,
+      new Set(a.map(q => q.zona.id)).size,
+      a.map(q => q.zona.id + q.tipo).join() == b.map(q => q.zona.id + q.tipo).join()
+    ];
+  });
+  igual(mismas, [10, 10, true], '10 pistas de zonas distintas, iguales con la misma fecha');
+  // Ninguna pista dice el nombre de su zona
+  const chivatas = await p.evaluate(() =>
+    pistasPosibles()
+      .filter(q => q.texto && q.tipo != 'Monumento' && q.texto.includes(q.zona.n))
+      .map(q => q.zona.n)
+  );
+  igual(chivatas, [], 'las pistas no regalan el nombre');
+  await p.click('#jug');
+  cierto(await p.$eval('#jp', e => e.classList.contains('o')), 'se abre el panel del juego');
+  igual(await p.$eval('#lg', e => getComputedStyle(e).display), 'none', 'sin nombres de zonas en el mapa');
+  // Tocar la zona buena en el mapa
+  const buena = await p.evaluate(() => juego.preguntas[0].zona.id);
+  const xy = await p.evaluate(id => {
+    const z = zonas.find(q => q.id == id),
+      m = z.e.getScreenCTM();
+    return [m.a * z.x + m.c * z.y + m.e, m.b * z.x + m.d * z.y + m.f];
+  }, buena);
+  await p.mouse.click(xy[0], xy[1]);
+  // Si justo ahí había otra zona encima del centro, vale igual: lo importante es que responde
+  const r = await p.evaluate(() => ({
+    respondida: juego.respondida,
+    puntos: juego.puntos,
+    ficha: document.querySelector('#sh').classList.contains('o')
+  }));
+  cierto(r.respondida && r.puntos > 0, 'tocar una zona responde y suma puntos');
+  cierto(!r.ficha, 'durante el juego no se abren fichas');
+  cierto(await p.$eval('#jgo', g => g.querySelectorAll('.jbien').length == 1), 'se marca la zona buena');
+  // Las otras 9, respondiendo una zona cualquiera
+  for (let i = 1; i < 10; i++) {
+    await p.click('#jp .botones button');
+    await p.evaluate(() => responderJuego(zonas.find(z => z.id == 'tejares')));
+  }
+  await p.click('#jp .botones button');
+  const final = await p.evaluate(() => ({
+    j: progreso.j,
+    guardado: JSON.parse(localStorage.charro2).j,
+    texto: document.querySelector('#jp h2').textContent
+  }));
+  cierto(final.j.m > 0 && final.j.d.length == 10 && final.j.s == final.j.m, 'guarda récord y reto del día');
+  igual(final.guardado, final.j, 'también en el navegador');
+  cierto(/de 1000 puntos/.test(final.texto), 'pantalla final');
+  // Volver a pulsar el botón el mismo día: partida libre
+  await p.click('#jp .botones button:nth-child(2)');
+  cierto(await p.evaluate(() => juego.activo && !juego.diario), 'otra partida es libre');
+  await p.click('#jp .jx');
+  cierto(
+    await p.evaluate(() => !juego.activo && !document.body.classList.contains('jugando')),
+    'salir deja el mapa normal'
+  );
+  await p.click('#jug');
+  await p.fill('#q', 'tejares');
+  await p.press('#q', 'Enter');
+  cierto(await p.evaluate(() => !juego.activo), 'abrir una ficha desde el buscador sale del juego');
+});
 
 prueba('Copia de seguridad', async p => {
   await p.evaluate(() => {

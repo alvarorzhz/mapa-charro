@@ -54,6 +54,7 @@ const pedanias = PROVINCIA.m.flatMap(m => m.P);
 //   gv [clave]                     sitios marcados estando allí con el GPS
 //   f  0 | 1                       rana encontrada
 //   t  milisegundos                última modificación (para elegir entre la copia local y la de la cuenta)
+//   j  { m, d, s }                 juego «¿Dónde está?»: mejor puntuación, fecha del último reto del día y sus puntos
 const CLAVE_LOCAL = 'charro2';
 const ESTADOS_MARCA = [
   ['v', 'He estado'],
@@ -78,9 +79,26 @@ function limpiarProgreso(o) {
   const gv = Array.isArray(o && o.gv)
     ? [...new Set(o.gv.filter(k => typeof k == 'string' && (z[k] == 'v' || p[k] == 'v')))]
     : [];
-  return { z, f: o && o.f ? 1 : 0, t: o && +o.t > 0 ? +o.t : 0, gv, p };
+  const j = o && o.j && typeof o.j == 'object' ? o.j : {},
+    puntosJuego = x => Math.max(0, Math.min(1000, Math.round(+x) || 0));
+  return {
+    z,
+    f: o && o.f ? 1 : 0,
+    t: o && +o.t > 0 ? +o.t : 0,
+    gv,
+    p,
+    j: { m: puntosJuego(j.m), d: /^\d{4}-\d\d-\d\d$/.test(j.d) ? j.d : '', s: puntosJuego(j.s) }
+  };
 }
-const datosParaGuardar = o => ({ z: o.z, f: o.f, t: o.t || 0, gv: o.gv || [], p: o.p || {}, v: 1 });
+const datosParaGuardar = o => ({
+  z: o.z,
+  f: o.f,
+  t: o.t || 0,
+  gv: o.gv || [],
+  p: o.p || {},
+  j: o.j || { m: 0, d: '', s: 0 },
+  v: 1
+});
 
 let progreso = { z: {}, f: 0 };
 try {

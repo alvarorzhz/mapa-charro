@@ -82,6 +82,7 @@ function modoBotonesFicha(modo) {
 }
 
 function mostrarFicha() {
+  if (typeof juego != 'undefined' && juego.activo) salirJuego(); // abrir una ficha (p. ej. desde el buscador) deja el juego
   document.querySelector('.sb').scrollTop = 0;
   $('#sh').classList.remove('grande');
   // En el móvil, sube la página hasta el mapa para que se vea por encima del panel
