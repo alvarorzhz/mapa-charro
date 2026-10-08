@@ -13,12 +13,12 @@ const PASOS_BIENVENIDA = [
   [
     '👆',
     'Pulsa una zona',
-    'Se abre su ficha. Pulsa «He estado» o «Quiero ir» y se pinta en el mapa. Con dos dedos (o la rueda del ratón) acercas y alejas.'
+    'Se abre su ficha. Pulsa «He estado» o «Quiero ir» y se pinta en el mapa. Con dos dedos (o la rueda del ratón) acercas y alejas. La brújula marca dónde estás: tu ubicación no se guarda ni se envía.'
   ],
   [
     '🏛️',
     'Mucho por descubrir',
-    'Debajo del mapa puedes mostrar los monumentos, las carreteras y una ruta a pie por el centro. En «Provincia» están todos los pueblos y en «Lista», todas las zonas.'
+    'Con el botón de capas, junto al zoom, enciendes los monumentos y las carreteras y ves la leyenda. Debajo del mapa, una ruta a pie por el centro y «Salamanca en el tiempo». En «Provincia» están todos los pueblos y en «Lista», todas las zonas.'
   ],
   [
     '🎯',

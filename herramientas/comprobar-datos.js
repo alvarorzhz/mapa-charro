@@ -194,6 +194,13 @@ for (const id in D.EPOCA_ZONA) {
 const html = leer('index.html');
 const enlazados = [...html.matchAll(/(?:src|href)="([^"#:]+?)(\?v=(\d+))?"/g)];
 enlazados.forEach(m => comprobar(existe(m[1]), `index.html enlaza ${m[1]}, que no existe`));
+// La frase de arriba cuenta lo mismo que el marcador: barrios, pueblos y el resto de la provincia
+const barrios = D.ZONAS.filter(z => z[3] < 5).length,
+  pueblosMapa = D.ZONAS.filter(z => z[3] == 5).length;
+comprobar(
+  html.includes(`class="sub">${barrios} barrios, ${pueblosMapa} pueblos y el resto de la provincia.`),
+  `index.html: la frase de arriba debe decir «${barrios} barrios, ${pueblosMapa} pueblos y el resto de la provincia»`
+);
 const versiones = new Set(enlazados.filter(m => m[3]).map(m => m[3]));
 comprobar(
   versiones.size == 1,
@@ -268,8 +275,12 @@ comprobar(
       `novedades.json ${n.version}: fecha «${n.fecha}» (AAAA-MM-DD)`
     );
     comprobar(
-      n.titulo && n.usuario && n.tecnico,
-      `novedades.json ${n.version}: falta título, párrafo de usuario o técnico`
+      n.titulo &&
+        n.tecnico &&
+        Array.isArray(n.usuario) &&
+        n.usuario.length &&
+        n.usuario.every(t => t && typeof t == 'string'),
+      `novedades.json ${n.version}: falta título, técnico o los puntos para el usuario (una lista de frases)`
     );
     if (i)
       comprobar(

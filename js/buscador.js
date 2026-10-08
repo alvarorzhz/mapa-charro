@@ -236,7 +236,12 @@ function mostrarRecientes() {
 }
 
 $('#q').addEventListener('input', buscar);
-$('#q').addEventListener('focus', () => !$('#q').value.trim() && mostrarRecientes());
+// Al volver a la caja, los resultados de lo que haya escrito (o los recientes, si está vacía)
+$('#q').addEventListener('focus', buscar);
+// Al pulsar fuera del buscador, los resultados se recogen (lo escrito se queda)
+document.addEventListener('pointerdown', e => {
+  if (!e.target.closest('.qs')) $('#sr').textContent = '';
+});
 // Al salir del buscador (sin elegir nada), se recogen los recientes
 $('#q').addEventListener('blur', () =>
   setTimeout(() => {

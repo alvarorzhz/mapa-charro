@@ -1,37 +1,85 @@
 [
   {
+    "version": "1.2.3",
+    "fecha": "2026-10-08",
+    "titulo": "Tema claro u oscuro, fuentes y novedades más claras",
+    "usuario": [
+      "Nuevo botón al pie para cambiar entre tema claro y oscuro. Se recuerda en tu navegador.",
+      "Las cuentas cuadran: arriba pone «47 barrios, 12 pueblos y el resto de la provincia», las mismas 60 zonas del marcador.",
+      "El buscador recoge los resultados al pulsar fuera, y vuelven al volver a la caja.",
+      "«Sobre los datos» pasa a llamarse «Fuentes» y es una lista corta de dónde sale cada cosa.",
+      "Se quita la copia de seguridad con código: el progreso ya se guarda solo (en tu cuenta dentro de Claude y en el navegador en la web).",
+      "La ayuda («?») está al día con el botón de capas y explica que tu ubicación no se guarda ni se envía.",
+      "Estas novedades, ahora en puntos para leerlas de un vistazo."
+    ],
+    "tecnico": "Tema: botón .tema en #ver (inicio.js), data-theme en <html> y preferencia en localStorage charro-tema, aplicada por un script en línea en el <head> antes de pintar. Frase de arriba con el resto de la provincia, comprobada contra ZONAS en comprobar-datos. Buscador: pointerdown fuera de .qs vacía #sr y el foco en #q vuelve a buscar. #dt como lista ul.fuentes. Fuera la copia de seguridad (#cd, #cp, #ld, sus manejadores y su prueba). bienvenida.js: paso 3 con el panel de capas y paso 2 con la nota de la ubicación. novedades.json: usuario es una lista de frases en todas las versiones (inicio.js la pinta como ul; comprobar-datos lo exige; anotado en CLAUDE.md). Pruebas nuevas: «Tema claro y oscuro» y el cierre del buscador."
+  },
+  {
     "version": "1.2.2",
     "fecha": "2026-10-08",
     "titulo": "Municipios vecinos y etapas más claras",
-    "usuario": "Los municipios de alrededor que se ven más apagados en el mapa, como Valverdón, Monterrubio de Armuña o San Cristóbal de la Cuesta, tienen ahora sus límites reales y encajan con los pueblos de al lado. Sus nombres se leen mejor y, al pasar el ratón por encima (o al pulsarlos en el móvil), se ve de qué municipio y comarca se trata; en el campo de alrededor de la ciudad, «Término de Salamanca». En «Salamanca en el tiempo», la lista de lo que aparece en cada etapa es ahora un botón por zona: al pulsarlo, el mapa va hasta ella y te dice de dónde sale su fecha. Y los textos que decían «toca» ahora dicen «pulsa», que vale igual en el móvil y en el ordenador.",
+    "usuario": [
+      "Los municipios de alrededor (Valverdón, Monterrubio de Armuña, San Cristóbal de la Cuesta…) tienen ahora sus límites reales y encajan con los pueblos de al lado.",
+      "Sus nombres se leen mejor. Al pasar el ratón, o al pulsarlos en el móvil, se ve el municipio y su comarca.",
+      "En el campo que rodea la ciudad se ve «Término de Salamanca».",
+      "«Salamanca en el tiempo»: lo que aparece en cada etapa es ahora un botón por zona. Al pulsarlo, el mapa va hasta ella y te dice de dónde sale su fecha.",
+      "Los textos dicen «pulsa» en vez de «toca», que vale igual en el móvil y en el ordenador."
+    ],
     "tecnico": "LIMITES_VECINOS en js/datos/alfoz.js: término de OpenStreetMap (Nominatim, simplificado a unos 30 m) de los 24 municipios de PROVINCIA que caen en el lienzo, descargados por herramientas/lindes-alfoz.js (con reintentos si Nominatim pide esperar); mapa.js los usa en vez de las lindes de la pestaña Provincia, y comprobar-datos verifica nombres y anillos. municipiosFondo y municipioFondoEn (isPointInFill, el fondo no recibe eventos): globo con el municipio o el término en escritorio (escritorio.js) y aviso al pulsar el fondo. .lbf a 10 px. Etapas: listaNacen (tiempo.js) con un botón .tzona por zona, contorno en limiteFoco al pasar y al pulsar, animarVista a la zona y el motivo de EPOCA_ZONA en .tmotivo (aria-live). «Toca» → «Pulsa» en el subtítulo, la bienvenida, el juego y Provincia. Pruebas nuevas en «Salamanca en el tiempo» y «Con ratón»."
   },
   {
     "version": "1.2.1",
     "fecha": "2026-10-08",
     "titulo": "Capas, buscador más útil y mejoras en escritorio",
-    "usuario": "El mapa está más despejado: carreteras, monumentos y la leyenda pasan a un panel de capas que se abre con el botón de capas, junto al zoom; «Ruta a pie» y «Salamanca en el tiempo» quedan como dos botones bajo el mapa. Al marcar «He estado» la zona celebra con un pequeño vítor (y el móvil vibra un poco). El buscador encuentra ahora barrios, pueblos, pedanías, monumentos, calles, restaurantes, la ruta y las etapas de la historia, busca también dentro de las curiosidades («rana» te lleva a la Universidad), resalta lo que coincide, te sugiere «¿Querías decir…?» si escribes mal un nombre y recuerda tus últimas búsquedas. En la ficha, el botón de compartir es ahora un icono para dejar más sitio a «He estado» y «Quiero ir». En el ordenador, al pasar el ratón por una zona ves su nombre y cómo la tienes, la tecla «/» lleva al buscador, debajo del mapa están los atajos de teclado y los logros salen a la vista.",
+    "usuario": [
+      "Mapa más despejado: carreteras, monumentos y la leyenda están en el botón de capas, junto al zoom.",
+      "«Ruta a pie» y «Salamanca en el tiempo», como dos botones bajo el mapa.",
+      "Al marcar «He estado», la zona celebra con un pequeño vítor y el móvil vibra un poco.",
+      "Buscador más útil: barrios, pueblos, pedanías, monumentos, calles, restaurantes, la ruta y las etapas de la historia.",
+      "El buscador también mira dentro de las curiosidades («rana» te lleva a la Universidad), sugiere «¿Querías decir…?» y recuerda tus últimas búsquedas.",
+      "En la ficha, compartir es ahora un icono, y «He estado» y «Quiero ir» tienen más sitio.",
+      "En el ordenador: el nombre de cada zona al pasar el ratón, la tecla «/» para buscar, los atajos de teclado a la vista y los logros abiertos."
+    ],
     "tecnico": "Panel #capas (vistas.js: abrirCapas, cierre con ×, Esc o pulsación fuera) con #rb/#mb como interruptores (marcarInterruptor en util.js, aria-pressed) y la leyenda .lg; .modos con #rt y #tm. #cmp como icono SVG con aria-label. animarVitor (mapa.js, capa #vitor, anillo y rayos a escala fija; navigator.vibrate; nada con movimiento reducido). js/buscador.js nuevo: candidatos de zonas, monumentos, ruta, etapas, PUEBLOS, municipios y pedanías, DONDE_COMER e INFO_VIAS; todas las palabras sin tildes; orden por nombre exacto, mapa antes que provincia y encaje, luego curiosidades y al final coincidencias a mitad de palabra; Levenshtein para «¿Querías decir…?»; recientes en localStorage charro-busquedas; flechas e Intro. js/escritorio.js nuevo: globo .globo al pasar el ratón (hover:hover y pointer:fine; estado o época en el modo tiempo), «/» enfoca #q, #lgr abierto en escritorio; línea .atajos. Arreglos: panel de capas con box-sizing para no salirse en el móvil; contraste de los logros pendientes. Pruebas nuevas: panel de capas, buscador y «Con ratón». GitHub Actions con actions/checkout@v5 y setup-node@v5; package-lock.json al día. Las novedades se piden como novedades.json?v=N (el enlace prefetch de index.html, que sube version.js), para que la caché del navegador o del modo sin conexión no enseñe las de una versión anterior."
   },
   {
     "version": "1.2.0",
     "fecha": "2026-10-08",
     "titulo": "Nació en…, enlaces por etapa y tarjetas por zona",
-    "usuario": "Cada ficha de barrio o pueblo dice ahora cuándo nació y en qué etapa de «Salamanca en el tiempo», con un enlace para verlo en el mapa histórico; si su fecha aún no está documentada, lo dice. Cada etapa tiene su propio enlace para compartirla. Al compartir una zona, la vista previa en WhatsApp, Telegram o redes muestra su propia tarjeta, con su nombre, su frase y la zona resaltada en el mapa. Además, los textos se leen mejor: hemos revisado el contraste de colores en tema claro y oscuro.",
+    "usuario": [
+      "Cada ficha de barrio o pueblo dice cuándo nació, con un enlace para verlo en «Salamanca en el tiempo».",
+      "Cada etapa de la historia tiene su propio enlace para compartirla.",
+      "Al compartir una zona, WhatsApp, Telegram o las redes muestran su propia tarjeta, con su nombre y la zona resaltada en el mapa.",
+      "Los textos se leen mejor: hemos revisado el contraste de colores en tema claro y oscuro."
+    ],
     "tecnico": "pintarNacimiento (tiempo.js) en abrirFicha, con #nac oculto en el resto de fichas. Enlaces #tiempo/1…7: pintarEtapa reescribe la dirección sin entrada nueva en el historial y aplicarEnlace abre la etapa (una que no existe abre la primera). herramientas/tarjetas.js (antes tarjeta-og.js) genera og.png y z/<id>.html + z/<id>.jpg para las 59 zonas, con dibujarMapaImagen aceptando encuadre y sin sellos; urlParaCompartir usa z/<id>.html en las fichas de zona; comprobar-datos verifica que cada página coincide con los datos y que la imagen mide 1200×630. Contraste WCAG AA: variables --vit-texto y --oro-texto, rojo de fondo más hondo en oscuro, notas y rótulos menos apagados; prueba fija con axe-core en claro y oscuro. GitHub Actions (.github/workflows/pruebas.yml): datos, Prettier y pruebas en cada push; package-lock.json, Playwright fijado a 1.56.0; version.js escribe sw.js sin coma final."
   },
   {
     "version": "1.1.0",
     "fecha": "2026-10-08",
     "titulo": "Salamanca en el tiempo",
-    "usuario": "Nuevo botón «Salamanca en el tiempo» en la leyenda del mapa: recorre la ciudad en siete etapas, del castro vetón a hoy, viendo qué barrios y pueblos ya existían, cuáles nacen en cada época y cuáles aún no tienen fecha documentada. Aparece la cerca nueva, la muralla medieval, con once de sus trece puertas, hasta su derribo en el siglo XIX. Mientras miras la historia, tus marcas de «He estado» y «Quiero ir» se apagan para no ensuciar la vista, y vuelven al salir. Además, los huecos entre la ciudad y los pueblos ya no quedan vacíos: se ve el término de Salamanca y los municipios vecinos con su nombre. En el juego «¿Dónde está?» ahora se ven los nombres de las zonas para orientarse. Y al pulsar la versión, al pie de la página, salen estas novedades.",
+    "usuario": [
+      "Nuevo «Salamanca en el tiempo»: la ciudad en siete etapas, del castro vetón a hoy, con lo que ya existía y lo que nace en cada época.",
+      "Se ve la muralla medieval, con once de sus trece puertas, hasta su derribo en el siglo XIX.",
+      "Mientras miras la historia, tus marcas se apagan para no ensuciar la vista, y vuelven al salir.",
+      "Entre la ciudad y los pueblos ya no hay huecos: se ve el término de Salamanca y los municipios vecinos con su nombre.",
+      "En el juego «¿Dónde está?» se ven los nombres de las zonas para orientarse.",
+      "Al pulsar la versión, al pie de la página, salen estas novedades."
+    ],
     "tecnico": "js/tiempo.js y js/datos/tiempo.js (ETAPAS, EPOCA_ZONA con fuente por zona, MURALLA). La muralla une los puntos de los paseos que ocuparon su sitio (AVENIDAS: San Vicente, Carmelitas, Mirat, Canalejas, Rector Esperabé, San Gregorio); las puertas, geocodificadas con Nominatim y llevadas al anillo. El estado de cada zona va en data-ep (pintarZona reescribe las clases) y el modo se apaga desde olvidarMonumento; puertas a tamaño fijo desde recolocarSegunZoom. Enlace #tiempo. TERMINO_SALAMANCA (OpenStreetMap) se descarga con herramientas/lindes-alfoz.js; capa #fondo bajo las zonas con el término y los municipios de PROVINCIA que caen en el lienzo, nombres en #lgf. En el juego ya no se oculta #lg. Versión visible semver en package.json, copiada a <meta name=\"version\"> por version.js; este archivo, enlazado con prefetch para el modo sin conexión y comprobado por comprobar-datos."
   },
   {
     "version": "1.0.0",
     "fecha": "2026-10-07",
     "titulo": "Primera versión numerada",
-    "usuario": "Mapa charro de Salamanca: los barrios de la ciudad con sus límites oficiales y los pueblos de alrededor con su término municipal. Cada zona tiene su ficha con curiosidades, leyendas, foto y dónde comer, y la puedes marcar con «He estado» o «Quiero ir», también con el GPS, para ir sumando logros. Incluye los monumentos más importantes con una mini infografía, una ruta a pie por el centro, las carreteras y avenidas, y la pestaña Provincia con todos los pueblos y pedanías. Puedes jugar al reto diario «¿Dónde está?» y sacar la imagen de «Mi Salamanca» para compartirla. Funciona sin conexión, guarda tu progreso en tu cuenta cuando la usas dentro de Claude, tiene una bienvenida la primera vez y se puede usar con teclado y lector de pantalla.",
+    "usuario": [
+      "Los barrios de Salamanca con sus límites oficiales y los pueblos de alrededor con su término municipal.",
+      "Cada zona tiene su ficha con curiosidades, leyendas, foto y dónde comer.",
+      "Márcalas con «He estado» o «Quiero ir», también con el GPS, y ve sumando logros.",
+      "Monumentos con una mini infografía, una ruta a pie por el centro, carreteras y avenidas, y la pestaña Provincia con todos los pueblos y pedanías.",
+      "Reto diario «¿Dónde está?» e imagen de «Mi Salamanca» para compartir.",
+      "Funciona sin conexión, guarda tu progreso en tu cuenta cuando la usas dentro de Claude y se puede usar con teclado y lector de pantalla."
+    ],
     "tecnico": "Web estática sin compilar: scripts clásicos con ámbito global compartido en el orden de index.html; datos en js/datos (sin lógica) y lógica en js/*.js. Mapa SVG (viewBox 400×480) con zoom y arrastre redibujados en directo por fotograma, zoom animado e inercia (activarGestos en util.js). Límites de barrios, avenidas, ruta a pie y términos del alfoz de OpenStreetMap. Progreso en localStorage (charro2) y, dentro de Claude, en la cuenta con las capacidades db y user; descargas con downloads. Service worker con versión interna ?v=N que sube herramientas/version.js. Tarjeta Open Graph og.png. Pruebas en navegador con Playwright (herramientas/pruebas.js, móvil y escritorio) y comprobación de datos (herramientas/comprobar-datos.js) antes de cada commit."
   }
 ]

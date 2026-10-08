@@ -1,6 +1,6 @@
-// Pestañas, marcador general, lista, buscador, copia de seguridad y teclado
+// Pestañas, marcador general, lista, panel de capas y teclado
 
-// Repinta todo lo que depende del progreso: barra y contador, rana, código de copia, logros y la pestaña abierta
+// Repinta todo lo que depende del progreso: barra y contador, rana, logros y la pestaña abierta
 function actualizar() {
   const marcas = Object.values(progreso.z),
     pisadas = marcas.filter(x => x == 'v').length,
@@ -16,7 +16,6 @@ function actualizar() {
     ' por visitar' +
     (progreso.f ? '. Rana encontrada 🐸' : '');
   $('#fr').style.opacity = progreso.f ? 1 : 0.45;
-  $('#cd').value = btoa(JSON.stringify(progreso));
   try {
     pintarLogros();
     if (pestana == 'list') pintarLista();
@@ -89,29 +88,6 @@ function pintarLista() {
 $('#vmap').onclick = () => cambiarPestana('map');
 $('#vprov').onclick = () => cambiarPestana('prov');
 $('#vlist').onclick = () => cambiarPestana('list');
-
-// --- Copia de seguridad: el progreso en base64 ------------------------------
-$('#cp').onclick = () => {
-  try {
-    navigator.clipboard.writeText($('#cd').value);
-    aviso('Código copiado');
-  } catch (e) {
-    $('#cd').select();
-  }
-};
-$('#ld').onclick = () => {
-  try {
-    const leido = JSON.parse(atob($('#cd').value.trim()));
-    if (!leido || typeof leido.z != 'object') throw 0;
-    progreso = limpiarProgreso(leido);
-    guardar();
-    todasLasZonas.forEach(pintarZona);
-    actualizar();
-    aviso('Mapa cargado');
-  } catch (e) {
-    aviso('Código no válido');
-  }
-};
 
 // --- Panel de capas: interruptores de carreteras y monumentos, y la leyenda ----------
 function abrirCapas(abrir = $('#capas').hidden) {

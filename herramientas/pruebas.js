@@ -257,13 +257,15 @@ prueba('Mapa con teclado y lector de pantalla', async p => {
   cierto(await p.evaluate(() => !document.activeElement.closest('#zg')), 'con Tab se sale del mapa');
   // Versión al pie y sin el botón de «Resto de la provincia»
   cierto(
-    /^Versión \d+\.\d+\.\d+ \(\d+\)$/.test(await texto(p, '#ver')),
+    /^Versión \d+\.\d+\.\d+ \(\d+\)$/.test(await texto(p, '#ver button:first-child')),
     'versión al pie, con la interna entre paréntesis'
   );
   await p.click('#ver button');
   await p.waitForSelector('.modal .novedades h4');
   cierto(
-    (await texto(p, '.modal .novedades h4')).startsWith((await texto(p, '#ver')).split(' ')[1]),
+    (await texto(p, '.modal .novedades h4')).startsWith(
+      (await texto(p, '#ver button:first-child')).split(' ')[1]
+    ),
     'al pulsarla salen las novedades, empezando por esta versión'
   );
   await p.click('.modal .cerrar');
@@ -442,6 +444,11 @@ prueba('Buscador', async p => {
     (await resultados())[0].startsWith('Universidad') && (await resultados())[0].includes('Curiosidad'),
     'palabras de las curiosidades, antes que lo que solo lo lleva en medio (Fuente Serrana)'
   );
+  // Al pulsar fuera se recogen; al volver a la caja, vuelven
+  await p.click('h1');
+  igual(await p.$$eval('#sr button', b => b.length), 0, 'se recogen al pulsar fuera');
+  await p.focus('#q');
+  cierto((await resultados()).length > 0, 'vuelven al volver a la caja');
   await p.fill('#q', 'garrido norte');
   igual((await resultados())[0].split(/Zona/)[0], 'Garrido Norte', 'varias palabras');
   await p.fill('#q', 'chamberri');
@@ -515,6 +522,21 @@ prueba('Con ratón: globo, «/» y atajos', async p => {
   // Atajos a la vista y Logros abierto, solo en escritorio
   igual(await p.$eval('.atajos', e => getComputedStyle(e).display != 'none'), escritorio, 'línea de atajos');
   igual(await p.$eval('#lgr', e => e.open), escritorio, 'Logros abierto');
+});
+
+prueba('Tema claro y oscuro', async (p, url) => {
+  const tema = () => p.evaluate(() => getComputedStyle(document.body).backgroundColor);
+  await p.emulateMedia({ colorScheme: 'light' });
+  const claro = await tema();
+  cierto((await texto(p, '#ver .tema')).includes('oscuro'), 'en claro ofrece el oscuro');
+  await p.click('#ver .tema');
+  cierto((await tema()) != claro, 'cambia a oscuro');
+  cierto((await texto(p, '#ver .tema')).includes('claro'), 'y ofrece volver al claro');
+  await p.goto(url);
+  await p.waitForTimeout(250);
+  cierto((await tema()) != claro, 'se recuerda al volver');
+  await p.click('#ver .tema');
+  igual(await tema(), claro, 'vuelve a claro');
 });
 
 prueba('Buscar, abrir ficha y marcar', async p => {
@@ -794,18 +816,6 @@ prueba('Juego «¿Dónde está?»', async p => {
   await p.fill('#q', 'tejares');
   await p.press('#q', 'Enter');
   cierto(await p.evaluate(() => !juego.activo), 'abrir una ficha desde el buscador sale del juego');
-});
-
-prueba('Copia de seguridad', async p => {
-  await p.evaluate(() => {
-    document.querySelectorAll('details').forEach(d => (d.open = true));
-    $('#cd').value = btoa(JSON.stringify({ z: { centro: 'v', univ: 'w' } }));
-  });
-  await p.click('#ld');
-  igual(await texto(p, '#cn'), '1 de 60 zonas pisadas, 1 por visitar', 'carga el código');
-  await p.evaluate(() => ($('#cd').value = 'basura'));
-  await p.click('#ld');
-  igual(await texto(p, '#ts'), 'Código no válido', 'rechaza un código malo');
 });
 
 prueba(

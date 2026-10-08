@@ -21,7 +21,10 @@ async function mostrarNovedades() {
         '',
         crear('h4', '', n.version + ' · ' + n.titulo),
         crear('small', '', formatoFecha(n.fecha)),
-        crear('p', '', n.usuario)
+        // En puntos (desde la 1.2.2); si alguna viniera como párrafo, tal cual
+        Array.isArray(n.usuario)
+          ? crear('ul', '', ...n.usuario.map(t => crear('li', '', t)))
+          : crear('p', '', n.usuario)
       )
     )
   );
@@ -29,7 +32,7 @@ async function mostrarNovedades() {
 }
 // Versión al pie de la página: la de package.json (1.4.0) y, entre paréntesis, el número interno ?v=
 // que sube herramientas/version.js en cada cambio (el que hace que el móvil baje los archivos nuevos).
-// Al pulsarla salen las novedades de cada versión (novedades.json, el párrafo para el usuario).
+// Al pulsarla salen las novedades de cada versión (novedades.json, los puntos para el usuario).
 {
   const meta = document.querySelector('meta[name="version"]'),
     v = (document.querySelector('script[src*="?v="]') || {}).src,
@@ -42,6 +45,32 @@ async function mostrarNovedades() {
   boton.setAttribute('aria-label', boton.textContent + ': ver las novedades');
   boton.onclick = mostrarNovedades;
   $('#ver').appendChild(boton);
+}
+
+// Tema claro u oscuro, al pie. Sin elegir, el del sistema; lo elegido se recuerda en este navegador
+// (lo aplica antes de pintar un script en el <head> de index.html, para que no parpadee)
+const CLAVE_TEMA = 'charro-tema';
+const temaActual = () =>
+  document.documentElement.dataset.theme ||
+  (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+{
+  const boton = crear('button', 'enlace tema');
+  const pintar = () => {
+    const oscuro = temaActual() == 'dark';
+    boton.textContent = oscuro ? '☀️ Tema claro' : '🌙 Tema oscuro';
+    boton.setAttribute('aria-label', oscuro ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro');
+  };
+  boton.onclick = () => {
+    const nuevo = temaActual() == 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = nuevo;
+    try {
+      localStorage.setItem(CLAVE_TEMA, nuevo);
+    } catch (e) {}
+    pintar();
+  };
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', pintar);
+  pintar();
+  $('#ver').append(' · ', boton);
 }
 ajustarVista();
 actualizar();
