@@ -1,6 +1,8 @@
 // Descarga de OpenStreetMap (Nominatim) el término municipal de cada pueblo de alrededor del mapa de
-// la ciudad (ALFOZ en js/datos/provincia.js) y lo guarda en js/datos/alfoz.js como LIMITES_ALFOZ, y el
-// del propio municipio de Salamanca como TERMINO_SALAMANCA (el campo entre la ciudad y los pueblos).
+// la ciudad (ALFOZ en js/datos/provincia.js) y lo guarda en js/datos/alfoz.js como LIMITES_ALFOZ, el
+// del propio municipio de Salamanca como TERMINO_SALAMANCA (el campo entre la ciudad y los pueblos) y
+// el de los demás municipios que asoman por el mapa (Valverdón, Monterrubio…) como LIMITES_VECINOS: las
+// lindes de la pestaña Provincia son demasiado bastas para verlas de cerca junto a las otras.
 // Uso, desde la raíz del repositorio:  node herramientas/lindes-alfoz.js
 // Solo hace falta volver a ejecutarlo si se añade un pueblo o cambian los límites en OpenStreetMap.
 // Usa curl (respeta el proxy del sistema) y espera entre peticiones, como pide Nominatim.
@@ -10,31 +12,45 @@ const vm = require('vm');
 const { execFileSync } = require('child_process');
 
 const RAIZ = path.join(__dirname, '..');
-const { ALFOZ, ZONAS } = vm.runInNewContext(
+const { ALFOZ, ZONAS, PROVINCIA } = vm.runInNewContext(
   ['zonas', 'provincia']
     .map(f => fs.readFileSync(path.join(RAIZ, 'js/datos/' + f + '.js'), 'utf8'))
-    .join('\n;\n') + ';({ ALFOZ, ZONAS })',
+    .join('\n;\n') + ';({ ALFOZ, ZONAS, PROVINCIA })',
   {}
 );
-const UMBRAL = 0.0001; // simplificación de Nominatim en grados (unos 10 m)
+// La proyección del mapa, tal cual está en js/util.js
+const proyectar = vm.runInNewContext(
+  fs.readFileSync(path.join(RAIZ, 'js/util.js'), 'utf8').match(/const proyectar = ([^;]+);/)[1]
+);
+const UMBRAL = 0.0001, // simplificación de Nominatim en grados (unos 10 m)
+  UMBRAL_VECINOS = 0.0003; // los vecinos son solo fondo: unos 30 m bastan y pesan menos
 const esperar = ms => execFileSync('sleep', [String(ms / 1000)]);
 
-function buscar(nombre) {
+function buscar(nombre, umbral = UMBRAL) {
   const url =
     'https://nominatim.openstreetmap.org/search?format=json&polygon_geojson=1&polygon_threshold=' +
-    UMBRAL +
+    umbral +
     '&countrycodes=es&q=' +
     encodeURIComponent(nombre + ', Salamanca, Castilla y León');
-  const r = JSON.parse(
-    execFileSync('curl', [
+  // Si Nominatim pide calma (responde con un error en XML en vez de JSON), se espera y se reintenta
+  let r;
+  for (let intento = 1; !r; intento++) {
+    const texto = execFileSync('curl', [
       '-s',
       '--max-time',
       '60',
       '-A',
       'mapa-charro (github.com/alvarorzhz/mapa-charro)',
       url
-    ])
-  );
+    ]).toString();
+    try {
+      r = JSON.parse(texto);
+    } catch (e) {
+      if (intento == 5) throw new Error('Nominatim no responde para ' + nombre + ': ' + texto.slice(0, 200));
+      console.log('  (Nominatim pide esperar; reintento ' + intento + ')');
+      esperar(intento * 10000);
+    }
+  }
   const termino = r.find(
     x => x.osm_type == 'relation' && x.class == 'boundary' && x.type == 'administrative' && x.geojson
   );
@@ -61,6 +77,7 @@ const area = anillo =>
   ) / 2;
 
 const limites = {},
+  vecinos = {},
   fuentes = [];
 for (const [nombre, id] of Object.entries(ALFOZ)) {
   const t = buscar(nombre),
@@ -86,9 +103,34 @@ const sal = buscar('Salamanca'),
 fuentes.push('Salamanca: relación ' + sal.osm_id);
 console.log('Salamanca'.padEnd(28), 'relación', sal.osm_id, '·', termino.length, 'puntos');
 
+// Los demás municipios que caen, aunque sea en parte, dentro del lienzo del mapa (400×480)
+const decodificar = r => {
+  let la = 0,
+    lo = 0;
+  const puntos = [];
+  for (let i = 0; i < r.length; i += 2) puntos.push([(la += r[i]) / 1000, (lo += r[i + 1]) / 1000]);
+  return puntos;
+};
+const enLienzo = m => {
+  const P = m.r.flatMap(decodificar).map(q => proyectar(q[0], q[1])),
+    xs = P.map(q => q[0]),
+    ys = P.map(q => q[1]);
+  return !(Math.max(...xs) < 0 || Math.min(...xs) > 400 || Math.max(...ys) < 0 || Math.min(...ys) > 480);
+};
+for (const m of PROVINCIA.m.filter(m => !ALFOZ[m.n] && m.n != 'Salamanca' && enLienzo(m))) {
+  esperar(1200);
+  const t = buscar(m.n, UMBRAL_VECINOS),
+    g = t.geojson,
+    poligonos = g.type == 'Polygon' ? [g.coordinates] : g.coordinates;
+  // Todos los trozos (algún término tiene enclaves), solo el anillo exterior de cada uno
+  vecinos[m.n] = poligonos.map(p => p[0].slice(0, -1).map(([lo, la]) => [+la.toFixed(5), +lo.toFixed(5)]));
+  fuentes.push(m.n + ': relación ' + t.osm_id);
+  console.log(m.n.padEnd(28), 'relación', t.osm_id, '·', vecinos[m.n].flat().length, 'puntos');
+}
+
 const salida =
-  '// Términos municipales de los pueblos de alrededor del mapa de la ciudad y de Salamanca, [lat, lon].\n' +
-  '// © colaboradores de OpenStreetMap (ODbL), vía Nominatim, simplificados a unos 10 m.\n' +
+  '// Términos municipales de los pueblos de alrededor del mapa de la ciudad, de Salamanca y de los\n// municipios vecinos que asoman por el mapa, [lat, lon].\n' +
+  '// © colaboradores de OpenStreetMap (ODbL), vía Nominatim, simplificados a unos 10 m (los vecinos, a 30 m).\n' +
   '// Generado con node herramientas/lindes-alfoz.js; no editar a mano.\n' +
   '// ' +
   fuentes.join(' · ') +
@@ -98,6 +140,16 @@ const salida =
   ';\n' +
   'const TERMINO_SALAMANCA=' +
   JSON.stringify(termino) +
+  ';\n' +
+  '// Municipios vecinos que asoman por el mapa: { nombre: [anillo, …] }\n' +
+  'const LIMITES_VECINOS=' +
+  JSON.stringify(vecinos) +
   ';\n';
 fs.writeFileSync(path.join(RAIZ, 'js/datos/alfoz.js'), salida);
-console.log('js/datos/alfoz.js: ' + Object.keys(limites).length + ' términos');
+console.log(
+  'js/datos/alfoz.js: ' +
+    Object.keys(limites).length +
+    ' términos y ' +
+    Object.keys(vecinos).length +
+    ' vecinos'
+);

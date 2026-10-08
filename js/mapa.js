@@ -108,7 +108,8 @@ pintarZona(zonaResto);
 // --- Fondo: término de Salamanca y municipios vecinos ----------------------
 // Entre los barrios y los pueblos del mapa queda el resto del término de Salamanca (campo) y, más allá,
 // otros municipios. Se pintan debajo de las zonas, sin poder tocarlos, con su nombre en pequeño.
-const etiquetasFondo = []; // { t, x, y, lejos } nombres a tamaño fijo; lejos: solo con el mapa alejado
+const etiquetasFondo = [], // { t, x, y, lejos } nombres a tamaño fijo; lejos: solo con el mapa alejado
+  municipiosFondo = []; // { e, n, sub } para decir su nombre al pasar el ratón o pulsar (el término, primero)
 {
   const fondo = $('#fondo'),
     anillo = R => 'M' + R.map(q => puntoTexto(proyectar(q[0], q[1]))).join('L') + 'Z',
@@ -117,11 +118,13 @@ const etiquetasFondo = []; // { t, x, y, lejos } nombres a tamaño fijo; lejos: 
       t.textContent = texto;
       etiquetasFondo.push({ t, x, y, lejos });
     };
-  // Municipios de la provincia que no están en el mapa (lindes de la pestaña Provincia, simplificadas)
+  // Municipios de la provincia que no están en el mapa: su término de OpenStreetMap (LIMITES_VECINOS) y,
+  // si no lo tiene, las lindes de la pestaña Provincia, más bastas
   PROVINCIA.m
     .filter(m => !m.z && !m.cap)
     .forEach(m => {
-      const P = m.R.flat().map(q => proyectar(q[0], q[1])),
+      const R = LIMITES_VECINOS[m.n] || m.R,
+        P = R.flat().map(q => proyectar(q[0], q[1])),
         xs = P.map(q => q[0]),
         ys = P.map(q => q[1]);
       if (
@@ -131,23 +134,42 @@ const etiquetasFondo = []; // { t, x, y, lejos } nombres a tamaño fijo; lejos: 
         Math.min(...ys) > ALTO_MAPA
       )
         return;
-      crearSvg(
+      const e = crearSvg(
         'path',
-        { d: m.R.map(anillo).join(''), class: 'vecino', 'vector-effect': 'non-scaling-stroke' },
+        { d: R.map(anillo).join(''), class: 'vecino', 'vector-effect': 'non-scaling-stroke' },
         fondo
       );
+      municipiosFondo.push({ e, n: m.n, sub: 'Municipio vecino · ' + PROVINCIA.com[m.c] });
       const cx = xs.reduce((a, b) => a + b) / xs.length,
         cy = ys.reduce((a, b) => a + b) / ys.length;
       if (cx > 10 && cx < ANCHO_MAPA - 10 && cy > 10 && cy < ALTO_MAPA - 10) rotulo(m.n, cx, cy, 'lbf', true);
     });
   // El término de Salamanca (OpenStreetMap), encima de los vecinos
-  crearSvg(
-    'path',
-    { d: anillo(TERMINO_SALAMANCA), class: 'termino', 'vector-effect': 'non-scaling-stroke' },
-    fondo
-  );
+  municipiosFondo.unshift({
+    e: crearSvg(
+      'path',
+      { d: anillo(TERMINO_SALAMANCA), class: 'termino', 'vector-effect': 'non-scaling-stroke' },
+      fondo
+    ),
+    n: 'Término de Salamanca',
+    sub: 'Municipio de Salamanca, fuera de los barrios'
+  });
   rotulo('Término de Salamanca', 114, 330, 'lbf lbt', false); // el punto más alejado de la ciudad y los pueblos
 }
+
+// El término o municipio vecino que hay en un punto de la pantalla (no se pueden tocar: se busca a mano)
+function municipioFondoEn(x, y) {
+  return municipiosFondo.find(m =>
+    m.e.isPointInFill(new DOMPoint(x, y).matrixTransform(m.e.getScreenCTM().inverse()))
+  );
+}
+// Al pulsar en el fondo (no en una zona, un monumento ni una carretera), un aviso con su nombre
+$('#m').addEventListener('click', e => {
+  if (e.target != $('#m') || gestosMapa.arrastre > UMBRAL_TOQUE) return;
+  if (typeof juego != 'undefined' && juego.activo) return;
+  const m = municipioFondoEn(e.clientX, e.clientY);
+  if (m) aviso(m.n + ' · ' + m.sub.replace('Municipio vecino · ', ''));
+});
 
 // u = unidades del mapa por píxel de pantalla. Los nombres de los vecinos, solo con el mapa alejado.
 function colocarEtiquetasFondo(u) {

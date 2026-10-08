@@ -12,7 +12,7 @@ const PASOS_BIENVENIDA = [
   ],
   [
     '👆',
-    'Toca una zona',
+    'Pulsa una zona',
     'Se abre su ficha. Pulsa «He estado» o «Quiero ir» y se pinta en el mapa. Con dos dedos (o la rueda del ratón) acercas y alejas.'
   ],
   [

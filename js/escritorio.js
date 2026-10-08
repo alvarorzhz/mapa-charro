@@ -1,6 +1,6 @@
 // Comodidades de escritorio (con ratón):
 // - Al pasar el ratón por una zona, un globo con su nombre y cómo está (pisada, quieres ir…; en
-//   «Salamanca en el tiempo», si ya existía en esa etapa).
+//   «Salamanca en el tiempo», si ya existía en esa etapa). Por el fondo, el término o el municipio vecino.
 // - «/» lleva al buscador desde cualquier sitio.
 // - Logros, abierto de entrada para aprovechar la columna derecha.
 // En el móvil no hace nada de esto (no hay ratón ni sitio).
@@ -27,14 +27,18 @@ globo.hidden = true;
 globo.setAttribute('aria-hidden', 'true'); // los lectores ya tienen el nombre en la propia zona
 document.querySelector('.mw').appendChild(globo);
 
-let zonaGlobo = null;
+let cosaGlobo = null; // la zona o el municipio del fondo que enseña el globo
 function moverGlobo(e) {
-  const z = !e.buttons && conRaton() && zonaDeElemento.get(e.target);
-  if (!z || (typeof juego != 'undefined' && juego.activo)) return ocultarGlobo();
-  if (z != zonaGlobo) {
-    zonaGlobo = z;
+  if (e.buttons || !conRaton() || (typeof juego != 'undefined' && juego.activo)) return ocultarGlobo();
+  const z = zonaDeElemento.get(e.target),
+    fondo = !z && e.target == $('#m') && municipioFondoEn(e.clientX, e.clientY),
+    cosa = z || fondo;
+  if (!cosa) return ocultarGlobo();
+  if (cosa != cosaGlobo) {
+    cosaGlobo = cosa;
     globo.textContent = '';
-    globo.append(crear('b', '', z.n), crear('small', '', textoEstadoZona(z)));
+    globo.classList.toggle('fondo', !z);
+    globo.append(crear('b', '', cosa.n), crear('small', '', z ? textoEstadoZona(z) : fondo.sub));
   }
   globo.hidden = false;
   // Junto al puntero, sin salirse del mapa
@@ -48,7 +52,7 @@ function moverGlobo(e) {
 }
 function ocultarGlobo() {
   globo.hidden = true;
-  zonaGlobo = null;
+  cosaGlobo = null;
 }
 $('#m').addEventListener('pointermove', moverGlobo);
 $('#m').addEventListener('pointerleave', ocultarGlobo);

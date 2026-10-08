@@ -202,7 +202,7 @@ function pintarPanelJuego() {
       crear(
         'p',
         'mu',
-        'Toca en el mapa la zona (puedes acercar y mover el mapa). Con teclado: flechas para moverte e Intro para responder.'
+        'Pulsa en el mapa la zona (puedes acercar y mover el mapa). Con teclado: flechas para moverte e Intro para responder.'
       )
     );
   else {

@@ -24,7 +24,7 @@ const datos = [
 const codigo =
   datos.map(d => leer('js/datos/' + d + '.js')).join('\n;\n') +
   '\n;({ NOMBRES_GRUPOS, ZONAS_GRANDES, ZONAS, MONUMENTOS, RUTA, PUEBLOS, CURIOSIDADES, LEYENDAS, FOTOS, DONDE_COMER,' +
-  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, ETAPAS, EPOCA_ZONA, MURALLA })';
+  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, ETAPAS, EPOCA_ZONA, MURALLA })';
 const D = vm.runInNewContext(codigo, {});
 
 const errores = [],
@@ -64,6 +64,18 @@ Object.entries(D.ALFOZ).forEach(([nombre, id]) => {
     `${nombre}: falta su término en LIMITES_ALFOZ (node herramientas/lindes-alfoz.js)`
   );
   if (z && P) comprobar(dentro(P, z[4], z[5]), `${nombre}: el pueblo queda fuera de su término municipal`);
+});
+// Municipios vecinos que asoman por el mapa (fondo): nombres de la provincia, fuera del alfoz y con anillos
+Object.entries(D.LIMITES_VECINOS).forEach(([nombre, anillos]) => {
+  comprobar(
+    D.PROVINCIA.m.some(m => m.n == nombre) && !D.ALFOZ[nombre] && nombre != 'Salamanca',
+    `LIMITES_VECINOS: «${nombre}» no es un municipio vecino de la provincia`
+  );
+  comprobar(
+    anillos.length &&
+      anillos.every(a => a.length >= 3 && a.every(q => q.length == 2 && q.every(Number.isFinite))),
+    `LIMITES_VECINOS ${nombre}: anillos mal formados`
+  );
 });
 D.ZONAS.filter(z => z[3] == 5).forEach(z =>
   comprobar(Object.values(D.ALFOZ).includes(z[0]), `Zona ${z[0]}: pueblo de alrededor sin entrada en ALFOZ`)

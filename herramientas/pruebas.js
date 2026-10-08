@@ -297,6 +297,12 @@ prueba('Salamanca en el tiempo', async p => {
     await p.$eval('#mur', e => e.style.display != 'none' && !e.classList.contains('derribada')),
     'la cerca nueva en pie'
   );
+  // «Aparecen ahora»: un botón por zona que lleva a ella y dice de dónde sale su fecha
+  const nacen = await p.$$eval('.tzona', bs => bs.map(b => b.textContent));
+  cierto(nacen.length > 5 && nacen.includes('Úrsulas'), 'botones de las zonas que aparecen');
+  await p.click('.tzona:text-is("Úrsulas")');
+  cierto((await texto(p, '.tmotivo')).startsWith('Úrsulas: '), 'dice por qué se sabe');
+  cierto(await p.evaluate(() => limiteFoco.getAttribute('d') != ''), 'marca su contorno en el mapa');
   await p.$eval('.tbarra', e => {
     e.value = 4;
     e.dispatchEvent(new Event('input'));
@@ -480,6 +486,28 @@ prueba('Con ratón: globo, «/» y atajos', async p => {
   cierto((await texto(p, '.globo')).startsWith('ProsperidadSin pisar'), 'dice el nombre y cómo está la zona');
   await p.mouse.move(2, 2);
   cierto(await p.$eval('.globo', e => e.hidden), 'se va al salir del mapa');
+  // Por el fondo, el nombre del término o del municipio vecino; al pulsarlo, un aviso con él
+  const vecino = await p.evaluate(() => {
+    Object.assign(vistaMapa, { x: 0, y: 0, w: 400, h: 480 }); // el mapa entero, con los vecinos a la vista
+    ajustarVista();
+    document.querySelector('.mw').scrollIntoView({ block: 'center' });
+    const r = $('#m').getBoundingClientRect();
+    for (let i = 1; i < 20; i++)
+      for (let j = 1; j < 20; j++) {
+        const x = r.x + (r.width * i) / 20,
+          y = r.y + (r.height * j) / 20,
+          m = document.elementFromPoint(x, y) == $('#m') && municipioFondoEn(x, y);
+        if (m && m.n != 'Término de Salamanca') return { x, y, n: m.n };
+      }
+  });
+  await p.mouse.move(vecino.x - 1, vecino.y - 1);
+  await p.mouse.move(vecino.x, vecino.y);
+  cierto(
+    (await texto(p, '.globo')).startsWith(vecino.n + 'Municipio vecino'),
+    'globo con el municipio vecino'
+  );
+  await p.mouse.click(vecino.x, vecino.y);
+  cierto((await texto(p, '#ts')).startsWith(vecino.n), 'al pulsarlo, aviso con su nombre');
   // «/» lleva al buscador
   await p.click('h1');
   await p.keyboard.press('/');

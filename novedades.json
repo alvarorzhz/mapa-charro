@@ -1,5 +1,12 @@
 [
   {
+    "version": "1.2.2",
+    "fecha": "2026-10-08",
+    "titulo": "Municipios vecinos y etapas más claras",
+    "usuario": "Los municipios de alrededor que se ven más apagados en el mapa, como Valverdón, Monterrubio de Armuña o San Cristóbal de la Cuesta, tienen ahora sus límites reales y encajan con los pueblos de al lado. Sus nombres se leen mejor y, al pasar el ratón por encima (o al pulsarlos en el móvil), se ve de qué municipio y comarca se trata; en el campo de alrededor de la ciudad, «Término de Salamanca». En «Salamanca en el tiempo», la lista de lo que aparece en cada etapa es ahora un botón por zona: al pulsarlo, el mapa va hasta ella y te dice de dónde sale su fecha. Y los textos que decían «toca» ahora dicen «pulsa», que vale igual en el móvil y en el ordenador.",
+    "tecnico": "LIMITES_VECINOS en js/datos/alfoz.js: término de OpenStreetMap (Nominatim, simplificado a unos 30 m) de los 24 municipios de PROVINCIA que caen en el lienzo, descargados por herramientas/lindes-alfoz.js (con reintentos si Nominatim pide esperar); mapa.js los usa en vez de las lindes de la pestaña Provincia, y comprobar-datos verifica nombres y anillos. municipiosFondo y municipioFondoEn (isPointInFill, el fondo no recibe eventos): globo con el municipio o el término en escritorio (escritorio.js) y aviso al pulsar el fondo. .lbf a 10 px. Etapas: listaNacen (tiempo.js) con un botón .tzona por zona, contorno en limiteFoco al pasar y al pulsar, animarVista a la zona y el motivo de EPOCA_ZONA en .tmotivo (aria-live). «Toca» → «Pulsa» en el subtítulo, la bienvenida, el juego y Provincia. Pruebas nuevas en «Salamanca en el tiempo» y «Con ratón»."
+  },
+  {
     "version": "1.2.1",
     "fecha": "2026-10-08",
     "titulo": "Capas, buscador más útil y mejoras en escritorio",

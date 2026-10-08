@@ -245,7 +245,7 @@ function construirProvincia() {
 
   const seleccion = crear('div', 'psb');
   seleccion.id = 'psb';
-  seleccion.innerHTML = '<p class="mu" style="margin:0">Toca un municipio del mapa para verlo aquí.</p>';
+  seleccion.innerHTML = '<p class="mu" style="margin:0">Pulsa un municipio del mapa para verlo aquí.</p>';
   caja.appendChild(seleccion);
 
   vistaProvincia.filtros = crearBotonesFiltro(filtroProvincia, clave => {

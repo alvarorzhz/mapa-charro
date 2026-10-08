@@ -58,6 +58,8 @@ function colocarTiempo(u) {
 // --- Pintar una etapa ----------------------------------------------------------
 function pintarEtapa(i) {
   etapaTiempo = i;
+  zonaNaceVista = null;
+  contornoNace(null);
   document.body.classList.add('tiempo');
   zonas.forEach(z => {
     const e = EPOCA_ZONA[z.id],
@@ -121,15 +123,7 @@ function pintarPanelTiempo(i) {
     crear('p', 'curio', texto),
     ...hitos.map(h => crear('p', 'curio mas', h))
   );
-  if (nacen.length)
-    caja.appendChild(
-      crear(
-        'p',
-        'tnacen',
-        crear('b', '', 'Aparecen ahora: '),
-        nacen.map(z => z.n + ' (' + EPOCA_ZONA[z.id][1].toLowerCase() + ')').join(' · ')
-      )
-    );
+  if (nacen.length) caja.appendChild(listaNacen(nacen));
   caja.appendChild(
     crear(
       'div',
@@ -162,6 +156,44 @@ function pintarPanelTiempo(i) {
     a.rel = 'noopener';
     ap.append(k ? ' · ' : '', a);
   });
+}
+
+// «Aparecen ahora»: un botón por zona. Al pasar por encima se marca su contorno en el mapa; al pulsarlo,
+// el mapa va a ella y debajo se lee por qué se sabe que ya existía (el detalle de EPOCA_ZONA)
+let zonaNaceVista = null;
+const contornoNace = z => limiteFoco.setAttribute('d', z ? trazoAnillo(z.P) : '');
+function listaNacen(nacen) {
+  const motivo = crear('p', 'tmotivo'),
+    botones = nacen.map(z => {
+      const b = crear('button', 'tzona', z.n);
+      b.setAttribute('aria-pressed', 'false');
+      b.onmouseenter = () => contornoNace(z);
+      b.onmouseleave = () => contornoNace(zonaNaceVista);
+      b.onclick = () => {
+        zonaNaceVista = z;
+        botones.forEach(o => o.setAttribute('aria-pressed', o == b));
+        contornoNace(z);
+        motivo.textContent = '';
+        motivo.append(crear('b', '', z.n + ': '), EPOCA_ZONA[z.id][1]);
+        const antes = { ...vistaMapa };
+        centrarMapaEn(z.x, z.y, Math.min(vistaMapa.w, 120));
+        const destino = { x: vistaMapa.x, y: vistaMapa.y, w: vistaMapa.w };
+        Object.assign(vistaMapa, antes);
+        animarVista(destino, 400);
+      };
+      return b;
+    });
+  zonaNaceVista = null;
+  contornoNace(null);
+  motivo.setAttribute('aria-live', 'polite');
+  motivo.textContent = 'Pulsa una para verla en el mapa y saber de dónde sale su fecha.';
+  return crear(
+    'div',
+    'tnacen',
+    crear('h4', '', 'Aparecen ahora (' + nacen.length + ')'),
+    crear('div', 'tzonas', ...botones),
+    motivo
+  );
 }
 
 function reproducirEtapas() {
@@ -235,6 +267,8 @@ function salirTiempo() {
   clearTimeout(temporizadorTiempo);
   temporizadorTiempo = 0;
   etapaTiempo = -1;
+  zonaNaceVista = null;
+  contornoNace(null);
   document.body.classList.remove('tiempo');
   capaMuralla.style.display = 'none';
   zonas.forEach(z => {
