@@ -4,7 +4,10 @@ const formatoFecha = f =>
 async function mostrarNovedades() {
   let lista = [];
   try {
-    lista = await (await fetch('novedades.json')).json();
+    // Con el ?v= de la versión, como el resto de archivos: si no, el navegador o el modo sin conexión
+    // podían seguir enseñando las novedades de una versión anterior
+    const enlace = document.querySelector('link[href^="novedades.json"]');
+    lista = await (await fetch(enlace ? enlace.getAttribute('href') : 'novedades.json')).json();
   } catch (e) {
     aviso('No se han podido cargar las novedades');
     return;
