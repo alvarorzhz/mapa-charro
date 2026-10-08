@@ -114,6 +114,12 @@ const aviso = texto => {
   temporizadorAviso = setTimeout(() => (t.className = ''), 1700);
 };
 
+// Botón que se enciende y se apaga (capas del mapa)
+const marcarInterruptor = (boton, encendido) => {
+  boton.classList.toggle('on', encendido);
+  boton.setAttribute('aria-pressed', encendido);
+};
+
 // Fila de botones de filtro (Todos / He estado / Quiero ir / Sin pisar)
 const FILTROS = [
   ['all', 'Todos'],

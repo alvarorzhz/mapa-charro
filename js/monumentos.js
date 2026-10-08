@@ -133,10 +133,11 @@ function apartarEtiquetas(puestos, u) {
 }
 
 // Botón «Monumentos» de la leyenda: muestra u oculta la capa
+// Interruptor «Monumentos» del panel de capas
 $('#mb').onclick = () => {
   const visibles = $('#mon').style.display != 'none';
   $('#mon').style.display = visibles ? 'none' : '';
-  $('#mb').style.opacity = visibles ? 0.5 : 1;
+  marcarInterruptor($('#mb'), !visibles);
   ajustarVista();
 };
 

@@ -441,11 +441,45 @@ function resaltarVia(nombre) {
   );
 }
 
+// Interruptor «Carreteras» del panel de capas
 $('#rb').onclick = () => {
   const visibles = $('#rd').style.display != 'none';
   $('#rd').style.display = $('#al').style.display = $('#sd').style.display = visibles ? 'none' : '';
-  $('#rb').style.opacity = visibles ? 0.5 : 1;
+  marcarInterruptor($('#rb'), !visibles);
 };
+
+// --- ¡Vítor! ------------------------------------------------------------------
+// Al marcar una zona como «He estado»: una onda y un estallido de rayos desde su centro, a tamaño fijo en
+// pantalla, y una vibración corta en los móviles que la permiten. Con «reducir movimiento», nada.
+const capaVitor = crearSvg(
+  'g',
+  { id: 'vitor', 'aria-hidden': 'true', style: 'pointer-events:none' },
+  mapaSvg
+);
+function animarVitor(z) {
+  try {
+    if (navigator.vibrate) navigator.vibrate([18, 40, 28]);
+  } catch (e) {}
+  if (movimientoReducido() || !z.e) return;
+  const u = ultimaEscala || vistaMapa.w / (tamMapa.w || 380),
+    g = crearSvg('g', { transform: escalaFija(z.x, z.y, u), class: 'vitor' }, capaVitor);
+  crearSvg('circle', { r: 10, class: 'vitor-onda' }, g);
+  for (let i = 0; i < 8; i++) {
+    const a = (i * Math.PI) / 4;
+    crearSvg(
+      'line',
+      {
+        x1: Math.cos(a) * 14,
+        y1: Math.sin(a) * 14,
+        x2: Math.cos(a) * 24,
+        y2: Math.sin(a) * 24,
+        class: 'vitor-rayo'
+      },
+      g
+    );
+  }
+  setTimeout(() => g.remove(), 1000);
+}
 
 // --- Encuadre ---------------------------------------------------------------
 

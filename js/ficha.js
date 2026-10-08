@@ -180,6 +180,7 @@ function marcarZona(id, marca) {
       const conGps = ubicacionReciente() && ubicacion.id == id;
       if (marca == 'v' && conGps && !progreso.gv.includes(id)) progreso.gv.push(id);
       aviso(marca == 'v' ? (conGps ? '¡Vítor! Pisado con GPS' : '¡Vítor!') : 'Apuntada');
+      if (marca == 'v') animarVitor(buscarZona(id));
     }
     if (progreso.z[id] != 'v') progreso.gv = progreso.gv.filter(k => k != id);
     guardar();

@@ -32,9 +32,10 @@ function cambiarPestana(nueva) {
   pestana = nueva;
   const enMapa = nueva == 'map',
     mapaVisible = enMapa || esEscritorio();
-  document.querySelector('.mw').style.display = document.querySelector('.lg').style.display = mapaVisible
+  document.querySelector('.mw').style.display = document.querySelector('.modos').style.display = mapaVisible
     ? ''
     : 'none';
+  if (!mapaVisible) abrirCapas(false);
   $('#gm').hidden = mapaVisible ? !$('#gm').textContent : true;
   $('#ls').style.display = nueva == 'list' ? '' : 'none';
   $('#pv').style.display = nueva == 'prov' ? '' : 'none';
@@ -112,54 +113,30 @@ $('#ld').onclick = () => {
   }
 };
 
-// --- Buscador principal: zonas, restaurantes y carreteras --------------------
-function buscar() {
-  const q = normalizar($('#q').value.trim()),
-    caja = $('#sr');
-  caja.textContent = '';
-  if (!q) return;
-  // Cada candidato: [texto, subtítulo, qué hacer al elegirlo]
-  const candidatos = [
-    ...todasLasZonas.map(z => [z.n, NOMBRES_GRUPOS[z.g], () => abrirFicha(z.id)]),
-    ...Object.entries(DONDE_COMER).flatMap(([id, sitios]) =>
-      sitios.map(s => [s.n, 'Dónde comer · ' + buscarZona(id).n, () => abrirFicha(id)])
-    ),
-    ...Object.keys(PUEBLOS).map(n => [
-      n,
-      'Pueblo · ' + PROVINCIA.com[municipioPorNombre(n).c],
-      () => abrirPueblo(municipioPorNombre(n))
-    ]),
-    [RUTA.nombre + ' a pie', 'Ruta · ' + RUTA.paradas.length + ' paradas', () => abrirRuta()],
-    ...MONUMENTOS.map(m => [m.n, 'Monumento · ' + buscarZona(m.zona).n, () => abrirMonumento(m.id)]),
-    ...Object.keys(INFO_VIAS).map(k => [k + ' · ' + INFO_VIAS[k][1], INFO_VIAS[k][0], () => abrirFichaVia(k)])
-  ];
-  const encontrados = candidatos
-    .map(c => [normalizar(c[0]).indexOf(q), c])
-    .filter(a => a[0] >= 0)
-    .sort((a, b) => a[0] - b[0])
-    .slice(0, 6);
-  if (!encontrados.length) {
-    caja.textContent = 'Sin resultados';
-    return;
-  }
-  encontrados.forEach(([, [texto, subtitulo, abrir]]) => {
-    const b = crear('button', '', texto, crear('small', '', subtitulo));
-    b.onclick = () => {
-      abrir();
-      $('#q').value = '';
-      caja.textContent = '';
-      document.querySelector('.mw').scrollIntoView({ behavior: comoDesplazar(), block: 'start' });
-    };
-    caja.appendChild(b);
-  });
+// --- Panel de capas: interruptores de carreteras y monumentos, y la leyenda ----------
+function abrirCapas(abrir = $('#capas').hidden) {
+  $('#capas').hidden = !abrir;
+  $('#zc').setAttribute('aria-expanded', abrir);
+  $('#zc').classList.toggle('on', abrir);
+  if (abrir) $('#rb').focus({ preventScroll: true });
 }
-$('#q').addEventListener('input', buscar);
-$('#q').addEventListener('keydown', e => {
-  if (e.key == 'Enter') {
-    const primero = document.querySelector('#sr button');
-    if (primero) primero.click();
+$('#zc').onclick = () => abrirCapas();
+$('#capx').onclick = () => {
+  abrirCapas(false);
+  $('#zc').focus({ preventScroll: true });
+};
+// Se cierra al tocar fuera o con Esc
+document.addEventListener('pointerdown', e => {
+  if (!$('#capas').hidden && !e.target.closest('#capas, #zc')) abrirCapas(false);
+});
+$('#capas').addEventListener('keydown', e => {
+  if (e.key == 'Escape') {
+    e.stopPropagation();
+    $('#capx').click();
   }
 });
+
+// (El buscador principal está en buscador.js)
 
 // --- Tamaño de pantalla y teclado -------------------------------------------
 addEventListener('resize', () => {
@@ -172,7 +149,8 @@ matchMedia('(min-width:900px)').addEventListener('change', () => {
 });
 // Esc cierra la ficha; + y - acercan y alejan el mapa
 addEventListener('keydown', e => {
-  if (e.key == 'Escape' && $('#sh').classList.contains('o')) $('#x').click();
+  if (e.key == 'Escape' && !$('#capas').hidden) abrirCapas(false);
+  else if (e.key == 'Escape' && $('#sh').classList.contains('o')) $('#x').click();
   else if (
     e.target.tagName != 'INPUT' &&
     e.target.tagName != 'TEXTAREA' &&

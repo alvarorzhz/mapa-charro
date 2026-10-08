@@ -382,6 +382,9 @@ prueba('Contraste de los textos', async (p, url) => {
       await p.goto(url + 'index.html?' + tema + hash);
       await p.waitForTimeout(250);
       if (pulsar) await p.click(pulsar);
+      // Con una ficha abierta (fija en escritorio) y la página de detrás con scroll, axe confunde el fondo de
+      // la ficha con el de la página: se cierra Logros (que en escritorio sale abierto) para que no haya scroll
+      if (hash && hash != '#lista') await p.evaluate(() => ($('#lgr').open = false));
       await p.waitForTimeout(450); // que acaben las transiciones de los paneles
       await p.addScriptTag({ content: AXE });
       const malos = await p.evaluate(async () =>
@@ -417,6 +420,73 @@ prueba('Tarjeta de cada zona al compartir', async (p, url) => {
     'https://alvarorzhz.github.io/mapa-charro/#monumento/catedrales',
     'otras fichas'
   );
+});
+
+prueba('Buscador', async p => {
+  const resultados = () => p.$$eval('#sr button', bs => bs.map(b => b.textContent));
+  await p.fill('#q', 'catedral');
+  cierto((await resultados())[0].startsWith('Catedrales Nueva y Vieja'), 'monumentos');
+  await p.fill('#q', 'muralla');
+  cierto(
+    (await resultados()).some(t => t.includes('Salamanca en el tiempo')),
+    'etapas de la historia'
+  );
+  await p.fill('#q', 'rana');
+  cierto(
+    (await resultados())[0].startsWith('Universidad') && (await resultados())[0].includes('Curiosidad'),
+    'palabras de las curiosidades, antes que lo que solo lo lleva en medio (Fuente Serrana)'
+  );
+  await p.fill('#q', 'garrido norte');
+  igual((await resultados())[0].split(/Zona/)[0], 'Garrido Norte', 'varias palabras');
+  await p.fill('#q', 'chamberri');
+  cierto(
+    (await texto(p, '#sr')).startsWith('¿Querías decir…?') && (await resultados())[0].startsWith('Chamberí'),
+    '¿Querías decir…?'
+  );
+  // Con flechas y Intro, y luego aparece en recientes
+  await p.fill('#q', 'tejares');
+  await p.keyboard.press('ArrowDown');
+  await p.keyboard.press('Enter');
+  igual(await texto(p, '#nm'), 'Tejares', 'flechas e Intro abren el resultado');
+  await p.click('#x');
+  await p.focus('#q');
+  cierto((await texto(p, '#sr')).startsWith('Búsquedas recientes'), 'búsquedas recientes con la caja vacía');
+  cierto((await resultados())[0].startsWith('Tejares'), 'con lo último elegido');
+  // Una pedanía lleva a su municipio en la pestaña Provincia
+  const pedania = await p.evaluate(() => pedanias[0].n);
+  await p.fill('#q', pedania);
+  await p.click('#sr button');
+  igual(await p.evaluate(() => pestana), 'prov', 'pedanía, en Provincia');
+});
+
+prueba('Con ratón: globo, «/» y atajos', async p => {
+  const escritorio = await p.evaluate(() => esEscritorio());
+  // Globo con el nombre al pasar por una zona
+  // Un punto de la zona que no tape ningún rótulo
+  const caja = await p.evaluate(() => {
+    const z = buscarZona('prosperidad');
+    document.querySelector('.mw').scrollIntoView({ block: 'center' });
+    const r = z.e.getBoundingClientRect();
+    for (let i = 1; i < 10; i++)
+      for (let j = 1; j < 10; j++) {
+        const x = r.x + (r.width * i) / 10,
+          y = r.y + (r.height * j) / 10;
+        if (document.elementFromPoint(x, y) == z.e) return { x, y };
+      }
+  });
+  await p.mouse.move(caja.x, caja.y);
+  await p.mouse.move(caja.x + 2, caja.y + 2);
+  cierto(!(await p.$eval('.globo', e => e.hidden)), 'aparece el globo');
+  cierto((await texto(p, '.globo')).startsWith('ProsperidadSin pisar'), 'dice el nombre y cómo está la zona');
+  await p.mouse.move(2, 2);
+  cierto(await p.$eval('.globo', e => e.hidden), 'se va al salir del mapa');
+  // «/» lleva al buscador
+  await p.click('h1');
+  await p.keyboard.press('/');
+  igual(await p.evaluate(() => document.activeElement.id), 'q', '«/» enfoca el buscador');
+  // Atajos a la vista y Logros abierto, solo en escritorio
+  igual(await p.$eval('.atajos', e => getComputedStyle(e).display != 'none'), escritorio, 'línea de atajos');
+  igual(await p.$eval('#lgr', e => e.open), escritorio, 'Logros abierto');
 });
 
 prueba('Buscar, abrir ficha y marcar', async p => {
@@ -496,8 +566,35 @@ prueba('Monumentos', async (p, url) => {
   igual(await p.evaluate(() => location.hash), '#univ', 'Ver el barrio');
   cierto((await p.$$('#mz button')).length >= 3, 'monumentos del barrio');
   await p.click('#x');
+  await p.click('#zc');
   await p.click('#mb');
-  igual(await p.$eval('#mon', e => e.style.display), 'none', 'el botón oculta los monumentos');
+  igual(await p.$eval('#mon', e => e.style.display), 'none', 'el interruptor oculta los monumentos');
+});
+
+prueba('Panel de capas y leyenda', async p => {
+  cierto(await p.$eval('#capas', e => e.hidden), 'cerrado al empezar');
+  await p.click('#zc');
+  cierto(!(await p.$eval('#capas', e => e.hidden)), 'el botón lo abre');
+  igual(await p.$eval('#zc', e => e.getAttribute('aria-expanded')), 'true', 'y lo anuncia');
+  igual((await p.$$('#capas .lg span')).length, 10, 'con la leyenda dentro');
+  await p.click('#rb');
+  igual(await p.$eval('#rd', e => e.style.display), 'none', 'Carreteras se apaga');
+  igual(await p.$eval('#rb', e => e.getAttribute('aria-pressed')), 'false', 'y el interruptor lo dice');
+  await p.click('#rb');
+  igual(await p.$eval('#rd', e => e.style.display), '', 'y se vuelve a encender');
+  await p.keyboard.press('Escape');
+  cierto(await p.$eval('#capas', e => e.hidden), 'Esc lo cierra');
+  await p.click('#zc');
+  await p.mouse.click(5, 5);
+  cierto(await p.$eval('#capas', e => e.hidden), 'tocar fuera lo cierra');
+  // La ruta a pie y Salamanca en el tiempo siguen siendo botones aparte, a la vista
+  cierto(await p.$eval('.modos #rt', e => e.offsetParent != null), 'Ruta a pie a la vista');
+  cierto(await p.$eval('.modos #tm', e => e.offsetParent != null), 'Salamanca en el tiempo a la vista');
+  igual(
+    await p.$eval('#cmp', e => e.getAttribute('aria-label')),
+    'Compartir este sitio',
+    'Compartir, como icono con nombre'
+  );
 });
 
 prueba('Ruta a pie', async p => {
