@@ -18,6 +18,7 @@ function actualizar() {
   $('#fr').style.opacity = progreso.f ? 1 : 0.45;
   try {
     pintarLogros();
+    if (typeof pintarCuenta == 'function') pintarCuenta(); // cuenta.js: «para no perder tu progreso»
     if (pestana == 'list') pintarLista();
     if (pestana == 'prov') actualizarProvincia();
   } catch (e) {

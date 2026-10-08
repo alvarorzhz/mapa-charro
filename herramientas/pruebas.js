@@ -714,6 +714,81 @@ prueba(
   }
 );
 
+prueba(
+  'Cuenta con Google (simulada)',
+  async p => {
+    await p.waitForTimeout(200);
+    cierto(
+      (await texto(p, '#cuenta')).startsWith('Para no perder tu progreso: Entrar con Google'),
+      'ofrece entrar si hay progreso'
+    );
+    await p.click('#cuenta button');
+    await p.waitForTimeout(300);
+    igual(await texto(p, '#sv'), 'Guardado en tu cuenta (prueba@ejemplo.es)', 'entra y conecta');
+    igual(
+      await p.evaluate(() => progreso.z),
+      { centro: 'v', vega: 'v' },
+      'junta lo del navegador con lo de la cuenta'
+    );
+    await p.waitForTimeout(1000);
+    igual(await p.evaluate(() => window.__nubeGoogle.datos.z), { centro: 'v', vega: 'v' }, 'y lo sube');
+    igual(await p.evaluate(() => localStorage.getItem('charro-cuenta')), 'u1', 'recuerda la cuenta');
+    // Salir: el progreso se queda en el navegador
+    await p.click('#cuenta button');
+    await p.click('.modal .botones button:text-is("Salir")');
+    igual(await texto(p, '#sv'), 'Guardado en este navegador', 'sale');
+    cierto((await texto(p, '#cuenta')).endsWith('Entrar con Google'), 'vuelve a ofrecer entrar');
+    igual(await p.evaluate(() => Object.keys(progreso.z).length), 2, 'el progreso sigue');
+    // Borrar la cuenta borra lo de la nube
+    await p.click('#cuenta button');
+    await p.waitForTimeout(300);
+    await p.click('#cuenta button');
+    await p.click('.modal .botones button:text-is("Borrar mi cuenta")');
+    await p.click('.modal .botones button:text-is("Borrar")');
+    await p.waitForTimeout(200);
+    igual(await p.evaluate(() => window.__nubeGoogle.datos), null, 'borra el progreso de la nube');
+    igual(await p.evaluate(() => localStorage.getItem('charro-cuenta')), null, 'y olvida la cuenta');
+  },
+  {
+    antes: () => {
+      // Firebase falso: una cuenta de Google y su documento de progreso en memoria
+      localStorage.setItem('charro2', JSON.stringify({ z: { vega: 'v' }, t: 5 }));
+      const nube = { datos: { z: { centro: 'v' }, t: 9, v: 1 } },
+        oyentes = [];
+      let usuario = null;
+      window.__nubeGoogle = nube;
+      const avisar = () => oyentes.forEach(f => f(usuario)),
+        auth = {
+          onAuthStateChanged: f => {
+            oyentes.push(f);
+            setTimeout(() => f(usuario));
+            return () => {};
+          },
+          signInWithPopup: async () => {
+            usuario = { uid: 'u1', email: 'prueba@ejemplo.es', delete: async () => (usuario = null) };
+            avisar();
+          },
+          signOut: async () => {
+            usuario = null;
+            avisar();
+          }
+        },
+        doc = {
+          get: async () => ({ exists: !!nube.datos, data: () => nube.datos }),
+          set: async d => (nube.datos = d),
+          delete: async () => (nube.datos = null),
+          onSnapshot: () => () => {}
+        };
+      window.firebase = {
+        prueba: true,
+        apps: [1],
+        auth: Object.assign(() => auth, { GoogleAuthProvider: function () {} }),
+        firestore: () => ({ collection: () => ({ doc: () => doc }) })
+      };
+    }
+  }
+);
+
 prueba('Imagen «Mi Salamanca»', async p => {
   await p.evaluate(() => {
     progreso.z.centro = progreso.z.tejares = 'v';

@@ -1,5 +1,20 @@
 [
   {
+    "version": "1.3.0",
+    "fecha": "2026-10-08",
+    "titulo": "Tu progreso en tu cuenta de Google",
+    "usuario": [
+      "Nuevo «Entrar con Google» en la web: tu progreso se guarda en tu cuenta y no se pierde aunque borres el navegador.",
+      "Entra con la misma cuenta en otro móvil u ordenador y verás tus zonas; lo que marques en uno aparece en los demás.",
+      "Al entrar, lo que ya tuvieras marcado en el navegador se junta con lo de la cuenta, sin perder nada.",
+      "Es opcional: sin entrar, la app funciona igual que siempre.",
+      "Desde «Tu cuenta» puedes salir o borrar tu cuenta y tu progreso guardado.",
+      "Nueva página de Privacidad, enlazada al pie, con qué se guarda y cómo borrarlo.",
+      "Dentro de Claude todo sigue igual: el progreso va en tu cuenta de Claude."
+    ],
+    "tecnico": "js/cuenta.js: Firebase 12.19.0 compat (app, auth y firestore) cargado de gstatic solo al pulsar «Entrar con Google» o si charro-cuenta guarda un uid; signInWithPopup (signInWithRedirect si se bloquea la ventana), onAuthStateChanged, salir y borrar (Firestore progreso/<uid> y la cuenta, con reautenticación si Google la pide). Configuración en js/datos/firebase.js (comprobada en comprobar-datos). guardado.js: conectarNube(ref, texto, juntar) común a la cuenta de Claude y a la de Google, desconectarNube y juntarProgresos (al entrar en una cuenta desde un navegador con progreso: unión de marcas, pisada gana a quiero ir). #cuenta junto a #sv, repintado desde actualizar. privacidad.html. Reglas de Firestore: cada uid solo su documento, campos z, f, t, gv, p, j y v. Prueba nueva con un Firebase simulado; probada a mano la carga real del SDK y la ventanita de Google contra el proyecto mapa-charro."
+  },
+  {
     "version": "1.2.3",
     "fecha": "2026-10-08",
     "titulo": "Tema claro u oscuro, fuentes y novedades más claras",

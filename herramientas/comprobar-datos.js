@@ -19,12 +19,13 @@ const datos = [
   'alfoz',
   'tiempo',
   'carreteras',
-  'provincia'
+  'provincia',
+  'firebase'
 ];
 const codigo =
   datos.map(d => leer('js/datos/' + d + '.js')).join('\n;\n') +
   '\n;({ NOMBRES_GRUPOS, ZONAS_GRANDES, ZONAS, MONUMENTOS, RUTA, PUEBLOS, CURIOSIDADES, LEYENDAS, FOTOS, DONDE_COMER,' +
-  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, ETAPAS, EPOCA_ZONA, MURALLA })';
+  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA })';
 const D = vm.runInNewContext(codigo, {});
 
 const errores = [],
@@ -77,6 +78,14 @@ Object.entries(D.LIMITES_VECINOS).forEach(([nombre, anillos]) => {
     `LIMITES_VECINOS ${nombre}: anillos mal formados`
   );
 });
+// Configuración de Firebase (cuenta con Google en la web): null o los datos que da la consola de Firebase
+comprobar(
+  D.CONFIG_FIREBASE === null ||
+    ['apiKey', 'authDomain', 'projectId', 'appId'].every(
+      k => typeof D.CONFIG_FIREBASE[k] == 'string' && D.CONFIG_FIREBASE[k]
+    ),
+  'CONFIG_FIREBASE: tiene que ser null o llevar apiKey, authDomain, projectId y appId'
+);
 D.ZONAS.filter(z => z[3] == 5).forEach(z =>
   comprobar(Object.values(D.ALFOZ).includes(z[0]), `Zona ${z[0]}: pueblo de alrededor sin entrada en ALFOZ`)
 );

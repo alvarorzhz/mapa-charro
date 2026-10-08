@@ -16,3 +16,4 @@
 - Si añades una función nueva a la app, añade su prueba en `herramientas/pruebas.js`; si añades un tipo de dato, su comprobación en `herramientas/comprobar-datos.js`.
 - La ruta a pie (`js/datos/ruta.js`) se calcula sobre las calles de OpenStreetMap: si cambian las paradas hay que recalcular los tramos.
 - No cambies los nombres de los campos del progreso (`z`, `p`, `gv`, `f`, `t`) ni los ids de zonas y logros: están en el progreso guardado de la gente y en los enlaces.
+- Cuenta con Google en la web (`js/cuenta.js`, configuración en `js/datos/firebase.js`): Firebase Auth + Firestore (`progreso/<uid>`, reglas en la consola de Firebase del proyecto `mapa-charro`). Firebase se carga de gstatic solo al entrar o si ya se entró (`charro-cuenta`). Dentro de Claude no se usa. La sincronización es la de `guardado.js` (`conectarNube`), común a las dos cuentas. Página de privacidad: `privacidad.html`.

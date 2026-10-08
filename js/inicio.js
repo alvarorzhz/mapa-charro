@@ -72,6 +72,12 @@ const temaActual = () =>
   pintar();
   $('#ver').append(' · ', boton);
 }
+// Privacidad (qué se guarda con la cuenta de Google); dentro de Claude no hay esa cuenta
+if (!EN_MARCO) {
+  const enlace = crear('a', '', 'Privacidad');
+  enlace.href = 'privacidad.html';
+  $('#ver').append(' · ', enlace);
+}
 ajustarVista();
 actualizar();
 aplicarEnlace();
