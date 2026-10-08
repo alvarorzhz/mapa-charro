@@ -256,8 +256,82 @@ prueba('Mapa con teclado y lector de pantalla', async p => {
   await p.keyboard.press('Tab');
   cierto(await p.evaluate(() => !document.activeElement.closest('#zg')), 'con Tab se sale del mapa');
   // Versión al pie y sin el botón de «Resto de la provincia»
-  cierto(/^Versión \d+$/.test(await texto(p, '#ver')), 'versión al pie');
+  cierto(
+    /^Versión \d+\.\d+\.\d+ \(\d+\)$/.test(await texto(p, '#ver')),
+    'versión al pie, con la interna entre paréntesis'
+  );
+  await p.click('#ver button');
+  await p.waitForSelector('.modal .novedades h4');
+  cierto(
+    (await texto(p, '.modal .novedades h4')).startsWith((await texto(p, '#ver')).split(' ')[1]),
+    'al pulsarla salen las novedades, empezando por esta versión'
+  );
+  await p.click('.modal .cerrar');
   cierto(!(await p.$('#rs')), 'sin botón de Resto de la provincia');
+});
+
+prueba('Salamanca en el tiempo', async p => {
+  // Una zona marcada como «He estado»: en este modo no se ve la marca y al salir vuelve
+  // (el color cambia con una transición de 0,25 s: se espera a que acabe)
+  const relleno = async () => {
+    await p.waitForTimeout(400);
+    return p.evaluate(() => getComputedStyle(zonas.find(z => z.id == 'vega').e).fill);
+  };
+  await p.evaluate(() => {
+    progreso.z.vega = 'v';
+    pintarZona(zonas.find(z => z.id == 'vega'));
+  });
+  const rojo = await relleno();
+  igual(rojo, 'rgb(168, 34, 28)', 'marcada en rojo (--vit)');
+  await p.click('#tm');
+  cierto((await relleno()) != rojo, 'las marcas de He estado se apagan');
+  igual(await p.evaluate(() => location.hash), '#tiempo', 'enlace propio');
+  igual(await texto(p, '#nm'), 'El castro vetón', 'empieza por la primera etapa');
+  const estado = id => p.evaluate(id => 'ep-' + zonas.find(z => z.id == id).e.dataset.ep, id);
+  igual(await estado('sanvicente'), 'ep-nueva', 'San Vicente nace en la primera etapa');
+  igual(await estado('labradores'), 'ep-no', 'Labradores aún no existe');
+  cierto(await p.$eval('#mur', e => e.style.display == 'none'), 'sin muralla medieval todavía');
+  await p.click('.tmarcas button:nth-child(3)');
+  igual(await estado('sanvicente'), 'ep-ya', 'después ya existía');
+  cierto(
+    await p.$eval('#mur', e => e.style.display != 'none' && !e.classList.contains('derribada')),
+    'la cerca nueva en pie'
+  );
+  await p.$eval('.tbarra', e => {
+    e.value = 4;
+    e.dispatchEvent(new Event('input'));
+  });
+  cierto(await p.$eval('#mur', e => e.classList.contains('derribada')), 'derribada en el siglo XIX');
+  await p.click('#x');
+  cierto(
+    await p.evaluate(
+      () => !document.body.classList.contains('tiempo') && !document.querySelector('#zg [data-ep]')
+    ),
+    'al cerrar, el mapa vuelve a ser el de hoy'
+  );
+  igual(await relleno(), rojo, 'y las marcas vuelven');
+});
+
+prueba('Término de Salamanca y municipios vecinos', async p => {
+  cierto(
+    (await p.$eval('#fondo .termino', e => e.getAttribute('d'))).length > 500,
+    'se dibuja el término de Salamanca'
+  );
+  cierto((await p.$$('#fondo .vecino')).length >= 10, 'y los municipios vecinos');
+  const rotulo = () =>
+    p.$$eval('#lgf text', ts => ts.filter(t => t.style.display != 'none').map(t => t.textContent));
+  await p.evaluate(() => {
+    vistaMapa.x = vistaMapa.y = 0;
+    vistaMapa.w = 400;
+    ajustarVista();
+  });
+  cierto((await rotulo()).includes('Término de Salamanca'), 'con su nombre al alejar el mapa');
+  cierto((await rotulo()).length > 3, 'y los nombres de los vecinos');
+  await p.evaluate(() => {
+    centrarMapaEn(209, 292, 60);
+    ajustarVista();
+  });
+  igual(await rotulo(), [], 'de cerca no estorban');
 });
 
 prueba('Buscar, abrir ficha y marcar', async p => {
@@ -458,7 +532,15 @@ prueba('Juego «¿Dónde está?»', async p => {
   igual(chivatas, [], 'las pistas no regalan el nombre');
   await p.click('#jug');
   cierto(await p.$eval('#jp', e => e.classList.contains('o')), 'se abre el panel del juego');
-  igual(await p.$eval('#lg', e => getComputedStyle(e).display), 'none', 'sin nombres de zonas en el mapa');
+  cierto(
+    await p.$eval('#lg', e => getComputedStyle(e).display != 'none'),
+    'con los nombres de las zonas para orientarse'
+  );
+  igual(
+    await p.$eval('#mon', e => getComputedStyle(e).display),
+    'none',
+    'sin pictogramas, que darían pistas'
+  );
   // Tocar la zona buena en el mapa
   const buena = await p.evaluate(() => juego.preguntas[0].zona.id);
   const xy = await p.evaluate(id => {

@@ -1,6 +1,7 @@
 // Enlaces directos: cada ficha, pueblo y pestaña tiene su propia dirección
 //   #tejares                  ficha de un barrio o pueblo del mapa (id de la zona)
 //   #via/a-62                 ficha de una carretera o avenida
+//   #tiempo                   Salamanca en el tiempo (muestra)
 //   #monumento/catedrales     mini infografía de un monumento
 //   #ruta  #ruta/3            ruta a pie: resumen y cada parada
 //   #pueblo/la-alberca        ficha de un pueblo de la provincia
@@ -19,6 +20,7 @@ const esHashDeFicha = h =>
   h.startsWith('via/') ||
   h.startsWith('monumento/') ||
   h == 'ruta' ||
+  h == 'tiempo' ||
   h.startsWith('ruta/') ||
   h.startsWith('pueblo/') ||
   todasLasZonas.some(z => z.id == h);
@@ -76,6 +78,8 @@ function aplicarEnlace() {
       if (i >= 0 && i < RUTA.paradas.length) {
         if (paradaActual != i || !fichaAbierta) abrirParada(i);
       } else if (paradaActual >= 0 || !fichaAbierta || !rutaActiva) abrirRuta();
+    } else if (a == 'tiempo') {
+      if (etapaTiempo < 0 || !fichaAbierta) abrirTiempo();
     } else if (a == 'monumento' && b) {
       if (buscarMonumento(b) && (monumentoAbierto != b || !fichaAbierta)) abrirMonumento(b);
     } else if (a == 'via' && b) {

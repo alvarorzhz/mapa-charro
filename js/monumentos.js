@@ -214,6 +214,7 @@ function abrirMonumento(id, parada) {
 // Quita la selección de monumento (al abrir otra ficha o cerrar)
 function olvidarMonumento() {
   monumentoAbierto = null;
+  if (typeof salirTiempo == 'function') salirTiempo(); // tiempo.js: el mapa vuelve a ser el de hoy
   if (typeof puebloAbierto != 'undefined') puebloAbierto = null;
   if (typeof paradaActual != 'undefined') paradaActual = -1;
   $('#info').hidden = true;

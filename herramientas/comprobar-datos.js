@@ -17,13 +17,14 @@ const datos = [
   'contenido',
   'geometria',
   'alfoz',
+  'tiempo',
   'carreteras',
   'provincia'
 ];
 const codigo =
   datos.map(d => leer('js/datos/' + d + '.js')).join('\n;\n') +
   '\n;({ NOMBRES_GRUPOS, ZONAS_GRANDES, ZONAS, MONUMENTOS, RUTA, PUEBLOS, CURIOSIDADES, LEYENDAS, FOTOS, DONDE_COMER,' +
-  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ })';
+  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, ETAPAS, EPOCA_ZONA, MURALLA })';
 const D = vm.runInNewContext(codigo, {});
 
 const errores = [],
@@ -139,6 +140,44 @@ for (const n in D.ALFOZ)
 D.ESCUDOS.forEach(([n]) => comprobar(D.INFO_VIAS[n], `Escudo «${n}» sin ficha en INFO_VIAS`));
 D.AVENIDAS.forEach(([n]) => n && comprobar(D.INFO_AVENIDAS[n], `Avenida «${n}» sin ficha en INFO_AVENIDAS`));
 
+// --- Salamanca en el tiempo ------------------------------------------------------
+const esFuente = f => Array.isArray(f) && f[0] && /^https?:\/\//.test(f[1]);
+D.ETAPAS.forEach(([anio, nombre, texto, hitos, fuentes], i) => {
+  comprobar(
+    anio && nombre && texto && Array.isArray(hitos),
+    `Etapa ${i}: le falta año, nombre, texto o hitos`
+  );
+  fuentes.forEach(f => comprobar(esFuente(f), `Etapa «${nombre}»: fuente mal escrita`));
+});
+for (const id in D.EPOCA_ZONA) {
+  const [etapa, motivo, fuente] = D.EPOCA_ZONA[id];
+  comprobar(idsZona.has(id) && id != 'resto', `EPOCA_ZONA: «${id}» no es una zona del mapa`);
+  comprobar(
+    Number.isInteger(etapa) && etapa >= 0 && etapa < D.ETAPAS.length,
+    `EPOCA_ZONA ${id}: etapa ${etapa} no existe`
+  );
+  comprobar(motivo, `EPOCA_ZONA ${id}: falta el porqué`);
+  // Sin fuente propia, el dato sale de su ficha (curiosidades) o de la muralla y el castro
+  if (fuente !== undefined) comprobar(esFuente(fuente), `EPOCA_ZONA ${id}: fuente mal escrita`);
+  else
+    comprobar(
+      (D.CURIOSIDADES[id] || []).length || /cerca nueva|castro|Puente Romano|Catedrales/.test(motivo),
+      `EPOCA_ZONA ${id}: sin fuente propia ni curiosidades en su ficha`
+    );
+}
+{
+  const M = D.MURALLA,
+    enCasco = ([la, lo]) => la > 40.95 && la < 40.98 && lo > -5.68 && lo < -5.65;
+  comprobar(M.anillo.length > 10 && M.anillo.every(enCasco), 'MURALLA: el anillo se sale del casco');
+  M.puertas.forEach(p =>
+    comprobar(p[0] && enCasco([p[1], p[2]]), `MURALLA: puerta «${p[0]}» fuera del casco`)
+  );
+  comprobar(
+    M.levantada < M.derribada && M.derribada < D.ETAPAS.length,
+    'MURALLA: etapas de levantada y derribada'
+  );
+}
+
 // --- index.html y sw.js -------------------------------------------------------
 const html = leer('index.html');
 const enlazados = [...html.matchAll(/(?:src|href)="([^"#:]+?)(\?v=(\d+))?"/g)];
@@ -181,6 +220,52 @@ usadasEnDatos.forEach(([ruta, quien]) => {
   comprobar(existe(ruta), `${quien} usa ${ruta}, que no existe`);
   comprobar(enSw.has(ruta), `sw.js no guarda ${ruta} (${quien}) para usar sin conexión`);
 });
+
+// Versión visible: la de package.json, con formato 1.4.0, copiada en index.html por version.js
+const versionPaquete = JSON.parse(leer('package.json')).version;
+comprobar(
+  /^\d+\.\d+\.\d+$/.test(versionPaquete),
+  `package.json: la versión ${versionPaquete} no tiene formato 1.4.0`
+);
+comprobar(
+  html.includes('<meta name="version" content="' + versionPaquete + '">'),
+  'index.html no tiene la versión de package.json: ejecuta node herramientas/version.js'
+);
+
+// Novedades: una entrada por versión, de la más nueva a la más vieja; la primera es la de package.json
+{
+  let novedades = [];
+  try {
+    novedades = JSON.parse(leer('novedades.json'));
+  } catch (e) {
+    mal('novedades.json no se puede leer: ' + e.message);
+  }
+  const num = v => v.split('.').map(Number),
+    mayor = (a, b) => {
+      const [x, y] = [num(a), num(b)];
+      return x[0] - y[0] || x[1] - y[1] || x[2] - y[2];
+    };
+  comprobar(
+    novedades.length && novedades[0].version == versionPaquete,
+    `novedades.json: falta la entrada de la ${versionPaquete}`
+  );
+  novedades.forEach((n, i) => {
+    comprobar(/^\d+\.\d+\.\d+$/.test(n.version), `novedades.json: versión «${n.version}» mal escrita`);
+    comprobar(
+      /^\d{4}-\d\d-\d\d$/.test(n.fecha),
+      `novedades.json ${n.version}: fecha «${n.fecha}» (AAAA-MM-DD)`
+    );
+    comprobar(
+      n.titulo && n.usuario && n.tecnico,
+      `novedades.json ${n.version}: falta título, párrafo de usuario o técnico`
+    );
+    if (i)
+      comprobar(
+        mayor(novedades[i - 1].version, n.version) > 0,
+        `novedades.json: ${n.version} fuera de orden`
+      );
+  });
+}
 
 // Tarjeta Open Graph: la imagen tiene que estar en el repositorio y medir 1200×630
 const imagenOg = (html.match(/property="og:image" content="https:\/\/[^/]+\/mapa-charro\/([^"]+)"/) || [])[1];

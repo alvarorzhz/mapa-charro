@@ -105,6 +105,58 @@ construirZonas(
 );
 pintarZona(zonaResto);
 
+// --- Fondo: término de Salamanca y municipios vecinos ----------------------
+// Entre los barrios y los pueblos del mapa queda el resto del término de Salamanca (campo) y, más allá,
+// otros municipios. Se pintan debajo de las zonas, sin poder tocarlos, con su nombre en pequeño.
+const etiquetasFondo = []; // { t, x, y, lejos } nombres a tamaño fijo; lejos: solo con el mapa alejado
+{
+  const fondo = $('#fondo'),
+    anillo = R => 'M' + R.map(q => puntoTexto(proyectar(q[0], q[1]))).join('L') + 'Z',
+    rotulo = (texto, x, y, clase, lejos) => {
+      const t = crearSvg('text', { class: clase, 'text-anchor': 'middle' }, $('#lgf'));
+      t.textContent = texto;
+      etiquetasFondo.push({ t, x, y, lejos });
+    };
+  // Municipios de la provincia que no están en el mapa (lindes de la pestaña Provincia, simplificadas)
+  PROVINCIA.m
+    .filter(m => !m.z && !m.cap)
+    .forEach(m => {
+      const P = m.R.flat().map(q => proyectar(q[0], q[1])),
+        xs = P.map(q => q[0]),
+        ys = P.map(q => q[1]);
+      if (
+        Math.max(...xs) < 0 ||
+        Math.min(...xs) > ANCHO_MAPA ||
+        Math.max(...ys) < 0 ||
+        Math.min(...ys) > ALTO_MAPA
+      )
+        return;
+      crearSvg(
+        'path',
+        { d: m.R.map(anillo).join(''), class: 'vecino', 'vector-effect': 'non-scaling-stroke' },
+        fondo
+      );
+      const cx = xs.reduce((a, b) => a + b) / xs.length,
+        cy = ys.reduce((a, b) => a + b) / ys.length;
+      if (cx > 10 && cx < ANCHO_MAPA - 10 && cy > 10 && cy < ALTO_MAPA - 10) rotulo(m.n, cx, cy, 'lbf', true);
+    });
+  // El término de Salamanca (OpenStreetMap), encima de los vecinos
+  crearSvg(
+    'path',
+    { d: anillo(TERMINO_SALAMANCA), class: 'termino', 'vector-effect': 'non-scaling-stroke' },
+    fondo
+  );
+  rotulo('Término de Salamanca', 114, 330, 'lbf lbt', false); // el punto más alejado de la ciudad y los pueblos
+}
+
+// u = unidades del mapa por píxel de pantalla. Los nombres de los vecinos, solo con el mapa alejado.
+function colocarEtiquetasFondo(u) {
+  etiquetasFondo.forEach(e => {
+    e.t.style.display = e.lejos ? (vistaMapa.w > 170 ? '' : 'none') : vistaMapa.w > 90 ? '' : 'none';
+    e.t.setAttribute('transform', escalaFija(e.x, e.y, u));
+  });
+}
+
 // Tonos alternos: dos zonas vecinas nunca llevan el mismo tono (coloreado voraz con 4 tonos)
 {
   // Son vecinas si al menos dos vértices de una caen sobre el borde de la otra (los términos municipales
@@ -499,10 +551,12 @@ function recolocarSegunZoom(siempre) {
 
   document.querySelectorAll('.avp').forEach(e => (e.style.display = v.w <= 240 ? '' : 'none'));
   mostrarEtiquetaAvenida(u);
+  colocarEtiquetasFondo(u);
   $('#rl').style.fontSize = 11 * u + 'px';
   escudosEscalables.forEach(q => q.g.setAttribute('transform', escalaFija(q.x, q.y, u)));
   // monumentos.js carga después: en la primera llamada puede no existir aún
   if (typeof colocarMonumentos == 'function') colocarMonumentos(u);
+  if (typeof colocarTiempo == 'function') colocarTiempo(u); // tiempo.js: puertas de la muralla
   // marcaPosicion se declara en ubicacion.js, que carga después: aquí puede no existir aún
   if (typeof marcaPosicion != 'undefined' && marcaPosicion)
     marcaPosicion.m.setAttribute('transform', escalaFija(marcaPosicion.x, marcaPosicion.y, u));

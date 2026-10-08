@@ -8,8 +8,20 @@ const RAIZ = path.join(__dirname, '..');
 const leer = f => fs.readFileSync(path.join(RAIZ, f), 'utf8');
 const escribir = (f, s) => fs.writeFileSync(path.join(RAIZ, f), s);
 
-// 1. index.html: todas las etiquetas al número siguiente
+// 1. index.html: todas las etiquetas al número siguiente, y la versión «humana» de package.json
+//    (1.4.0: la primera cifra para cambios grandes, la segunda para funciones nuevas y la tercera para
+//    arreglos; esa se sube a mano en package.json cuando toca, este script solo la copia)
 let html = leer('index.html');
+const versionApp = JSON.parse(leer('package.json')).version;
+html = /<meta name="version" content="[^"]*">/.test(html)
+  ? html.replace(
+      /<meta name="version" content="[^"]*">/,
+      '<meta name="version" content="' + versionApp + '">'
+    )
+  : html.replace(
+      '<meta charset="utf-8">',
+      '<meta charset="utf-8"><meta name="version" content="' + versionApp + '">'
+    );
 const usadas = [...html.matchAll(/\?v=(\d+)"/g)].map(m => +m[1]);
 const v = Math.max(0, ...usadas) + 1;
 html = html.replace(/\?v=\d+"/g, '?v=' + v + '"');
@@ -46,4 +58,6 @@ sw = sw.replace(
 );
 escribir('sw.js', sw);
 
-console.log('Versión ' + v + ': ' + archivos.length + ' archivos para usar sin conexión.');
+console.log(
+  'Versión ' + versionApp + ' (' + v + '): ' + archivos.length + ' archivos para usar sin conexión.'
+);

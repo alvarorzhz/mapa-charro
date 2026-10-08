@@ -1,8 +1,44 @@
 // Arranque
-// Versión al pie de la página: el número ?v= que pone herramientas/version.js en cada cambio
+const formatoFecha = f =>
+  new Date(f + 'T12:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+async function mostrarNovedades() {
+  let lista = [];
+  try {
+    lista = await (await fetch('novedades.json')).json();
+  } catch (e) {
+    aviso('No se han podido cargar las novedades');
+    return;
+  }
+  const caja = crear(
+    'div',
+    'novedades',
+    ...lista.map(n =>
+      crear(
+        'section',
+        '',
+        crear('h4', '', n.version + ' · ' + n.titulo),
+        crear('small', '', formatoFecha(n.fecha)),
+        crear('p', '', n.usuario)
+      )
+    )
+  );
+  abrirVentana('Novedades', caja, [['Cerrar', cerrarVentana]], $('#ver button'));
+}
+// Versión al pie de la página: la de package.json (1.4.0) y, entre paréntesis, el número interno ?v=
+// que sube herramientas/version.js en cada cambio (el que hace que el móvil baje los archivos nuevos).
+// Al pulsarla salen las novedades de cada versión (novedades.json, el párrafo para el usuario).
 {
-  const v = (document.querySelector('script[src*="?v="]') || {}).src;
-  $('#ver').textContent = v ? 'Versión ' + v.split('?v=')[1] : '';
+  const meta = document.querySelector('meta[name="version"]'),
+    v = (document.querySelector('script[src*="?v="]') || {}).src,
+    boton = crear(
+      'button',
+      'enlace',
+      (meta ? 'Versión ' + meta.content : '') +
+        (v ? (meta ? ' (' : 'Versión ') + v.split('?v=')[1] + (meta ? ')' : '') : '')
+    );
+  boton.setAttribute('aria-label', boton.textContent + ': ver las novedades');
+  boton.onclick = mostrarNovedades;
+  $('#ver').appendChild(boton);
 }
 ajustarVista();
 actualizar();

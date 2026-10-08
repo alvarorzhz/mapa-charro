@@ -1,5 +1,6 @@
 // Descarga de OpenStreetMap (Nominatim) el término municipal de cada pueblo de alrededor del mapa de
-// la ciudad (ALFOZ en js/datos/provincia.js) y lo guarda en js/datos/alfoz.js como LIMITES_ALFOZ.
+// la ciudad (ALFOZ en js/datos/provincia.js) y lo guarda en js/datos/alfoz.js como LIMITES_ALFOZ, y el
+// del propio municipio de Salamanca como TERMINO_SALAMANCA (el campo entre la ciudad y los pueblos).
 // Uso, desde la raíz del repositorio:  node herramientas/lindes-alfoz.js
 // Solo hace falta volver a ejecutarlo si se añade un pueblo o cambian los límites en OpenStreetMap.
 // Usa curl (respeta el proxy del sistema) y espera entre peticiones, como pide Nominatim.
@@ -10,8 +11,9 @@ const { execFileSync } = require('child_process');
 
 const RAIZ = path.join(__dirname, '..');
 const { ALFOZ, ZONAS } = vm.runInNewContext(
-  ['zonas', 'provincia'].map(f => fs.readFileSync(path.join(RAIZ, 'js/datos/' + f + '.js'), 'utf8')).join('\n;\n') +
-    ';({ ALFOZ, ZONAS })',
+  ['zonas', 'provincia']
+    .map(f => fs.readFileSync(path.join(RAIZ, 'js/datos/' + f + '.js'), 'utf8'))
+    .join('\n;\n') + ';({ ALFOZ, ZONAS })',
   {}
 );
 const UMBRAL = 0.0001; // simplificación de Nominatim en grados (unos 10 m)
@@ -76,8 +78,16 @@ for (const [nombre, id] of Object.entries(ALFOZ)) {
   esperar(1200);
 }
 
+// El término de Salamanca (un solo polígono, el que contiene el centro)
+const sal = buscar('Salamanca'),
+  pSal = sal.geojson.type == 'Polygon' ? [sal.geojson.coordinates] : sal.geojson.coordinates,
+  exteriorSal = pSal.map(p => p[0]).find(a => dentro(a, -5.6645, 40.9652)) || pSal[0][0],
+  termino = exteriorSal.slice(0, -1).map(([lo, la]) => [+la.toFixed(5), +lo.toFixed(5)]);
+fuentes.push('Salamanca: relación ' + sal.osm_id);
+console.log('Salamanca'.padEnd(28), 'relación', sal.osm_id, '·', termino.length, 'puntos');
+
 const salida =
-  '// Términos municipales de los pueblos de alrededor del mapa de la ciudad, [lat, lon].\n' +
+  '// Términos municipales de los pueblos de alrededor del mapa de la ciudad y de Salamanca, [lat, lon].\n' +
   '// © colaboradores de OpenStreetMap (ODbL), vía Nominatim, simplificados a unos 10 m.\n' +
   '// Generado con node herramientas/lindes-alfoz.js; no editar a mano.\n' +
   '// ' +
@@ -85,6 +95,9 @@ const salida =
   '\n' +
   'const LIMITES_ALFOZ=' +
   JSON.stringify(limites) +
+  ';\n' +
+  'const TERMINO_SALAMANCA=' +
+  JSON.stringify(termino) +
   ';\n';
 fs.writeFileSync(path.join(RAIZ, 'js/datos/alfoz.js'), salida);
 console.log('js/datos/alfoz.js: ' + Object.keys(limites).length + ' términos');
