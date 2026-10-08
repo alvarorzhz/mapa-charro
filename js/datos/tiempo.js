@@ -15,10 +15,19 @@ const FUENTE_TURISMO_MURALLAS = [
   'Turismo de Salamanca: Centro de Interpretación de las Murallas',
   'https://salamanca-turismo.gvam.es/en/see/monuments/centro-de-interpretacion-de-las-murallas-de-salamanca'
 ];
-const FUENTE_WIKI_MURALLAS = ['Wikipedia: Murallas de Salamanca', 'https://es.wikipedia.org/wiki/Murallas_de_Salamanca'];
+const FUENTE_WIKI_MURALLAS = [
+  'Wikipedia: Murallas de Salamanca',
+  'https://es.wikipedia.org/wiki/Murallas_de_Salamanca'
+];
 const FUENTE_WIKI_SALAMANCA = ['Wikipedia: Salamanca (historia)', 'https://es.wikipedia.org/wiki/Salamanca'];
-const FUENTE_AYER = ['Salamanca en el ayer: las puertas', 'https://www.salamancaenelayer.com/2012/11/paseo-de-las-carmelitas.html'];
-const FUENTE_PASO = ['Salamanca paso a paso: las puertas de la muralla', 'http://salamancapasoapaso.blogspot.com/2013/01/la-muralla-iii-las-puertas.html'];
+const FUENTE_AYER = [
+  'Salamanca en el ayer: las puertas',
+  'https://www.salamancaenelayer.com/2012/11/paseo-de-las-carmelitas.html'
+];
+const FUENTE_PASO = [
+  'Salamanca paso a paso: las puertas de la muralla',
+  'http://salamancapasoapaso.blogspot.com/2013/01/la-muralla-iii-las-puertas.html'
+];
 const ETAPAS = [
   [
     'Siglo IV a. C.',
@@ -74,14 +83,20 @@ const ETAPAS = [
     '1900–1962',
     'Ensanche y barrios obreros',
     'Labradores es el primer ensanche, desde 1900. Alrededor crecen barrios de casas levantadas por sus vecinos, como Pizarrales o Chamberí, y después los grupos de viviendas sociales, como El Carmen o La Vega.',
-    ['El Carmen entregó sus primeras casas en 1950.', 'La Vega se inauguró en 1954 con 650 viviendas sociales.'],
+    [
+      'El Carmen entregó sus primeras casas en 1950.',
+      'La Vega se inauguró en 1954 con 650 viviendas sociales.'
+    ],
     []
   ],
   [
     '1963–hoy',
     'La ciudad de hoy',
     'En 1963 Salamanca incorpora el municipio de Tejares. Siguen naciendo barrios en las afueras y, desde los noventa, crecen sobre todo los pueblos de alrededor.',
-    ['Buenos Aires nace en 1983 y El Zurguén en 1997.', 'Carbajosa pasó de unos 1.700 vecinos en el año 2000 a casi 7.800.'],
+    [
+      'Buenos Aires nace en 1983 y El Zurguén en 1997.',
+      'Carbajosa pasó de unos 1.700 vecinos en el año 2000 a casi 7.800.'
+    ],
     [FUENTE_WIKI_SALAMANCA]
   ]
 ];
@@ -129,19 +144,125 @@ const EPOCA_ZONA = {
   vistahermosa: [6, 'Pasa a Salamanca con Tejares en 1963'],
   buenosaires: [6, 'Nace en 1983'],
   zurguen: [6, 'Nace en 1997'],
-  vidal: [5, 'Grupos de viviendas municipales desde los años cuarenta', ['La Gaceta de Salamanca', 'https://www.lagacetadesalamanca.es/salamanca/san-jose-san-bernardo-viaje-origenes-vivienda-20250605181332-nt.html']],
-  blanco: [5, 'En 2021 se le daba casi un siglo de historia', ['El Español-NoticiasCYL', 'https://elespanol.com/castilla-y-leon/region/salamanca/20211112/barrio-blanco-pueblo-dentro-salamanca/626188394_0.html']],
-  alambres: [5, 'Casas de construcción propia en la posguerra', ['El Español-NoticiasCYL', 'https://www.elespanol.com/castilla-y-leon/region/salamanca/20220117/alambres-corrales-ganado-suburbio-marginal-busca-identidad/641435993_0.html']],
-  sanisidro: [5, 'Surge a mediados del siglo XX', ['El Español-NoticiasCYL', 'https://elespanol.com/castilla-y-leon/region/salamanca/20220422/san-isidro-antiguo-hospicio-rafael-barrio-obrero/666433740_0.html']],
-  puenteladrillo: [4, 'Primeras casas a finales del siglo XIX', ['La Gaceta de Salamanca', 'https://www.lagacetadesalamanca.es/salamanca/barrio-salmantino-creado-ferroviarios-vecinos-cavaron-kilometro-20240224204430-nt.html']],
-  hospitales: [6, 'Nace con el hospital Virgen de la Vega, de 1965', ['Sanidad de Castilla y León: reseña histórica', 'https://www.saludcastillayleon.es/CASalamanca/es/resena-historica']],
-  sanjose: [6, 'Surge en los años setenta', ['SALAMANCArtv AL DÍA', 'https://salamancartvaldia.es/noticia/2025-01-09-san-jose-el-barrio-obrero-que-mantiene-su-esencia-fotos-361237']],
-  capuchinos: [6, 'Se urbaniza a partir de los años noventa', ['El Español-NoticiasCYL', 'https://www.elespanol.com/castilla-y-leon/region/salamanca/20211119/barrio-capuchinos-salamanca-piedra-dorada-expansion-urbana/627687731_0.html']],
-  carrascal: [2, 'Repoblado por los reyes de León en la Edad Media', ['Wikipedia: Carrascal de Barregas', 'https://es.wikipedia.org/wiki/Carrascal_de_Barregas']]
+  vidal: [
+    5,
+    'Grupos de viviendas municipales desde los años cuarenta',
+    [
+      'La Gaceta de Salamanca',
+      'https://www.lagacetadesalamanca.es/salamanca/san-jose-san-bernardo-viaje-origenes-vivienda-20250605181332-nt.html'
+    ]
+  ],
+  blanco: [
+    5,
+    'En 2021 se le daba casi un siglo de historia',
+    [
+      'El Español-NoticiasCYL',
+      'https://elespanol.com/castilla-y-leon/region/salamanca/20211112/barrio-blanco-pueblo-dentro-salamanca/626188394_0.html'
+    ]
+  ],
+  alambres: [
+    5,
+    'Casas de construcción propia en la posguerra',
+    [
+      'El Español-NoticiasCYL',
+      'https://www.elespanol.com/castilla-y-leon/region/salamanca/20220117/alambres-corrales-ganado-suburbio-marginal-busca-identidad/641435993_0.html'
+    ]
+  ],
+  sanisidro: [
+    5,
+    'Surge a mediados del siglo XX',
+    [
+      'El Español-NoticiasCYL',
+      'https://elespanol.com/castilla-y-leon/region/salamanca/20220422/san-isidro-antiguo-hospicio-rafael-barrio-obrero/666433740_0.html'
+    ]
+  ],
+  puenteladrillo: [
+    4,
+    'Primeras casas a finales del siglo XIX',
+    [
+      'La Gaceta de Salamanca',
+      'https://www.lagacetadesalamanca.es/salamanca/barrio-salmantino-creado-ferroviarios-vecinos-cavaron-kilometro-20240224204430-nt.html'
+    ]
+  ],
+  hospitales: [
+    6,
+    'Nace con el hospital Virgen de la Vega, de 1965',
+    [
+      'Sanidad de Castilla y León: reseña histórica',
+      'https://www.saludcastillayleon.es/CASalamanca/es/resena-historica'
+    ]
+  ],
+  sanjose: [
+    6,
+    'Surge en los años setenta',
+    [
+      'SALAMANCArtv AL DÍA',
+      'https://salamancartvaldia.es/noticia/2025-01-09-san-jose-el-barrio-obrero-que-mantiene-su-esencia-fotos-361237'
+    ]
+  ],
+  capuchinos: [
+    6,
+    'Se urbaniza a partir de los años noventa',
+    [
+      'El Español-NoticiasCYL',
+      'https://www.elespanol.com/castilla-y-leon/region/salamanca/20211119/barrio-capuchinos-salamanca-piedra-dorada-expansion-urbana/627687731_0.html'
+    ]
+  ],
+  carrascal: [
+    2,
+    'Repoblado por los reyes de León en la Edad Media',
+    ['Wikipedia: Carrascal de Barregas', 'https://es.wikipedia.org/wiki/Carrascal_de_Barregas']
+  ]
 };
 const MURALLA = {
-  anillo: [[40.96185,-5.67505],[40.96261,-5.67438],[40.96379,-5.67314],[40.96495,-5.67241],[40.9658,-5.67119],[40.966,-5.67047],[40.9664,-5.66984],[40.96689,-5.66922],[40.96787,-5.66793],[40.96867,-5.66699],[40.96966,-5.66524],[40.96987,-5.66462],[40.97002,-5.66362],[40.96958,-5.66141],[40.96913,-5.66013],[40.96878,-5.65956],[40.96828,-5.65844],[40.96763,-5.65827],[40.96708,-5.65796],[40.96608,-5.65776],[40.96317,-5.65854],[40.95972,-5.65971],[40.95814,-5.66099],[40.95873,-5.66376],[40.95892,-5.66444],[40.95908,-5.665],[40.95921,-5.66692],[40.9595,-5.66768],[40.95932,-5.6684],[40.95936,-5.66954],[40.95974,-5.6717],[40.96,-5.67237],[40.96042,-5.67301]],
-  puertas: [["Puerta de Zamora", 40.97002, -5.66362, 0], ["Puerta de Toro", 40.96878, -5.65956, 0], ["Puerta de San Pablo", 40.95892, -5.66444, 0], ["Puerta del Río", 40.95936, -5.66954, 0], ["Puerta de Villamayor", 40.96787, -5.66793, 0], ["Puerta de San Bernardo", 40.96638, -5.66988, 0], ["Puerta Falsa", 40.96573, -5.67129, 0], ["Puerta de San Vicente", 40.96374, -5.67319, 0], ["Puerta de Santo Tomás", 40.96004, -5.6596, 0], ["Puerta de Sancti-Spíritus", 40.96479, -5.65811, 1], ["Puerta Nueva", 40.9593, -5.66005, 1]],
+  anillo: [
+    [40.96185, -5.67505],
+    [40.96261, -5.67438],
+    [40.96379, -5.67314],
+    [40.96495, -5.67241],
+    [40.9658, -5.67119],
+    [40.966, -5.67047],
+    [40.9664, -5.66984],
+    [40.96689, -5.66922],
+    [40.96787, -5.66793],
+    [40.96867, -5.66699],
+    [40.96966, -5.66524],
+    [40.96987, -5.66462],
+    [40.97002, -5.66362],
+    [40.96958, -5.66141],
+    [40.96913, -5.66013],
+    [40.96878, -5.65956],
+    [40.96828, -5.65844],
+    [40.96763, -5.65827],
+    [40.96708, -5.65796],
+    [40.96608, -5.65776],
+    [40.96317, -5.65854],
+    [40.95972, -5.65971],
+    [40.95814, -5.66099],
+    [40.95873, -5.66376],
+    [40.95892, -5.66444],
+    [40.95908, -5.665],
+    [40.95921, -5.66692],
+    [40.9595, -5.66768],
+    [40.95932, -5.6684],
+    [40.95936, -5.66954],
+    [40.95974, -5.6717],
+    [40.96, -5.67237],
+    [40.96042, -5.67301]
+  ],
+  puertas: [
+    ['Puerta de Zamora', 40.97002, -5.66362, 0],
+    ['Puerta de Toro', 40.96878, -5.65956, 0],
+    ['Puerta de San Pablo', 40.95892, -5.66444, 0],
+    ['Puerta del Río', 40.95936, -5.66954, 0],
+    ['Puerta de Villamayor', 40.96787, -5.66793, 0],
+    ['Puerta de San Bernardo', 40.96638, -5.66988, 0],
+    ['Puerta Falsa', 40.96573, -5.67129, 0],
+    ['Puerta de San Vicente', 40.96374, -5.67319, 0],
+    ['Puerta de Santo Tomás', 40.96004, -5.6596, 0],
+    ['Puerta de Sancti-Spíritus', 40.96479, -5.65811, 1],
+    ['Puerta Nueva', 40.9593, -5.66005, 1]
+  ],
   levantada: 2, // etapa en que se levanta
   derribada: 4 // etapa en que se derriba
 };

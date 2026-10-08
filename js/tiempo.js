@@ -70,7 +70,14 @@ function pintarEtapa(i) {
   capaMuralla.classList.toggle('derribada', i >= MURALLA.derribada);
   colocarTiempo(ultimaEscala || vistaMapa.w / (tamMapa.w || 380));
   pintarPanelTiempo(i);
+  // Cada etapa tiene su enlace (#tiempo/1 … #tiempo/7); al cambiar de etapa se sustituye, sin llenar el historial
+  if ($('#sh').classList.contains('o') && hashActual().split('/')[0] == 'tiempo') {
+    nombreFicha = 'Salamanca en el tiempo: ' + ETAPAS[i][1];
+    ponerTitulo();
+    escribirHash(hashEtapa(i), false);
+  }
 }
+const hashEtapa = i => 'tiempo/' + (i + 1);
 
 function pintarPanelTiempo(i) {
   const [anio, nombre, texto, hitos, fuentes] = ETAPAS[i],
@@ -173,6 +180,36 @@ function pararReproduccion() {
   if (etapaTiempo >= 0) pintarPanelTiempo(etapaTiempo);
 }
 
+// --- «Nació en…» en la ficha de cada zona -----------------------------------------
+function pintarNacimiento(z) {
+  const caja = $('#nac'),
+    e = EPOCA_ZONA[z.id];
+  caja.textContent = '';
+  caja.hidden = z.id == 'resto';
+  if (caja.hidden) return;
+  const ver = crear(
+    'button',
+    'enlace',
+    e ? 'Verlo en «Salamanca en el tiempo»' : 'Ver «Salamanca en el tiempo»'
+  );
+  ver.onclick = () => abrirTiempo(e ? e[0] : 0);
+  if (!e) {
+    caja.append(crear('b', '', 'Nació: '), 'su fecha aún no está documentada. ', ver);
+    return;
+  }
+  const [etapa, motivo, fuente] = e,
+    [anio, nombre] = ETAPAS[etapa];
+  caja.append(crear('b', '', 'Nació: '), anio + ', en la etapa «' + nombre + '». ' + motivo + '. ');
+  if (fuente) {
+    const a = crear('a', '', 'Fuente: ' + fuente[0]);
+    a.href = fuente[1];
+    a.target = '_blank';
+    a.rel = 'noopener';
+    caja.append(a, ' ');
+  }
+  caja.append(ver);
+}
+
 // --- Abrir y salir -------------------------------------------------------------
 function abrirTiempo(i = 0) {
   zonaAbierta = null;
@@ -189,7 +226,7 @@ function abrirTiempo(i = 0) {
   $('#tm').classList.add('on');
   $('#tm').setAttribute('aria-pressed', 'true');
   mostrarFicha();
-  enlaceFicha('tiempo', 'Salamanca en el tiempo');
+  enlaceFicha(hashEtapa(i), 'Salamanca en el tiempo: ' + ETAPAS[i][1]);
 }
 
 // Al abrir otra ficha o cerrar (olvidarMonumento lo llama): el mapa vuelve a ser el de hoy

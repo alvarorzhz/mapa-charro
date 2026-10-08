@@ -1,0 +1,39 @@
+# Pruebas automáticas: en cada push y en cada pull request comprueba los datos, el formato del código
+# y pasa las pruebas en un navegador de verdad (Chromium, en móvil y escritorio), contraste incluido.
+# Es lo mismo que «npm run antes-del-commit», salvo herramientas/version.js, que cambia archivos.
+name: Pruebas
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: pruebas-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pruebas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Instalar dependencias (Playwright, Prettier y axe)
+        run: npm ci --no-audit --no-fund
+
+      - name: Instalar Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Comprobar los datos
+        run: node herramientas/comprobar-datos.js
+
+      - name: Comprobar el formato
+        run: npx prettier --check "js/**/*.js" sw.js "herramientas/*.js"
+
+      - name: Pruebas en el navegador
+        run: node herramientas/pruebas.js

@@ -1,7 +1,7 @@
 // Enlaces directos: cada ficha, pueblo y pestaña tiene su propia dirección
 //   #tejares                  ficha de un barrio o pueblo del mapa (id de la zona)
 //   #via/a-62                 ficha de una carretera o avenida
-//   #tiempo                   Salamanca en el tiempo (muestra)
+//   #tiempo  #tiempo/3        Salamanca en el tiempo: la primera etapa o una concreta (1 a 7)
 //   #monumento/catedrales     mini infografía de un monumento
 //   #ruta  #ruta/3            ruta a pie: resumen y cada parada
 //   #pueblo/la-alberca        ficha de un pueblo de la provincia
@@ -21,6 +21,7 @@ const esHashDeFicha = h =>
   h.startsWith('monumento/') ||
   h == 'ruta' ||
   h == 'tiempo' ||
+  h.startsWith('tiempo/') ||
   h.startsWith('ruta/') ||
   h.startsWith('pueblo/') ||
   todasLasZonas.some(z => z.id == h);
@@ -79,7 +80,10 @@ function aplicarEnlace() {
         if (paradaActual != i || !fichaAbierta) abrirParada(i);
       } else if (paradaActual >= 0 || !fichaAbierta || !rutaActiva) abrirRuta();
     } else if (a == 'tiempo') {
-      if (etapaTiempo < 0 || !fichaAbierta) abrirTiempo();
+      const n = parseInt(b),
+        i = n >= 1 && n <= ETAPAS.length ? n - 1 : 0;
+      if (etapaTiempo < 0 || !fichaAbierta) abrirTiempo(i);
+      else if (etapaTiempo != i) pintarEtapa(i);
     } else if (a == 'monumento' && b) {
       if (buscarMonumento(b) && (monumentoAbierto != b || !fichaAbierta)) abrirMonumento(b);
     } else if (a == 'via' && b) {
@@ -112,9 +116,14 @@ addEventListener('hashchange', () => {
   if (!aplicandoEnlace) aplicarEnlace();
 });
 
-// Botón Compartir de la ficha: siempre comparte la dirección de la web pública
+// Botón Compartir de la ficha: siempre comparte la dirección de la web pública. Una zona del mapa tiene
+// su propia página (z/<id>.html, herramientas/tarjetas.js) para que al compartirla salga su tarjeta.
+const urlParaCompartir = () => {
+  const h = hashActual();
+  return zonas.some(z => z.id == h) ? WEB + 'z/' + h + '.html' : WEB + location.hash;
+};
 async function compartir() {
-  const url = WEB + location.hash;
+  const url = urlParaCompartir();
   const datos = {
     title: document.title,
     text: nombreFicha ? nombreFicha + ', en el Mapa charro' : TITULO,

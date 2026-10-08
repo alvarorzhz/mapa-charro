@@ -192,7 +192,7 @@ function abrirMonumento(id, parada) {
   zonaAbierta = null;
   monumentoAbierto = id;
   MONUMENTOS.forEach(o => o.g.classList.toggle('sel', o == m));
-  $('#here').hidden = true;
+  $('#here').hidden = $('#nac').hidden = true;
   $('#k').textContent = 'Monumento · ' + zona.n;
   $('#nm').textContent = m.n;
   $('#hc').hidden = $('#hl').hidden = $('#he').hidden = true;
@@ -218,6 +218,7 @@ function olvidarMonumento() {
   if (typeof puebloAbierto != 'undefined') puebloAbierto = null;
   if (typeof paradaActual != 'undefined') paradaActual = -1;
   $('#info').hidden = true;
+  $('#nac').hidden = true; // «Nació en…» solo va en las fichas de zona (tiempo.js)
   MONUMENTOS.forEach(o => o.g.classList.remove('sel'));
 }
 

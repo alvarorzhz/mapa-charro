@@ -285,7 +285,7 @@ prueba('Salamanca en el tiempo', async p => {
   igual(rojo, 'rgb(168, 34, 28)', 'marcada en rojo (--vit)');
   await p.click('#tm');
   cierto((await relleno()) != rojo, 'las marcas de He estado se apagan');
-  igual(await p.evaluate(() => location.hash), '#tiempo', 'enlace propio');
+  igual(await p.evaluate(() => location.hash), '#tiempo/1', 'enlace de la primera etapa');
   igual(await texto(p, '#nm'), 'El castro vetón', 'empieza por la primera etapa');
   const estado = id => p.evaluate(id => 'ep-' + zonas.find(z => z.id == id).e.dataset.ep, id);
   igual(await estado('sanvicente'), 'ep-nueva', 'San Vicente nace en la primera etapa');
@@ -302,6 +302,7 @@ prueba('Salamanca en el tiempo', async p => {
     e.dispatchEvent(new Event('input'));
   });
   cierto(await p.$eval('#mur', e => e.classList.contains('derribada')), 'derribada en el siglo XIX');
+  igual(await p.evaluate(() => location.hash), '#tiempo/5', 'cada etapa cambia el enlace');
   await p.click('#x');
   cierto(
     await p.evaluate(
@@ -332,6 +333,90 @@ prueba('Término de Salamanca y municipios vecinos', async p => {
     ajustarVista();
   });
   igual(await rotulo(), [], 'de cerca no estorban');
+});
+
+prueba('Nació en… en la ficha', async (p, url) => {
+  await p.goto(url + '#labradores');
+  await p.waitForTimeout(300);
+  cierto(
+    (await texto(p, '#nac')).startsWith('Nació: 1900–1962, en la etapa «Ensanche y barrios obreros»'),
+    'con su etapa'
+  );
+  await p.click('#nac button');
+  igual(await texto(p, '#nm'), 'Ensanche y barrios obreros', 'el enlace abre esa etapa');
+  igual(await p.evaluate(() => location.hash), '#tiempo/6', 'con su dirección');
+  await p.goto(url + '#vidal');
+  await p.waitForTimeout(300);
+  cierto(!!(await p.$('#nac a[href^="https://"]')), 'con la fuente cuando no viene de la ficha');
+  await p.goto(url + '#marin');
+  await p.waitForTimeout(300);
+  cierto((await texto(p, '#nac')).includes('aún no está documentada'), 'sin fecha, lo dice');
+  await p.goto(url + '#monumento/catedrales');
+  await p.waitForTimeout(300);
+  cierto(await p.$eval('#nac', e => e.hidden), 'no sale en otras fichas');
+});
+
+prueba('Enlace a una etapa', async (p, url) => {
+  await p.goto(url + '#tiempo/3');
+  await p.waitForTimeout(300);
+  igual(await texto(p, '#nm'), 'Repoblación y murallas', 'abre la etapa del enlace');
+  cierto(await p.$eval('#mur', e => e.style.display != 'none'), 'con la muralla');
+  await p.goto(url + '#tiempo/99');
+  await p.waitForTimeout(300);
+  igual(await texto(p, '#nm'), 'El castro vetón', 'una etapa que no existe abre la primera');
+});
+
+// Contraste de los textos (WCAG AA) con axe, en tema claro y oscuro, en las pantallas principales
+const AXE = fs.readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8');
+prueba('Contraste de los textos', async (p, url) => {
+  const fallos = [];
+  for (const tema of ['light', 'dark'])
+    for (const [hash, pulsar] of [
+      ['', null],
+      ['#vidal', null],
+      ['#tiempo/3', null],
+      ['', '#jug'],
+      ['#lista', null]
+    ]) {
+      await p.emulateMedia({ colorScheme: tema });
+      await p.goto(url + 'index.html?' + tema + hash);
+      await p.waitForTimeout(250);
+      if (pulsar) await p.click(pulsar);
+      await p.waitForTimeout(450); // que acaben las transiciones de los paneles
+      await p.addScriptTag({ content: AXE });
+      const malos = await p.evaluate(async () =>
+        (await axe.run(document, { runOnly: ['color-contrast'] })).violations.flatMap(v =>
+          v.nodes.map(n => n.target.join(' '))
+        )
+      );
+      malos.forEach(m => fallos.push(tema + ' ' + (hash || pulsar || 'inicio') + ': ' + m));
+    }
+  igual(fallos, [], 'textos con poco contraste');
+});
+
+prueba('Tarjeta de cada zona al compartir', async (p, url) => {
+  // La página de la zona lleva su tarjeta y abre su ficha
+  await p.goto(url + 'z/tejares.html');
+  await p.waitForURL(/#tejares$/);
+  await p.waitForTimeout(300);
+  igual(await texto(p, '#nm'), 'Tejares', 'abre la ficha de la zona');
+  const r = await p.request.get(url + 'z/tejares.html'),
+    h = await r.text();
+  cierto(/og:image" content="https:\/\/[^"]+\/z\/tejares\.jpg"/.test(h), 'con su imagen');
+  cierto(h.includes('og:title" content="Tejares · '), 'y su título');
+  // Compartir desde la ficha de una zona usa su página; desde otra ficha, el enlace de siempre
+  igual(
+    await p.evaluate(() => urlParaCompartir()),
+    'https://alvarorzhz.github.io/mapa-charro/z/tejares.html',
+    'zona'
+  );
+  await p.goto(url + '#monumento/catedrales');
+  await p.waitForTimeout(300);
+  igual(
+    await p.evaluate(() => urlParaCompartir()),
+    'https://alvarorzhz.github.io/mapa-charro/#monumento/catedrales',
+    'otras fichas'
+  );
 });
 
 prueba('Buscar, abrir ficha y marcar', async p => {

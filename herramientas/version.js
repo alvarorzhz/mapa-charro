@@ -53,7 +53,7 @@ sw = sw.replace(/const VERSION = \d+;/, 'const VERSION = ' + v + ';');
 sw = sw.replace(
   /\/\/ <archivos>[\s\S]*?\/\/ <\/archivos>/,
   '// <archivos>\nconst ARCHIVOS = [\n' +
-    archivos.map(a => "  '" + a + "',").join('\n') +
+    archivos.map(a => "  '" + a + "'").join(',\n') + // sin coma final, como pide Prettier
     '\n];\n// </archivos>'
 );
 escribir('sw.js', sw);

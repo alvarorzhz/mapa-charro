@@ -121,6 +121,7 @@ function abrirFicha(id) {
       : 'Posición aproximada: estimada, no de una coordenada exacta.';
   resaltarVia(null);
   pintarFoto(id);
+  if (typeof pintarNacimiento == 'function') pintarNacimiento(z); // tiempo.js
   pintarDondeComer(id);
   pintarCercanas(z);
   // Acerca el mapa a la zona, según su tamaño (sin alejarlo si ya estaba más cerca). En el móvil,

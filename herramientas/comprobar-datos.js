@@ -267,13 +267,54 @@ comprobar(
   });
 }
 
+// Tarjetas de las zonas (herramientas/tarjetas.js): página e imagen por zona, al día con los datos
+{
+  const medidasJpg = b => {
+    // Busca el marcador SOF del JPG, donde van el alto y el ancho
+    for (let i = 2; i < b.length - 9;) {
+      if (b[i] != 0xff) return null;
+      const m = b[i + 1],
+        largo = b.readUInt16BE(i + 2);
+      if (m >= 0xc0 && m <= 0xc3) return [b.readUInt16BE(i + 7), b.readUInt16BE(i + 5)];
+      i += 2 + largo;
+    }
+    return null;
+  };
+  const esc = s =>
+    s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  D.ZONAS.forEach(([id, n, , , , , c]) => {
+    const pag = 'z/' + id + '.html',
+      img = 'z/' + id + '.jpg',
+      regenerar = ': node herramientas/tarjetas.js zonas';
+    if (!existe(pag) || !existe(img)) return mal(`Falta la tarjeta de ${id} (${pag} o ${img})` + regenerar);
+    const h = leer(pag);
+    comprobar(
+      h.includes('og:title" content="' + esc(n) + ' · '),
+      `${pag}: el nombre no coincide con los datos` + regenerar
+    );
+    comprobar(
+      h.includes('og:description" content="' + esc(c || '') + '"'),
+      `${pag}: la frase no coincide` + regenerar
+    );
+    comprobar(h.includes("location.replace('../#" + id + "'"), `${pag}: no lleva a la ficha #${id}`);
+    const m = medidasJpg(fs.readFileSync(path.join(RAIZ, img)));
+    comprobar(m && m[0] == 1200 && m[1] == 630, `${img} debería medir 1200×630`);
+  });
+  const sobran = fs.existsSync(path.join(RAIZ, 'z'))
+    ? fs
+        .readdirSync(path.join(RAIZ, 'z'))
+        .filter(f => !D.ZONAS.some(z => f == z[0] + '.html' || f == z[0] + '.jpg'))
+    : [];
+  comprobar(!sobran.length, 'z/ tiene archivos de zonas que ya no existen: ' + sobran.join(', '));
+}
+
 // Tarjeta Open Graph: la imagen tiene que estar en el repositorio y medir 1200×630
 const imagenOg = (html.match(/property="og:image" content="https:\/\/[^/]+\/mapa-charro\/([^"]+)"/) || [])[1];
 comprobar(imagenOg, 'index.html no tiene og:image de la web pública');
 if (imagenOg) {
   comprobar(
     existe(imagenOg),
-    `og:image apunta a ${imagenOg}, que no existe: node herramientas/tarjeta-og.js`
+    `og:image apunta a ${imagenOg}, que no existe: node herramientas/tarjetas.js general`
   );
   if (existe(imagenOg)) {
     const png = fs.readFileSync(path.join(RAIZ, imagenOg));

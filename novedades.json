@@ -1,5 +1,12 @@
 [
   {
+    "version": "1.2.0",
+    "fecha": "2026-10-08",
+    "titulo": "Nació en…, enlaces por etapa y tarjetas por zona",
+    "usuario": "Cada ficha de barrio o pueblo dice ahora cuándo nació y en qué etapa de «Salamanca en el tiempo», con un enlace para verlo en el mapa histórico; si su fecha aún no está documentada, lo dice. Cada etapa tiene su propio enlace para compartirla. Al compartir una zona, la vista previa en WhatsApp, Telegram o redes muestra su propia tarjeta, con su nombre, su frase y la zona resaltada en el mapa. Además, los textos se leen mejor: hemos revisado el contraste de colores en tema claro y oscuro.",
+    "tecnico": "pintarNacimiento (tiempo.js) en abrirFicha, con #nac oculto en el resto de fichas. Enlaces #tiempo/1…7: pintarEtapa reescribe la dirección sin entrada nueva en el historial y aplicarEnlace abre la etapa (una que no existe abre la primera). herramientas/tarjetas.js (antes tarjeta-og.js) genera og.png y z/<id>.html + z/<id>.jpg para las 59 zonas, con dibujarMapaImagen aceptando encuadre y sin sellos; urlParaCompartir usa z/<id>.html en las fichas de zona; comprobar-datos verifica que cada página coincide con los datos y que la imagen mide 1200×630. Contraste WCAG AA: variables --vit-texto y --oro-texto, rojo de fondo más hondo en oscuro, notas y rótulos menos apagados; prueba fija con axe-core en claro y oscuro. GitHub Actions (.github/workflows/pruebas.yml): datos, Prettier y pruebas en cada push; package-lock.json, Playwright fijado a 1.56.0; version.js escribe sw.js sin coma final."
+  },
+  {
     "version": "1.1.0",
     "fecha": "2026-10-08",
     "titulo": "Salamanca en el tiempo",

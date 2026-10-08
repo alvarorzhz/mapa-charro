@@ -42,14 +42,18 @@ function resumenProgreso() {
   };
 }
 
-// Dibuja el mapa de zonas en el rectángulo (x, y, w, h), encuadrando los barrios de la ciudad
-function dibujarMapaImagen(ctx, x, y, w, h) {
+// Dibuja el mapa de zonas en el rectángulo (x, y, w, h), encuadrando los barrios de la ciudad u otro encuadre
+// encuadre: [x0, y0, x1, y1] en unidades del mapa (por defecto, todos los barrios de la ciudad);
+// sellos: dibujar la «V» de las zonas pisadas
+function dibujarMapaImagen(ctx, x, y, w, h, encuadre, sellos = true) {
   const C = COLORES_IMAGEN,
     ciudad = zonas.filter(z => z.g < 5).flatMap(z => z.P),
     xs = ciudad.map(q => q[0]),
     ys = ciudad.map(q => q[1]),
-    margen = 0.06;
-  let [x0, x1, y0, y1] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
+    margen = encuadre ? 0 : 0.06;
+  let [x0, x1, y0, y1] = encuadre
+    ? [encuadre[0], encuadre[2], encuadre[1], encuadre[3]]
+    : [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
   const anchoCiudad = (x1 - x0) * (1 + 2 * margen),
     altoCiudad = (y1 - y0) * (1 + 2 * margen),
     escala = Math.min(w / anchoCiudad, h / altoCiudad),
@@ -118,7 +122,7 @@ function dibujarMapaImagen(ctx, x, y, w, h) {
 
   // Sello «V» en cada zona pisada
   zonas
-    .filter(z => progreso.z[z.id] == 'v')
+    .filter(z => sellos && progreso.z[z.id] == 'v')
     .forEach(z => {
       const [px, py] = aImagen(z.x, z.y);
       if (px < x || px > x + w || py < y || py > y + h) return;
