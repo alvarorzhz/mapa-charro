@@ -95,7 +95,7 @@ if (
       const w = reg.installing;
       if (w && primeraVez)
         w.addEventListener('statechange', () => {
-          if (w.state == 'activated') aviso('Listo: ya puedes usar el mapa sin conexión');
+          if (w.state == 'activated') aviso('✓ Listo: el mapa ya funciona sin conexión', true);
         });
     })
     .catch(e => console.warn('Sin modo sin conexión:', e));

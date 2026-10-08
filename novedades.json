@@ -1,5 +1,19 @@
 [
   {
+    "version": "1.4.0",
+    "fecha": "2026-10-08",
+    "titulo": "Rutas de murales y de tapas, y más barrios con contenido",
+    "usuario": [
+      "Nuevas rutas a pie: «Murales del Barrio del Oeste», con 8 obras de la Galería Urbana, y «De tapas por Van Dyck», con 7 bares y qué pedir en cada uno.",
+      "El botón «Rutas a pie» abre la lista de rutas; cada parada tiene su ficha, su fuente y «Cómo llegar».",
+      "El buscador encuentra también los murales y los bares de las rutas.",
+      "31 curiosidades nuevas en barrios que tenían poca información, como Tormes, Los Alcaldes, Estación, La Platina, Hospitales o Los Montalvos.",
+      "Fotos nuevas en 9 zonas: Estación, Barrio del Oeste, Hospitales, La Platina, Salesas, Prosperidad, Delicias, Carrascal y Santa Marta.",
+      "El aviso de que la app ya funciona sin conexión sale abajo y más discreto, sin tapar el título."
+    ],
+    "tecnico": "RUTAS (js/datos/rutas.js) sustituye a RUTA: paradas como id de monumento o sitio propio {id, n, la, lo, dir, detalle, texto, fuente}; tramos en js/datos/tramos.js (TRAMOS_RUTAS, generado con herramientas/rutas.js sobre OSRM a pie de routing.openstreetmap.de, simplificado con Douglas-Peucker; en .prettierignore). ruta.js: lista de rutas (#rutas), una capa SVG por ruta, números pulsables en los sitios propios, ficha de sitio (abrirSitio) y navegación común; enlaces #ruta y #ruta/N (monumental, como antes) y #ruta-<id>/N. buscador: rutas y paradas propias. comprobar-datos: ids, fuentes con enlace, coordenadas dentro del mapa y tramos en orden por ruta. contenido.js: curiosidades nuevas con su fuente en un comentario al lado; FOTOS de Wikimedia Commons (500 px). aviso(texto, discreto) en util.js. Prueba «Rutas a pie» ampliada."
+  },
+  {
     "version": "1.3.0",
     "fecha": "2026-10-08",
     "titulo": "Tu progreso en tu cuenta de Google",

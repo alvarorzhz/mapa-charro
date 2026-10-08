@@ -12,7 +12,8 @@ const existe = f => fs.existsSync(path.join(RAIZ, f));
 const datos = [
   'zonas',
   'monumentos',
-  'ruta',
+  'rutas',
+  'tramos',
   'pueblos',
   'contenido',
   'geometria',
@@ -24,7 +25,7 @@ const datos = [
 ];
 const codigo =
   datos.map(d => leer('js/datos/' + d + '.js')).join('\n;\n') +
-  '\n;({ NOMBRES_GRUPOS, ZONAS_GRANDES, ZONAS, MONUMENTOS, RUTA, PUEBLOS, CURIOSIDADES, LEYENDAS, FOTOS, DONDE_COMER,' +
+  '\n;({ NOMBRES_GRUPOS, ZONAS_GRANDES, ZONAS, MONUMENTOS, RUTAS, TRAMOS_RUTAS, PUEBLOS, CURIOSIDADES, LEYENDAS, FOTOS, DONDE_COMER,' +
   ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA })';
 const D = vm.runInNewContext(codigo, {});
 
@@ -130,19 +131,38 @@ D.MONUMENTOS.forEach(m => {
   if (m.foto) comprobar(D.FOTOS[m.foto], `Monumento ${m.id}: la foto «${m.foto}» no está en FOTOS`);
 });
 
-// --- Ruta a pie ---------------------------------------------------------------
-D.RUTA.paradas.forEach(id => comprobar(idsMonumento.has(id), `Ruta: la parada «${id}» no es un monumento`));
-comprobar(
-  D.RUTA.tramos.length == D.RUTA.paradas.length - 1,
-  'Ruta: tiene que haber un tramo menos que paradas'
-);
-D.RUTA.tramos.forEach((t, i) => {
+// --- Rutas a pie --------------------------------------------------------------
+const idsRuta = new Set();
+D.RUTAS.forEach(r => {
+  comprobar(r.id && !idsRuta.has(r.id), `Rutas: id «${r.id}» vacío o repetido`);
+  idsRuta.add(r.id);
+  comprobar(r.nombre && r.icono && r.resumen, `Ruta ${r.id}: falta nombre, icono o resumen`);
+  if (r.fuente) comprobar(/^https?:\/\//.test(r.fuente[1]), `Ruta ${r.id}: la fuente del resumen sin enlace`);
+  const idParada = p => (typeof p == 'string' ? p : p.id);
+  r.paradas.forEach(p => {
+    if (typeof p == 'string')
+      return comprobar(idsMonumento.has(p), `Ruta ${r.id}: la parada «${p}» no es un monumento`);
+    for (const campo of ['id', 'n', 'dir', 'texto'])
+      comprobar(p[campo], `Ruta ${r.id}: la parada «${p.n || p.id}» sin «${campo}»`);
+    comprobar(
+      p.la > 40.9 && p.la < 41.05 && p.lo > -5.75 && p.lo < -5.55,
+      `Ruta ${r.id}: la parada «${p.n}» cae fuera del mapa`
+    );
+    comprobar(
+      Array.isArray(p.fuente) && p.fuente[0] && /^https?:\/\//.test(p.fuente[1]),
+      `Ruta ${r.id}: la parada «${p.n}» sin fuente con enlace`
+    );
+  });
+  comprobar(new Set(r.paradas.map(idParada)).size == r.paradas.length, `Ruta ${r.id}: hay paradas repetidas`);
+  const T = D.TRAMOS_RUTAS[r.id] || [];
   comprobar(
-    t.de == D.RUTA.paradas[i] && t.a == D.RUTA.paradas[i + 1],
-    `Ruta: el tramo ${i + 1} no une las paradas en orden`
+    T.length == r.paradas.length - 1 &&
+      T.every((t, i) => t.de == idParada(r.paradas[i]) && t.a == idParada(r.paradas[i + 1])),
+    `Ruta ${r.id}: los tramos no unen las paradas en orden (node herramientas/rutas.js ${r.id})`
   );
-  comprobar(t.m > 0 && t.p.length >= 2, `Ruta: el tramo ${i + 1} está vacío`);
+  T.forEach((t, i) => comprobar(t.m > 0 && t.p.length >= 2, `Ruta ${r.id}: el tramo ${i + 1} está vacío`));
 });
+for (const id in D.TRAMOS_RUTAS) comprobar(idsRuta.has(id), `TRAMOS_RUTAS: «${id}» no es una ruta`);
 
 // --- Pueblos de la provincia --------------------------------------------------
 const municipios = new Set(D.PROVINCIA.m.map(m => m.n));
@@ -370,6 +390,6 @@ if (errores.length) {
   process.exit(1);
 }
 console.log(
-  `✓ Datos correctos: ${ids.length} zonas, ${D.MONUMENTOS.length} monumentos, ruta de ${D.RUTA.paradas.length} paradas, ` +
+  `✓ Datos correctos: ${ids.length} zonas, ${D.MONUMENTOS.length} monumentos, ${D.RUTAS.length} rutas a pie, ` +
     `${Object.keys(D.PUEBLOS).length} pueblos con ficha, ${Object.keys(D.DONDE_COMER).length} zonas con dónde comer.`
 );

@@ -26,14 +26,38 @@ function candidatos() {
     poner(m.n, 'Monumento · ' + buscarZona(m.zona).n, 'monumento', m.id, 1, () => abrirMonumento(m.id))
   );
   poner(
-    RUTA.nombre + ' a pie',
-    'Ruta · ' + RUTA.paradas.length + ' paradas',
-    'ruta',
+    'Rutas a pie',
+    'Rutas · ' + RUTAS.length + ' rutas',
+    'rutas',
     '',
     2,
-    () => abrirRuta(),
-    'paseo'
+    () => abrirRutas(),
+    'paseo ruta'
   );
+  RUTAS.forEach((r, k) => {
+    poner(
+      r.nombre,
+      'Ruta a pie · ' + r.paradas.length + ' paradas',
+      'ruta',
+      r.id,
+      2,
+      () => abrirRuta(k),
+      'ruta paseo'
+    );
+    // Los sitios propios de cada ruta (murales, bares…); los monumentos ya salen como monumentos
+    r.paradas.forEach((p, i) => {
+      if (typeof p == 'string') return;
+      poner(
+        p.n,
+        r.nombre + ' · ' + p.dir,
+        'parada',
+        r.id + '|' + p.id,
+        2,
+        () => abrirParada(i, k),
+        p.detalle || ''
+      );
+    });
+  });
   ETAPAS.forEach(([anio, nombre], i) =>
     poner(
       nombre,

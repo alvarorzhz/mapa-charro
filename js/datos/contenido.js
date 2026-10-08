@@ -56,15 +56,25 @@ const CURIOSIDADES = {
   ],
   garridosur: [
     'Lo levantaron en fila Manuel Garrido, albañil, y Santiago Bermejo, confitero; desde 2009 una calle recuerda que el barrio debería llamarse Garrido y Bermejo.',
-    'La primera piedra de la iglesia de la Virgen de Fátima se puso en 1955 y se inauguró en 1960. En la esquina de Federico Anaya con María Auxiliadora estaba el cine Taramona.'
+    'La primera piedra de la iglesia de la Virgen de Fátima se puso en 1955 y se inauguró en 1960. En la esquina de Federico Anaya con María Auxiliadora estaba el cine Taramona.',
+    // Fuente: https://salamancartvaldia.es/noticia/2023-12-10-garrido-y-bermejo-el-nacimiento-del-barrio-garrido-335932
+    'Manuel Garrido, que da nombre al barrio, fue elegido concejal en 1917 por el mismo distrito que Miguel de Unamuno, y con más votos: 318 frente a 205.'
   ],
   garridonorte: [
     'Es el barrio con más vecinos de la capital: dicen que quien no gana Garrido no gana el Ayuntamiento.',
     'Nació a finales del siglo XIX, con la llegada del tren. El parque Garrido se inauguró el 7 de diciembre de 1974.',
-    'El Multiusos Sánchez Paraíso se construyó para la Capitalidad Cultural Europea de 2002, y la mezquita de la plaza García Lorca ocupa la antigua tienda El Manolo.'
+    'El Multiusos Sánchez Paraíso se construyó para la Capitalidad Cultural Europea de 2002, y la mezquita de la plaza García Lorca ocupa la antigua tienda El Manolo.',
+    // Fuente: https://www.elespanol.com/castilla-y-leon/region/salamanca/20211209/garrido-norte-crisol-razas-culturas-ciudad-salamanca/633437537_0.html
+    'En la inauguración de la plaza de Barcelona, diseñada por Antonio Fernández Alba, el alcalde barcelonés Pasqual Maragall empezó su discurso con «¡Queridos ciudadanos de Málaga!».'
   ],
   estacion: [
-    'Nació junto a la estación para las familias del ferrocarril. El tren llegó a Salamanca a finales del siglo XIX y con él creció todo Garrido.'
+    'Nació junto a la estación para las familias del ferrocarril. El tren llegó a Salamanca a finales del siglo XIX y con él creció todo Garrido.',
+    // Fuente: https://www.salamancaenelayer.com/2012/09/la-estacion-de-ferrocarril.html
+    'La línea de Medina del Campo a Salamanca se inauguró oficialmente el 9 de septiembre de 1877, con el rey Alfonso XII presente.',
+    // Fuente: https://www.salamancaenelayer.com/2012/09/la-estacion-de-ferrocarril.html
+    'La vieja estación se derribó en 1970 y la nueva se inauguró en 1973. En 2001 se levantó Vialia, que une estación y centro comercial.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/asi-se-transformo-el-paseo-de-la-estacion-vida-e-industria-en-torno-al-tren-CH6382994
+    'El paseo de la Estación se llamó también avenida de Canals y del General Mola. A su alrededor hubo fábricas de chocolate, galletas, hielo o gaseosa que repartían sus productos en tren.'
   ],
   chinchibarra: [
     'Su nombre, según los historiadores locales, podría venir del vasco. Creció alrededor del depósito de agua, inaugurado en 1945 el día de San Juan de Sahagún.',
@@ -91,11 +101,17 @@ const CURIOSIDADES = {
   ],
   sanisidro: [
     'Toma el nombre de su iglesia. Creció tras la Guerra Civil con casas bajas alrededor del antiguo hospicio de San Rafael, que hoy es una residencia de mayores.',
-    'Sus vecinos trabajaban en el ferrocarril y en las fábricas del Alto del Rollo. El mercado de la plaza de Trujillo se convirtió a principios de este siglo en un centro cultural.'
+    'Sus vecinos trabajaban en el ferrocarril y en las fábricas del Alto del Rollo. El mercado de la plaza de Trujillo se convirtió a principios de este siglo en un centro cultural.',
+    // Fuente: https://www.salamancaenelayer.com/2019/11/el-asilo-de-san-rafael.html
+    'La residencia de San Rafael viene del asilo que fundó en 1874 el médico salmantino Rafael Pérez Piñuela; en 1908 se trasladó a una finca del paseo del Rollo, frente a las Esclavas.'
   ],
   prosperidad: [
     'Su nombre imita al de un ensanche madrileño y recuerda a quienes llegaban de los pueblos buscando prosperar. Esteban Corral, que hizo fortuna en Argentina, parceló los terrenos y bautizó calles como México, Perú o Argentina.',
-    'Nació a principios del siglo XX en Cuatro Caminos, entre huertas que bajaban hasta el río. Sus vecinos trabajaban en la fábrica de fertilizantes Mirat, el ferrocarril, curtidurías e imprentas.'
+    'Nació a principios del siglo XX en Cuatro Caminos, entre huertas que bajaban hasta el río. Sus vecinos trabajaban en la fábrica de fertilizantes Mirat, el ferrocarril, curtidurías e imprentas.',
+    // Fuente: https://www.ub.edu/geocrit/sn/sn-146(139).htm
+    'Entre 1919 y 1922 se levantaron, junto al Depósito de Aguas de 1917, casas de una planta para unos 250 vecinos: fue el germen del barrio.',
+    // Fuente: https://www.elespanol.com/castilla-y-leon/region/20180311/prosperidad-camino-agua-progreso/291221741_0.html
+    'La antigua prisión provincial se convirtió en el DA2, museo de arte contemporáneo, con la Capitalidad Cultural Europea de 2002.'
   ],
   rollo: [
     'Lo parceló el mismo contratista que después creó la Prosperidad, Esteban Corral y Castro.',
@@ -103,7 +119,11 @@ const CURIOSIDADES = {
   ],
   puenteladrillo: [
     'Su nombre viene del puente de ladrillo que cruza las vías del tren hacia Madrid. Hace casi 150 años lo levantaron familias de ferroviarios junto a los talleres de reparación.',
-    'La iglesia de la Asunción la construyeron los vecinos sin licencia municipal. El alcantarillado y el agua corriente no llegaron hasta los años setenta, y el primer supermercado, en 1993.'
+    'La iglesia de la Asunción la construyeron los vecinos sin licencia municipal. El alcantarillado y el agua corriente no llegaron hasta los años setenta, y el primer supermercado, en 1993.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/el-barrio-salmantino-que-nacio-ligado-al-ferrocarril-HN7168449
+    'El 18 de diciembre de 1936 diez aviones bombardearon la estación. Una bomba dirigida al puente no lo alcanzó, pero mató a tres vecinos de una casa junto a la vía.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/el-barrio-salmantino-que-nacio-ligado-al-ferrocarril-HN7168449
+    'Muchos vecinos se despertaban con «la burra», la bocina de vapor de los talleres de Renfe. El puente se hizo hacia 1889 con ladrillo de La Cerámica Salmantina.'
   ],
   carmelitas: [
     'La asociación de vecinos ZOES nació en 1977, con una cuota de 25 pesetas al mes, para pedir asfalto y agua potable.',
@@ -116,7 +136,13 @@ const CURIOSIDADES = {
     'Desde los años ochenta sus zonas verdes funcionan como un museo de esculturas al aire libre.'
   ],
   hospitales: [
-    'Aquí están el Hospital Clínico y el Campus Miguel de Unamuno, con las facultades de Derecho, Economía y Medicina.'
+    'Aquí están el Hospital Clínico y el Campus Miguel de Unamuno, con las facultades de Derecho, Economía y Medicina.',
+    // Fuente: https://es.wikipedia.org/wiki/Complejo_Hospitalario_de_Salamanca
+    'El Hospital Clínico y el edificio Materno-Infantil los inauguraron en 1975 los entonces príncipes Juan Carlos y Sofía.',
+    // Fuente: https://www.casareal.es/ES/Actividades/Paginas/actividades_actividades_detalle.aspx?data=15593
+    'El rey Felipe VI inauguró el nuevo Hospital Universitario el 17 de enero de 2023. Tiene 863 camas y 25 quirófanos.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/el-campus-unamuno-un-ejemplo-de-la-arquitectura-contemporanea-CG9899433
+    'El primer edificio del Campus Unamuno fue la Facultad de Farmacia, inaugurada en 1980 y obra de los arquitectos Julio Cano Lasso e Ignacio Mendaro.'
   ],
   vidal: ['Debe su nombre a los constructores, Balbino y Manuel, que levantaron sus primeras viviendas.'],
   pizarrales: [
@@ -133,7 +159,13 @@ const CURIOSIDADES = {
     'Creció en los años noventa con el hipermercado Pryca, el actual Carrefour, y casi todas sus fachadas son de piedra de Villamayor.'
   ],
   platina: [
-    'Junto a Huerta Otea, una de las orillas del Tormes donde los salmantinos celebran el Lunes de Aguas.'
+    'Junto a Huerta Otea, una de las orillas del Tormes donde los salmantinos celebran el Lunes de Aguas.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/el-agua-salmantina-filtrada-por-la-piedra-de-villamayor-que-fue-la-mejor-de-espana-KA2367378
+    'Junto al cementerio brotaba el manantial de La Platina. Su agua se embotelló desde los años sesenta, ganó una medalla de oro en 1985 y en 1995 una revista la eligió la mejor de España.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/el-manantial-de-la-platina-vuelve-a-brotar-YC2352155
+    'La urbanización del barrio acabó con la embotelladora. En 2020 el agua volvió a brotar por las paredes del Instituto de Neurociencias.',
+    // Fuente: https://www.agronewscastillayleon.com/el-salmantino-campus-de-la-platina-servira-de-apoyo-al-sector-agropecuario-de-castilla-y-leon
+    'En 2018 el Ayuntamiento cedió aquí parcelas al CSIC y a la Universidad para un campus agroambiental, con el IRNASA y la Facultad de Ciencias Agrarias y Ambientales.'
   ],
   arrabal: [
     'Su iglesia vieja, de la Santísima Trinidad, es románica del siglo XII. Se dejó de usar en los años cincuenta y ha vuelto a abrirse al culto.',
@@ -199,7 +231,11 @@ const CURIOSIDADES = {
     'Tiene el museo del escultor Ángel Mateos, que trabajó con hormigón.'
   ],
   carrascal: [
-    'Su término, de casi 77 km², es de los más grandes de la provincia, y la mayoría de sus vecinos vive en la urbanización Peñasolana, junto a Los Montalvos.'
+    'Su término, de casi 77 km², es de los más grandes de la provincia, y la mayoría de sus vecinos vive en la urbanización Peñasolana, junto a Los Montalvos.',
+    // Fuente: https://carrascaldebarregas.com/historia-del-municipio/
+    'En 1162 se libró en el arroyo de la Valmuza una batalla entre los nobles del alfoz salmantino y el rey Fernando II. En junio de 1812 las tropas de Wellington hicieron retirarse aquí a los franceses.',
+    // Fuente: https://es.wikipedia.org/wiki/Carrascal_de_Barregas
+    'Su término está partido en cinco islas separadas por tierras de los municipios vecinos.'
   ],
   pelabravo: [
     'Según la tradición lo fundó Pelay o Pelayo Bravo, por orden de los reyes de León.',
@@ -217,7 +253,11 @@ const CURIOSIDADES = {
     'Del monasterio de Santa María de la Vega, de hacia 1150 y después de los canónigos de San Agustín, quedan cinco arcos del claustro con 16 capiteles de escenas de caza, bailes y animales.'
   ],
   teso: [
-    'Aquí, junto al Puente Romano, se celebraba la feria de ganado de septiembre, que arranca el día de la Virgen de la Vega, el 8.'
+    'Aquí, junto al Puente Romano, se celebraba la feria de ganado de septiembre, que arranca el día de la Virgen de la Vega, el 8.',
+    // Fuente: https://www.elespanol.com/castilla-y-leon/region/salamanca/20211126/arrabal-transcurre-historia-literaria-salamanca/629437869_0.html
+    'El Parador de Turismo ocupa el antiguo espacio cercado del Teso, donde las reses esperaban a ser vendidas o sacrificadas.',
+    // Fuente: https://www.lagacetadesalamanca.es/hemeroteca/teso-feria-AEGS184224
+    'Enrique IV concedió a Salamanca la feria de septiembre en 1467; en junio se celebraba otra, la del Teso o de San Juan.'
   ],
   carmen: [
     'Nació para sacar de las chabolas a vecinos de Pizarrales: en 1948 el Ayuntamiento creó el Patronato Benéfico Nuestra Señora del Carmen y en 1950 entregó las primeras casas, unifamiliares, del arquitecto Fernando Población.',
@@ -232,11 +272,39 @@ const CURIOSIDADES = {
     'Aquí nació, con ASDECOBA, el catering Algo Nuevo, que da de comer a más de mil personas al día.'
   ],
   montalvos: [
-    'Su gran edificio fue el Sanatorio Antituberculoso de los Montalvos, impulsado por el doctor Filiberto Villalobos: primera piedra en 1935, 500 camas y 13 años de obras. Se anunció como el mayor de España y hoy es el Hospital de los Montalvos.'
+    'Su gran edificio fue el Sanatorio Antituberculoso de los Montalvos, impulsado por el doctor Filiberto Villalobos: primera piedra en 1935 y 13 años de obras. Se anunció como el mayor de España y hoy es el Hospital de los Montalvos.',
+    // Fuente: https://salamancamedica.es/el-hospital-de-los-montalvos/
+    'El sanatorio lo proyectó Rafael Bergamín, que se exilió en Venezuela tras la guerra. Lo terminó Genaro de No, y al final tuvo 601 camas.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/el-gobierno-eliminara-los-carteles-en-la-n-620-que-anuncian-el-hospital-martinez-anido-CN8384127
+    'Abrió en 1948 con el nombre del militar Martínez Anido. Se llama Los Montalvos desde 2001, aunque en 2021 dos señales de la N-620 aún conservaban el nombre antiguo.',
+    // Fuente: https://carrascaldebarregas.com/historia-del-municipio/
+    'El sanatorio tuvo cementerio propio: entre 1950 y 1985 se enterró allí a 1.071 personas. Su fachada luce la cruz de Lorena, símbolo de la lucha contra la tuberculosis.'
   ],
   moriscos: [
     'Su nombre se debe a que lo poblaron moriscos; antes se decía «Morisco». En el siglo XIV formaba parte de la región de Villoria.',
     'En 1877 se inauguró su estación, en la línea de Salamanca a Medina del Campo.'
+  ],
+  tormes: [
+    // Fuente: https://www.ub.edu/geocrit/sn/sn-146(139).htm
+    'Nació como polígono de viviendas: el proyecto del Polígono de El Tormes es de 1959, y en 1965 se adjudicó allí el grupo de viviendas San Mateo.',
+    // Fuente: https://www.salamanca24horas.com/local/salamanca-suma-nuevo-balcon-urbano-inauguracion-mirador-tormes
+    'En la calle Diego Pisador se abrió en 2026 un mirador de la Ruta de los Miradores, con la vista de la ciudad que sale en muchas postales.',
+    // Fuente: https://es.wikipedia.org/wiki/Diego_Pisador
+    'Esa calle recuerda a Diego Pisador, vihuelista nacido en Salamanca hacia 1510 que publicó en 1552 un Libro de música de vihuela dedicado a Felipe II.'
+  ],
+  alcaldes: [
+    // Fuente: https://avlosalcaldes.org/quienes-somos/
+    'Es uno de los barrios más jóvenes de la ciudad: su asociación vecinal nació en julio de 2025 y celebró sus primeras fiestas del 2 al 5 de julio de 2026.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/la-selva-del-parque-de-los-alcaldes-ED13015188
+    'En 2008 el Ayuntamiento cedió al Ministerio de Cultura un solar de 6.000 m² del barrio para ampliar el Centro Documental de la Memoria Histórica.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/barrio-alcaldes-busca-nuevos-residentes-20230717172626-nt.html
+    'Algunas de sus calles llevan nombre de alcalde, como Alcalde Bravo García o Alcalde Málaga Guerrero.'
+  ],
+  vidal: [
+    // Fuente: https://www.ub.edu/geocrit/sn/sn-146(139).htm
+    'Fue un barrio de viviendas sociales proyectado en 1943 para 400 casas. La primera piedra se puso en junio de 1945 y en 1948 había 170 viviendas.',
+    // Fuente: https://www.salamancaenelayer.com/2012/11/avenida-de-portugal.html
+    'La avenida de Portugal ocupa el trazado de la antigua vía del tren a Portugal, desviada por Tejares en 1954. En 1967 el terraplén seguía en pie en la plaza del barrio Vidal.'
   ]
 };
 // Leyendas: { idZona: [párrafo, ...] }
@@ -381,6 +449,42 @@ const FOTOS = {
   glorieta: [
     'img/glorieta.jpg',
     'Plaza de toros de La Glorieta. Foto: Ytha67 · CC BY-SA 4.0 · Wikimedia Commons'
+  ],
+  estacion: [
+    'img/estacion.jpg',
+    'Fachada de la estación de tren (Vialia). Foto: Vivir el tren · CC BY 2.0 · Wikimedia Commons'
+  ],
+  carmelitas: [
+    'img/carmelitas.jpg',
+    'Murales de la Galería Urbana del Barrio del Oeste. Foto: MAngeluX · CC BY 2.0 · Wikimedia Commons'
+  ],
+  hospitales: [
+    'img/hospitales.jpg',
+    'Nuevo Hospital Universitario de Salamanca. Foto: FLAVIVSAETIVS · CC BY-SA 4.0 · Wikimedia Commons'
+  ],
+  platina: [
+    'img/platina.jpg',
+    'Instituto de Neurociencias de Castilla y León (INCYL). Foto: davidbenito · CC BY-SA 2.0 · Wikimedia Commons'
+  ],
+  salesas: [
+    'img/salesas.jpg',
+    'Parroquia de María Mediadora, en el paseo de Torres Villarroel. Foto: Zarateman · CC0 · Wikimedia Commons'
+  ],
+  prosperidad: [
+    'img/prosperidad.jpg',
+    'Parroquia del Milagro de San José. Foto: Zarateman · CC BY-SA 3.0 · Wikimedia Commons'
+  ],
+  delicias: [
+    'img/delicias.jpg',
+    'Iglesia de San Isidro de las Esclavas, en el paseo del Rollo. Foto: Zarateman · CC0 · Wikimedia Commons'
+  ],
+  carrascal: [
+    'img/carrascal.jpg',
+    'Iglesia de San Pedro Apóstol. Foto: Malopez 21 · CC BY-SA 4.0 · Wikimedia Commons'
+  ],
+  santamarta: [
+    'img/santamarta.jpg',
+    'Iglesia parroquial de Santa Marta de Tormes. Foto: FLAVIVSAETIVS · CC BY-SA 4.0 · Wikimedia Commons'
   ]
 };
 // Dónde comer: { idZona: [{ n: nombre, t: tipo de cocina, a: dirección, p: descripción, s: fuente y fecha }] }

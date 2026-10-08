@@ -638,7 +638,7 @@ prueba('Panel de capas y leyenda', async p => {
   await p.mouse.click(5, 5);
   cierto(await p.$eval('#capas', e => e.hidden), 'tocar fuera lo cierra');
   // La ruta a pie y Salamanca en el tiempo siguen siendo botones aparte, a la vista
-  cierto(await p.$eval('.modos #rt', e => e.offsetParent != null), 'Ruta a pie a la vista');
+  cierto(await p.$eval('.modos #rt', e => e.offsetParent != null), 'Rutas a pie a la vista');
   cierto(await p.$eval('.modos #tm', e => e.offsetParent != null), 'Salamanca en el tiempo a la vista');
   igual(
     await p.$eval('#cmp', e => e.getAttribute('aria-label')),
@@ -647,25 +647,44 @@ prueba('Panel de capas y leyenda', async p => {
   );
 });
 
-prueba('Ruta a pie', async p => {
+prueba('Rutas a pie', async p => {
+  // El botón abre la lista de rutas
   await p.click('#rt');
-  igual(await p.evaluate(() => location.hash), '#ruta', 'abre la ruta');
+  igual(await p.evaluate(() => location.hash), '#rutas', 'abre la lista');
+  igual(await p.$$eval('.tarjeta-ruta', a => a.length), 3, 'tres rutas');
+  // La monumental: sus paradas son monumentos
+  await p.click('.tarjeta-ruta >> nth=0');
+  igual(await p.evaluate(() => location.hash), '#ruta', 'abre la ruta monumental');
   igual(await p.$$eval('#info ol.paradas li', a => a.length), 9, 'paradas');
   await p.click('#nb button.principal');
   igual(await p.evaluate(() => location.hash), '#ruta/1', 'primera parada');
   await p.click('.navruta button.principal');
   igual(await p.evaluate(() => location.hash), '#ruta/2', 'siguiente parada');
   cierto(await p.$eval('#ruta', e => e.style.display != 'none'), 'camino dibujado');
-  // El botón la apaga, también con una parada abierta, y la vuelve a encender
+  // El botón la apaga, también con una parada abierta
   await p.click('#rt');
   cierto(await p.$eval('#ruta', e => e.style.display == 'none'), 'el botón quita la ruta');
   cierto(!(await fichaAbierta(p)), 'y cierra la ficha de la parada');
   igual(await p.$eval('#rt', e => e.getAttribute('aria-pressed')), 'false', 'botón desmarcado');
+  // Los murales: paradas propias, con su ficha, su fuente y su enlace
   await p.click('#rt');
-  cierto(await p.$eval('#ruta', e => e.style.display != 'none'), 'otra vez se enciende');
+  await p.click('.tarjeta-ruta:has-text("Murales")');
+  igual(await p.evaluate(() => location.hash), '#ruta-murales', 'abre la de los murales');
+  await p.click('#nb button.principal');
+  igual(await p.evaluate(() => location.hash), '#ruta-murales/1', 'primer mural');
+  igual(await texto(p, '#nm'), 'Diáspora', 'su ficha');
+  cierto((await texto(p, '#ap')).startsWith('Fuente: '), 'con su fuente');
+  cierto(await p.$eval('.ruta-murales', e => e.style.display != 'none'), 'se ve su camino');
+  cierto(await p.$eval('.ruta-monumental', e => e.style.display == 'none'), 'y no el de otra ruta');
+  // Un enlace directo a una parada de otra ruta
+  await p.evaluate(() => (location.hash = '#ruta-vandyck/2'));
+  await p.waitForTimeout(200);
+  igual(await texto(p, '#nm'), 'Café de Chinitas', 'enlace a una parada de Van Dyck');
+  // Desde el buscador, un mural
   await p.click('#x');
-  await p.click('#rt');
-  cierto(await p.$eval('#ruta', e => e.style.display == 'none'), 'con la ficha cerrada también se apaga');
+  await p.fill('#q', 'geppetto');
+  await p.press('#q', 'Enter');
+  igual(await texto(p, '#nm'), 'Geppetto', 'el buscador encuentra los murales');
 });
 
 prueba(

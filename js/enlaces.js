@@ -3,7 +3,9 @@
 //   #via/a-62                 ficha de una carretera o avenida
 //   #tiempo  #tiempo/3        Salamanca en el tiempo: la primera etapa o una concreta (1 a 7)
 //   #monumento/catedrales     mini infografía de un monumento
-//   #ruta  #ruta/3            ruta a pie: resumen y cada parada
+//   #rutas                    rutas a pie: la lista
+//   #ruta  #ruta/3            ruta monumental: resumen y cada parada
+//   #ruta-murales/3           las demás rutas (#ruta-<id>), igual
 //   #pueblo/la-alberca        ficha de un pueblo de la provincia
 //   #lista  #provincia        pestañas
 //   #provincia/alba-de-tormes pueblo seleccionado en la pestaña Provincia
@@ -19,10 +21,9 @@ const hashActual = () => decodeURIComponent(location.hash.slice(1));
 const esHashDeFicha = h =>
   h.startsWith('via/') ||
   h.startsWith('monumento/') ||
-  h == 'ruta' ||
+  /^rutas?($|\/|-)/.test(h) ||
   h == 'tiempo' ||
   h.startsWith('tiempo/') ||
-  h.startsWith('ruta/') ||
   h.startsWith('pueblo/') ||
   todasLasZonas.some(z => z.id == h);
 
@@ -74,11 +75,16 @@ function aplicarEnlace() {
     if (a == 'pueblo' && b) {
       const m = PROVINCIA.m.find(m => slug(m.n) == b);
       if (m && PUEBLOS[m.n] && (puebloAbierto != m || !fichaAbierta)) abrirPueblo(m);
-    } else if (a == 'ruta') {
-      const i = parseInt(b) - 1;
-      if (i >= 0 && i < RUTA.paradas.length) {
-        if (paradaActual != i || !fichaAbierta) abrirParada(i);
-      } else if (paradaActual >= 0 || !fichaAbierta || !rutaActiva) abrirRuta();
+    } else if (a == 'rutas') {
+      if (!fichaAbierta || rutaActiva) abrirRutas();
+    } else if (a == 'ruta' || a.startsWith('ruta-')) {
+      // Una ruta que no existe (enlace viejo o mal copiado) abre la lista de rutas
+      const k = RUTAS.findIndex(r => hashRuta(r) == a),
+        i = parseInt(b) - 1;
+      if (k < 0) abrirRutas();
+      else if (i >= 0 && i < RUTAS[k].paradas.length) {
+        if (paradaActual != i || rutaElegida != k || !fichaAbierta) abrirParada(i, k);
+      } else if (paradaActual >= 0 || rutaElegida != k || !fichaAbierta || !rutaActiva) abrirRuta(k);
     } else if (a == 'tiempo') {
       const n = parseInt(b),
         i = n >= 1 && n <= ETAPAS.length ? n - 1 : 0;

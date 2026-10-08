@@ -74,7 +74,7 @@ function colocarMonumentos(u) {
       py = (m.y - v.y) / u,
       tocaZoom = v.w <= (m.top ? ANCHO_MAX_IMPRESCINDIBLES : ANCHO_MAX_RESTO),
       libre = !puestos.some(p => Math.abs(p[0] - px) < SEPARACION_PX && Math.abs(p[1] - py) < SEPARACION_PX),
-      enRuta = typeof rutaActiva != 'undefined' && rutaActiva && RUTA.paradas.includes(m.id),
+      enRuta = typeof rutaActiva != 'undefined' && rutaActiva && rutaActual().paradas.includes(m.id),
       ver = (tocaZoom && libre) || m.id == monumentoAbierto || enRuta;
     m.g.style.display = ver ? '' : 'none';
     if (!ver) return;
@@ -186,7 +186,7 @@ function pintarInfografia(m) {
   nb.append(barrio, llegar);
 }
 
-// parada: índice en la ruta a pie si se abre como parada de la ruta
+// parada: índice en la ruta a pie elegida (ruta.js) si se abre como parada de la ruta
 function abrirMonumento(id, parada) {
   const m = buscarMonumento(id),
     zona = buscarZona(m.zona);
@@ -209,7 +209,7 @@ function abrirMonumento(id, parada) {
   resaltarVia(null);
   centrarMapaEn(m.x, m.y, Math.min(vistaMapa.w, 70));
   mostrarFicha();
-  enlaceFicha(comoParada ? 'ruta/' + (parada + 1) : 'monumento/' + id, m.n);
+  enlaceFicha(comoParada ? hashParada(parada) : 'monumento/' + id, m.n);
 }
 
 // Quita la selección de monumento (al abrir otra ficha o cerrar)

@@ -104,14 +104,15 @@ const crearSvg = (etiqueta, atributos, padre) => {
   return e;
 };
 
-// Mensaje breve en la parte de abajo de la pantalla
+// Mensaje breve arriba de la pantalla. Con discreto, abajo, más pequeño y un poco más rato
+// (para avisos que no vienen de algo que acabas de hacer, como el de «ya funciona sin conexión»)
 let temporizadorAviso;
-const aviso = texto => {
+const aviso = (texto, discreto = false) => {
   const t = $('#ts');
   t.textContent = texto;
-  t.className = 'on';
+  t.className = 'on' + (discreto ? ' discreto' : '');
   clearTimeout(temporizadorAviso);
-  temporizadorAviso = setTimeout(() => (t.className = ''), 1700);
+  temporizadorAviso = setTimeout(() => (t.className = discreto ? 'discreto' : ''), discreto ? 3500 : 1700);
 };
 
 // Botón que se enciende y se apaga (capas del mapa)
