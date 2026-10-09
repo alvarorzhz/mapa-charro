@@ -403,8 +403,13 @@ prueba('Contraste de los textos', async (p, url) => {
       await p.waitForTimeout(250);
       if (pulsar) await p.click(pulsar);
       // Con una ficha abierta (fija en escritorio) y la página de detrás con scroll, axe confunde el fondo de
-      // la ficha con el de la página: se cierra Logros (que en escritorio sale abierto) para que no haya scroll
-      if (hash && hash != '#lista') await p.evaluate(() => ($('#lgr').open = false));
+      // la ficha con el de la página: se cierra Logros (que en escritorio sale abierto) y se esconde la tarjeta
+      // de la palabra charra (su contraste se mira sin ficha, en «inicio») para que no haya scroll
+      if (hash && hash != '#lista')
+        await p.evaluate(() => {
+          $('#lgr').open = false;
+          $('#palabra').hidden = true;
+        });
       await p.waitForTimeout(450); // que acaben las transiciones de los paneles
       await p.addScriptTag({ content: AXE });
       const malos = await p.evaluate(async () =>
