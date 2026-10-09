@@ -280,7 +280,7 @@ function apuntarUso(campo, valor) {
   conAvisoDeLogros(() => {
     if (valor === undefined) j[campo] = (j[campo] || 0) + 1;
     else j[campo] = [...(j[campo] || []), valor];
-    guardar();
+    guardar({ uso: true });
     actualizar();
   });
 }

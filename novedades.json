@@ -1,5 +1,27 @@
 [
   {
+    "version": "1.5.3",
+    "fecha": "2026-10-09",
+    "titulo": "Tu progreso, más a salvo",
+    "usuario": [
+      "Al entrar con tu cuenta en un navegador o dispositivo nuevo, se junta lo que tenías en la cuenta con lo del navegador: ya no se puede perder nada.",
+      "La ficha de «Resto de la provincia» vuelve a abrirse.",
+      "Página de privacidad más completa y clara: es un proyecto personal, sin ánimo de lucro, sin publicidad ni analítica."
+    ],
+    "tecnico": "guardado.js: conectarNube junta siempre las copias la primera vez que una cuenta se conecta en el navegador (Google: charro-cuenta; Claude: charro-cuenta-claude); guardar({uso}) no cambia t sin cuenta conectada (apuntarUso); t monótono y limitado a +1 día en limpiarProgreso; tieneProgreso cuenta también j. zonaResto con otros y cur. privacidad.html completa (Claude, GitHub Pages, Google Fonts, base legal, conservación, derechos). Pruebas: cuenta de Claude con enlace a zona, Google tras abrir solo fichas, ficha de Resto de la provincia."
+  },
+  {
+    "version": "1.5.3",
+    "fecha": "2026-10-09",
+    "titulo": "Tu progreso, más seguro",
+    "usuario": [
+      "Al entrar con tu cuenta en un dispositivo nuevo, tu progreso de la cuenta se junta con el del navegador y ya no se puede perder.",
+      "La ficha «Resto de la provincia» vuelve a abrirse.",
+      "Página de privacidad más clara y completa: es un proyecto personal, sin publicidad ni analítica, y tus datos no se usan para nada más."
+    ],
+    "tecnico": "guardado.js: conectarNube junta siempre las copias la primera vez que una cuenta se conecta en el navegador (Google con charro-cuenta; Claude con charro-cuenta-claude); guardar({uso:true}) desde apuntarUso no cambia t sin cuenta conectada; t crece siempre (max(ahora, t+1)) y limpiarProgreso lo limita a un día por delante; tieneProgreso cuenta también los datos de j. zonaResto con otros y cur. privacidad.html reescrita. Pruebas nuevas: cuenta de Claude con enlace a zona, Google tras abrir solo fichas, ficha de Resto; opción hash en el arnés."
+  },
+  {
     "version": "1.5.2",
     "fecha": "2026-10-09",
     "titulo": "Mapa más ágil y pantalla más ordenada",

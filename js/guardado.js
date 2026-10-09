@@ -70,9 +70,12 @@ async function subirANube() {
   }
 }
 
-// Guarda tras cualquier cambio: al momento en el navegador y, agrupando cambios seguidos, en la cuenta
-const guardar = () => {
-  progreso.t = Date.now();
+// Guarda tras cualquier cambio: al momento en el navegador y, agrupando cambios seguidos, en la cuenta.
+// uso: datos que solo cuentan para los logros (fichas leídas, palabras vistas…). Sin cuenta conectada no
+// cambian la hora del progreso: así, al abrir una ficha antes de conectar, esa copia casi vacía del
+// navegador no parece más nueva que la de la cuenta y no la pisa.
+const guardar = ({ uso = false } = {}) => {
+  if (!uso || nube.ref) progreso.t = Math.max(Date.now(), (progreso.t || 0) + 1);
   guardarLocal();
   if (nube.ref) {
     clearTimeout(nube.temporizador);
@@ -87,7 +90,21 @@ function aplicarDesdeNube(datos) {
   actualizar();
 }
 
-const tieneProgreso = p => Object.keys(p.z).length || Object.keys(p.p || {}).length || p.f;
+// ¿Hay algo que guardar? Marcas, la rana o cualquier dato de los logros y del juego
+const tieneProgreso = p => {
+  const j = p.j || {};
+  return !!(
+    Object.keys(p.z || {}).length ||
+    Object.keys(p.p || {}).length ||
+    p.f ||
+    j.m ||
+    j.n ||
+    j.ms ||
+    j.cp ||
+    ['h', 'mo', 'fl', 'et', 'pv'].some(k => (j[k] || []).length) ||
+    Object.keys(j.r || {}).length
+  );
+};
 
 // Junta dos progresos sin perder nada: una zona pisada en cualquiera de los dos queda pisada; si no,
 // «quiero ir» si lo está en alguno. Para cuando alguien entra en su cuenta con progreso en el navegador.
@@ -125,7 +142,8 @@ function juntarProgresos(a, b) {
 }
 
 // Conecta el progreso con su documento en la cuenta. Normalmente gana la copia (navegador o cuenta)
-// modificada más tarde; con juntar (al entrar en la cuenta desde un navegador), se juntan las dos.
+// modificada más tarde; con juntar (la primera vez que esa cuenta se conecta en este navegador), se
+// juntan siempre las dos, para que nada de lo que haya en la cuenta se pierda.
 // Devuelve false si no se ha podido leer la cuenta (y se queda en el navegador).
 async function conectarNube(ref, textoOk, juntar = false) {
   nube.textoOk = textoOk;
@@ -149,7 +167,7 @@ async function conectarNube(ref, textoOk, juntar = false) {
   }
   nube.ref = ref;
   const enCuenta = instantanea.exists ? limpiarProgreso(instantanea.data()) : null;
-  if (enCuenta && juntar && tieneProgreso(progreso)) {
+  if (enCuenta && juntar) {
     aplicarDesdeNube(juntarProgresos(enCuenta, progreso));
     subirANube();
   } else if (enCuenta) {
@@ -186,6 +204,20 @@ function desconectarNube() {
   mostrarEstadoGuardado('local');
 }
 
+const CLAVE_NUBE_CLAUDE = 'charro-cuenta-claude'; // la cuenta de Claude ya conectada en este dispositivo
+const leerClave = k => {
+  try {
+    return localStorage.getItem(k);
+  } catch (e) {
+    return null;
+  }
+};
+const escribirClave = (k, v) => {
+  try {
+    localStorage.setItem(k, v);
+  } catch (e) {}
+};
+
 // Al arrancar: dentro de Claude, su cuenta; si no, la de Google si se entró antes (cuenta.js)
 async function iniciarNube() {
   mostrarEstadoGuardado('local');
@@ -193,7 +225,17 @@ async function iniciarNube() {
     if (window.claude && window.claude.use) {
       const [db, user] = await Promise.all([window.claude.use('db'), window.claude.use('user')]);
       const id = db && user && (await user.id());
-      if (id) return conectarNube(db.doc('data/users/' + id + '/progreso'), 'Guardado en tu cuenta');
+      if (id) {
+        // La primera vez que esta cuenta de Claude se conecta en este dispositivo, se juntan las copias
+        const juntar = leerClave(CLAVE_NUBE_CLAUDE) != id,
+          conectada = await conectarNube(
+            db.doc('data/users/' + id + '/progreso'),
+            'Guardado en tu cuenta',
+            juntar
+          );
+        if (conectada) escribirClave(CLAVE_NUBE_CLAUDE, id);
+        return conectada;
+      }
     }
   } catch (e) {
     console.error(e);

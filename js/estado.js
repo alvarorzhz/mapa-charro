@@ -29,6 +29,8 @@ const zonaResto = {
   id: 'resto',
   n: 'Resto de la provincia',
   g: 6,
+  otros: [],
+  cur: [],
   ly: [],
   c: 'Ciudad Rodrigo, Béjar, La Alberca, las Arribes... Márcala cuando salgas de la zona de la capital.'
 };
@@ -91,7 +93,7 @@ function limpiarProgreso(o) {
   return {
     z,
     f: o && o.f ? 1 : 0,
-    t: o && +o.t > 0 ? +o.t : 0,
+    t: o && +o.t > 0 ? Math.min(+o.t, Date.now() + 864e5) : 0, // como mucho, un día por delante (relojes mal puestos)
     gv,
     p,
     j: {

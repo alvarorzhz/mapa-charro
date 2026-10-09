@@ -875,6 +875,98 @@ prueba(
 );
 
 prueba(
+  'Cuenta de Claude en un dispositivo nuevo con enlace a una zona',
+  async p => {
+    // La ficha de la zona se abre antes de que llegue la cuenta: lo de la cuenta no se puede perder
+    await p.waitForTimeout(1200);
+    igual(await p.evaluate(() => progreso.z), { centro: 'v', vega: 'w' }, 'trae lo de la cuenta');
+    cierto(await p.evaluate(() => progreso.j.fl.includes('tejares')), 'y conserva la ficha leída');
+    igual(await p.evaluate(() => window.__guardado.z), { centro: 'v', vega: 'w' }, 'la cuenta sigue entera');
+    igual(
+      await p.evaluate(() => localStorage.getItem('charro-cuenta-claude')),
+      'prueba',
+      'recuerda la cuenta'
+    );
+  },
+  {
+    hash: '#tejares',
+    antes: () => {
+      window.__guardado = { z: { centro: 'v', vega: 'w' }, t: 9, v: 1 };
+      window.claude = {
+        use: async k =>
+          k == 'user'
+            ? { id: async () => 'prueba' }
+            : {
+                doc: () => ({
+                  get: () =>
+                    new Promise(r =>
+                      setTimeout(() => r({ exists: true, data: () => window.__guardado }), 300)
+                    ),
+                  set: async d => (window.__guardado = d),
+                  onSnapshot: () => () => {}
+                })
+              }
+      };
+    }
+  }
+);
+
+prueba(
+  'Cuenta con Google tras abrir solo fichas',
+  async p => {
+    // En un navegador nuevo se lee una ficha (solo cuenta para los logros) y luego se entra
+    await p.evaluate(() => abrirFicha('vega'));
+    await p.evaluate(() => cerrarFicha());
+    igual(await p.evaluate(() => progreso.t), 0, 'leer una ficha no hace la copia más nueva');
+    await p.click('#cuenta button');
+    await p.waitForTimeout(1300);
+    igual(await p.evaluate(() => progreso.z), { centro: 'v', tejares: 'w' }, 'trae lo de la cuenta');
+    igual(await p.evaluate(() => window.__nubeGoogle.datos.z), { centro: 'v', tejares: 'w' }, 'sin pisarla');
+    cierto(await p.evaluate(() => window.__nubeGoogle.datos.j.fl.includes('vega')), 'y suma la ficha leída');
+  },
+  {
+    antes: () => {
+      const nube = { datos: { z: { centro: 'v', tejares: 'w' }, t: 9, v: 1 } };
+      let usuario = null;
+      const oyentes = [];
+      window.__nubeGoogle = nube;
+      const auth = {
+          onAuthStateChanged: f => {
+            oyentes.push(f);
+            setTimeout(() => f(usuario));
+            return () => {};
+          },
+          signInWithPopup: async () => {
+            usuario = { uid: 'u1', email: 'prueba@ejemplo.es' };
+            oyentes.forEach(f => f(usuario));
+          }
+        },
+        doc = {
+          get: async () => ({ exists: !!nube.datos, data: () => nube.datos }),
+          set: async d => (nube.datos = d),
+          onSnapshot: () => () => {}
+        };
+      window.firebase = {
+        prueba: true,
+        apps: [1],
+        auth: Object.assign(() => auth, { GoogleAuthProvider: function () {} }),
+        firestore: () => ({ collection: () => ({ doc: () => doc }) })
+      };
+    }
+  }
+);
+
+prueba('Ficha de «Resto de la provincia»', async p => {
+  await p.evaluate(() => abrirFicha('resto'));
+  cierto(await fichaAbierta(p), 'se abre');
+  igual(await texto(p, '#nm'), 'Resto de la provincia', 'con su nombre');
+  await p.evaluate(() => cerrarFicha());
+  await p.click('#vlist');
+  await p.click('.lr .nm:text-is("Resto de la provincia")');
+  cierto(await fichaAbierta(p), 'también desde la Lista');
+});
+
+prueba(
   'Cuenta con Google: ventanita bloqueada en el móvil',
   async p => {
     await p.click('#cuenta button');
@@ -1233,7 +1325,7 @@ prueba(
         await p.addInitScript(() => localStorage.setItem('charro-bienvenida', '1'));
       if (opciones.antes) await p.addInitScript(opciones.antes);
       try {
-        await p.goto(url);
+        await p.goto(url + (opciones.hash || ''));
         await p.waitForTimeout(250);
         await fn(p, url, ctx);
         if (errores.length) throw new Error('errores de JavaScript: ' + errores.join(' | '));
