@@ -322,6 +322,7 @@ function empezarPorLaMasCercana() {
 
 // El botón abre la lista de rutas; si hay una en el mapa, la quita (y cierra su ficha si estaba abierta)
 $('#rt').onclick = () => {
+  if (pestana != 'map' && !esEscritorio()) cambiarPestana('map'); // en el móvil, la ruta se ve en el mapa
   if (!rutaActiva) return abrirRutas();
   const fichaDeRuta = $('#sh').classList.contains('o') && hashActual().split('/')[0].startsWith('ruta');
   activarRuta(false);

@@ -1,5 +1,18 @@
 [
   {
+    "version": "1.5.2",
+    "fecha": "2026-10-09",
+    "titulo": "Mapa más ágil y pantalla más ordenada",
+    "usuario": [
+      "En el ordenador, arrastrar el mapa va más fluido.",
+      "En el móvil el mapa sale antes: la cabecera es más compacta y Rutas a pie y Salamanca en el tiempo están arriba, junto a Mi Salamanca, ¿Dónde está? y Ayuda.",
+      "Cada ficha de barrio tiene un índice arriba para saltar a Curiosidades, Leyenda, Dónde comer o la Palabra charra.",
+      "Los logros van plegados por categorías, cada una con su medalla y cuántos llevas.",
+      "La palabra charra ya no aparece encima de la Lista en el móvil."
+    ],
+    "tecnico": "mapa.js: durante los gestos sin cambio de escala, moverSinRedibujar aplica translate CSS al SVG (will-change) y ponerViewBox solo redibuja al pasar el 15 % o al terminar; clase en-gesto sin pointer-events en los hijos; .mw hace de marco también en el móvil. Cabecera: .progreso (barra + contador), .guardado (estado + cuenta), #sig compacto en el móvil (cuenta-sig), .acc en rejilla con iconos; colocarAccesos (vistas.js) pone #rt y #tm en .acc (móvil) o .modos (escritorio). Ficha: índice #idx (pintarIndiceFicha, APARTADOS_FICHA), solo en zonas. Logros: CATEGORIAS_LOGRO en <details> plegados, categoriasAbiertas, #sig abre su categoría. #palabra oculta fuera de la pestaña Mapa. Pruebas ampliadas."
+  },
+  {
     "version": "1.5.1",
     "fecha": "2026-10-09",
     "titulo": "Palabras charras y más logros",

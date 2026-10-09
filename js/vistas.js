@@ -34,9 +34,10 @@ function cambiarPestana(nueva) {
   pestana = nueva;
   const enMapa = nueva == 'map',
     mapaVisible = enMapa || esEscritorio();
-  document.querySelector('.mw').style.display = document.querySelector('.modos').style.display = mapaVisible
-    ? ''
-    : 'none';
+  document.querySelector('.mw').style.display =
+    document.querySelector('.modos').style.display =
+    $('#palabra').style.display =
+      mapaVisible ? '' : 'none';
   if (!mapaVisible) abrirCapas(false);
   $('#gm').hidden = mapaVisible ? !$('#gm').textContent : true;
   $('#ls').style.display = nueva == 'list' ? '' : 'none';
@@ -95,6 +96,18 @@ function pintarLista() {
   if (!alguna)
     caja.appendChild(crear('p', 'mu', LISTA_VACIA[filtroLista] || 'Nada que mostrar con este filtro.'));
 }
+
+// Rutas a pie y Salamanca en el tiempo: en el móvil, con los demás accesos de arriba; en escritorio,
+// bajo el mapa (arriba a la derecha los taparía la ficha abierta)
+function colocarAccesos() {
+  const destino = document.querySelector(esEscritorio() ? '.modos' : '.acc'),
+    ayuda = $('#ayuda');
+  ['#rt', '#tm'].forEach(s =>
+    destino.classList.contains('acc') ? destino.insertBefore($(s), ayuda) : destino.appendChild($(s))
+  );
+}
+colocarAccesos();
+matchMedia('(min-width: 900px)').addEventListener('change', colocarAccesos);
 
 $('#vmap').onclick = () => cambiarPestana('map');
 $('#vprov').onclick = () => cambiarPestana('prov');

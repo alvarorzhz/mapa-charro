@@ -93,6 +93,30 @@ function modoBotonesFicha(modo) {
   pintarBotonesFicha();
 }
 
+// Índice de la ficha de zona: un botón por apartado que lleva a él (en el móvil, agrandando la ficha)
+let fichaConIndice = false;
+const APARTADOS_FICHA = [
+  ['#hc', 'Curiosidades'],
+  ['#hl', 'Leyenda'],
+  ['#he', 'Dónde comer'],
+  ['#pch', 'Palabra charra']
+];
+function pintarIndiceFicha() {
+  const indice = $('#idx'),
+    apartados = APARTADOS_FICHA.filter(([sel]) => !$(sel).hidden || (sel == '#pch' && fichaConPalabra));
+  indice.textContent = '';
+  fichaConIndice = apartados.length > 1;
+  apartados.forEach(([sel, texto]) => {
+    const b = crear('button', '', texto);
+    b.onclick = () => {
+      if (!esEscritorio()) $('#sh').classList.add('grande');
+      // Después de agrandar la ficha, para que el apartado quede arriba
+      requestAnimationFrame(() => $(sel).scrollIntoView({ behavior: comoDesplazar(), block: 'start' }));
+    };
+    indice.appendChild(b);
+  });
+}
+
 // Dónde estaba el foco antes de abrir la ficha, para devolverlo al cerrarla
 let focoAntesDeFicha = null;
 
@@ -101,9 +125,10 @@ function mostrarFicha() {
   if (typeof juego != 'undefined' && juego.activo) salirJuego(); // abrir una ficha (p. ej. desde el buscador) deja el juego
   document.querySelector('.sb').scrollTop = 0;
   $('#sh').classList.remove('grande');
-  // La palabra charra solo va en las fichas de zona (la pinta abrirFicha justo antes)
+  // La palabra charra y el índice solo van en las fichas de zona (los pinta abrirFicha justo antes)
   $('#pch').hidden = !fichaConPalabra;
-  fichaConPalabra = false;
+  $('#idx').hidden = !fichaConIndice;
+  fichaConPalabra = fichaConIndice = false;
   // En el móvil, sube la página hasta el mapa para que se vea por encima del panel
   if (!esEscritorio() && pestana == 'map') {
     const arriba = document.querySelector('.mw').getBoundingClientRect().top;
@@ -147,6 +172,7 @@ function abrirFicha(id) {
   if (typeof pintarNacimiento == 'function') pintarNacimiento(z); // tiempo.js
   pintarDondeComer(id);
   pintarCercanas(z);
+  pintarIndiceFicha();
   // Acerca el mapa a la zona, según su tamaño (sin alejarlo si ya estaba más cerca). En el móvil,
   // además, que la zona quepa entera en el trozo de mapa que deja libre el panel.
   if (id != 'resto') {

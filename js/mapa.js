@@ -516,7 +516,32 @@ function limitarVista(aplicar = true) {
   v.h = v.w * AR;
   v.x = v.w >= ANCHO_MAPA ? (ANCHO_MAPA - v.w) / 2 : Math.max(0, Math.min(ANCHO_MAPA - v.w, v.x));
   v.y = v.h >= ALTO_MAPA ? (ALTO_MAPA - v.h) / 2 : Math.max(0, Math.min(ALTO_MAPA - v.h, v.y));
-  if (aplicar) mapaSvg.setAttribute('viewBox', v.x + ' ' + v.y + ' ' + v.w + ' ' + v.h);
+  if (aplicar) ponerViewBox();
+}
+function ponerViewBox() {
+  const v = vistaMapa;
+  mapaSvg.setAttribute('viewBox', v.x + ' ' + v.y + ' ' + v.w + ' ' + v.h);
+  mapaSvg.style.transform = '';
+  vistaPintada = { x: v.x, y: v.y, w: v.w };
+}
+
+// Al arrastrar o deslizar sin cambiar la escala, redibujar todo el SVG en cada fotograma es lo que
+// más cuesta. En vez de eso se mueve con una transformación CSS la imagen ya pintada (la mueve la
+// tarjeta gráfica) y solo se redibuja de verdad cuando se ha movido bastante, o al terminar.
+let vistaPintada = null; // la vista que tiene puesta el viewBox del SVG
+const MOVER_SIN_REDIBUJAR = 0.15; // fracción del mapa que se puede mover antes de redibujar
+function moverSinRedibujar() {
+  const v = vistaMapa,
+    p = vistaPintada,
+    r = rectInicioGesto;
+  if (!p || !r || !r.width || Math.abs(p.w - v.w) > 1e-9) return false;
+  const pxPorUnidad = r.width / v.w,
+    dx = (p.x - v.x) * pxPorUnidad,
+    dy = (p.y - v.y) * pxPorUnidad;
+  if (Math.abs(dx) > r.width * MOVER_SIN_REDIBUJAR || Math.abs(dy) > r.height * MOVER_SIN_REDIBUJAR)
+    return false;
+  mapaSvg.style.transform = 'translate(' + dx.toFixed(1) + 'px, ' + dy.toFixed(1) + 'px)';
+  return true;
 }
 
 // Encuadre completo: limita la vista y recoloca todo lo que depende del zoom
@@ -538,11 +563,14 @@ function ajustarVistaPronto() {
   if (!enGesto) {
     enGesto = true;
     rectInicioGesto = mapaSvg.getBoundingClientRect();
+    mapaSvg.classList.add('en-gesto'); // sin efectos al pasar por encima mientras se mueve (estilos.css)
   }
   if (!marcoPendiente)
     marcoPendiente = requestAnimationFrame(() => {
       marcoPendiente = 0;
-      limitarVista();
+      limitarVista(false);
+      if (moverSinRedibujar()) return;
+      ponerViewBox();
       recolocarSegunZoom(false);
     });
   // Con los dedos apoyados o una animación en marcha, se espera a que acaben; si no (rueda), a una pausa
@@ -557,6 +585,7 @@ function terminarGesto() {
   if (!enGesto) return;
   enGesto = false;
   rectInicioGesto = null;
+  mapaSvg.classList.remove('en-gesto');
   cancelAnimationFrame(marcoPendiente);
   marcoPendiente = 0;
   ajustarVista();

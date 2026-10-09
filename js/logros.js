@@ -396,37 +396,86 @@ function pintarLogros() {
         crear('b', '', 'Siguiente logro: ' + sig.n),
         crear('small', '', sig.d + ' · ' + Math.min(sig.c, sig.m) + ' de ' + sig.m)
       ),
+      crear('span', 'cuenta-sig', Math.min(sig.c, sig.m) + '/' + sig.m), // en el móvil, en vez de la descripción
       barra(sig.c / sig.m)
     );
     linea.onclick = () => {
       $('#lgr').open = true;
+      const categoria = CATEGORIAS_LOGRO.find(c => c[2].includes(sig.cat));
+      if (categoria) {
+        categoriasAbiertas.add(categoria[0]);
+        pintarLogros();
+      }
       $('#lgr').scrollIntoView({ behavior: comoDesplazar(), block: 'start' });
     };
   }
-  // Lista: primero los empezados (los más cerca, arriba), luego los que faltan y al final los conseguidos
+  // Lista plegada por categorías: en cada cabecera, su medalla, cuántos y su barra. Dentro, primero los
+  // empezados (los más cerca, arriba), luego los que faltan y al final los conseguidos.
   const orden = a => (conseguido(a) ? 2 : a.c > 0 ? 0 : 1);
   caja.textContent = '';
-  [...logros]
-    .sort((a, b) => orden(a) - orden(b) || b.c / b.m - a.c / a.m)
-    .forEach(a => {
-      const hecho = conseguido(a),
-        cuenta = Math.min(a.c, a.m);
-      caja.appendChild(
+  CATEGORIAS_LOGRO.forEach(([nombre, medalla, cats]) => {
+    const deLaCategoria = logros.filter(a => cats.includes(a.cat));
+    if (!deLaCategoria.length) return;
+    const hechosCat = deLaCategoria.filter(conseguido).length,
+      plegable = crear(
+        'details',
+        'cat-logros' + (hechosCat == deLaCategoria.length ? ' completa' : ''),
         crear(
-          'div',
-          'ac' + (hecho ? ' ok' : ''),
-          crear('span', 'medalla', MEDALLAS[a.cat] || '🏆'),
+          'summary',
+          '',
+          crear('span', 'medalla' + (hechosCat ? ' con' : ''), medalla),
           crear(
-            'div',
+            'span',
             'texto',
-            crear('b', '', a.n),
-            crear('small', '', a.d + ' · ' + (hecho ? 'conseguido' : cuenta + ' de ' + a.m))
+            crear('b', '', nombre),
+            crear('small', '', hechosCat + ' de ' + deLaCategoria.length)
           ),
-          barra(cuenta / a.m)
+          barra(hechosCat / deLaCategoria.length)
         )
       );
-    });
+    plegable.dataset.cat = nombre;
+    plegable.open = categoriasAbiertas.has(nombre);
+    plegable.ontoggle = () =>
+      plegable.open ? categoriasAbiertas.add(nombre) : categoriasAbiertas.delete(nombre);
+    [...deLaCategoria]
+      .sort((a, b) => orden(a) - orden(b) || b.c / b.m - a.c / a.m)
+      .forEach(a => {
+        const hecho = conseguido(a),
+          cuenta = Math.min(a.c, a.m);
+        plegable.appendChild(
+          crear(
+            'div',
+            'ac' + (hecho ? ' ok' : ''),
+            crear('span', 'st', hecho ? '✓' : ''),
+            crear(
+              'div',
+              'texto',
+              crear('b', '', a.n),
+              crear('small', '', a.d + ' · ' + (hecho ? 'conseguido' : cuenta + ' de ' + a.m))
+            ),
+            barra(cuenta / a.m)
+          )
+        );
+      });
+    caja.appendChild(plegable);
+  });
 }
+// Categorías de la lista de logros: [nombre, medalla, categorías de los logros (cat)]
+const CATEGORIAS_LOGRO = [
+  ['Barrios y zonas', '📍', ['zonas', 'grupo']],
+  ['Pisado con GPS', '🥾', ['gps']],
+  ['Provincia', '🗺️', ['provincia']],
+  ['Comarcas', '🌾', ['comarca']],
+  ['Monumentos', '🏛️', ['monumento']],
+  ['Rutas a pie', '🚶', ['ruta']],
+  ['Historia', '🏰', ['epoca']],
+  ['Lectura', '📖', ['lectura']],
+  ['Reto «¿Dónde está?»', '🎯', ['reto']],
+  ['Palabras charras', '🗣️', ['palabras']],
+  ['Compartir', '📣', ['compartir']],
+  ['Sorpresas', '🐸', ['leyendas', 'rio', 'deseo', 'rana']]
+];
+const categoriasAbiertas = new Set(); // las que se han abierto, para que sigan abiertas al repintar
 
 // Ejecuta «cambio» y, si con él se consigue algún logro nuevo, lo anuncia después del aviso del cambio
 function conAvisoDeLogros(cambio) {

@@ -1,6 +1,6 @@
 {
   "name": "mapa-charro",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "private": true,
   "description": "Mapa charro de Salamanca: barrios, pueblos, monumentos y ruta a pie",
   "scripts": {

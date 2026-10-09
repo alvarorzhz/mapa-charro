@@ -698,9 +698,14 @@ prueba('Panel de capas y leyenda', async p => {
   await p.click('#zc');
   await p.mouse.click(5, 5);
   cierto(await p.$eval('#capas', e => e.hidden), 'tocar fuera lo cierra');
-  // La ruta a pie y Salamanca en el tiempo siguen siendo botones aparte, a la vista
-  cierto(await p.$eval('.modos #rt', e => e.offsetParent != null), 'Rutas a pie a la vista');
-  cierto(await p.$eval('.modos #tm', e => e.offsetParent != null), 'Salamanca en el tiempo a la vista');
+  // La ruta a pie y Salamanca en el tiempo, a la vista: en el móvil con los demás accesos de arriba;
+  // en escritorio bajo el mapa, donde no los tapa la ficha
+  const dondeAccesos = (await p.evaluate(() => esEscritorio())) ? '.modos' : '.acc';
+  cierto(await p.$eval(dondeAccesos + ' #rt', e => e.offsetParent != null), 'Rutas a pie a la vista');
+  cierto(
+    await p.$eval(dondeAccesos + ' #tm', e => e.offsetParent != null),
+    'Salamanca en el tiempo a la vista'
+  );
   igual(
     await p.$eval('#cmp', e => e.getAttribute('aria-label')),
     'Compartir este sitio',
@@ -975,13 +980,35 @@ prueba('Palabras charras: tarjeta, ficha y logros', async p => {
   await p.evaluate(() => abrirFicha('tejares'));
   await p.evaluate(() => abrirFicha('vidal'));
   igual(await texto(p, '#pch'), deVidal, 'la misma palabra en la misma zona');
-  // En otras fichas no sale
+  // Índice de la ficha: lleva a cada apartado
+  igual(
+    await p.$$eval('#idx button', b => b.map(x => x.textContent)),
+    ['Curiosidades', 'Dónde comer', 'Palabra charra'],
+    'índice de la ficha de Vidal'
+  );
+  // En otras fichas no salen ni la palabra ni el índice
   await p.evaluate(() => abrirRutas());
   cierto(await p.isHidden('#pch'), 'sin palabra fuera de las zonas');
+  cierto(await p.isHidden('#idx'), 'sin índice fuera de las zonas');
   await p.evaluate(() => cerrarFicha());
   // Logros
   const ids = await p.evaluate(() => calcularLogros().map(a => a.id));
   for (const id of ['pa1', 'pam', 'pat']) cierto(ids.includes(id), 'logro ' + id);
+  // Lista de logros plegada por categorías: todos los logros caen en alguna
+  igual(
+    await p.evaluate(() =>
+      calcularLogros()
+        .filter(a => !CATEGORIAS_LOGRO.some(c => c[2].includes(a.cat)))
+        .map(a => a.id)
+    ),
+    [],
+    'cada logro en una categoría'
+  );
+  igual(
+    await p.$$eval('#lga .ac', a => a.length),
+    await p.evaluate(() => calcularLogros().length),
+    'todos en la lista'
+  );
   igual(
     await p.evaluate(() => calcularLogros().find(a => a.id == 'pa1').c >= 1),
     true,

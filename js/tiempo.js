@@ -280,4 +280,7 @@ function salirTiempo() {
   $('#tm').setAttribute('aria-pressed', 'false');
 }
 
-$('#tm').onclick = () => (etapaTiempo >= 0 ? $('#x').click() : abrirTiempo());
+$('#tm').onclick = () => {
+  if (pestana != 'map' && !esEscritorio()) cambiarPestana('map'); // en el móvil, las etapas se ven en el mapa
+  etapaTiempo >= 0 ? $('#x').click() : abrirTiempo();
+};
