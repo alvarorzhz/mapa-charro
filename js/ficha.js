@@ -32,6 +32,13 @@ function pintarSitiosComer(sitios, lugar) {
   el.textContent = '';
   $('#he').hidden = !(sitios && sitios.length);
   if (sitios && sitios.length) {
+    el.appendChild(
+      crear(
+        'p',
+        'mu',
+        'Para cuando preguntes «¿qué hay de comer?» y no quieras oír «canguingos y patas de peces».'
+      )
+    );
     sitios.forEach(s => {
       const mapa = crear('a', '', 'Ver en Google Maps');
       mapa.href =
@@ -94,6 +101,9 @@ function mostrarFicha() {
   if (typeof juego != 'undefined' && juego.activo) salirJuego(); // abrir una ficha (p. ej. desde el buscador) deja el juego
   document.querySelector('.sb').scrollTop = 0;
   $('#sh').classList.remove('grande');
+  // La palabra charra solo va en las fichas de zona (la pinta abrirFicha justo antes)
+  $('#pch').hidden = !fichaConPalabra;
+  fichaConPalabra = false;
   // En el móvil, sube la página hasta el mapa para que se vea por encima del panel
   if (!esEscritorio() && pestana == 'map') {
     const arriba = document.querySelector('.mw').getBoundingClientRect().top;
@@ -116,12 +126,14 @@ function abrirFicha(id) {
   mostrarAvisoAqui(id);
   $('#k').textContent = NOMBRES_GRUPOS[z.g];
   $('#nm').textContent = z.n;
+  if (id != 'resto' && typeof apuntarUso == 'function') apuntarUso('fl', id); // para los logros de lectura
   $('#otros').hidden = !z.otros.length;
   $('#otros').textContent = z.otros.length ? 'También: ' + z.otros.join(' · ') : '';
   $('#hc').hidden = false;
   pintarMonumentosDeZona(z);
   pintarCuriosidades(z);
   pintarLeyendas(z);
+  pintarPalabraDeZona(z); // palabras.js
   $('#ap').textContent = [
     POSICION_EXACTA.has(id) || id == 'resto'
       ? ''

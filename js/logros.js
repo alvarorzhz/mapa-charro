@@ -1,140 +1,31 @@
 // Logros. Cada logro es { id, n (nombre), d (descripción), c (llevas), m (meta), cat (categoría, para su
-// medalla) }; está conseguido si c >= m. Los ids se usan para saber cuáles son nuevos: no cambiarlos.
-// Además de los fijos, logrosGenerados() crea uno por cada época, ruta y comarca a partir de los datos:
-// al añadir una ruta o una época, su logro aparece solo.
-function calcularLogros() {
-  return [...logrosFijos(), ...logrosGenerados()];
-}
-function logrosFijos() {
-  const pisada = id => progreso.z[id] == 'v',
-    vis = todasLasZonas.filter(z => pisada(z.id)).length,
-    N = todasLasZonas.length,
-    delGrupo = g => {
-      const a = todasLasZonas.filter(z => z.g == g);
-      return [a.filter(z => pisada(z.id)).length, a.length];
-    },
-    g = (id, n, d, grupo) => ({ id, n, d, cat: 'grupo', c: delGrupo(grupo)[0], m: delGrupo(grupo)[1] });
-  const big = todasLasZonas.filter(z => z.t && z.g < 5),
-    leg = todasLasZonas.filter(z => z.ly && z.ly.length),
-    wish = todasLasZonas.filter(z => progreso.z[z.id] == 'w').length,
-    sur = delGrupo(4)[0],
-    nor = todasLasZonas.filter(z => z.g < 4 && pisada(z.id)).length;
-  return [
-    { id: 'p', cat: 'zonas', n: 'Primer vítor', d: 'Marca tu primer sitio como «He estado»', c: vis, m: 1 },
-    { id: 'e', cat: 'zonas', n: 'Explorador', d: 'Pisa 10 zonas', c: vis, m: 10 },
-    { id: 'h', cat: 'zonas', n: 'Medio mapa', d: 'Pisa la mitad de las zonas', c: vis, m: Math.ceil(N / 2) },
-    { id: 't', cat: 'zonas', n: 'Charro de pura cepa', d: 'Pisa todas las zonas', c: vis, m: N },
-    g('k0', 'Casco completo', 'Pisa todo el casco histórico', 0),
-    g('k1', 'Norte completo', 'Pisa toda la zona norte', 1),
-    g('k2', 'Este completo', 'Pisa toda la zona este', 2),
-    g('k3', 'Oeste completo', 'Pisa toda la zona oeste', 3),
-    g('k4', 'Sur completo', 'Pisa todo el sur, al otro lado del río', 4),
-    g('k5', 'Vuelta al alfoz', 'Pisa los pueblos de alrededor', 5),
-    {
-      id: 'gr',
-      cat: 'zonas',
-      n: 'Los grandes',
-      d: 'Pisa los grandes barrios (Garrido, Pizarrales, Prosperidad…)',
-      c: big.filter(z => pisada(z.id)).length,
-      m: big.length
-    },
-    {
-      id: 'ly',
-      cat: 'leyendas',
-      n: 'Cazador de leyendas',
-      d: 'Pisa todas las zonas que tienen leyenda',
-      c: leg.filter(z => pisada(z.id)).length,
-      m: leg.length
-    },
-    {
-      id: 'rv',
-      cat: 'rio',
-      n: 'Cruzar el Tormes',
-      d: 'Pisa 3 barrios del sur y 3 del norte',
-      c: Math.min(sur, 3) + Math.min(nor, 3),
-      m: 6
-    },
-    { id: 'wi', cat: 'deseo', n: 'Soñador', d: 'Apunta 5 sitios como «Quiero ir»', c: wish, m: 5 },
-    {
-      id: 'fr',
-      cat: 'rana',
-      n: 'Rana a la vista',
-      d: 'Encuentra la rana escondida en el mapa',
-      c: progreso.f ? 1 : 0,
-      m: 1
-    },
-    {
-      id: 'g1',
-      cat: 'gps',
-      n: 'Aquí mismo',
-      d: 'Marca un sitio estando en él, con el botón Estoy aquí',
-      c: (progreso.gv || []).length,
-      m: 1
-    },
-    {
-      id: 'g5',
-      cat: 'gps',
-      n: 'Con las botas puestas',
-      d: 'Marca 5 sitios estando en ellos',
-      c: (progreso.gv || []).length,
-      m: 5
-    },
-    {
-      id: 'p1',
-      cat: 'provincia',
-      n: 'Saliendo del alfoz',
-      d: 'Pisa tu primer pueblo de la provincia (pestaña Provincia)',
-      c: pueblos.filter(m => !m.z && estadoMunicipio(m) == 'v').length,
-      m: 1
-    },
-    {
-      id: 'p25',
-      cat: 'provincia',
-      n: 'Trotapueblos',
-      d: 'Pisa 25 pueblos de la provincia',
-      c: pueblos.filter(m => estadoMunicipio(m) == 'v').length,
-      m: 25
-    },
-    {
-      id: 'p100',
-      cat: 'provincia',
-      n: 'Charro de mapa entero',
-      d: 'Pisa 100 pueblos de la provincia',
-      c: pueblos.filter(m => estadoMunicipio(m) == 'v').length,
-      m: 100
-    },
-    {
-      id: 'pc',
-      cat: 'comarca',
-      n: 'Comarca completa',
-      d: 'Pisa todos los pueblos de una comarca',
-      c: Math.max(
-        ...PROVINCIA.com.map((_, ci) => {
-          const a = pueblos.filter(m => m.c == ci);
-          return a.filter(m => estadoMunicipio(m) == 'v').length / a.length;
-        })
-      ),
-      m: 1
-    }
-  ];
-}
-// --- Logros que salen de los datos -----------------------------------------------------
-// Visitas: monumentos (por su id) y paradas propias de las rutas (por ruta), en progreso.j
-const monumentosVisitados = () => (progreso.j && progreso.j.mo) || [];
-const paradasVisitadas = idRuta => ((progreso.j && progreso.j.r) || {})[idRuta] || [];
+// medalla) }; está conseguido si c >= m. Los ids solo se usan para saber cuáles acaban de conseguirse
+// (no se guardan), pero conviene no cambiarlos.
+//
+// Se generan solos a partir de los datos, con dos moldes:
+//   escalones(): de un contador (zonas pisadas, monumentos, partidas…) salen varios logros con metas
+//                crecientes; «mitad» y «todo» se calculan con el total, así que crecen con los datos
+//   coleccion(): «todas las de…» un grupo de cosas; se crea uno por cada grupo de zonas, época, ruta,
+//                comarca y estilo de monumento. Al añadir una ruta, una época o un estilo, su logro sale solo.
+
+// Visitas y usos guardados en progreso.j (ver estado.js)
+const datoJ = (campo, vacio) => (progreso.j && progreso.j[campo]) || vacio;
+const monumentosVisitados = () => datoJ('mo', []);
+const paradasVisitadas = idRuta => datoJ('r', {})[idRuta] || [];
 const paradaVisitada = (ruta, p) =>
   typeof p == 'string' ? monumentosVisitados().includes(p) : paradasVisitadas(ruta.id).includes(p.id);
+const rutaCompleta = r => r.paradas.every(p => paradaVisitada(r, p));
 
 // Días seguidos con el reto del día hecho, hasta hoy (o hasta ayer, si hoy aún no se ha jugado)
 function rachaReto() {
-  const dias = new Set((progreso.j && progreso.j.h) || []),
-    d = new Date();
-  const texto = f =>
-    f.getFullYear() +
-    '-' +
-    String(f.getMonth() + 1).padStart(2, '0') +
-    '-' +
-    String(f.getDate()).padStart(2, '0');
+  const dias = new Set(datoJ('h', [])),
+    d = new Date(),
+    texto = f =>
+      f.getFullYear() +
+      '-' +
+      String(f.getMonth() + 1).padStart(2, '0') +
+      '-' +
+      String(f.getDate()).padStart(2, '0');
   if (!dias.has(texto(d))) d.setDate(d.getDate() - 1);
   let n = 0;
   while (dias.has(texto(d))) {
@@ -144,71 +35,174 @@ function rachaReto() {
   return n;
 }
 
-function logrosGenerados() {
+// Moldes
+const escalones = (cat, c, total, metas) =>
+  metas
+    .map(([id, meta, n, d]) => {
+      const m = meta == 'todo' ? total : meta == 'mitad' ? Math.ceil(total / 2) : meta;
+      return { id, cat, n, d: d.replace('{m}', m), c, m };
+    })
+    .filter((a, i, l) => a.m > 0 && a.m <= total && l.findIndex(o => o.m == a.m) == i); // sin metas repetidas
+const coleccion = (id, cat, n, d, cosas, hecha) =>
+  cosas.length >= 2 ? [{ id, cat, n, d, c: cosas.filter(hecha).length, m: cosas.length }] : [];
+const slugLogro = t =>
+  t
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, '-');
+
+// Nombre del logro de cada grupo de zonas (NOMBRES_GRUPOS); si se añade un grupo, sale «<grupo> completo»
+const LOGRO_DE_GRUPO = [
+  'Casco completo',
+  'Norte completo',
+  'Este completo',
+  'Oeste completo',
+  'Sur completo',
+  'Vuelta al alfoz'
+];
+// Estilos de los monumentos que dan logro, si hay dos o más de ese estilo
+const ESTILOS_LOGRO = [
+  ['Plateresco', 'Ruta plateresca'],
+  ['Barroco', 'Ruta barroca'],
+  ['Románico', 'Ruta románica'],
+  ['Gótico', 'Ruta gótica'],
+  ['Renacentista', 'Ruta renacentista'],
+  ['Modernista', 'Ruta modernista']
+];
+
+function calcularLogros() {
   const pisada = id => progreso.z[id] == 'v',
-    lista = [];
-  // Una por época de «Salamanca en el tiempo»: pisar las zonas que nacen en ella
-  ETAPAS.forEach(([anio, nombre], i) => {
-    const nacen = zonas.filter(z => EPOCA_ZONA[z.id] && EPOCA_ZONA[z.id][0] == i);
-    if (nacen.length >= 2)
-      lista.push({
-        id: 'ep' + i,
-        cat: 'epoca',
-        n: nombre,
-        d: 'Pisa las zonas que nacen en ' + anio,
-        c: nacen.filter(z => pisada(z.id)).length,
-        m: nacen.length
-      });
-  });
-  // Una por ruta a pie: pasar por todas sus paradas
-  RUTAS.forEach(r =>
-    lista.push({
+    pisadas = todasLasZonas.filter(z => pisada(z.id)),
+    j = progreso.j || {},
+    gps = (progreso.gv || []).length,
+    pueblosPisados = pueblos.filter(m => estadoMunicipio(m) == 'v'),
+    pedaniasPisadas = pedanias.filter(p => estadoClave(p.k) == 'v'),
+    ciudad = z => z.g < 5;
+  return [
+    // --- Zonas del mapa ---
+    ...escalones('zonas', pisadas.length, todasLasZonas.length, [
+      ['p', 1, 'Primer vítor', 'Marca tu primer sitio como «He estado»'],
+      ['e', 10, 'Explorador', 'Pisa {m} zonas'],
+      ['z25', 25, 'Callejero', 'Pisa {m} zonas'],
+      ['h', 'mitad', 'Medio mapa', 'Pisa la mitad de las zonas ({m})'],
+      ['t', 'todo', 'Charro de pura cepa', 'Pisa todas las zonas ({m})']
+    ]),
+    ...NOMBRES_GRUPOS.flatMap((nombre, g) =>
+      coleccion(
+        'k' + g,
+        'grupo',
+        LOGRO_DE_GRUPO[g] || nombre + ': completo',
+        g == 5
+          ? 'Pisa los pueblos de alrededor'
+          : 'Pisa toda la ' + nombre.toLowerCase().replace('zona sur, al otro lado del tormes', 'zona sur'),
+        todasLasZonas.filter(z => z.g == g),
+        z => pisada(z.id)
+      )
+    ).map(a => (a.id == 'k0' ? { ...a, d: 'Pisa todo el casco histórico' } : a)),
+    ...coleccion(
+      'gr',
+      'zonas',
+      'Los grandes',
+      'Pisa los grandes barrios (Garrido, Pizarrales, Prosperidad…)',
+      zonas.filter(z => z.t && ciudad(z)),
+      z => pisada(z.id)
+    ),
+    ...coleccion(
+      'ly',
+      'leyendas',
+      'Cazador de leyendas',
+      'Pisa todas las zonas que tienen leyenda',
+      zonas.filter(z => z.ly.length),
+      z => pisada(z.id)
+    ),
+    {
+      id: 'rv',
+      cat: 'rio',
+      n: 'Cruzar el Tormes',
+      d: 'Pisa 3 barrios del sur y 3 del norte',
+      c: Math.min(pisadas.filter(z => z.g == 4).length, 3) + Math.min(pisadas.filter(z => z.g < 4).length, 3),
+      m: 6
+    },
+    {
+      id: 'wi',
+      cat: 'deseo',
+      n: 'Soñador',
+      d: 'Apunta 5 sitios como «Quiero ir»',
+      c: Object.values(progreso.z).filter(x => x == 'w').length,
+      m: 5
+    },
+    {
+      id: 'fr',
+      cat: 'rana',
+      n: 'Rana a la vista',
+      d: 'Encuentra la rana escondida en el mapa',
+      c: progreso.f ? 1 : 0,
+      m: 1
+    },
+    ...escalones('gps', gps, Infinity, [
+      ['g1', 1, 'Aquí mismo', 'Marca un sitio estando en él, con el botón Estoy aquí'],
+      ['g5', 5, 'Con las botas puestas', 'Marca {m} sitios estando en ellos'],
+      ['g15', 15, 'Suela gastada', 'Marca {m} sitios estando en ellos']
+    ]),
+    // --- Fichas y «Salamanca en el tiempo» ---
+    ...escalones('lectura', datoJ('fl', []).length, zonas.length, [
+      ['fl10', 10, 'Curioso', 'Abre la ficha de {m} zonas'],
+      ['flt', 'todo', 'Enciclopedia charra', 'Abre la ficha de todas las zonas ({m})']
+    ]),
+    ...coleccion(
+      'et',
+      'epoca',
+      'Viaje en el tiempo',
+      'Recorre todas las etapas de «Salamanca en el tiempo»',
+      ETAPAS.map((_, i) => i),
+      i => datoJ('et', []).includes(i)
+    ),
+    ...ETAPAS.flatMap(([anio, nombre], i) =>
+      coleccion(
+        'ep' + i,
+        'epoca',
+        nombre,
+        'Pisa las zonas que nacen en esta época (' + anio + ')',
+        zonas.filter(z => EPOCA_ZONA[z.id] && EPOCA_ZONA[z.id][0] == i),
+        z => pisada(z.id)
+      )
+    ),
+    // --- Monumentos y rutas a pie ---
+    ...escalones('monumento', monumentosVisitados().length, MONUMENTOS.length, [
+      ['mo1', 1, 'Primera visita', 'Visita un monumento (pulsa «He estado aquí» en su ficha)'],
+      ['mo5', 5, 'Turista de primera', 'Visita {m} monumentos'],
+      ['mot', 'todo', 'Guía de la ciudad', 'Visita todos los monumentos del mapa ({m})']
+    ]),
+    ...ESTILOS_LOGRO.flatMap(([estilo, nombre]) =>
+      coleccion(
+        'es-' + slugLogro(estilo),
+        'monumento',
+        nombre,
+        'Visita los monumentos de estilo ' + estilo.toLowerCase(),
+        MONUMENTOS.filter(m => (m.estilo || '').toLowerCase().includes(estilo.toLowerCase())),
+        m => monumentosVisitados().includes(m.id)
+      )
+    ),
+    ...RUTAS.map(r => ({
       id: 'ru-' + r.id,
       cat: 'ruta',
       n: r.nombre,
       d: 'Pasa por todas sus paradas (pulsa «He estado aquí» en cada una)',
       c: r.paradas.filter(p => paradaVisitada(r, p)).length,
       m: r.paradas.length
-    })
-  );
-  // Monumentos
-  lista.push(
-    {
-      id: 'mo5',
-      cat: 'monumento',
-      n: 'Turista de primera',
-      d: 'Visita 5 monumentos',
-      c: monumentosVisitados().length,
-      m: 5
-    },
-    {
-      id: 'mot',
-      cat: 'monumento',
-      n: 'Guía de la ciudad',
-      d: 'Visita todos los monumentos del mapa',
-      c: monumentosVisitados().length,
-      m: MONUMENTOS.length
-    }
-  );
-  // Reto del día
-  const j = progreso.j || {};
-  lista.push(
-    {
-      id: 'jr3',
-      cat: 'reto',
-      n: 'Tres en raya',
-      d: 'Haz el reto del día 3 días seguidos',
-      c: rachaReto(),
-      m: 3
-    },
-    {
-      id: 'jr7',
-      cat: 'reto',
-      n: 'Semana charra',
-      d: 'Haz el reto del día 7 días seguidos',
-      c: rachaReto(),
-      m: 7
-    },
+    })),
+    ...coleccion('ru-todas', 'ruta', 'Andarín', 'Completa todas las rutas a pie', RUTAS, rutaCompleta),
+    // --- Reto del día ---
+    ...escalones('reto', datoJ('n', 0), Infinity, [
+      ['jn1', 1, 'Primera partida', 'Termina una partida de «¿Dónde está?»'],
+      ['jn10', 10, 'Jugador habitual', 'Termina {m} partidas']
+    ]),
+    ...escalones('reto', rachaReto(), Infinity, [
+      ['jr3', 3, 'Tres en raya', 'Haz el reto del día {m} días seguidos'],
+      ['jr7', 7, 'Semana charra', 'Haz el reto del día {m} días seguidos'],
+      ['jr30', 30, 'Mes charro', 'Haz el reto del día {m} días seguidos']
+    ]),
     {
       id: 'j8',
       cat: 'reto',
@@ -217,22 +211,78 @@ function logrosGenerados() {
       c: j.m >= 800 ? 1 : 0,
       m: 1
     },
-    { id: 'j10', cat: 'reto', n: 'Pleno', d: 'Acierta las 10 pistas de una partida', c: j.pf ? 1 : 0, m: 1 }
-  );
-  // Una por comarca de la provincia: pisar todos sus pueblos
-  PROVINCIA.com.forEach((nombre, ci) => {
-    const a = pueblos.filter(m => m.c == ci);
-    if (a.length)
-      lista.push({
-        id: 'co' + ci,
-        cat: 'comarca',
-        n: nombre,
-        d: 'Pisa sus ' + a.length + ' pueblos',
-        c: a.filter(m => estadoMunicipio(m) == 'v').length,
-        m: a.length
-      });
+    { id: 'j10', cat: 'reto', n: 'Pleno', d: 'Acierta las 10 pistas de una partida', c: j.pf ? 1 : 0, m: 1 },
+    // --- Compartir ---
+    {
+      id: 'ms',
+      cat: 'compartir',
+      n: 'Mi Salamanca',
+      d: 'Crea la imagen de «Mi Salamanca»',
+      c: datoJ('ms', 0) ? 1 : 0,
+      m: 1
+    },
+    ...escalones('compartir', datoJ('cp', 0), Infinity, [
+      ['cp3', 3, 'Embajador', 'Comparte {m} sitios con alguien']
+    ]),
+    // --- Palabras charras (palabras.js) ---
+    ...escalones('palabras', datoJ('pv', []).length, PALABRAS_CHARRAS.length, [
+      ['pa1', 1, 'Hablas charro', 'Descubre tu primera palabra charra'],
+      ['pam', 'mitad', 'Pejilguero', 'Descubre {m} palabras charras'],
+      ['pat', 'todo', 'Charro lígrimo', 'Descubre las {m} palabras charras']
+    ]),
+    // --- Provincia ---
+    ...escalones('provincia', pueblosPisados.filter(m => !m.z).length, Infinity, [
+      ['p1', 1, 'Saliendo del alfoz', 'Pisa tu primer pueblo de la provincia (pestaña Provincia)']
+    ]),
+    ...escalones('provincia', pueblosPisados.length, pueblos.length, [
+      ['pu10', 10, 'Dominguero', 'Pisa {m} pueblos de la provincia'],
+      ['p25', 25, 'Trotapueblos', 'Pisa {m} pueblos de la provincia'],
+      ['p100', 100, 'Charro de mapa entero', 'Pisa {m} pueblos de la provincia']
+    ]),
+    ...escalones('provincia', pedaniasPisadas.length, pedanias.length, [
+      ['pe1', 1, 'De anejo en anejo', 'Pisa una pedanía'],
+      ['pe10', 10, 'Pedáneo', 'Pisa {m} pedanías']
+    ]),
+    ...coleccion(
+      'pfi',
+      'provincia',
+      'Pueblos con historia',
+      'Pisa los pueblos que tienen ficha',
+      pueblos.filter(m => PUEBLOS[m.n]),
+      m => estadoMunicipio(m) == 'v'
+    ),
+    ...coleccion(
+      'tch',
+      'comarca',
+      'Tierra charra',
+      'Pisa un pueblo de cada comarca',
+      PROVINCIA.com.map((_, ci) => ci),
+      ci => pueblosPisados.some(m => m.c == ci)
+    ),
+    ...PROVINCIA.com.flatMap((nombre, ci) =>
+      coleccion(
+        'co' + ci,
+        'comarca',
+        nombre + ' al completo',
+        'Pisa todos los pueblos de la comarca',
+        pueblos.filter(m => m.c == ci),
+        m => estadoMunicipio(m) == 'v'
+      )
+    )
+  ];
+}
+
+// Cosas hechas con la app que cuentan para los logros (en progreso.j): con valor, lo añade a esa
+// lista (fichas abiertas, etapas vistas); sin valor, suma 1 (partidas, veces que se comparte)
+function apuntarUso(campo, valor) {
+  const j = (progreso.j = progreso.j || {});
+  if (valor !== undefined && (j[campo] || []).includes(valor)) return;
+  conAvisoDeLogros(() => {
+    if (valor === undefined) j[campo] = (j[campo] || 0) + 1;
+    else j[campo] = [...(j[campo] || []), valor];
+    guardar();
+    actualizar();
   });
-  return lista;
 }
 
 // --- Visitar un monumento o una parada propia de una ruta ---------------------------------
@@ -298,7 +348,10 @@ const MEDALLAS = {
   epoca: '🏰',
   ruta: '🚶',
   monumento: '🏛️',
-  reto: '🎯'
+  reto: '🎯',
+  lectura: '📖',
+  compartir: '📣',
+  palabras: '🗣️'
 };
 const conseguido = a => a.c >= a.m;
 // El siguiente: el empezado al que menos le falta (en proporción); si no hay, el primero sin empezar
@@ -384,7 +437,17 @@ function conAvisoDeLogros(cambio) {
   );
   cambio();
   const nuevos = calcularLogros().filter(a => a.c >= a.m && !antes.has(a.id));
-  if (nuevos.length) setTimeout(() => aviso('🏆 Logro: ' + nuevos[0].n, { tipo: 'logro' }), 1900);
+  // Después del aviso del cambio; si hay uno con «Deshacer» a la vista, se espera a que se vaya
+  const avisarLogro = () =>
+    $('#ts').classList.contains('con-accion')
+      ? setTimeout(avisarLogro, 800)
+      : aviso(
+          '🏆 Logro: ' + nuevos[0].n + (nuevos.length > 1 ? ' (y ' + (nuevos.length - 1) + ' más)' : ''),
+          {
+            tipo: 'logro'
+          }
+        );
+  if (nuevos.length) setTimeout(avisarLogro, 2100);
 }
 
 // La rana escondida en una esquina del mapa
@@ -394,5 +457,5 @@ $('#fr').onclick = () => {
   guardar();
   actualizar();
   aviso('¡Has encontrado la rana!', { tipo: 'logro' });
-  if (primeraVez) setTimeout(() => aviso('🏆 Logro: Rana a la vista', { tipo: 'logro' }), 1900);
+  if (primeraVez) setTimeout(() => aviso('🏆 Logro: Rana a la vista', { tipo: 'logro' }), 2100);
 };

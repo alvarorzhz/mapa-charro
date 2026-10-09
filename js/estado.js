@@ -58,7 +58,9 @@ const pedanias = PROVINCIA.m.flatMap(m => m.P);
 //   j  { m, d, s, h, pf, mo, r }   juego «¿Dónde está?»: mejor puntuación, fecha del último reto del día y sus
 //                                  puntos, días con el reto hecho (h), 1 si alguna partida fue perfecta (pf);
 //                                  y, para los logros, monumentos visitados (mo: [id]) y paradas propias de cada
-//                                  ruta visitadas (r: { idRuta: [idParada] }). Van dentro de j para no añadir
+//                                  ruta visitadas (r: { idRuta: [idParada] }), fichas de zona abiertas (fl),
+//                                  etapas de «Salamanca en el tiempo» vistas (et), partidas terminadas (n) y
+//                                  veces que se ha creado «Mi Salamanca» (ms) o compartido (cp) y palabras charras vistas (pv). Van dentro de j para no añadir
 //                                  campos nuevos a lo guardado (las reglas de la cuenta de Google solo aceptan estos)
 const CLAVE_LOCAL = 'charro2';
 const ESTADOS_MARCA = [
@@ -99,12 +101,22 @@ function limpiarProgreso(o) {
       h: Array.isArray(j.h) ? [...new Set(j.h.filter(esFecha))].sort().slice(-90) : [],
       pf: j.pf ? 1 : 0,
       mo: Array.isArray(j.mo) ? [...new Set(j.mo.filter(id => idsMonumentos.has(id)))] : [],
-      r: limpiarParadas(j.r)
+      r: limpiarParadas(j.r),
+      fl: Array.isArray(j.fl) ? [...new Set(j.fl.filter(id => idsValidos.has(id)))] : [],
+      et: Array.isArray(j.et)
+        ? [...new Set(j.et.filter(i => Number.isInteger(i) && i >= 0 && i < ETAPAS.length))]
+        : [],
+      n: contador(j.n),
+      ms: contador(j.ms),
+      cp: contador(j.cp),
+      pv: Array.isArray(j.pv) ? [...new Set(j.pv.filter(id => idsPalabras.has(id)))] : []
     }
   };
 }
+const contador = x => Math.max(0, Math.min(1e6, Math.round(+x) || 0));
 const esFecha = x => typeof x == 'string' && /^\d{4}-\d\d-\d\d$/.test(x);
 const idsMonumentos = new Set(MONUMENTOS.map(m => m.id));
+const idsPalabras = new Set(PALABRAS_CHARRAS.map(w => w.id));
 // Paradas propias (no monumentos) de cada ruta que existan
 function limpiarParadas(r) {
   const limpio = {};
@@ -122,7 +134,7 @@ const datosParaGuardar = o => ({
   t: o.t || 0,
   gv: o.gv || [],
   p: o.p || {},
-  j: o.j || { m: 0, d: '', s: 0, h: [], pf: 0, mo: [], r: {} },
+  j: o.j || { m: 0, d: '', s: 0, h: [], pf: 0, mo: [], r: {}, fl: [], et: [], n: 0, ms: 0, cp: 0, pv: [] },
   v: 1
 });
 

@@ -52,7 +52,7 @@ button:focus-visible,summary:focus-visible{outline:3px solid var(--vit);outline-
 .lh{font:600 13px Lora,serif;color:var(--oro-texto);margin:14px 0 2px}.lr{display:flex;align-items:center;gap:6px;padding:7px 2px;border-bottom:1px solid var(--line)}
 .lr .nm{flex:1;text-align:left;border:0;padding:4px 0;font:600 15px Lora,serif;background:none;color:var(--ink)}.lr .q{padding:2px 9px;font-size:12px;border-radius:99px}
 .lr .q.on.v{background:var(--vit);color:#fff;border-color:var(--vit)}.lr .q.on.w{background:var(--gold);color:var(--card);border-color:var(--gold)}
-.ac{display:flex;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line);font-size:14px}.ac.ok b{color:var(--vit-texto)}.ac small{display:block;opacity:.85}
+.ac{display:flex;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line);font-size:14px}.ac.ok b{color:var(--ink)}.ac small{display:block;opacity:.85}
 .ac .st{font-size:18px;width:22px;text-align:center}.ac .pb{height:6px;border:1px solid var(--line);border-radius:4px;overflow:hidden;width:70px;flex:none}.ac .pb i{display:block;height:100%;background:var(--vit)}#ap{font-size:12px}
 
 main{display:flex;flex-direction:column}.cside,.top,.rest{display:contents}.top>*{order:1}.cmap{order:2}.rest>*{order:3}
@@ -129,3 +129,4 @@ body.tiempo .z{stroke:none!important}body.tiempo .lb.v{fill:var(--ink);stroke:va
 .medalla{flex:none;display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:var(--b);border:2px solid var(--gold);font-size:17px}
 .ac .medalla{filter:grayscale(1);opacity:.55}.ac.ok .medalla{filter:none;opacity:1;border-color:var(--vit);background:var(--card)}.ac .texto{flex:1}
 
+.palabra{margin:10px 0 0;padding:8px 12px 10px;background:var(--card);border:2px dashed var(--line);border-radius:12px;font-size:14px;line-height:1.45}.palabra p,.pch p{margin:2px 0}.pal-cab{display:flex;justify-content:space-between;align-items:center;gap:8px;font:13px 'Alfa Slab One',Georgia,serif;color:var(--vit-texto)}.pal-cab .enlace,.palabra .enlace{background:none;border:0;padding:4px 0;font:600 13px Lora,Georgia,serif;color:var(--vit-texto);text-decoration:underline;cursor:pointer}.pal-def b{color:var(--vit-texto)}.pal-ej{font-style:italic}.palabra small,.pch small{font-size:12px}.pal-fuente a{font-size:12px;color:var(--vit-texto);font-weight:600}.pch{margin:10px 0 6px;padding:4px 10px;border-left:4px solid var(--vit);border-radius:0 8px 8px 0;font-size:14px;line-height:1.45}.pch h3{margin:2px 0 4px}

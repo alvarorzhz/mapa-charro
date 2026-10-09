@@ -1,5 +1,19 @@
 [
   {
+    "version": "1.5.1",
+    "fecha": "2026-10-09",
+    "titulo": "Palabras charras y más logros",
+    "usuario": [
+      "Palabras charras: bajo el mapa sale una al azar (candar, pitera, cencellada, chocones…) con su significado, un ejemplo y su fuente. Pulsa «Otra palabra» para ver más.",
+      "Cada ficha de barrio trae su palabra charra; en el Centro, la de quedar en el Toscano o debajo del reloj.",
+      "Algunos textos de la app hablan más charro: avíate, chaperón, la capi, sin atrochar…",
+      "Logros nuevos de palabras charras: «Hablas charro», «Pejilguero» y «Charro lígrimo».",
+      "Más logros de lo que ya tiene la app: leer fichas, recorrer «Salamanca en el tiempo», estilos de monumentos, todas las rutas, partidas y rachas del reto, compartir, pedanías y comarcas enteras (71 en total).",
+      "Los avisos duran 2 segundos; los de error y los que traen «Deshacer», algo más."
+    ],
+    "tecnico": "PALABRAS_CHARRAS y FUENTES_PALABRAS (js/datos/palabras.js, 46 entradas con fuente de prensa local) y js/palabras.js: tarjeta #palabra bajo el mapa (palabraAlAzar prefiere las no vistas) y #pch en la ficha de zona (palabraDeZona: la de su campo z o una fija por semillaDeTexto); vistas en progreso.j.pv (limpiarProgreso, juntarProgresos). Logros pa1/pam/pat (cat palabras). Logros generados con escalones() y coleccion(): fl10/flt, et, es-<estilo>, ru-todas, jn1/jn10, jr30, ms, cp3, z25, g15, pe1/pe10, pfi, tch, co<i> renombrados; fuera «pc». apuntarUso(campo, valor) para j.fl, j.et, j.n, j.ms, j.cp. aviso: 2000 ms por defecto. comprobar-datos valida palabras y fuentes. Prueba «Palabras charras»."
+  },
+  {
     "version": "1.5.0",
     "fecha": "2026-10-09",
     "titulo": "Más logros, barrios nuevos y avisos más claros",

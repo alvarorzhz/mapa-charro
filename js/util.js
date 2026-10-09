@@ -135,7 +135,7 @@ const aviso = (texto, opciones = {}) => {
   t.setAttribute('role', tipo == 'error' ? 'alert' : 'status');
   t.className = 'on ' + clase + (accion ? ' con-accion' : '');
   clearTimeout(temporizadorAviso);
-  temporizadorAviso = setTimeout(ocultar, accion ? 5000 : tipo == 'error' ? 4000 : discreto ? 3500 : 1800);
+  temporizadorAviso = setTimeout(ocultar, accion ? 5000 : tipo == 'error' ? 4000 : discreto ? 3500 : 2000);
 };
 
 // Botón que se enciende y se apaga (capas del mapa)

@@ -53,6 +53,13 @@ function cambiarPestana(nueva) {
   enlaceVista();
 }
 
+// Lo que dice la lista cuando un filtro no deja ninguna zona
+const LISTA_VACIA = {
+  v: 'Aún no has pisado ninguna zona. ¡Avíate, que te están esperando!',
+  w: 'Nada en «Quiero ir». ¿Vas a salir de guindas a brevas? Apunta algún sitio.',
+  n: 'No queda ninguna sin marcar: o la has pisado o está en «Quiero ir».'
+};
+
 // Pestaña Lista: zonas por grupo con sus botones
 function pintarLista() {
   const caja = $('#ls');
@@ -85,7 +92,8 @@ function pintarLista() {
       caja.appendChild(fila);
     });
   });
-  if (!alguna) caja.appendChild(crear('p', 'mu', 'Nada que mostrar con este filtro.'));
+  if (!alguna)
+    caja.appendChild(crear('p', 'mu', LISTA_VACIA[filtroLista] || 'Nada que mostrar con este filtro.'));
 }
 
 $('#vmap').onclick = () => cambiarPestana('map');

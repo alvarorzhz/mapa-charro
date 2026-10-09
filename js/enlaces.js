@@ -138,6 +138,7 @@ async function compartir() {
   try {
     if (navigator.share) {
       await navigator.share(datos);
+      apuntarUso('cp'); // logro «Embajador»
       return;
     }
   } catch (e) {
@@ -146,6 +147,7 @@ async function compartir() {
   try {
     await navigator.clipboard.writeText(url);
     aviso('Enlace copiado', { tipo: 'exito' });
+    apuntarUso('cp');
   } catch (e) {
     aviso(url);
   }

@@ -21,12 +21,13 @@ const datos = [
   'tiempo',
   'carreteras',
   'provincia',
-  'firebase'
+  'firebase',
+  'palabras'
 ];
 const codigo =
   datos.map(d => leer('js/datos/' + d + '.js')).join('\n;\n') +
   '\n;({ NOMBRES_GRUPOS, ZONAS_GRANDES, ZONAS, OTROS_NOMBRES, SEMILLAS_REPARTO, MONUMENTOS, RUTAS, TRAMOS_RUTAS, PUEBLOS, CURIOSIDADES, LEYENDAS, FOTOS, DONDE_COMER,' +
-  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA })';
+  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA, PALABRAS_CHARRAS, FUENTES_PALABRAS })';
 const D = vm.runInNewContext(codigo, {});
 
 const errores = [],
@@ -205,6 +206,20 @@ for (const n in D.ALFOZ)
 // --- Carreteras ---------------------------------------------------------------
 D.ESCUDOS.forEach(([n]) => comprobar(D.INFO_VIAS[n], `Escudo «${n}» sin ficha en INFO_VIAS`));
 D.AVENIDAS.forEach(([n]) => n && comprobar(D.INFO_AVENIDAS[n], `Avenida «${n}» sin ficha en INFO_AVENIDAS`));
+
+// --- Palabras charras -----------------------------------------------------------
+const idsPalabra = D.PALABRAS_CHARRAS.map(w => w.id);
+comprobar(idsPalabra.length == new Set(idsPalabra).size, 'Palabras charras: hay ids repetidos');
+for (const clave in D.FUENTES_PALABRAS) {
+  const [nombre, url] = D.FUENTES_PALABRAS[clave];
+  comprobar(nombre && /^https:\/\//.test(url), `FUENTES_PALABRAS: «${clave}» sin nombre o sin enlace`);
+}
+D.PALABRAS_CHARRAS.forEach(w => {
+  comprobar(/^[a-z0-9]+$/.test(w.id || ''), `Palabra «${w.p}»: id no válido`);
+  comprobar(w.p && w.s && w.e, `Palabra ${w.id}: le falta la palabra, el significado o el ejemplo`);
+  comprobar(D.FUENTES_PALABRAS[w.f], `Palabra ${w.id}: sin fuente (o la fuente «${w.f}» no existe)`);
+  (w.z || []).forEach(z => comprobar(idsZona.has(z), `Palabra ${w.id}: «${z}» no es una zona`));
+});
 
 // --- Salamanca en el tiempo ------------------------------------------------------
 const esFuente = f => Array.isArray(f) && f[0] && /^https?:\/\//.test(f[1]);
@@ -415,6 +430,6 @@ if (errores.length) {
   process.exit(1);
 }
 console.log(
-  `✓ Datos correctos: ${ids.length} zonas, ${D.MONUMENTOS.length} monumentos, ${D.RUTAS.length} rutas a pie, ` +
+  `✓ Datos correctos: ${ids.length} zonas, ${D.MONUMENTOS.length} monumentos, ${D.RUTAS.length} rutas a pie, ${D.PALABRAS_CHARRAS.length} palabras charras, ` +
     `${Object.keys(D.PUEBLOS).length} pueblos con ficha, ${Object.keys(D.DONDE_COMER).length} zonas con dónde comer.`
 );

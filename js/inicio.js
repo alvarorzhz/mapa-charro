@@ -80,6 +80,7 @@ if (!EN_MARCO) {
 }
 ajustarVista();
 actualizar();
+iniciarPalabras();
 aplicarEnlace();
 iniciarNube();
 // Sin conexión: solo en la web (dentro de Claude la app va en un marco y no hace falta)

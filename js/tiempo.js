@@ -58,6 +58,7 @@ function colocarTiempo(u) {
 // --- Pintar una etapa ----------------------------------------------------------
 function pintarEtapa(i) {
   etapaTiempo = i;
+  apuntarUso('et', i); // logro «Viaje en el tiempo»
   zonaNaceVista = null;
   contornoNace(null);
   document.body.classList.add('tiempo');

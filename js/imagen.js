@@ -259,7 +259,8 @@ async function guardarImagen(blob) {
     try {
       await descargas.save({ filename: NOMBRE_IMAGEN, data: blob });
     } catch (e) {
-      if (e && e.code != 'declined') aviso('No se ha podido guardar la imagen', { tipo: 'error' });
+      if (e && e.code != 'declined')
+        aviso('Vaya chaperón: no se ha podido guardar la imagen', { tipo: 'error' });
     }
     return;
   }
@@ -363,9 +364,10 @@ async function abrirMiSalamanca() {
       boton
     );
     v._url = url;
+    apuntarUso('ms'); // logro «Mi Salamanca»
   } catch (e) {
     console.error(e);
-    aviso('No se ha podido crear la imagen. Vuelve a probar', { tipo: 'error' });
+    aviso('Vaya chaperón: no se ha podido crear la imagen. Vuelve a probar', { tipo: 'error' });
   } finally {
     boton.disabled = false;
   }

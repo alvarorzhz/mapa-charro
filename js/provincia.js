@@ -308,7 +308,7 @@ function seleccionarPueblo(m, encuadrar) {
     barra.appendChild(aqui);
   }
   if (m.cap) {
-    const nota = crear('p', 'mu', 'La capital se marca por barrios en la pestaña Mapa.');
+    const nota = crear('p', 'mu', 'La capi se marca por barrios en la pestaña Mapa.');
     nota.style.margin = '4px 0 0';
     barra.appendChild(nota);
   } else {

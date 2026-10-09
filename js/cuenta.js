@@ -121,7 +121,7 @@ async function salirDeCuenta() {
     await cuentaWeb.auth.signOut();
   } catch (e) {}
   pintarCuenta('');
-  aviso('Has salido. Tu progreso sigue en este navegador');
+  aviso('Sesión candada. Tu progreso sigue en este navegador');
 }
 
 // Borra el progreso de la nube y la cuenta (en el navegador se queda). Google pide haber entrado

@@ -935,7 +935,7 @@ prueba('Quitar una marca se puede deshacer', async p => {
   await p.press('#q', 'Enter');
   await p.click('.bt button[data-s=v]');
   cierto(await p.$eval('#ts', e => e.classList.contains('exito')), 'marcar es un aviso de éxito');
-  await p.waitForTimeout(2000);
+  await p.waitForTimeout(2600); // que pase también el aviso del logro
   await p.click('.bt button[data-s=v]');
   igual(await texto(p, '#ts span'), 'Tejares: quitada de «He estado»', 'avisa al quitarla');
   igual(await p.evaluate(() => progreso.z.tejares), undefined, 'quitada');
@@ -951,6 +951,42 @@ prueba('Quitar una marca se puede deshacer', async p => {
     await p.$eval('#ts', e => [e.className.includes('error'), e.getAttribute('role')]),
     [true, 'alert'],
     'error con su estilo'
+  );
+});
+
+prueba('Palabras charras: tarjeta, ficha y logros', async p => {
+  // La tarjeta bajo el mapa enseña una palabra con su fuente; «Otra palabra» cambia y cuenta las dos
+  cierto(await p.isVisible('#palabra'), 'tarjeta a la vista');
+  const antes = await texto(p, '#palabra .pal-def');
+  cierto((await p.$$('#palabra a[href^="https://"]')).length == 1, 'con su fuente');
+  await p.click('#palabra .pal-cab button');
+  cierto((await texto(p, '#palabra .pal-def')) != antes, 'otra palabra');
+  igual(await p.evaluate(() => progreso.j.pv.length), 2, 'dos palabras vistas');
+  // La ficha del Centro trae la suya; una zona sin palabra propia, siempre la misma
+  await p.evaluate(() => abrirFicha('centro'));
+  cierto((await texto(p, '#pch')).includes('debajo del reloj'), 'palabra del Centro');
+  await p.evaluate(() => abrirFicha('vidal'));
+  const deVidal = await texto(p, '#pch');
+  await p.evaluate(() => abrirFicha('tejares'));
+  await p.evaluate(() => abrirFicha('vidal'));
+  igual(await texto(p, '#pch'), deVidal, 'la misma palabra en la misma zona');
+  // En otras fichas no sale
+  await p.evaluate(() => abrirRutas());
+  cierto(await p.isHidden('#pch'), 'sin palabra fuera de las zonas');
+  await p.evaluate(() => cerrarFicha());
+  // Logros
+  const ids = await p.evaluate(() => calcularLogros().map(a => a.id));
+  for (const id of ['pa1', 'pam', 'pat']) cierto(ids.includes(id), 'logro ' + id);
+  igual(
+    await p.evaluate(() => calcularLogros().find(a => a.id == 'pa1').c >= 1),
+    true,
+    '«Hablas charro» conseguido'
+  );
+  // Se guardan limpias
+  igual(
+    await p.evaluate(() => limpiarProgreso({ z: {}, j: { pv: ['candar', 'nada', 'candar'] } }).j.pv),
+    ['candar'],
+    'palabras vistas limpias'
   );
 });
 
@@ -975,8 +1011,30 @@ prueba('Salir del reto a medias pregunta', async p => {
 
 prueba('Logros: los que salen de los datos, el siguiente y su barra', async p => {
   const ids = await p.evaluate(() => calcularLogros().map(a => a.id));
-  for (const id of ['ep5', 'ru-monumental', 'ru-murales', 'ru-vandyck', 'mo5', 'jr7', 'j10', 'co0'])
+  for (const id of [
+    'ep5',
+    'ru-monumental',
+    'ru-murales',
+    'ru-vandyck',
+    'ru-todas',
+    'mo5',
+    'jr7',
+    'j10',
+    'jn1',
+    'co0',
+    'tch',
+    'pfi',
+    'pe1',
+    'z25',
+    'g15',
+    'fl10',
+    'et',
+    'es-plateresco',
+    'ms',
+    'cp3'
+  ])
     cierto(ids.includes(id), 'logro ' + id);
+  cierto(!ids.includes('pc'), 'sin el logro repetido «Comarca completa»');
   igual(new Set(ids).size, ids.length, 'sin ids repetidos');
   cierto(
     (await texto(p, '#sig')).startsWith('📍Siguiente logro: Primer vítor'),
@@ -992,6 +1050,10 @@ prueba('Logros: los que salen de los datos, el siguiente y su barra', async p =>
   await p.waitForTimeout(200);
   await p.click('.bt button[data-s=v]');
   igual(await p.evaluate(() => progreso.j.r), { murales: ['diaspora'] }, 'parada visitada');
+  // Abrir una ficha cuenta para el logro de lectura
+  await p.evaluate(() => abrirFicha('tejares'));
+  cierto(await p.evaluate(() => progreso.j.fl.includes('tejares')), 'ficha leída apuntada');
+  await p.evaluate(() => cerrarFicha());
   // Racha del reto del día, a partir de los días guardados
   const racha = await p.evaluate(() => {
     const d = new Date(),

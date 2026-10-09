@@ -110,6 +110,12 @@ function juntarProgresos(a, b) {
       h: [...(ja.h || []), ...(jb.h || [])],
       pf: ja.pf || jb.pf ? 1 : 0,
       mo: [...(ja.mo || []), ...(jb.mo || [])],
+      fl: [...(ja.fl || []), ...(jb.fl || [])],
+      et: [...(ja.et || []), ...(jb.et || [])],
+      pv: [...(ja.pv || []), ...(jb.pv || [])],
+      n: Math.max(ja.n || 0, jb.n || 0),
+      ms: Math.max(ja.ms || 0, jb.ms || 0),
+      cp: Math.max(ja.cp || 0, jb.cp || 0),
       r: Object.fromEntries(
         RUTAS.map(ruta => [ruta.id, [...((ja.r || {})[ruta.id] || []), ...((jb.r || {})[ruta.id] || [])]])
       )

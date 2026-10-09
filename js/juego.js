@@ -344,7 +344,8 @@ function terminarJuegoYGuardar() {
     d: juego.diario ? fechaHoy() : j.d || '',
     s: juego.diario ? juego.puntos : j.s || 0,
     h: juego.diario ? [...new Set([...(j.h || []), fechaHoy()])] : j.h || [],
-    pf: j.pf || juego.resultados.every(x => x >= PUNTOS_ACIERTO) ? 1 : 0
+    pf: j.pf || juego.resultados.every(x => x >= PUNTOS_ACIERTO) ? 1 : 0,
+    n: (j.n || 0) + 1
   };
   guardar();
   capaJuego.textContent = '';

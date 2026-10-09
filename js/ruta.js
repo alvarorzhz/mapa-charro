@@ -140,7 +140,13 @@ const enlaceFuente = ([medio, url]) => {
 function abrirRutas() {
   activarRuta(false);
   const caja = fichaLimpia('Rutas a pie', 'Rutas a pie');
-  caja.appendChild(crear('p', 'hab', 'Elige una ruta: se dibuja en el mapa y te lleva parada a parada.'));
+  caja.appendChild(
+    crear(
+      'p',
+      'hab',
+      'Elige una ruta: se dibuja en el mapa y te lleva parada a parada, por calles y sin atrochar.'
+    )
+  );
   const lista = crear('div', 'rutas');
   RUTAS.forEach((r, k) => {
     const m = metrosRuta(r),
@@ -178,6 +184,10 @@ function abrirRuta(k = rutaElegida) {
     caja = fichaLimpia('Ruta a pie', r.nombre);
   paradaActual = -1;
   caja.appendChild(crear('p', 'hab', r.resumen));
+  if (r.id == 'monumental')
+    caja.appendChild(
+      crear('p', 'mu', 'Para empezar, queda donde siempre: en el Toscano o debajo del reloj.')
+    );
   caja.appendChild(
     cajaDatos([
       ['Distancia', textoDistancia(total)],
