@@ -1,5 +1,17 @@
 [
   {
+    "version": "1.5.4",
+    "fecha": "2026-10-09",
+    "titulo": "Más historia en diez barrios",
+    "usuario": [
+      "46 curiosidades nuevas, cada una con su fuente, en los diez barrios que tenían menos: El Montalvo, Marín, El Carmen, Capuchinos, Buenos Aires, Alambres, Vistahermosa, La Vega, Fontana y Blanco.",
+      "Fotos nuevas en El Montalvo, El Carmen, Blanco, Alambres, Vistahermosa y Fontana (los arcos de Santa María de la Vega en 1891).",
+      "Dónde comer en Capuchinos: Mesón Borgoña.",
+      "Correcciones: La Vega se inauguró en 1954, no en 1945; Blanco no fue un pueblo anexionado, sino una barriada que levantaron sus vecinos; los arcos de Fontana pudieron ser la entrada a la sala capitular."
+    ],
+    "tecnico": "contenido.js: curiosidades nuevas con // Fuente en montalvos (nueva), marin, carmen, capuchinos, buenosaires, alambres, vistahermosa, vega, fontana y blanco; FOTOS de Commons (img/montalvos, carmen, blanco, alambres, vistahermosa, fontana, 640 px); DONDE_COMER.capuchinos; leyenda de Fontana sin el año 1904. zonas.js: frases de blanco y vega; tarjetas z/blanco y z/vega regeneradas."
+  },
+  {
     "version": "1.5.3",
     "fecha": "2026-10-09",
     "titulo": "Tu progreso, más a salvo",

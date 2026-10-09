@@ -149,12 +149,32 @@ const CURIOSIDADES = {
     'Tuvo el cine del señor Ulpiano y un teatro en el local de la señora Victorina.'
   ],
   blanco: [
-    'Su nombre viene de sus primeras casas de una planta, blancas como la nieve. Fue un pueblo antes de quedar dentro de la capital.',
-    'La calle Don Quijote es la de mayor pendiente de Salamanca. Los propios vecinos hicieron las tuberías del agua trabajando los fines de semana.'
+    'Su nombre viene de sus primeras casas de una planta, blancas como la nieve.',
+    'La calle Don Quijote es la de mayor pendiente de Salamanca. Los propios vecinos hicieron las tuberías del agua trabajando los fines de semana.',
+    // Fuente: https://www.consejosocialbarriospbc.es/barrio-blanco/
+    'En 1930 solo vivían aquí seis matrimonios con sus hijos, seguramente atraídos por la obra del cercano Cuartel de Ingenieros. Levantaron sus casas entre todos, en terrenos baldíos y llenos de cuestas.',
+    // Fuente: https://www.consejosocialbarriospbc.es/barrio-blanco/
+    'Por la Santa Misión de 1950 se predicó aquí bajo un techado de lonas, y en su recuerdo las calles se rebautizaron: La Misión, Nazaret, San Luis Gonzaga…',
+    // Fuente: https://www.consejosocialbarriospbc.es/barrio-blanco/
+    'En 1955, dirigidos por Saturnino Barrios y Antonio Berrocal, los vecinos llevaron con su trabajo el agua y el alcantarillado a casi cien casas. El resto del barrio esperó hasta 1958.',
+    // Fuente: https://www.elespanol.com/castilla-y-leon/region/salamanca/20211112/barrio-blanco-pueblo-dentro-salamanca/626188394_0.html
+    'La calle Regato del Anís recuerda un arroyo que hoy va bajo el asfalto. El nombre era irónico: olía fatal. Antes, el agua se compraba en el pozo de la «Señora Anita».',
+    // Fuente: https://www.elespanol.com/castilla-y-leon/region/salamanca/20211112/barrio-blanco-pueblo-dentro-salamanca/626188394_0.html
+    'Donde hoy pasa la avenida de Salamanca solo había un camino de tierra, y allí se montaban el circo y la feria. Los niños se dividían en dos bandos: «los de arriba» y «los de abajo».'
   ],
   capuchinos: [
     'Antes se llamaba La Charca-Capuchinos, por una pequeña poza que había aquí, entre los caminos de Toro y Zamora.',
-    'Creció en los años noventa con el hipermercado Pryca, el actual Carrefour, y casi todas sus fachadas son de piedra de Villamayor.'
+    'Creció desde 1989 con el hipermercado Pryca, el actual Carrefour, y casi todas sus fachadas son de piedra de Villamayor.',
+    // Fuente: https://www.lagacetadesalamanca.es/hemeroteca/capuchinos-tenia-calles-barro-carrefour-OTGS256484
+    'El Pryca abrió el 26 de octubre de 1989 con más de 8.000 m² y 266 trabajadores. Su nombre juntaba las palabras «precio» y «calidad».',
+    // Fuente: https://www.lagacetadesalamanca.es/hemeroteca/capuchinos-tenia-calles-barro-carrefour-OTGS256484
+    'Antes de los bloques había casas bajas, calles de barro, la fuente del Cántaro y la vaquería Balta, adonde se iba a por leche. Las calles nuevas tomaron nombres de pueblos de Castilla y León.',
+    // Fuente: https://www.diocesisdesalamanca.com/noticias/25-aniversario-de-la-parroquia-nuestra-senora-de-lourdes/
+    'Su iglesia, en la calle Riaño, es la única de la diócesis dedicada a la Virgen de Lourdes. Es octogonal, y bajo su primera piedra, de 1997, se enterró una urna con monedas y los periódicos del día.',
+    // Fuente: https://www.lagacetadesalamanca.es/hemeroteca/capuchinos-tenia-calles-barro-carrefour-OTGS256484
+    'A principios de los noventa, sus fiestas, con cabezudos, charangas y orquestas, salían adelante con solo 75.000 pesetas.',
+    // Fuente: https://www.elespanol.com/castilla-y-leon/region/salamanca/20211119/barrio-capuchinos-salamanca-piedra-dorada-expansion-urbana/627687731_0.html
+    'Fue campo de juego de los niños de Blanco y Pizarrales, y hoy acoge el instituto García Bernalt, que se quedó pequeño en El Rollo.'
   ],
   platina: [
     // Fuente: https://www.lagacetadesalamanca.es/salamanca/el-agua-salmantina-filtrada-por-la-piedra-de-villamayor-que-fue-la-mejor-de-espana-KA2367378
@@ -176,7 +196,15 @@ const CURIOSIDADES = {
   ],
   alambres: [
     'Su nombre viene de las alambradas de los corrales de ganado que había junto al Teso de la Feria y el Cordel de Merinas.',
-    'Por su calle principal pasaban vacas lecheras, y había quien venía desde la zona de la Catedral a por leche fresca. Los vecinos pagaron su capilla en los años sesenta.'
+    'Por su calle principal pasaban vacas lecheras, y había quien venía desde la zona de la Catedral a por leche fresca. Los vecinos pagaron su capilla en los años sesenta.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/gran-riada-chamberi-vecinos-atrincheran-horas-capilla-20240120202822-nt.html
+    'En la tromba del Corpus de 1976 no murió nadie, pero en el barrio se ahogaron 40 corderos, 11 añojos, 200 gallinas y un cerdo.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/gran-riada-chamberi-vecinos-atrincheran-horas-capilla-20240120202822-nt.html
+    'En los años cuarenta, con permiso del Ayuntamiento de Tejares, aquí se vendían parcelas a 50 céntimos o una peseta el metro cuadrado, y cada familia se hacía su casa.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/gran-riada-chamberi-vecinos-atrincheran-horas-capilla-20240120202822-nt.html
+    'En los sesenta llegaron por fin tres caños públicos a la calle Mayor, y fueron los propios vecinos quienes cavaron cuatro metros para meter las tuberías.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/mujer-puso-alambres-mapa-era-aurelia-lopez-20260817162643-nt.html
+    'Una calle peatonal de 127 metros recuerda desde 2004 a Aurelia López, la vecina que presidió la asociación del barrio y consiguió el centro cívico en 1984.'
   ],
   zurguen: [
     'Debe su nombre al arroyo que lo cruza, cantado por poetas como Meléndez Valdés; el nombre podría venir del árabe. El barrio nació en 1997 con 120 viviendas protegidas.',
@@ -185,11 +213,31 @@ const CURIOSIDADES = {
   ],
   vistahermosa: [
     'Hereda el nombre del pueblo de Vistahermosa, que pertenecía a Tejares y pasó a Salamanca en 1963. Está en el cerro de Buenaventura, con vistas a toda la ciudad.',
-    'Empezó en los años cincuenta con tres calles: la carretera de Vistahermosa, San Cosme y San Damián. Ha recuperado sus fiestas de San Joaquín y Santa Ana.'
+    'Empezó en los años cincuenta con tres calles: la carretera de Vistahermosa, San Cosme y San Damián. Ha recuperado sus fiestas de San Joaquín y Santa Ana.',
+    // Fuente: https://noticiascyl.elespanol.com/t/1751829/vistahermosa-mirador-salamanca-barrio-dormitorio
+    'En el cerro había una poza adonde las mujeres del antiguo pueblo iban a lavar la ropa.',
+    // Fuente: https://noticiascyl.elespanol.com/t/1751829/vistahermosa-mirador-salamanca-barrio-dormitorio
+    'El pueblo vivió años de esplendor gracias a la fábrica de un empresario catalán, con cine a diario, biblioteca y regalos de Reyes para los hijos de los obreros.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/el-poblado-de-vistahermosa-una-decada-despues-de-su-desalojo-ED2140745
+    'Al sur estaba el poblado de una granja, con iglesia, Correos y escuela. Sus últimas casas se derribaron el 28 de mayo de 2013; solo quedó en pie la iglesia.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/gran-riada-chamberi-vecinos-atrincheran-horas-capilla-20240120202822-nt.html
+    'La tormenta del Corpus de 1976 empezó con más fuerza aquí, y el agua bajó hasta Los Alambres convirtiendo su calle Mayor en un río.',
+    // Fuente: https://www.elespanol.com/castilla-y-leon/region/salamanca/20250226/barrio-vistahermosa-salamanca-moderna-plaza-alegre-colorida-pedian-vecinos/927157515_0.html
+    'Tras años de pedirla, en 2025 el Ayuntamiento proyectó la plaza que querían los vecinos: 7.500 m² en tres terrazas, con grada para 300 personas y circuito de pump track.'
   ],
   vega: [
-    'Su nombre honra a la Virgen de la Vega, patrona de Salamanca. Se inauguró el 7 de mayo de 1954 con 650 viviendas sociales.',
-    'Sus casas bajas y blancas tienen soportales y patios con jardines, en calles estrechas alrededor de la plaza de la iglesia.'
+    'Su nombre honra a la Virgen de la Vega, patrona de Salamanca. Se inauguró el 7 de mayo de 1954 con unas 650 viviendas sociales.',
+    'Sus casas bajas y blancas tienen soportales y patios con jardines, en calles estrechas alrededor de la plaza de la iglesia.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/la-historia-del-pueblo-blanco-de-664-casas-dentro-de-la-capital-salmantina-HK7419339
+    'Franco entregó en persona las llaves a los primeros vecinos, y el obispo Barbado Viejo bendijo el barrio.',
+    // Fuente: https://lacronicadesalamanca.com/327296-la-vega-el-jardin-de-salamanca/
+    'El Colegio de Arquitectos de Salamanca hizo el proyecto gratis. Las obras empezaron en 1950.',
+    // Fuente: https://lacronicadesalamanca.com/327296-la-vega-el-jardin-de-salamanca/
+    'Los primeros vecinos eran inquilinos que pagaban cada mes una especie de hipoteca y no fueron dueños de sus casas hasta 1973. Quien se iba antes perdía lo pagado.',
+    // Fuente: https://lacronicadesalamanca.com/327296-la-vega-el-jardin-de-salamanca/
+    'En las fiestas de la patrona, del 2 al 9 de septiembre, los vecinos competían por el jardín más bonito a pie de calle.',
+    // Fuente: https://lacronicadesalamanca.com/327296-la-vega-el-jardin-de-salamanca/
+    'En los años sesenta, el único televisor del barrio estaba en el bar de Ezequiel, que se convirtió en el centro social.'
   ],
   sanjose: [
     'Surgió en los años setenta, como continuación de La Vega, para la gente que llegaba de los pueblos. Al principio no tenía consultorio, ni tiendas, ni colegios.',
@@ -254,7 +302,17 @@ const CURIOSIDADES = {
     'A sus vecinos los llaman «cucos», por los dos cucos de su escudo.'
   ],
   fontana: [
-    'Del monasterio de Santa María de la Vega, de hacia 1150 y después de los canónigos de San Agustín, quedan cinco arcos del claustro con 16 capiteles de escenas de caza, bailes y animales.'
+    'Del monasterio de Santa María de la Vega, de hacia 1150 y después de los canónigos de San Agustín, quedan cinco arcos con 16 capiteles de escenas de caza, bailes y animales.',
+    // Fuente: https://www.romanicodigital.com/actualidad/noticias/fachada-sala-capitular-santa-maria-vega-salamanca-valorizacion-y-difusion-una
+    'Esos arcos son Bien de Interés Cultural desde 1931. Siempre se dijo que eran del claustro, pero hoy se cree que eran la entrada a la sala capitular.',
+    // Fuente: https://es.wikipedia.org/wiki/Monasterio_de_Santa_Mar%C3%ADa_de_la_Vega_(Salamanca)
+    'Sobre el solar del monasterio se levantó la Granja Escuela-Asilo de la Fundación Rodríguez Fabrés, obra modernista de Joaquín de Vargas, el arquitecto de la Casa Lis, que inauguró Alfonso XIII a finales de 1914.',
+    // Fuente: https://es.wikipedia.org/wiki/Colegio_de_la_Pur%C3%ADsima_Concepci%C3%B3n_de_los_Ni%C3%B1os_Hu%C3%A9rfanos_(Salamanca)
+    'El Edificio Solís, en el paseo de Canalejas, nació en 1542 como colegio de huérfanos del obispo Francisco de Solís. En el siglo XX fue manicomio, y desde 1971 es la Facultad de Educación.',
+    // Fuente: https://es.wikipedia.org/wiki/Puente_Felipe_VI
+    'El puente que cruza el Tormes desde aquí se hizo en el año 2000 como puente Príncipe de Asturias; hoy se llama Felipe VI y mide 182 metros.',
+    // Fuente: https://www.guiaarqueologicaciudadespatrimonio.org/salamanca-itinerario-i
+    'Junto a ese puente se conservan norias circulares de mampostería que regaban las huertas de la ribera.'
   ],
   teso: [
     'Aquí, junto al Puente Romano, se celebraba la feria de ganado de septiembre, que arranca el día de la Virgen de la Vega, el 8.',
@@ -265,7 +323,17 @@ const CURIOSIDADES = {
   ],
   carmen: [
     'Nació para sacar de las chabolas a vecinos de Pizarrales: en 1948 el Ayuntamiento creó el Patronato Benéfico Nuestra Señora del Carmen y en 1950 entregó las primeras casas, unifamiliares, del arquitecto Fernando Población.',
-    'Se hizo en tres fases, de 118, 230 y 222 viviendas. La segunda estuvo sin servicios mínimos hasta los años sesenta.'
+    'Se hizo en tres fases, de 118, 230 y 222 viviendas. La segunda estuvo sin servicios mínimos hasta los años sesenta.',
+    // Fuente: https://es.wikipedia.org/wiki/El_Carmen_(Salamanca)
+    'Tiene dos mitades con nombre propio: el Carmen Blanco, de casas adosadas, y el Carmen Rojo, de bloques de ladrillo visto.',
+    // Fuente: https://www.consejosocialbarriospbc.es/barrio-el-carmen/
+    'Las 118 primeras casas las levantaron sus futuros vecinos con sus manos: ese trabajo contó como el 10 % del coste; el Ayuntamiento puso el 30 % y el Instituto Nacional de la Vivienda, el 60 %.',
+    // Fuente: https://www.consejosocialbarriospbc.es/barrio-el-carmen/
+    'En la segunda fase, la Obra Sindical del Hogar convirtió las 230 viviendas previstas en 452 «miniviviendas» de peores materiales.',
+    // Fuente: https://www.consejosocialbarriospbc.es/barrio-el-carmen/
+    'Como faltaban escuelas para tanto niño, el Movimiento Social Cristiano levantó dos detrás del Carmen Rojo.',
+    // Fuente: https://es.wikipedia.org/wiki/El_Carmen_(Salamanca)
+    'También son del Carmen los ocho «bloques de Nicar», entre la calle Linares y la avenida de Portugal.'
   ],
   chamberi: [
     'Nació a principios del siglo XX dentro del término de Tejares, con casas levantadas a mano en solares que vendía un hombre apodado «el zamorano». En 1969 ya dependía de Salamanca.',
@@ -273,7 +341,16 @@ const CURIOSIDADES = {
   ],
   buenosaires: [
     'Nació en 1983 en la periferia, entre la vía del tren, la autovía y el río.',
-    'Aquí nació, con ASDECOBA, el catering Algo Nuevo, que da de comer a más de mil personas al día.'
+    // Fuente: http://habitat.aq.upm.es/evbpes/abpes_9.html
+    'Se construyó para realojar a unas 350 familias humildes que vivían en casas deterioradas del casco antiguo, cuando se rehabilitó el centro histórico.',
+    // Fuente: https://www.elespanol.com/castilla-y-leon/region/salamanca/20260520/asdecoba-herencia-aristocrata-obrero-pulmon-social-lucha-narcotrafico-salamanca/1003744247823_0.html
+    'Aquí nació, con ASDECOBA, el catering Algo Nuevo, en un edificio que había sido picadero de heroína. Empezó con seis comidas al día y hoy prepara 1.200.',
+    // Fuente: https://www.elespanol.com/castilla-y-leon/region/salamanca/20260520/asdecoba-herencia-aristocrata-obrero-pulmon-social-lucha-narcotrafico-salamanca/1003744247823_0.html
+    'ASDECOBA empezó llamándose Asociación Cultural Buenos Aires, y juntó en un solo grupo a los vecinos, las familias del colegio, los mayores y los jóvenes.',
+    // Fuente: https://www.elespanol.com/castilla-y-leon/region/salamanca/20201011/emiliano-tapia-proporciona-puestos-narcotrafico-buenos-aires/527447966_0.html
+    'Su parroquia, de la Virgen de Nazaret, es también taller y albergue: en 2020 acogía a 36 personas.',
+    // Fuente: https://es.wikipedia.org/wiki/Buenos_Aires_(Salamanca)
+    'Ha perdido vecinos: tenía 1.326 en 2001 y 907 en 2014.'
   ],
   moriscos: [
     'Su nombre se debe a que lo poblaron moriscos; antes se decía «Morisco». En el siglo XIV formaba parte de la región de Villoria.',
@@ -330,7 +407,25 @@ const CURIOSIDADES = {
   ],
   marin: [
     // Fuente: https://www.lagacetadesalamanca.es/salamanca/el-centro-de-salamanca-se-vacia-y-crecen-los-barrios-del-oeste-JY8661193
-    'Para el Ayuntamiento no es un barrio aparte: en sus estadísticas, Marín I y II cuentan dentro de La Platina.'
+    'Para el Ayuntamiento no es un barrio aparte: en sus estadísticas, Marín I y II cuentan dentro de La Platina.',
+    // Fuente: https://lacronicadesalamanca.com/234522-nuevo-proyecto-de-vivienda-protegida-en-el-marin-con-firma/
+    'La promoción Jardines del Marín, de 96 viviendas protegidas, es del arquitecto Julio Touza, y su forma imita las curvas del Tormes.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/el-centro-de-salamanca-se-vacia-y-crecen-los-barrios-del-oeste-JY8661193
+    'Es de lo que más crece: su sector, con Huerta Otea, pasó de unos 1.900 vecinos en 2010 a más de 2.700, un 41 % más.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/el-unico-barrio-de-salamanca-que-no-perdio-poblacion-en-2020-CX7132026
+    'En 2020, el año de la pandemia, fue el único sector de Salamanca que no perdió habitantes: ganó cinco.',
+    // Fuente: https://www.elespanol.com/castilla-y-leon/region/salamanca/20220317/salamanca-transforma-ribera-salas-bajas-marin-corredor/657934362_0.html
+    'El proyecto de la ribera le reserva un circuito de running de 1,4 km y arboledas que tapen el ruido de la autovía A-62.'
+  ],
+  montalvos: [
+    // Fuente: https://poligonoelmontalvo.com/quienes-somos/
+    'El polígono lo promovió el Instituto Nacional de Urbanización y se urbanizó en dos fases, en 1961 y 1977. La primera licencia para una nave se pidió en 1966.',
+    // Fuente: https://salamancartvaldia.es/noticia/2025-11-06-el-montalvo-i-compromiso-servicios-y-reivindicaciones-para-seguir-avanzando-378910
+    'Pasa por ser el polígono más antiguo de la provincia, y lo gestionan a medias los ayuntamientos de Salamanca y Carbajosa de la Sagrada.',
+    // Fuente: https://poligonoelmontalvo.com/quienes-somos/
+    'Sus empresarios se organizaron pronto: su asociación se fundó el 27 de abril de 1972.',
+    // Fuente: https://es.wikipedia.org/wiki/L%C3%ADnea_12_(Salamanca_de_Transportes)
+    'La línea 12 del autobús urbano nació en 2003 entre Barrio Blanco y San José, y en 2006 se alargó hasta El Montalvo II.'
   ]
 };
 // Leyendas: { idZona: [párrafo, ...] }
@@ -374,7 +469,7 @@ const LEYENDAS = {
     'La Cueva de Salamanca: en la cripta de la antigua iglesia de San Cebrián, el diablo enseñaba magia a grupos de siete alumnos durante siete años, y uno debía quedarse a su servicio. El marqués de Villena escapó, pero perdió su sombra.'
   ],
   fontana: [
-    'Cuenta la leyenda que la talla de la Virgen de la Vega, patrona de Salamanca, llegó desde Constantinopla. Era la titular del monasterio de Santa María de la Vega, cuyas ruinas están en este barrio; desde 1904 preside el altar mayor de la Catedral Vieja.'
+    'Cuenta la leyenda que la talla de la Virgen de la Vega, patrona de Salamanca, llegó desde Constantinopla. Era la titular del monasterio de Santa María de la Vega, cuyas ruinas están en este barrio; hoy preside el altar mayor de la Catedral Vieja.'
   ]
 };
 // Fotos: { idZona: [ruta en img/, pie con autor y licencia] }. El texto hasta «. Foto» se usa como texto alternativo.
@@ -511,6 +606,30 @@ const FOTOS = {
   santamarta: [
     'img/santamarta.jpg',
     'Iglesia parroquial de Santa Marta de Tormes. Foto: FLAVIVSAETIVS · CC BY-SA 4.0 · Wikimedia Commons'
+  ],
+  montalvos: [
+    'img/montalvos.jpg',
+    'Carteles de salida de Salamanca y entrada a Carbajosa, entre las naves del polígono. Foto: Mentxuwiki · CC BY-SA 4.0 · Wikimedia Commons'
+  ],
+  carmen: [
+    'img/carmen.jpg',
+    'Busto de don Jesús García Rodríguez, párroco del barrio, puesto por suscripción popular en 2004. Foto: Mapper59 · CC BY-SA 4.0 · Wikimedia Commons'
+  ],
+  blanco: [
+    'img/blanco.jpg',
+    'Casas bajas en la calle San Pascasio, en 2015. Foto: r2hox · CC BY-SA 2.0 · Wikimedia Commons'
+  ],
+  alambres: [
+    'img/alambres.jpg',
+    'Mural del proyecto de arte urbano «Rutas centrífugas» en una casa del barrio, en 2015. Foto: r2hox · CC BY-SA 2.0 · Wikimedia Commons'
+  ],
+  vistahermosa: [
+    'img/vistahermosa.jpg',
+    'Aula al aire libre del arroyo del Zurguén, al pie del cerro. Foto: Mapper59 · CC BY-SA 4.0 · Wikimedia Commons'
+  ],
+  fontana: [
+    'img/fontana.jpg',
+    'Arcos del monasterio de Santa María de la Vega en 1891. Foto: J. Laurent · dominio público · Wikimedia Commons'
   ]
 };
 // Dónde comer: { idZona: [{ n: nombre, t: tipo de cocina, a: dirección, p: descripción, s: fuente y fecha }] }
@@ -933,6 +1052,15 @@ const DONDE_COMER = {
       t: 'Restaurante',
       a: 'Carretera de Valladolid, 4-6',
       p: 'El mejor valorado de la zona en Gastroranking: 8,3 sobre 10 con unas 2.800 opiniones. Precio medio: 30 a 45 €.',
+      s: 'Gastroranking, oct. 2026'
+    }
+  ],
+  capuchinos: [
+    {
+      n: 'Mesón Borgoña',
+      t: 'Mesón',
+      a: 'Avenida de los Agustinos Recoletos, 99',
+      p: 'Mesón de barrio con terraza: 6,7 sobre 10 en Gastroranking con unas 420 opiniones. Destacan sus pinchos, sobre todo el de tortilla, y los desayunos.',
       s: 'Gastroranking, oct. 2026'
     }
   ]
