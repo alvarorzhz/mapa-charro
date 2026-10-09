@@ -32,17 +32,14 @@ const capaRuta = $('#ruta');
 capaRuta.style.display = 'none';
 const dibujosRutas = RUTAS.map((r, k) => {
   const g = crearSvg('g', { class: 'ruta-' + r.id }, capaRuta),
-    trazos = tramosDe(r).map(t =>
-      crearSvg(
-        'path',
-        {
-          d: 'M' + t.p.map(q => puntoTexto(proyectar(q[0], q[1]))).join('L'),
-          class: 'rt',
-          'vector-effect': 'non-scaling-stroke'
-        },
-        g
-      )
-    ),
+    // Cada tramo lleva debajo un borde blanco: así la ruta se ve sobre cualquier color, también sobre
+    // las zonas pisadas, que son del mismo rojo
+    trazos = tramosDe(r).map(t => {
+      const d = 'M' + t.p.map(q => puntoTexto(proyectar(q[0], q[1]))).join('L'),
+        borde = crearSvg('path', { d, class: 'rt-borde', 'vector-effect': 'non-scaling-stroke' }, g),
+        trazo = crearSvg('path', { d, class: 'rt', 'vector-effect': 'non-scaling-stroke' }, g);
+      return { borde, trazo };
+    }),
     // Números de las paradas: junto al pictograma si es un monumento; si no, en el sitio y se pueden pulsar
     numeros = r.paradas.map((p, i) => {
       const d = datosParada(p),
@@ -71,7 +68,10 @@ function colocarRuta(u) {
         : 'translate(' + (n.x + 12 * u).toFixed(3) + ' ' + (n.y - 12 * u).toFixed(3) + ') scale(' + u + ')'
     )
   );
-  d.trazos.forEach((t, i) => t.classList.toggle('act', i == paradaActual));
+  d.trazos.forEach((t, i) => {
+    t.trazo.classList.toggle('act', i == paradaActual);
+    t.borde.classList.toggle('act', i == paradaActual);
+  });
   d.numeros.forEach((n, i) => n.g.classList.toggle('sel', i == paradaActual));
 }
 
@@ -79,6 +79,7 @@ function activarRuta(si, k = rutaElegida) {
   rutaActiva = si;
   rutaElegida = k;
   capaRuta.style.display = si ? '' : 'none';
+  document.body.classList.toggle('con-ruta', si); // las zonas pisadas se aclaran para que se vea la ruta
   dibujosRutas.forEach((d, i) => (d.g.style.display = si && i == k ? '' : 'none'));
   $('#rt').classList.toggle('on', si);
   $('#rt').setAttribute('aria-pressed', si);

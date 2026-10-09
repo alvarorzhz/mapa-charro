@@ -594,6 +594,7 @@ function terminarGesto() {
 // Qué etiquetas caben y a qué tamaño, puntos, sellos, nombres de avenidas, escudos, monumentos y la
 // marca de «Estoy aquí». Con siempre=false no hace nada si la escala no ha cambiado.
 let ultimaEscala = 0;
+const ANCHO_SELLOS = 120; // ancho de la vista (unidades del mapa) a partir del cual no se ven los sellos
 function recolocarSegunZoom(siempre) {
   const v = vistaMapa,
     u = v.w / (tamMapa.w || 380); // unidades del mapa por píxel de pantalla
@@ -635,6 +636,8 @@ function recolocarSegunZoom(siempre) {
   });
 
   quitarEtiquetasQueSeTapan(u);
+  // Los sellos «V» de las zonas pisadas, solo de cerca: de lejos, con muchas zonas, tapan el mapa
+  $('#sg').classList.toggle('lejos', v.w > ANCHO_SELLOS);
   document.querySelectorAll('.avp').forEach(e => (e.style.display = v.w <= 240 ? '' : 'none'));
   mostrarEtiquetaAvenida(u);
   colocarEtiquetasFondo(u);

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.5.5",
+    "fecha": "2026-10-09",
+    "titulo": "Rutas que se ven y un mapa más limpio",
+    "usuario": [
+      "Con una ruta en el mapa, las zonas pisadas se ven más suaves y la ruta lleva un borde blanco: ya no se pierde sobre el rojo.",
+      "Los sellos «V» de las zonas pisadas solo salen al acercar el mapa; de lejos ya no lo tapan."
+    ],
+    "tecnico": "ruta.js: tramos con borde .rt-borde bajo .rt; body.con-ruta aclara .z.v (fill-opacity .35), oculta #sg y devuelve el color normal a .lb.v. mapa.js: #sg.lejos con vistaMapa.w > ANCHO_SELLOS (120). Prueba «Sellos «V» y rutas sobre zonas pisadas»."
+  },
+  {
     "version": "1.5.4",
     "fecha": "2026-10-09",
     "titulo": "Más historia en diez barrios",

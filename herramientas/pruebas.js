@@ -713,6 +713,31 @@ prueba('Panel de capas y leyenda', async p => {
   );
 });
 
+prueba('Sellos «V» y rutas sobre zonas pisadas', async p => {
+  await p.evaluate(() => {
+    progreso.z.centro = 'v';
+    todasLasZonas.forEach(pintarZona);
+  });
+  // De lejos no se ven los sellos; al acercar, sí
+  await p.evaluate(() => {
+    vistaMapa.w = 300;
+    ajustarVista();
+  });
+  cierto(await p.$eval('#sg', e => getComputedStyle(e).display == 'none'), 'sin sellos de lejos');
+  await p.evaluate(() => {
+    vistaMapa = { x: 180, y: 220, w: 80, h: 80 };
+    ajustarVista();
+  });
+  cierto(await p.$eval('#sg', e => getComputedStyle(e).display != 'none'), 'con sellos de cerca');
+  // Con una ruta, las zonas pisadas se aclaran, sin sellos, y la ruta lleva borde blanco
+  await p.click('#rt');
+  await p.click('.tarjeta-ruta >> nth=0');
+  cierto(await p.evaluate(() => document.body.classList.contains('con-ruta')), 'modo ruta');
+  igual(await p.$eval('.z.v', e => getComputedStyle(e).fillOpacity), '0.35', 'zonas pisadas aclaradas');
+  cierto(await p.$eval('#sg', e => getComputedStyle(e).display == 'none'), 'sin sellos con la ruta');
+  cierto((await p.$$('.ruta-monumental .rt-borde')).length > 0, 'borde blanco de la ruta');
+});
+
 prueba('Rutas a pie', async p => {
   // El botón abre la lista de rutas
   await p.click('#rt');
