@@ -9,7 +9,7 @@ async function mostrarNovedades() {
     const enlace = document.querySelector('link[href^="novedades.json"]');
     lista = await (await fetch(enlace ? enlace.getAttribute('href') : 'novedades.json')).json();
   } catch (e) {
-    aviso('No se han podido cargar las novedades');
+    aviso('No se han podido cargar las novedades. Comprueba la conexión', { tipo: 'error' });
     return;
   }
   const caja = crear(
@@ -95,7 +95,8 @@ if (
       const w = reg.installing;
       if (w && primeraVez)
         w.addEventListener('statechange', () => {
-          if (w.state == 'activated') aviso('✓ Listo: el mapa ya funciona sin conexión', true);
+          if (w.state == 'activated')
+            aviso('✓ Listo: el mapa ya funciona sin conexión', { tipo: 'exito', discreto: true });
         });
     })
     .catch(e => console.warn('Sin modo sin conexión:', e));

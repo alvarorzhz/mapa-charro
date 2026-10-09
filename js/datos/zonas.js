@@ -17,6 +17,23 @@ const ZONAS_GRANDES = new Set([
   'centro', 'garridonorte', 'garridosur', 'pizarrales', 'prosperidad', 'tejares', 'vidal', 'capuchinos', 'carmelitas', 'sanjose', 'chamberi', 'villamayor', 'santamarta', 'carbajosa', 'cabrerizos', 'villares'
 ]);
 
+// Otros nombres de una zona o de partes de ella: salen en su ficha y el buscador los encuentra
+const OTROS_NOMBRES = {
+  carmelitas: ['Carmelitas-Oeste (nombre oficial)', 'Eras de Carmelitas'],
+  sancristobal: ['Las Claras'],
+  ursulas: ['San Marcos'],
+  rollo: ['Alto del Rollo', 'Las Pajas'],
+  tejares: ['Lasalle', 'Tejares antiguo', 'La Fuente'],
+  prosperidad: ['La Prospe'],
+  marin: ['Marín I y II']
+};
+
+// Puntos de más para repartir el límite aproximado de una zona (herramientas/repartos.js): así un
+// edificio conocido cae en su zona. [lat, lon]. La app no los usa: usa los límites ya calculados.
+const SEMILLAS_REPARTO = {
+  garridonorte: [[40.97375, -5.65006]] // plaza de Barcelona
+};
+
 // [id, nombre, etiqueta en el mapa (| = salto de línea), grupo, latitud, longitud, frase corta]
 // El id se usa en el progreso guardado y en los enlaces (#id): no cambiarlo.
 // prettier-ignore
@@ -27,7 +44,7 @@ const ZONAS = [
   ['sancti', 'Sancti-Spíritus', 'Sancti-Spíritus', 0, 40.96539, -5.65922, 'Toma el nombre de la iglesia de Sancti-Spíritus, en el lado este del casco histórico.'],
   ['sanjuan', 'San Juan', 'San|Juan', 0, 40.96783, -5.66614, 'Su nombre viene de la iglesia de San Juan de Barbalos, en el norte del casco.'],
   ['tenerias', 'Tenerías', 'Tenerías', 0, 40.95824, -5.66812, 'Creció al sur de las murallas, junto al Tormes; el nombre recuerda a las antiguas curtidurías.'],
-  ['ursulas', 'Úrsulas', 'Úrsulas', 0, 40.96631, -5.6671, 'Con el Convento de la Anunciación, las Úrsulas, fundado por el arzobispo Fonseca en 1512.'],
+  ['ursulas', 'Úrsulas-San Marcos', 'Úrsulas', 0, 40.96631, -5.6671, 'Con el Convento de la Anunciación, las Úrsulas, fundado por el arzobispo Fonseca en 1512.'],
   ['sancristobal', 'San Cristóbal', 'San|Cristóbal', 0, 40.96394, -5.65903, 'Barrio del este del casco, con la iglesia de San Cristóbal y su torre románica.'],
   ['sanesteban', 'San Esteban', 'San|Esteban', 0, 40.96014, -5.66252, 'Aquí está el Convento de San Esteban, dominico, con su fachada plateresca del siglo XVI.'],
   ['labradores', 'Labradores', 'Labradores', 1, 40.97039, -5.6594, 'Uno de los primeros ensanches del casco histórico; hoy, zona de bares y restaurantes.'],
@@ -36,7 +53,8 @@ const ZONAS = [
   ['estacion', 'Estación', 'Estación', 1, 40.97138, -5.64863, 'Nació para los trabajadores del ferrocarril, junto a la estación de tren.'],
   ['garridonorte', 'Garrido Norte', 'Garrido|Norte', 1, 40.97606, -5.64827, 'El barrio con más gente de la capital, con aire de pueblo dentro de la ciudad.'],
   ['chinchibarra', 'Chinchibarra', 'Chinchibarra', 1, 40.98001, -5.65426, 'Nació en torno a los depósitos de agua y tiene el parque Würzburg.'],
-  ['glorieta', 'Glorieta-Ciudad Jardín', 'Glorieta', 1, 40.98098, -5.66005, 'Zona nueva con la plaza de toros, el estadio y un campus universitario.'],
+  ['glorieta', 'Glorieta', 'Glorieta', 1, 40.97727, -5.66125, 'Barrio de la plaza de toros de La Glorieta, entre la avenida de San Agustín y la carretera de Zamora.'],
+  ['ciudadjardin', 'Ciudad Jardín', 'Ciudad|Jardín', 1, 40.9819, -5.6592, 'Pequeño barrio obrero de los años cincuenta entre las avenidas de San Agustín y de la Merced.'],
   ['alamedilla', 'Alamedilla', 'Alamedilla', 2, 40.96785, -5.65625, 'Crece alrededor del parque que le da nombre.'],
   ['santotomas', 'Santo Tomás', 'Santo|Tomás', 2, 40.96168, -5.65816, 'Se extiende desde la Alamedilla casi hasta el río.'],
   ['fontana', 'Fontana', 'Fontana', 2, 40.95637, -5.66122, 'Une el centro con el río hacia el este.'],
@@ -45,18 +63,20 @@ const ZONAS = [
   ['prosperidad', 'Prosperidad', 'Prosperidad', 2, 40.96019, -5.65213, 'Nació con la llegada de gente de los pueblos a las fábricas junto al Tormes.'],
   ['rollo', 'Rollo-Las Pajas', 'Rollo', 2, 40.96838, -5.64741, 'Barrio tradicional y tranquilo, con esencia de pueblo.'],
   ['puenteladrillo', 'Puente Ladrillo', 'Puente|Ladrillo', 2, 40.97199, -5.6384, 'Empezó como colonia de ferroviarios, casi un pueblo aparte.'],
-  ['carmelitas', 'Carmelitas-Oeste', 'Carmelitas|Oeste', 3, 40.97106, -5.6672, 'Entre la avenida de Villamayor y el paseo de las Carmelitas: ocio y arte urbano.'],
+  ['carmelitas', 'Barrio del Oeste', 'Barrio del|Oeste', 3, 40.97106, -5.6672, 'Entre la avenida de Villamayor y el paseo de las Carmelitas: ocio y arte urbano.'],
   ['sanbernardo', 'San Bernardo', 'San|Bernardo', 3, 40.9674, -5.67603, 'Barrio universitario, junto al Campus Unamuno y la estación de autobuses.'],
-  ['hospitales', 'Hospitales', 'Hospitales', 3, 40.96292, -5.67543, 'Aquí están el Campus Unamuno y los hospitales públicos, junto al río.'],
+  ['hospitales', 'Hospital', 'Hospital', 3, 40.96292, -5.67543, 'Aquí están el Campus Unamuno y los hospitales públicos, junto al río.'],
   ['carmen', 'El Carmen', 'Carmen', 3, 40.97434, -5.67485, 'Hermano pequeño de Pizarrales, entre la zona universitaria y la trabajadora.'],
   ['vidal', 'Vidal', 'Vidal', 3, 40.97525, -5.66614, 'Limita con Carmelitas-Oeste por la avenida de Portugal, cerca de la plaza de toros.'],
   ['pizarrales', 'Pizarrales', 'Pizarrales', 3, 40.97632, -5.67964, 'Nació a principios del siglo XX con casas levantadas en el camino a Villamayor.'],
   ['blanco', 'Blanco', 'Blanco', 3, 40.97783, -5.67084, 'Fue un pueblo que acabó anexionado a la capital.'],
   ['capuchinos', 'Capuchinos', 'Capuchinos', 3, 40.98138, -5.66631, 'El «Barrio Dorado»: casi todo en piedra de Villamayor, y con el mayor Carrefour de la ciudad.'],
   ['platina', 'La Platina', 'Platina', 3, 40.9678, -5.68742, 'Barrio nuevo, todavía en desarrollo, junto a Huerta Otea.'],
+  ['huertaotea', 'Huerta Otea', 'Huerta|Otea', 3, 40.9642, -5.6867, 'Barrio joven junto al Tormes, entre La Platina y El Marín, sobre una antigua finca de huertas.'],
   ['arrabal', 'Arrabal', 'Arrabal', 4, 40.9562, -5.67172, 'Al otro lado del Puente Romano, con el verraco y la escultura del Lazarillo.'],
   ['tormes', 'Tormes', 'Tormes', 4, 40.95312, -5.66554, 'Barrio ribereño, hermano del Arrabal y de Chamberí.'],
   ['chamberi', 'Chamberí', 'Chamberí', 4, 40.95569, -5.68316, 'Casi todo lo levantaron sus propios vecinos; vida muy de pueblo.'],
+  ['salasbajas', 'Salas Bajas', 'Salas|Bajas', 4, 40.9574, -5.682, 'Antiguas huertas de la orilla sur del Tormes: huertos urbanos, deporte universitario y casas junto al río.'],
   ['tejares', 'Tejares', 'Tejares', 4, 40.95512, -5.69879, 'Fue pueblo hasta 1963; la tradición sitúa aquí el nacimiento del Lazarillo, en la pesquera.'],
   ['buenosaires', 'Buenos Aires', 'Buenos|Aires', 4, 40.95415, -5.70532, 'Barrio en el límite oeste de la ciudad, vecino de Tejares.'],
   ['alambres', 'Alambres-San Buenaventura', 'Alambres', 4, 40.95139, -5.68466, 'Pasó de corrales de ganado a barrio que busca su identidad; muy ligado a Chamberí.'],
@@ -67,7 +87,7 @@ const ZONAS = [
   ['sanjose', 'San José', 'San José', 4, 40.94926, -5.66156, 'Barrio obrero y muy reivindicativo, con muchas instalaciones deportivas.'],
   ['marin', 'Marín', 'Marín', 3, 40.96171, -5.69547, 'Barrio pequeño del oeste, a orillas del Tormes y frente a Tejares.'],
   ['alcaldes', 'Los Alcaldes', 'Los|Alcaldes', 4, 40.95188, -5.69065, 'Barrio al otro lado del río, entre Los Alambres y Tejares.'],
-  ['montalvos', 'Los Montalvos', 'Montalvos', 4, 40.94121, -5.66518, 'El barrio más al sur de la capital, junto al polígono de El Montalvo y la salida hacia Béjar.'],
+  ['montalvos', 'El Montalvo', 'El Montalvo', 4, 40.94121, -5.66518, 'El barrio más al sur de la capital, junto al polígono de El Montalvo y la salida hacia Béjar.'],
   ['villamayor', 'Villamayor', 'Villamayor', 5, 40.99839, -5.69584, 'Sus canteras dieron la piedra dorada de la Salamanca monumental.'],
   ['aldeatejada', 'Aldeatejada', 'Aldeatejada', 5, 40.92497, -5.69108, 'Unos 2.700 vecinos al sur de la capital; su vecino más cercano es Vistahermosa.'],
   ['villares', 'Villares de la Reina', 'Villares|de la Reina', 5, 41.00916, -5.64896, 'Unos 6.800 vecinos y un gran polígono industrial.'],

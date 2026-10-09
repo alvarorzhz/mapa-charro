@@ -259,7 +259,7 @@ async function guardarImagen(blob) {
     try {
       await descargas.save({ filename: NOMBRE_IMAGEN, data: blob });
     } catch (e) {
-      if (e && e.code != 'declined') aviso('No se pudo guardar la imagen');
+      if (e && e.code != 'declined') aviso('No se ha podido guardar la imagen', { tipo: 'error' });
     }
     return;
   }
@@ -365,7 +365,7 @@ async function abrirMiSalamanca() {
     v._url = url;
   } catch (e) {
     console.error(e);
-    aviso('No se pudo crear la imagen');
+    aviso('No se ha podido crear la imagen. Vuelve a probar', { tipo: 'error' });
   } finally {
     boton.disabled = false;
   }

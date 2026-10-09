@@ -6,7 +6,7 @@
 
 const VERSION_FIREBASE = '12.19.0',
   CLAVE_CUENTA = 'charro-cuenta';
-const cuentaWeb = { auth: null, db: null, usuario: null, escuchando: false };
+const cuentaWeb = { auth: null, db: null, usuario: null, escuchando: false, estadoBoton: '' };
 
 // Las pruebas ponen un Firebase falso (window.firebase.prueba) en vez de la configuración real
 const configFirebase = () =>
@@ -81,24 +81,34 @@ function escucharCuenta() {
   });
 }
 
+// Entrar con la ventanita de Google. Los navegadores del móvil (sobre todo Safari) solo dejan abrir
+// una ventana justo al pulsar: si antes hay que descargar Firebase, la bloquean. Por eso, si la
+// bloquean, el botón pasa a «Elegir tu cuenta de Google» y la segunda pulsación, ya con Firebase
+// cargado, la abre al momento. (La entrada cambiando de página no sirve aquí: con la web en
+// github.io y Firebase en firebaseapp.com, los navegadores actuales pierden la sesión por el camino.)
+let firebaseListo = false;
 async function entrarConGoogle() {
+  const proveedor = () => new firebase.auth.GoogleAuthProvider();
   try {
-    await cargarFirebase();
-    escucharCuenta();
-    const proveedor = new firebase.auth.GoogleAuthProvider();
-    try {
-      await cuentaWeb.auth.signInWithPopup(proveedor);
-    } catch (e) {
-      // Si el navegador bloquea la ventanita, se entra cambiando de página y volviendo
-      if (e && e.code == 'auth/popup-blocked') {
-        recordarCuenta('pendiente'); // para cargar Firebase al volver y recoger la entrada
-        await cuentaWeb.auth.signInWithRedirect(proveedor);
-      } else throw e;
+    if (!firebaseListo) {
+      pintarCuenta('cargando');
+      await cargarFirebase();
+      escucharCuenta();
+      firebaseListo = true;
     }
+    await cuentaWeb.auth.signInWithPopup(proveedor());
   } catch (e) {
-    if (e && ['auth/popup-closed-by-user', 'auth/cancelled-popup-request'].includes(e.code)) return;
+    const codigo = (e && e.code) || '';
+    if (codigo == 'auth/popup-blocked') return pintarCuenta('listo');
+    pintarCuenta('');
+    if (['auth/popup-closed-by-user', 'auth/cancelled-popup-request'].includes(codigo)) return;
     console.error(e);
-    aviso('No se ha podido entrar. Comprueba la conexión y vuelve a probar');
+    aviso(
+      codigo == 'auth/network-request-failed'
+        ? 'No se ha podido entrar: comprueba la conexión'
+        : 'No se ha podido entrar' + (codigo ? ' (' + codigo.replace('auth/', '') + ')' : ''),
+      { tipo: 'error' }
+    );
   }
 }
 
@@ -110,7 +120,7 @@ async function salirDeCuenta() {
   try {
     await cuentaWeb.auth.signOut();
   } catch (e) {}
-  pintarCuenta();
+  pintarCuenta('');
   aviso('Has salido. Tu progreso sigue en este navegador');
 }
 
@@ -133,11 +143,11 @@ async function borrarCuenta() {
     cuentaWeb.usuario = null;
     recordarCuenta(null);
     cerrarVentana();
-    pintarCuenta();
-    aviso('Cuenta borrada. Tu progreso sigue en este navegador');
+    pintarCuenta('');
+    aviso('Cuenta borrada. Tu progreso sigue en este navegador', { tipo: 'exito' });
   } catch (e) {
     console.error(e);
-    aviso('No se ha podido borrar la cuenta. Vuelve a probar');
+    aviso('No se ha podido borrar la cuenta. Vuelve a probar', { tipo: 'error' });
   }
 }
 
@@ -187,7 +197,9 @@ function ventanaCuenta() {
   ]);
 }
 
-function pintarCuenta() {
+// estado: 'cargando' mientras baja Firebase; 'listo' si el navegador bloqueó la ventanita
+function pintarCuenta(estado = cuentaWeb.estadoBoton) {
+  cuentaWeb.estadoBoton = estado; // se mantiene al repintar desde fuera (al cambiar el progreso o la sesión)
   const caja = $('#cuenta');
   caja.textContent = '';
   caja.hidden = !puedeUsarCuenta();
@@ -196,6 +208,15 @@ function pintarCuenta() {
   if (cuentaWeb.usuario) {
     b.textContent = 'Tu cuenta';
     b.onclick = ventanaCuenta;
+  } else if (estado == 'cargando') {
+    b.textContent = 'Conectando con Google…';
+    b.disabled = true;
+  } else if (estado == 'listo') {
+    b.textContent = 'Pulsa aquí para elegir tu cuenta de Google';
+    b.onclick = entrarConGoogle;
+    caja.append(b);
+    b.focus({ preventScroll: true });
+    return;
   } else {
     b.textContent = 'Entrar con Google';
     b.onclick = entrarConGoogle;

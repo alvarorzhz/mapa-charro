@@ -104,15 +104,38 @@ const crearSvg = (etiqueta, atributos, padre) => {
   return e;
 };
 
-// Mensaje breve arriba de la pantalla. Con discreto, abajo, más pequeño y un poco más rato
-// (para avisos que no vienen de algo que acabas de hacer, como el de «ya funciona sin conexión»)
+// Mensaje breve arriba de la pantalla. opciones:
+//   tipo: 'info' (por defecto), 'exito', 'logro' o 'error' (cada uno con su color; el de error dura más
+//         y lo anuncian antes los lectores de pantalla)
+//   discreto: abajo, más pequeño y un poco más rato (avisos que no vienen de algo que acabas de hacer)
+//   accion: [texto, alPulsar] para un botón dentro del aviso, como «Deshacer» (dura 5 s)
+// Se acepta aviso(texto, true) como discreto, como antes.
 let temporizadorAviso;
-const aviso = (texto, discreto = false) => {
-  const t = $('#ts');
-  t.textContent = texto;
-  t.className = 'on' + (discreto ? ' discreto' : '');
+const aviso = (texto, opciones = {}) => {
+  if (opciones === true) opciones = { discreto: true };
+  const { tipo = 'info', discreto = false, accion = null } = opciones,
+    t = $('#ts'),
+    clase = tipo + (discreto ? ' discreto' : ''),
+    ocultar = () => {
+      t.className = clase;
+      const b = t.querySelector('button');
+      if (b) b.remove(); // que no se quede un botón invisible al que se llegue con el tabulador
+    };
+  t.textContent = '';
+  t.append(crear('span', '', texto));
+  if (accion) {
+    const b = crear('button', '', accion[0]);
+    b.onclick = () => {
+      clearTimeout(temporizadorAviso);
+      ocultar();
+      accion[1]();
+    };
+    t.append(b);
+  }
+  t.setAttribute('role', tipo == 'error' ? 'alert' : 'status');
+  t.className = 'on ' + clase + (accion ? ' con-accion' : '');
   clearTimeout(temporizadorAviso);
-  temporizadorAviso = setTimeout(() => (t.className = discreto ? 'discreto' : ''), discreto ? 3500 : 1700);
+  temporizadorAviso = setTimeout(ocultar, accion ? 5000 : tipo == 'error' ? 4000 : discreto ? 3500 : 1800);
 };
 
 // Botón que se enciende y se apaga (capas del mapa)

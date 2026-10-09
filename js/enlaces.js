@@ -145,7 +145,7 @@ async function compartir() {
   }
   try {
     await navigator.clipboard.writeText(url);
-    aviso('Enlace copiado');
+    aviso('Enlace copiado', { tipo: 'exito' });
   } catch (e) {
     aviso(url);
   }

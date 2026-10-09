@@ -25,7 +25,7 @@ const datos = [
 ];
 const codigo =
   datos.map(d => leer('js/datos/' + d + '.js')).join('\n;\n') +
-  '\n;({ NOMBRES_GRUPOS, ZONAS_GRANDES, ZONAS, MONUMENTOS, RUTAS, TRAMOS_RUTAS, PUEBLOS, CURIOSIDADES, LEYENDAS, FOTOS, DONDE_COMER,' +
+  '\n;({ NOMBRES_GRUPOS, ZONAS_GRANDES, ZONAS, OTROS_NOMBRES, SEMILLAS_REPARTO, MONUMENTOS, RUTAS, TRAMOS_RUTAS, PUEBLOS, CURIOSIDADES, LEYENDAS, FOTOS, DONDE_COMER,' +
   ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA })';
 const D = vm.runInNewContext(codigo, {});
 
@@ -90,6 +90,31 @@ comprobar(
 D.ZONAS.filter(z => z[3] == 5).forEach(z =>
   comprobar(Object.values(D.ALFOZ).includes(z[0]), `Zona ${z[0]}: pueblo de alrededor sin entrada en ALFOZ`)
 );
+
+// Otros nombres (en la ficha y el buscador) y puntos de más para los límites aproximados
+for (const id in D.OTROS_NOMBRES)
+  comprobar(
+    idsZona.has(id) &&
+      D.OTROS_NOMBRES[id].length &&
+      D.OTROS_NOMBRES[id].every(n => n && typeof n == 'string'),
+    `OTROS_NOMBRES: «${id}» no es una zona o tiene nombres vacíos`
+  );
+for (const id in D.SEMILLAS_REPARTO)
+  comprobar(
+    D.ZONAS_NO_OFICIALES.has(id),
+    `SEMILLAS_REPARTO: «${id}» no tiene límite aproximado (ZONAS_NO_OFICIALES)`
+  );
+
+// Claves repetidas en los datos: en un objeto de JavaScript la segunda pisa a la primera sin avisar
+for (const f of datos) {
+  const texto = leer('js/datos/' + f + '.js');
+  for (const [, nombre, cuerpo] of texto.matchAll(/^const (\w+) = \{\n([\s\S]*?)\n\};/gm)) {
+    const claves = [...cuerpo.matchAll(/^  '?([\w-]+)'?: /gm)].map(m => m[1]);
+    claves
+      .filter((k, i) => claves.indexOf(k) != i)
+      .forEach(k => comprobar(false, `${f}.js: «${k}» aparece dos veces en ${nombre}`));
+  }
+}
 
 // --- Contenido de las fichas ------------------------------------------------
 for (const obj of ['CURIOSIDADES', 'LEYENDAS', 'FOTOS', 'DONDE_COMER'])

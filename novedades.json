@@ -1,5 +1,24 @@
 [
   {
+    "version": "1.5.0",
+    "fecha": "2026-10-09",
+    "titulo": "Más logros, barrios nuevos y avisos más claros",
+    "usuario": [
+      "Logros a la vista: debajo del contador sale tu siguiente logro con su barra de progreso, y la lista tiene medallas y empieza por los que tienes más cerca.",
+      "Al marcar una zona, el aviso te dice cuánto te falta, por ejemplo «5 de 7 en Norte completo».",
+      "26 logros nuevos (47 en total): uno por cada ruta a pie, época de la historia y comarca, y otros de monumentos y del reto diario (rachas de 3 y 7 días, 800 puntos, pleno de 10).",
+      "En los monumentos y en las paradas de las rutas, «He estado aquí» cuenta para esos logros.",
+      "Barrios nuevos: Ciudad Jardín, Huerta Otea y Salas Bajas, con sus curiosidades. El Barrio del Oeste ya se llama así en el mapa.",
+      "Nombres oficiales: Úrsulas-San Marcos, Hospital y El Montalvo; y en cada ficha, otros nombres del barrio (Las Claras, Alto del Rollo, La Prospe…), que también encuentra el buscador.",
+      "Si quitas una marca por error, el aviso trae un botón «Deshacer».",
+      "Los avisos tienen colores distintos: verde si todo va bien, dorado para los logros y un aviso claro con ⚠ si algo falla.",
+      "Si sales del reto a medias, te pregunta antes de perder la partida.",
+      "«Entrar con Google» funciona en el móvil aunque el navegador bloquee la ventanita: basta con pulsar otra vez.",
+      "Los nombres del mapa ya no se pisan entre sí."
+    ],
+    "tecnico": "Logros: calcularLogros = logrosFijos (con cat) + logrosGenerados (ep<i> por etapa con 2+ zonas, ru-<id> por ruta, co<i> por comarca, mo5/mot, jr3/jr7/j8/j10); medallas por categoría (MEDALLAS), #sig con siguienteLogro y barra, lista ordenada y barra en el resumen; progresoDeZona en el aviso al marcar. Visitas en progreso.j (mo, r) con visitaAbierta y modoBotonesFicha('visita') en monumentos y paradas propias; j.h (días del reto) y j.pf (partida perfecta) desde terminarJuego, que ya no pisa el resto de j; limpiarProgreso y juntarProgresos los conservan. Zonas: ciudadjardin (OSM 1282523; glorieta pasa a la relación 1282520 y su punto a la plaza de toros), huertaotea y salasbajas como límites aproximados dentro de La Platina y Chamberí (herramientas/repartos.js con polygon-clipping, SEMILLAS_REPARTO; garridonorte con la plaza de Barcelona); renombres de ursulas, hospitales, montalvos y carmelitas; las curiosidades del sanatorio pasan a carrascal; OTROS_NOMBRES en la ficha (#otros) y el buscador; nota de límite aproximado; comprobación de claves repetidas en los datos (se había perdido una curiosidad de Vidal). aviso(texto, {tipo, discreto, accion}) con colores por tipo, role=alert en errores y Deshacer al quitar marcas (zonas y provincia). pedirSalirJuego al cerrar o cambiar de pestaña a medias. quitarEtiquetasQueSeTapan en recolocarSegunZoom. cuenta.js: si se bloquea la ventanita de Google, segunda pulsación ya con Firebase cargado (sin signInWithRedirect). Tarjetas de zona regeneradas. Pruebas nuevas: barrios nuevos, deshacer, avisos, salir del reto, logros."
+  },
+  {
     "version": "1.4.0",
     "fecha": "2026-10-08",
     "titulo": "Rutas de murales y de tapas, y más barrios con contenido",

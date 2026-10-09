@@ -3,7 +3,7 @@
 // Cada zona del mapa es un objeto con:
 //   id, n (nombre), l (etiqueta del mapa, | = salto de línea), g (grupo, índice de NOMBRES_GRUPOS),
 //   la, lo (coordenadas), x, y (posición en el mapa), t (1 si es un barrio grande),
-//   c (frase corta), cur (curiosidades), ly (leyendas).
+//   c (frase corta), otros (otros nombres), cur (curiosidades), ly (leyendas).
 // mapa.js le añade al dibujarla: e (polígono), tx/tx2 (etiqueta en 1 o 2 líneas), dt (punto),
 //   sg/so/st (grupo del sello «V»), cw/ch (ancho/alto útil para la etiqueta), w1/w2 (largo de la etiqueta).
 const zonas = ZONAS.map(([id, n, l, g, la, lo, c]) => {
@@ -19,6 +19,7 @@ const zonas = ZONAS.map(([id, n, l, g, la, lo, c]) => {
     lo,
     t: ZONAS_GRANDES.has(id) ? 1 : 0,
     c: c || '',
+    otros: OTROS_NOMBRES[id] || [],
     cur: CURIOSIDADES[id] || [],
     ly: LEYENDAS[id] || []
   };
@@ -54,7 +55,11 @@ const pedanias = PROVINCIA.m.flatMap(m => m.P);
 //   gv [clave]                     sitios marcados estando allí con el GPS
 //   f  0 | 1                       rana encontrada
 //   t  milisegundos                última modificación (para elegir entre la copia local y la de la cuenta)
-//   j  { m, d, s }                 juego «¿Dónde está?»: mejor puntuación, fecha del último reto del día y sus puntos
+//   j  { m, d, s, h, pf, mo, r }   juego «¿Dónde está?»: mejor puntuación, fecha del último reto del día y sus
+//                                  puntos, días con el reto hecho (h), 1 si alguna partida fue perfecta (pf);
+//                                  y, para los logros, monumentos visitados (mo: [id]) y paradas propias de cada
+//                                  ruta visitadas (r: { idRuta: [idParada] }). Van dentro de j para no añadir
+//                                  campos nuevos a lo guardado (las reglas de la cuenta de Google solo aceptan estos)
 const CLAVE_LOCAL = 'charro2';
 const ESTADOS_MARCA = [
   ['v', 'He estado'],
@@ -87,8 +92,29 @@ function limpiarProgreso(o) {
     t: o && +o.t > 0 ? +o.t : 0,
     gv,
     p,
-    j: { m: puntosJuego(j.m), d: /^\d{4}-\d\d-\d\d$/.test(j.d) ? j.d : '', s: puntosJuego(j.s) }
+    j: {
+      m: puntosJuego(j.m),
+      d: esFecha(j.d) ? j.d : '',
+      s: puntosJuego(j.s),
+      h: Array.isArray(j.h) ? [...new Set(j.h.filter(esFecha))].sort().slice(-90) : [],
+      pf: j.pf ? 1 : 0,
+      mo: Array.isArray(j.mo) ? [...new Set(j.mo.filter(id => idsMonumentos.has(id)))] : [],
+      r: limpiarParadas(j.r)
+    }
   };
+}
+const esFecha = x => typeof x == 'string' && /^\d{4}-\d\d-\d\d$/.test(x);
+const idsMonumentos = new Set(MONUMENTOS.map(m => m.id));
+// Paradas propias (no monumentos) de cada ruta que existan
+function limpiarParadas(r) {
+  const limpio = {};
+  if (!r || typeof r != 'object') return limpio;
+  RUTAS.forEach(ruta => {
+    const ids = new Set(ruta.paradas.filter(p => typeof p != 'string').map(p => p.id)),
+      vistas = Array.isArray(r[ruta.id]) ? [...new Set(r[ruta.id].filter(id => ids.has(id)))] : [];
+    if (vistas.length) limpio[ruta.id] = vistas;
+  });
+  return limpio;
 }
 const datosParaGuardar = o => ({
   z: o.z,
@@ -96,7 +122,7 @@ const datosParaGuardar = o => ({
   t: o.t || 0,
   gv: o.gv || [],
   p: o.p || {},
-  j: o.j || { m: 0, d: '', s: 0 },
+  j: o.j || { m: 0, d: '', s: 0, h: [], pf: 0, mo: [], r: {} },
   v: 1
 });
 

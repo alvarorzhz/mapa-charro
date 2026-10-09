@@ -20,7 +20,15 @@ function candidatos() {
     poner = (texto, sub, tipo, clave, peso, abrir, extra = '') =>
       c.push({ texto, sub, tipo, clave, peso, abrir, buscable: normalizar(texto + ' ' + extra) });
   todasLasZonas.forEach(z =>
-    poner(z.n, NOMBRES_GRUPOS[z.g], 'zona', z.id, 0, () => abrirFicha(z.id), (z.l || '').replace('|', ' '))
+    poner(
+      z.n,
+      NOMBRES_GRUPOS[z.g],
+      'zona',
+      z.id,
+      0,
+      () => abrirFicha(z.id),
+      (z.l || '').replace('|', ' ') + ' ' + (z.otros || []).join(' ')
+    )
   );
   MONUMENTOS.forEach(m =>
     poner(m.n, 'Monumento · ' + buscarZona(m.zona).n, 'monumento', m.id, 1, () => abrirMonumento(m.id))

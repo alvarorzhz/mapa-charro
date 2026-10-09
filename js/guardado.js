@@ -104,7 +104,16 @@ function juntarProgresos(a, b) {
     p: juntar(a.p, b.p),
     gv: [...(a.gv || []), ...(b.gv || [])],
     f: a.f || b.f ? 1 : 0,
-    j: (ja.d || '') >= (jb.d || '') ? ja : jb,
+    j: {
+      ...((ja.d || '') >= (jb.d || '') ? ja : jb),
+      m: Math.max(ja.m || 0, jb.m || 0),
+      h: [...(ja.h || []), ...(jb.h || [])],
+      pf: ja.pf || jb.pf ? 1 : 0,
+      mo: [...(ja.mo || []), ...(jb.mo || [])],
+      r: Object.fromEntries(
+        RUTAS.map(ruta => [ruta.id, [...((ja.r || {})[ruta.id] || []), ...((jb.r || {})[ruta.id] || [])]])
+      )
+    },
     t: Date.now()
   });
 }

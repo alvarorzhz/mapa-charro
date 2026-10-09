@@ -172,7 +172,7 @@ function pintarPanelJuego() {
     q = juego.preguntas[juego.ronda],
     cerrar = crear('button', 'jx', '×');
   cerrar.setAttribute('aria-label', 'Salir del juego');
-  cerrar.onclick = salirJuego;
+  cerrar.onclick = () => pedirSalirJuego();
   p.textContent = '';
   p.append(
     cerrar,
@@ -319,7 +319,7 @@ function responderJuego(z) {
   pintarSolucion(z, buena);
   verZonaBuena(buena);
   pintarPanelJuego();
-  if (acierto) aviso('¡Vítor! +' + puntos);
+  if (acierto) aviso('¡Vítor! +' + puntos, { tipo: 'exito' });
 }
 
 function siguientePregunta() {
@@ -333,17 +333,62 @@ function siguientePregunta() {
 }
 
 function terminarJuego() {
+  conAvisoDeLogros(terminarJuegoYGuardar);
+}
+function terminarJuegoYGuardar() {
   const j = progreso.j || {},
     mejorAntes = j.m || 0;
   progreso.j = {
+    ...j,
     m: Math.max(mejorAntes, juego.puntos),
     d: juego.diario ? fechaHoy() : j.d || '',
-    s: juego.diario ? juego.puntos : j.s || 0
+    s: juego.diario ? juego.puntos : j.s || 0,
+    h: juego.diario ? [...new Set([...(j.h || []), fechaHoy()])] : j.h || [],
+    pf: j.pf || juego.resultados.every(x => x >= PUNTOS_ACIERTO) ? 1 : 0
   };
   guardar();
   capaJuego.textContent = '';
   encuadrarCiudad();
   pintarFinalJuego(mejorAntes);
+}
+
+// ¿Hay una partida empezada y sin terminar? (con alguna pista ya respondida)
+const juegoAMedias = () =>
+  juego.activo && juego.resultados.length < RONDAS_JUEGO && (juego.ronda > 0 || juego.respondida);
+
+// Salir del juego a petición de la persona: si va a medias, antes se pregunta. «luego», si se sale.
+function pedirSalirJuego(luego = () => {}) {
+  if (!juegoAMedias()) {
+    salirJuego();
+    return luego();
+  }
+  const hechas = juego.ronda + (juego.respondida ? 1 : 0);
+  abrirVentana(
+    juego.diario ? '¿Dejar el reto del día?' : '¿Dejar la partida?',
+    crear(
+      'p',
+      '',
+      'Llevas ' +
+        juego.puntos +
+        ' puntos en ' +
+        hechas +
+        ' de ' +
+        RONDAS_JUEGO +
+        ' pistas. Si sales, esta partida se pierde' +
+        (juego.diario ? '; el reto de hoy lo podrás volver a empezar.' : '.')
+    ),
+    [
+      ['Seguir jugando', cerrarVentana, 'on'],
+      [
+        'Salir',
+        () => {
+          cerrarVentana();
+          salirJuego();
+          luego();
+        }
+      ]
+    ]
+  );
 }
 
 function salirJuego() {
@@ -377,9 +422,9 @@ async function compartirResultadoJuego() {
   }
   try {
     await navigator.clipboard.writeText(texto);
-    aviso('Resultado copiado');
+    aviso('Resultado copiado', { tipo: 'exito' });
   } catch (e) {
-    aviso('No se pudo copiar');
+    aviso('No se ha podido copiar el resultado', { tipo: 'error' });
   }
 }
 

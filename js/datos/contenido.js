@@ -82,7 +82,6 @@ const CURIOSIDADES = {
     'A finales de los setenta aquí se ponían las ferias, antes de mudarse a La Aldehuela. Hoy tiene el parque Würzburg, la biblioteca Torrente Ballester y el Conservatorio Superior de Música.'
   ],
   glorieta: [
-    'Se proyectó tras la Guerra Civil como una «ciudad jardín»: un círculo de 400 hectáreas para 31.000 vecinos. A finales de los cuarenta solo se hicieron 126 viviendas, para militares y guardias civiles.',
     'La plaza de toros de La Glorieta la impulsaron los comerciantes a finales del siglo XIX, y a su lado estuvo, a comienzos del XX, el primer campo de fútbol de la ciudad.'
   ],
   alamedilla: [
@@ -144,7 +143,6 @@ const CURIOSIDADES = {
     // Fuente: https://www.lagacetadesalamanca.es/salamanca/el-campus-unamuno-un-ejemplo-de-la-arquitectura-contemporanea-CG9899433
     'El primer edificio del Campus Unamuno fue la Facultad de Farmacia, inaugurada en 1980 y obra de los arquitectos Julio Cano Lasso e Ignacio Mendaro.'
   ],
-  vidal: ['Debe su nombre a los constructores, Balbino y Manuel, que levantaron sus primeras viviendas.'],
   pizarrales: [
     'Nació a comienzos del siglo XX con casas de pizarra y sin permisos (la licencia oficial llegó en 1966). Los vecinos llevaron el agua hasta sus casas a pico y pala.',
     'En pocos años tuvo de todo: iglesia en 1916, sociedad de socorros mutuos en 1917, escuela en 1918 y depósito de agua en 1927. Bebían de fuentes como el caño Mamarón o la Cagalona.',
@@ -159,7 +157,6 @@ const CURIOSIDADES = {
     'Creció en los años noventa con el hipermercado Pryca, el actual Carrefour, y casi todas sus fachadas son de piedra de Villamayor.'
   ],
   platina: [
-    'Junto a Huerta Otea, una de las orillas del Tormes donde los salmantinos celebran el Lunes de Aguas.',
     // Fuente: https://www.lagacetadesalamanca.es/salamanca/el-agua-salmantina-filtrada-por-la-piedra-de-villamayor-que-fue-la-mejor-de-espana-KA2367378
     'Junto al cementerio brotaba el manantial de La Platina. Su agua se embotelló desde los años sesenta, ganó una medalla de oro en 1985 y en 1995 una revista la eligió la mejor de España.',
     // Fuente: https://www.lagacetadesalamanca.es/salamanca/el-manantial-de-la-platina-vuelve-a-brotar-YC2352155
@@ -235,7 +232,14 @@ const CURIOSIDADES = {
     // Fuente: https://carrascaldebarregas.com/historia-del-municipio/
     'En 1162 se libró en el arroyo de la Valmuza una batalla entre los nobles del alfoz salmantino y el rey Fernando II. En junio de 1812 las tropas de Wellington hicieron retirarse aquí a los franceses.',
     // Fuente: https://es.wikipedia.org/wiki/Carrascal_de_Barregas
-    'Su término está partido en cinco islas separadas por tierras de los municipios vecinos.'
+    'Su término está partido en cinco islas separadas por tierras de los municipios vecinos.',
+    'En su término está el antiguo Sanatorio Antituberculoso de los Montalvos, impulsado por el doctor Filiberto Villalobos: primera piedra en 1935 y 13 años de obras. Se anunció como el mayor de España y hoy es el Hospital de los Montalvos.',
+    // Fuente: https://salamancamedica.es/el-hospital-de-los-montalvos/
+    'El sanatorio lo proyectó Rafael Bergamín, que se exilió en Venezuela tras la guerra. Lo terminó Genaro de No, y al final tuvo 601 camas.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/el-gobierno-eliminara-los-carteles-en-la-n-620-que-anuncian-el-hospital-martinez-anido-CN8384127
+    'Abrió en 1948 con el nombre del militar Martínez Anido. Se llama Los Montalvos desde 2001, aunque en 2021 dos señales de la N-620 aún conservaban el nombre antiguo.',
+    // Fuente: https://carrascaldebarregas.com/historia-del-municipio/
+    'El sanatorio tuvo cementerio propio: entre 1950 y 1985 se enterró allí a 1.071 personas. Su fachada luce la cruz de Lorena, símbolo de la lucha contra la tuberculosis.'
   ],
   pelabravo: [
     'Según la tradición lo fundó Pelay o Pelayo Bravo, por orden de los reyes de León.',
@@ -271,15 +275,6 @@ const CURIOSIDADES = {
     'Nació en 1983 en la periferia, entre la vía del tren, la autovía y el río.',
     'Aquí nació, con ASDECOBA, el catering Algo Nuevo, que da de comer a más de mil personas al día.'
   ],
-  montalvos: [
-    'Su gran edificio fue el Sanatorio Antituberculoso de los Montalvos, impulsado por el doctor Filiberto Villalobos: primera piedra en 1935 y 13 años de obras. Se anunció como el mayor de España y hoy es el Hospital de los Montalvos.',
-    // Fuente: https://salamancamedica.es/el-hospital-de-los-montalvos/
-    'El sanatorio lo proyectó Rafael Bergamín, que se exilió en Venezuela tras la guerra. Lo terminó Genaro de No, y al final tuvo 601 camas.',
-    // Fuente: https://www.lagacetadesalamanca.es/salamanca/el-gobierno-eliminara-los-carteles-en-la-n-620-que-anuncian-el-hospital-martinez-anido-CN8384127
-    'Abrió en 1948 con el nombre del militar Martínez Anido. Se llama Los Montalvos desde 2001, aunque en 2021 dos señales de la N-620 aún conservaban el nombre antiguo.',
-    // Fuente: https://carrascaldebarregas.com/historia-del-municipio/
-    'El sanatorio tuvo cementerio propio: entre 1950 y 1985 se enterró allí a 1.071 personas. Su fachada luce la cruz de Lorena, símbolo de la lucha contra la tuberculosis.'
-  ],
   moriscos: [
     'Su nombre se debe a que lo poblaron moriscos; antes se decía «Morisco». En el siglo XIV formaba parte de la región de Villoria.',
     'En 1877 se inauguró su estación, en la línea de Salamanca a Medina del Campo.'
@@ -298,13 +293,44 @@ const CURIOSIDADES = {
     // Fuente: https://www.lagacetadesalamanca.es/salamanca/la-selva-del-parque-de-los-alcaldes-ED13015188
     'En 2008 el Ayuntamiento cedió al Ministerio de Cultura un solar de 6.000 m² del barrio para ampliar el Centro Documental de la Memoria Histórica.',
     // Fuente: https://www.lagacetadesalamanca.es/salamanca/barrio-alcaldes-busca-nuevos-residentes-20230717172626-nt.html
-    'Algunas de sus calles llevan nombre de alcalde, como Alcalde Bravo García o Alcalde Málaga Guerrero.'
+    'Algunas de sus calles llevan nombre de alcalde, como Alcalde Bravo García o Alcalde Málaga Guerrero.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/el-centro-de-salamanca-se-vacia-y-crecen-los-barrios-del-oeste-JY8661193
+    'Para el Ayuntamiento no es un barrio aparte: en sus estadísticas, sus promociones de viviendas cuentan dentro de Tejares.'
   ],
   vidal: [
+    'Debe su nombre a los constructores, Balbino y Manuel, que levantaron sus primeras viviendas.',
     // Fuente: https://www.ub.edu/geocrit/sn/sn-146(139).htm
     'Fue un barrio de viviendas sociales proyectado en 1943 para 400 casas. La primera piedra se puso en junio de 1945 y en 1948 había 170 viviendas.',
     // Fuente: https://www.salamancaenelayer.com/2012/11/avenida-de-portugal.html
     'La avenida de Portugal ocupa el trazado de la antigua vía del tren a Portugal, desviada por Tejares en 1954. En 1967 el terraplén seguía en pie en la plaza del barrio Vidal.'
+  ],
+  ciudadjardin: [
+    'Se proyectó tras la Guerra Civil como una «ciudad jardín»: un círculo de 400 hectáreas para 31.000 vecinos. A finales de los cuarenta solo se hicieron 126 viviendas, para militares y guardias civiles.',
+    // Fuente: https://salamancartvaldia.es/noticia/2025-01-27-ciudad-jardin-el-barrio-que-surgio-de-una-utopia-fotos-362169
+    'Sus vecinos lo llaman el barrio «de las dos mentiras»: ni ciudad ni jardín.',
+    // Fuente: https://www.salamancahoy.es/salamanca/ciudad/ciudad-jardin-barrio-lleva-anos-sonando-calles-20230501135134-nt.html
+    'En 1973 una inmobiliaria madrileña compró el barrio por nueve millones de pesetas; en 1980 cada piso se vendía por un millón.'
+  ],
+  huertaotea: [
+    // Fuente: https://www.elespanol.com/castilla-y-leon/region/20180701/huerta-otea-mirador-botanico-rio-tormes/319218877_0.html
+    'El nombre viene de una antigua finca: la huerta desde la que se «oteaba» el casco histórico de Salamanca.',
+    // Fuente: https://www.elespanol.com/castilla-y-leon/region/20180701/huerta-otea-mirador-botanico-rio-tormes/319218877_0.html
+    'En 1942 la condesa propietaria vendió la finca a su rentero, Valentín Carrasco, que la convirtió en un referente de hortalizas tempranas con invernaderos.',
+    // Fuente: https://salamancartvaldia.es/noticia/2023-02-02-huerta-otea-creemos-en-el-barrio-y-apostamos-fuerte-por-el-y-por-sus-habitantes-314741
+    'Fue el barrio de Salamanca que más creció en una década: pasó de 2.025 empadronados en 2012 a 2.769 en 2022.',
+    'Sus orillas del Tormes son de las que eligen los salmantinos para celebrar el Lunes de Aguas.'
+  ],
+  salasbajas: [
+    // Fuente: https://www.salamancaenelayer.com/2020/04/riadas-inundaciones-del-tormes-y.html
+    'En la riada de diciembre de 1909 las huertas del Arrabal, Salas Bajas, Mambrú y Sotomuñiz quedaron completamente anegadas.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/ya-hay-fecha-aproximada-para-la-entrega-de-los-huertos-urbanos-de-salas-bajas-XI4497088
+    'Junto a Salas Bajas hay un parque de 100.000 m² con unos 600 huertos urbanos ecológicos de 45 m², cercados con cantos rodados del río Yeltes.',
+    // Fuente: https://deportes.usal.es/sefyd/instalaciones/complejo-deportivo-salas-bajas/
+    'La Universidad de Salamanca tiene aquí su complejo deportivo, con pista de atletismo, campo de rugby, fútbol, tenis y pádel.'
+  ],
+  marin: [
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/el-centro-de-salamanca-se-vacia-y-crecen-los-barrios-del-oeste-JY8661193
+    'Para el Ayuntamiento no es un barrio aparte: en sus estadísticas, Marín I y II cuentan dentro de La Platina.'
   ]
 };
 // Leyendas: { idZona: [párrafo, ...] }

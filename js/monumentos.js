@@ -193,7 +193,7 @@ function abrirMonumento(id, parada) {
   zonaAbierta = null;
   monumentoAbierto = id;
   MONUMENTOS.forEach(o => o.g.classList.toggle('sel', o == m));
-  $('#here').hidden = $('#nac').hidden = true;
+  $('#here').hidden = $('#nac').hidden = $('#otros').hidden = true;
   $('#k').textContent = 'Monumento · ' + zona.n;
   $('#nm').textContent = m.n;
   $('#hc').hidden = $('#hl').hidden = $('#he').hidden = true;
@@ -205,7 +205,8 @@ function abrirMonumento(id, parada) {
   const comoParada = typeof parada == 'number';
   if (comoParada) pintarNavegacionRuta(parada);
   else if (typeof paradaActual != 'undefined') paradaActual = -1;
-  modoBotonesFicha('monumento');
+  visitaAbierta = { tipo: 'mo', id, n: m.n }; // «He estado aquí», para los logros (logros.js)
+  modoBotonesFicha('visita');
   resaltarVia(null);
   centrarMapaEn(m.x, m.y, Math.min(vistaMapa.w, 70));
   mostrarFicha();
@@ -215,11 +216,13 @@ function abrirMonumento(id, parada) {
 // Quita la selección de monumento (al abrir otra ficha o cerrar)
 function olvidarMonumento() {
   monumentoAbierto = null;
+  if (typeof visitaAbierta != 'undefined') visitaAbierta = null;
   if (typeof salirTiempo == 'function') salirTiempo(); // tiempo.js: el mapa vuelve a ser el de hoy
   if (typeof puebloAbierto != 'undefined') puebloAbierto = null;
   if (typeof paradaActual != 'undefined') paradaActual = -1;
   $('#info').hidden = true;
   $('#nac').hidden = true; // «Nació en…» solo va en las fichas de zona (tiempo.js)
+  $('#otros').hidden = true; // los otros nombres, también solo en las de zona
   MONUMENTOS.forEach(o => o.g.classList.remove('sel'));
 }
 

@@ -244,6 +244,8 @@ function abrirSitio(d, i) {
   llegar.rel = 'noopener';
   $('#nb').append(llegar);
   $('#ap').append('Fuente: ', enlaceFuente(s.fuente), '.');
+  visitaAbierta = { tipo: 'ru', ruta: rutaActual().id, id: d.id, n: d.n }; // para los logros (logros.js)
+  modoBotonesFicha('visita');
   pintarNavegacionRuta(i);
   centrarMapaEn(d.x, d.y, Math.min(vistaMapa.w, 20));
   mostrarFicha();
@@ -301,7 +303,7 @@ function empezarPorLaMasCercana() {
       abrirParada(i);
     },
     () => {
-      aviso('No te he podido localizar: empiezo por la primera');
+      aviso('No te he podido localizar: empiezo por la primera', { tipo: 'error' });
       abrirParada(0);
     },
     { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }

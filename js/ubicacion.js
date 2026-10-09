@@ -146,7 +146,7 @@ function alLocalizar(pos) {
 
 function alFallarUbicacion(e) {
   ubicacion = null;
-  aviso('No te he podido localizar');
+  aviso('No te he podido localizar', { tipo: 'error' });
   if (e.code == 1 && EN_MARCO) {
     mensajeUbicacion(MENSAJE_EN_MARCO, true);
     return;
@@ -164,7 +164,7 @@ $('#zl').onclick = () => {
   const boton = $('#zl');
   mensajeUbicacion('');
   if (ubicacionBloqueada()) {
-    aviso('Aquí no puedo usar tu ubicación');
+    aviso('Aquí no puedo usar tu ubicación', { tipo: 'error' });
     mensajeUbicacion(MENSAJE_EN_MARCO, true);
     return;
   }

@@ -28,7 +28,9 @@ function actualizar() {
 
 // En el móvil cada pestaña ocupa la pantalla; en escritorio el mapa se ve siempre a la izquierda
 function cambiarPestana(nueva) {
-  if (nueva != 'map' && typeof juego != 'undefined' && juego.activo) salirJuego();
+  // Cambiar de pestaña deja el juego; si va a medias, antes se pregunta (juego.js)
+  if (nueva != 'map' && typeof juego != 'undefined' && juego.activo)
+    return pedirSalirJuego(() => cambiarPestana(nueva));
   pestana = nueva;
   const enMapa = nueva == 'map',
     mapaVisible = enMapa || esEscritorio();

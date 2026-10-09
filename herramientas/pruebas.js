@@ -54,8 +54,16 @@ const fichaAbierta = p => p.$eval('#sh', e => e.classList.contains('o'));
 // --- Pruebas ------------------------------------------------------------------
 
 prueba('Carga el mapa', async p => {
-  igual(await p.$$eval('#zg polygon', a => a.length), 59, 'polígonos de zonas');
-  igual(await texto(p, '#cn'), '0 de 60 zonas pisadas, 0 por visitar', 'contador');
+  igual(
+    await p.$$eval('#zg polygon', a => a.length),
+    await p.evaluate(() => zonas.length),
+    'polígonos de zonas'
+  );
+  igual(
+    await texto(p, '#cn'),
+    `0 de ${await p.evaluate(() => todasLasZonas.length)} zonas pisadas, 0 por visitar`,
+    'contador'
+  );
   cierto(
     (await p.$$eval('.mon', a => a.filter(e => e.style.display != 'none').length)) >= 3,
     'se ven monumentos'
@@ -201,7 +209,11 @@ prueba('Mapa con teclado y lector de pantalla', async p => {
       return z ? z.id : e.id || e.tagName;
     });
   igual(await p.$eval('#m', e => e.getAttribute('role')), 'group', 'el mapa no es una imagen opaca');
-  igual(await p.$$eval('#zg [role=button]', es => es.length), 59, 'cada zona es un botón');
+  igual(
+    await p.$$eval('#zg [role=button]', es => es.length),
+    await p.evaluate(() => zonas.length),
+    'cada zona es un botón'
+  );
   igual(await p.$$eval('#zg [tabindex="0"]', es => es.length), 1, 'una sola parada de Tab');
   cierto(
     await p.evaluate(() => {
@@ -301,9 +313,9 @@ prueba('Salamanca en el tiempo', async p => {
   );
   // «Aparecen ahora»: un botón por zona que lleva a ella y dice de dónde sale su fecha
   const nacen = await p.$$eval('.tzona', bs => bs.map(b => b.textContent));
-  cierto(nacen.length > 5 && nacen.includes('Úrsulas'), 'botones de las zonas que aparecen');
-  await p.click('.tzona:text-is("Úrsulas")');
-  cierto((await texto(p, '.tmotivo')).startsWith('Úrsulas: '), 'dice por qué se sabe');
+  cierto(nacen.length > 5 && nacen.includes('Úrsulas-San Marcos'), 'botones de las zonas que aparecen');
+  await p.click('.tzona:text-is("Úrsulas-San Marcos")');
+  cierto((await texto(p, '.tmotivo')).startsWith('Úrsulas-San Marcos: '), 'dice por qué se sabe');
   cierto(await p.evaluate(() => limiteFoco.getAttribute('d') != ''), 'marca su contorno en el mapa');
   await p.$eval('.tbarra', e => {
     e.value = 4;
@@ -539,20 +551,46 @@ prueba('Tema claro y oscuro', async (p, url) => {
   igual(await tema(), claro, 'vuelve a claro');
 });
 
+prueba('Barrios nuevos y otros nombres', async p => {
+  for (const id of ['ciudadjardin', 'huertaotea', 'salasbajas'])
+    cierto(await p.evaluate(id => !!buscarZona(id).e, id), 'en el mapa: ' + id);
+  // Un nombre popular lleva a su barrio, y la ficha lo dice
+  await p.fill('#q', 'las claras');
+  await p.press('#q', 'Enter');
+  igual(await texto(p, '#nm'), 'San Cristóbal', 'el buscador encuentra los otros nombres');
+  igual(await texto(p, '#otros'), 'También: Las Claras', 'la ficha los muestra');
+  await p.fill('#q', 'huerta otea');
+  await p.press('#q', 'Enter');
+  igual(await texto(p, '#nm'), 'Huerta Otea', 'barrio nuevo');
+  cierto(await p.$eval('#otros', e => e.hidden), 'sin otros nombres, no sale la línea');
+  cierto(
+    (await texto(p, '#ap')).includes('límite en el mapa es aproximado'),
+    'avisa de que su límite es aproximado'
+  );
+});
+
 prueba('Buscar, abrir ficha y marcar', async p => {
   await p.fill('#q', 'tejares');
   await p.press('#q', 'Enter');
   igual(await texto(p, '#nm'), 'Tejares', 'ficha abierta');
   igual(await p.evaluate(() => location.hash), '#tejares', 'enlace');
   await p.click('.bt button[data-s=v]');
-  igual(await texto(p, '#cn'), '1 de 60 zonas pisadas, 0 por visitar', 'contador tras marcar');
+  igual(
+    await texto(p, '#cn'),
+    `1 de ${await p.evaluate(() => todasLasZonas.length)} zonas pisadas, 0 por visitar`,
+    'contador tras marcar'
+  );
   igual(
     await p.evaluate(() => JSON.parse(localStorage.charro2).z),
     { tejares: 'v' },
     'guardado en el navegador'
   );
   await p.reload();
-  igual(await texto(p, '#cn'), '1 de 60 zonas pisadas, 0 por visitar', 'sigue tras recargar');
+  igual(
+    await texto(p, '#cn'),
+    `1 de ${await p.evaluate(() => todasLasZonas.length)} zonas pisadas, 0 por visitar`,
+    'sigue tras recargar'
+  );
 });
 
 prueba('Ficha sin apartados vacíos y panel del móvil', async (p, url) => {
@@ -588,7 +626,11 @@ prueba('Enlaces y botón atrás', async (p, url) => {
 
 prueba('Lista y provincia', async p => {
   await p.click('#vlist');
-  igual(await p.$$eval('#ls .lr', a => a.length), 60, 'filas de la lista');
+  igual(
+    await p.$$eval('#ls .lr', a => a.length),
+    await p.evaluate(() => todasLasZonas.length),
+    'filas de la lista'
+  );
   await p.click('#vprov');
   igual(await p.$$eval('#pm path.pmm', a => a.length), 362, 'municipios en el minimapa');
   await p.fill('#pq', 'ledesma');
@@ -611,7 +653,21 @@ prueba('Monumentos', async (p, url) => {
   await p.goto(url + '#monumento/catedrales');
   igual(await texto(p, '#nm'), 'Catedrales Nueva y Vieja', 'abre el monumento');
   cierto((await p.$$('#info .dato')).length >= 2, 'datos clave');
-  igual(await p.$$eval('.bt button', a => a.map(b => b.hidden)), [true, true, false], 'solo Compartir');
+  igual(
+    await p.$$eval('.bt button', a => a.map(b => (b.hidden ? '' : b.textContent || 'compartir'))),
+    ['He estado aquí', '', 'compartir'],
+    'He estado aquí y Compartir'
+  );
+  // Visitarlo cuenta para los logros de monumentos, y se puede deshacer
+  await p.click('.bt button[data-s=v]');
+  igual(await p.evaluate(() => progreso.j.mo), ['catedrales'], 'visitado');
+  cierto(
+    await p.evaluate(() => calcularLogros().find(a => a.id == 'mo5').c == 1),
+    'suma al logro de monumentos'
+  );
+  await p.click('.bt button[data-s=v]');
+  await p.click('#ts button');
+  igual(await p.evaluate(() => progreso.j.mo), ['catedrales'], 'quitar se deshace');
   await p.click('#nb button');
   igual(await p.evaluate(() => location.hash), '#univ', 'Ver el barrio');
   cierto((await p.$$('#mz button')).length >= 3, 'monumentos del barrio');
@@ -808,6 +864,43 @@ prueba(
   }
 );
 
+prueba(
+  'Cuenta con Google: ventanita bloqueada en el móvil',
+  async p => {
+    await p.click('#cuenta button');
+    await p.waitForTimeout(300);
+    igual(
+      await texto(p, '#cuenta'),
+      'Pulsa aquí para elegir tu cuenta de Google',
+      'si el navegador bloquea la ventanita, pide otra pulsación'
+    );
+    await p.click('#cuenta button');
+    await p.waitForTimeout(300);
+    igual(await p.evaluate(() => window.__intentos), 2, 'y a la segunda la abre');
+  },
+  {
+    antes: () => {
+      window.__intentos = 0;
+      const auth = {
+        onAuthStateChanged: f => {
+          setTimeout(() => f(null));
+          return () => {};
+        },
+        signInWithPopup: async () => {
+          if (++window.__intentos == 1)
+            throw Object.assign(new Error('bloqueada'), { code: 'auth/popup-blocked' });
+        }
+      };
+      window.firebase = {
+        prueba: true,
+        apps: [1],
+        auth: Object.assign(() => auth, { GoogleAuthProvider: function () {} }),
+        firestore: () => ({})
+      };
+    }
+  }
+);
+
 prueba('Imagen «Mi Salamanca»', async p => {
   await p.evaluate(() => {
     progreso.z.centro = progreso.z.tejares = 'v';
@@ -835,6 +928,100 @@ prueba('Imagen «Mi Salamanca»', async p => {
   );
   await p.click('.modal .cerrar');
   cierto(!(await p.$('.modal')), 'la ventana se cierra');
+});
+
+prueba('Quitar una marca se puede deshacer', async p => {
+  await p.fill('#q', 'tejares');
+  await p.press('#q', 'Enter');
+  await p.click('.bt button[data-s=v]');
+  cierto(await p.$eval('#ts', e => e.classList.contains('exito')), 'marcar es un aviso de éxito');
+  await p.waitForTimeout(2000);
+  await p.click('.bt button[data-s=v]');
+  igual(await texto(p, '#ts span'), 'Tejares: quitada de «He estado»', 'avisa al quitarla');
+  igual(await p.evaluate(() => progreso.z.tejares), undefined, 'quitada');
+  await p.click('#ts button');
+  igual(await p.evaluate(() => progreso.z.tejares), 'v', 'y Deshacer la recupera');
+  cierto(
+    await p.$eval('.bt button[data-s=v]', b => b.classList.contains('on')),
+    'el botón vuelve a estar marcado'
+  );
+  // Los errores se ven distintos
+  await p.evaluate(() => aviso('Algo ha fallado', { tipo: 'error' }));
+  igual(
+    await p.$eval('#ts', e => [e.className.includes('error'), e.getAttribute('role')]),
+    [true, 'alert'],
+    'error con su estilo'
+  );
+});
+
+prueba('Salir del reto a medias pregunta', async p => {
+  await p.click('#jug');
+  await p.waitForTimeout(300);
+  // Sin responder nada, sale sin preguntar
+  await p.click('#jp .jx');
+  cierto(await p.evaluate(() => !juego.activo), 'sin empezar, sale directamente');
+  await p.click('#jug');
+  await p.waitForTimeout(300);
+  await p.evaluate(() => responderJuego(juego.preguntas[0].zona));
+  await p.click('#jp .jx');
+  igual(await texto(p, '.modal h3'), '¿Dejar el reto del día?', 'a medias, pregunta');
+  await p.click('.modal .botones button:text-is("Seguir jugando")');
+  cierto(await p.evaluate(() => juego.activo), 'Seguir jugando no lo deja');
+  await p.evaluate(() => cambiarPestana('list')); // en escritorio, el panel del juego tapa las pestañas
+  cierto(!!(await p.$('.modal')), 'cambiar de pestaña también pregunta');
+  await p.click('.modal .botones button:text-is("Salir")');
+  igual(await p.evaluate(() => [juego.activo, pestana]), [false, 'list'], 'Salir lo deja y va a la pestaña');
+});
+
+prueba('Logros: los que salen de los datos, el siguiente y su barra', async p => {
+  const ids = await p.evaluate(() => calcularLogros().map(a => a.id));
+  for (const id of ['ep5', 'ru-monumental', 'ru-murales', 'ru-vandyck', 'mo5', 'jr7', 'j10', 'co0'])
+    cierto(ids.includes(id), 'logro ' + id);
+  igual(new Set(ids).size, ids.length, 'sin ids repetidos');
+  cierto(
+    (await texto(p, '#sig')).startsWith('📍Siguiente logro: Primer vítor'),
+    'siguiente logro a la vista'
+  );
+  // Marcar una zona dice cuánto falta para el logro de su grupo
+  await p.fill('#q', 'vidal');
+  await p.press('#q', 'Enter');
+  await p.click('.bt button[data-s=v]');
+  cierto((await texto(p, '#ts span')).includes('en «Oeste completo»'), 'el aviso dice lo que falta');
+  // Una parada propia de una ruta cuenta para el logro de esa ruta
+  await p.evaluate(() => (location.hash = '#ruta-murales/1'));
+  await p.waitForTimeout(200);
+  await p.click('.bt button[data-s=v]');
+  igual(await p.evaluate(() => progreso.j.r), { murales: ['diaspora'] }, 'parada visitada');
+  // Racha del reto del día, a partir de los días guardados
+  const racha = await p.evaluate(() => {
+    const d = new Date(),
+      dia = n => {
+        const f = new Date(d);
+        f.setDate(d.getDate() - n);
+        return (
+          f.getFullYear() +
+          '-' +
+          String(f.getMonth() + 1).padStart(2, '0') +
+          '-' +
+          String(f.getDate()).padStart(2, '0')
+        );
+      };
+    progreso.j.h = [dia(0), dia(1), dia(2), dia(4)];
+    return rachaReto();
+  });
+  igual(racha, 3, 'racha de días seguidos');
+  // Lo nuevo se conserva al limpiar el progreso (navegador o cuenta)
+  igual(
+    await p.evaluate(() => {
+      const l = limpiarProgreso({
+        z: {},
+        j: { mo: ['catedrales', 'nada'], r: { murales: ['nido', 'x'] }, pf: 1 }
+      }).j;
+      return [l.mo, l.r, l.pf];
+    }),
+    [['catedrales'], { murales: ['nido'] }, 1],
+    'se guarda limpio'
+  );
 });
 
 prueba('Juego «¿Dónde está?»', async p => {

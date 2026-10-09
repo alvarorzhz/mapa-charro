@@ -16,8 +16,23 @@ function marcarEnProvincia(clave, marca, nombre) {
   conAvisoDeLogros(() => {
     progreso.p = progreso.p || {};
     progreso.gv = progreso.gv || [];
-    if (progreso.p[clave] == marca) delete progreso.p[clave];
-    else {
+    if (progreso.p[clave] == marca) {
+      const conGpsAntes = progreso.gv.includes(clave);
+      delete progreso.p[clave];
+      aviso(nombre + ': quitado de «' + (marca == 'v' ? 'He estado' : 'Quiero ir') + '»', {
+        accion: [
+          'Deshacer',
+          () => {
+            progreso.p[clave] = marca;
+            if (conGpsAntes && !progreso.gv.includes(clave)) progreso.gv.push(clave);
+            guardar();
+            actualizar();
+            if (typeof pintarBotonesFicha == 'function') pintarBotonesFicha();
+            aviso('Recuperado: ' + nombre, { tipo: 'exito' });
+          }
+        ]
+      });
+    } else {
       progreso.p[clave] = marca;
       // Con GPS si estás en ese municipio (o en el municipio de esa pedanía)
       const conGps =
@@ -34,7 +49,8 @@ function marcarEnProvincia(clave, marca, nombre) {
           ? conGps
             ? '¡Vítor! ' + nombre + ', con GPS'
             : '¡Vítor! ' + nombre
-          : nombre + ' apuntado'
+          : nombre + ': apuntado en «Quiero ir»',
+        { tipo: 'exito' }
       );
     }
     if (progreso.p[clave] != 'v') progreso.gv = progreso.gv.filter(x => x != clave);

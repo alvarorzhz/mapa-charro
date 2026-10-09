@@ -135,7 +135,6 @@ const EPOCA_ZONA = {
   prosperidad: [5, 'Nace a principios del siglo XX'],
   pizarrales: [5, 'Nace a principios del siglo XX'],
   chamberi: [5, 'Nace a principios del siglo XX, en el término de Tejares'],
-  montalvos: [5, 'Sanatorio de los Montalvos, primera piedra en 1935'],
   sanbernardo: [5, 'Primer bloque de viviendas, de los años cuarenta'],
   chinchibarra: [5, 'Crece alrededor del depósito de agua de 1945'],
   carmen: [5, 'Primeras casas entregadas en 1950'],
@@ -206,6 +205,22 @@ const EPOCA_ZONA = {
     [
       'El Español-NoticiasCYL',
       'https://www.elespanol.com/castilla-y-leon/region/salamanca/20211119/barrio-capuchinos-salamanca-piedra-dorada-expansion-urbana/627687731_0.html'
+    ]
+  ],
+  ciudadjardin: [
+    5,
+    'Sus primeras viviendas son de finales de los años cuarenta',
+    [
+      'SALAMANCArtv AL DÍA',
+      'https://salamancartvaldia.es/noticia/2025-01-27-ciudad-jardin-el-barrio-que-surgio-de-una-utopia-fotos-362169'
+    ]
+  ],
+  huertaotea: [
+    6,
+    'Barrio residencial de principios del siglo XXI',
+    [
+      'El Español-NoticiasCYL',
+      'https://www.elespanol.com/castilla-y-leon/region/20180701/huerta-otea-mirador-botanico-rio-tormes/319218877_0.html'
     ]
   ],
   carrascal: [

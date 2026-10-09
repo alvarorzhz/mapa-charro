@@ -605,6 +605,7 @@ function recolocarSegunZoom(siempre) {
     );
   });
 
+  quitarEtiquetasQueSeTapan(u);
   document.querySelectorAll('.avp').forEach(e => (e.style.display = v.w <= 240 ? '' : 'none'));
   mostrarEtiquetaAvenida(u);
   colocarEtiquetasFondo(u);
@@ -616,6 +617,32 @@ function recolocarSegunZoom(siempre) {
   // marcaPosicion se declara en ubicacion.js, que carga después: aquí puede no existir aún
   if (typeof marcaPosicion != 'undefined' && marcaPosicion)
     marcaPosicion.m.setAttribute('transform', escalaFija(marcaPosicion.x, marcaPosicion.y, u));
+}
+
+// Si el nombre de una zona pisa el de otra, se queda el de la más importante (la abierta, luego las
+// grandes, luego la de letra más grande) y la otra se queda con su punto, hasta que se acerque el mapa
+function quitarEtiquetasQueSeTapan(u) {
+  const caja = z => {
+      const e = z.etiqueta,
+        ancho = e.ancho * (z.t ? 0.64 : 0.6) * e.tam * u,
+        alto = e.lineas * e.tam * 1.15 * u;
+      return [z.x - ancho / 2, z.y - alto / 2, z.x + ancho / 2, z.y + alto / 2];
+    },
+    pisan = (a, b) => a[0] < b[2] && b[0] < a[2] && a[1] < b[3] && b[1] < a[3],
+    puestas = [];
+  zonas
+    .filter(z => z.etiqueta)
+    .sort(
+      (a, b) => (b.id == zonaAbierta) - (a.id == zonaAbierta) || b.t - a.t || b.etiqueta.tam - a.etiqueta.tam
+    )
+    .forEach(z => {
+      const c = caja(z);
+      if (z.id != zonaAbierta && puestas.some(o => pisan(c, o))) {
+        z.etiqueta.el.style.display = 'none';
+        z.dt.style.display = '';
+        z.etiqueta = null;
+      } else puestas.push(c);
+    });
 }
 
 // Encuadra el mapa con ancho «ancho» y el punto (x, y) centrado y un poco hacia arriba

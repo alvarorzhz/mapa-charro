@@ -75,10 +75,15 @@ function pintarCercanas(z) {
     });
 }
 
-// Botones de abajo: en una zona, He estado / Quiero ir / Compartir; en una vía o un monumento, solo Compartir
+// Botones de abajo: en una zona, He estado / Quiero ir / Compartir; en un monumento o una parada de una
+// ruta ('visita'), He estado aquí / Compartir (para los logros); en lo demás, solo Compartir
 function modoBotonesFicha(modo) {
   document.querySelector('.bt').style.display = '';
-  document.querySelectorAll('.bt button[data-s]').forEach(b => (b.hidden = modo != 'zona'));
+  document.querySelectorAll('.bt button[data-s]').forEach(b => {
+    b.hidden = !(modo == 'zona' || (modo == 'visita' && b.dataset.s == 'v'));
+    if (b.dataset.s == 'v') b.textContent = modo == 'visita' ? 'He estado aquí' : 'He estado';
+  });
+  pintarBotonesFicha();
 }
 
 // Dónde estaba el foco antes de abrir la ficha, para devolverlo al cerrarla
@@ -111,14 +116,20 @@ function abrirFicha(id) {
   mostrarAvisoAqui(id);
   $('#k').textContent = NOMBRES_GRUPOS[z.g];
   $('#nm').textContent = z.n;
+  $('#otros').hidden = !z.otros.length;
+  $('#otros').textContent = z.otros.length ? 'También: ' + z.otros.join(' · ') : '';
   $('#hc').hidden = false;
   pintarMonumentosDeZona(z);
   pintarCuriosidades(z);
   pintarLeyendas(z);
-  $('#ap').textContent =
+  $('#ap').textContent = [
     POSICION_EXACTA.has(id) || id == 'resto'
       ? ''
-      : 'Posición aproximada: estimada, no de una coordenada exacta.';
+      : 'Posición aproximada: estimada, no de una coordenada exacta.',
+    ZONAS_NO_OFICIALES.has(id) ? 'Su límite en el mapa es aproximado: no hay uno publicado.' : ''
+  ]
+    .filter(Boolean)
+    .join(' ');
   resaltarVia(null);
   pintarFoto(id);
   if (typeof pintarNacimiento == 'function') pintarNacimiento(z); // tiempo.js
@@ -174,12 +185,24 @@ function abrirFichaVia(nombre, tramo = 0) {
 function marcarZona(id, marca) {
   conAvisoDeLogros(() => {
     progreso.gv = progreso.gv || [];
-    if (progreso.z[id] == marca) delete progreso.z[id];
-    else {
+    if (progreso.z[id] == marca) {
+      // Quitar una marca se puede deshacer (y con ella, si la tenía, la prueba de haberla pisado con GPS)
+      const conGpsAntes = progreso.gv.includes(id);
+      delete progreso.z[id];
+      aviso(buscarZona(id).n + ': quitada de «' + (marca == 'v' ? 'He estado' : 'Quiero ir') + '»', {
+        accion: ['Deshacer', () => recuperarMarca(id, marca, conGpsAntes)]
+      });
+    } else {
       progreso.z[id] = marca;
       const conGps = ubicacionReciente() && ubicacion.id == id;
       if (marca == 'v' && conGps && !progreso.gv.includes(id)) progreso.gv.push(id);
-      aviso(marca == 'v' ? (conGps ? '¡Vítor! Pisado con GPS' : '¡Vítor!') : 'Apuntada');
+      // Con lo que queda para el logro de su zona del mapa («· 5 de 7 en Norte completo»)
+      const falta = marca == 'v' ? progresoDeZona(buscarZona(id)) : '';
+      aviso(
+        (marca == 'v' ? (conGps ? '¡Vítor! Pisado con GPS' : '¡Vítor!') : 'Apuntada en «Quiero ir»') +
+          (falta ? ' · ' + falta : ''),
+        { tipo: 'exito' }
+      );
       if (marca == 'v') animarVitor(buscarZona(id));
     }
     if (progreso.z[id] != 'v') progreso.gv = progreso.gv.filter(k => k != id);
@@ -191,11 +214,30 @@ function marcarZona(id, marca) {
   });
 }
 
+// «Deshacer» después de quitar una marca: la deja como estaba
+function recuperarMarca(id, marca, conGps) {
+  progreso.z[id] = marca;
+  if (conGps && !progreso.gv.includes(id)) progreso.gv.push(id);
+  guardar();
+  pintarZona(buscarZona(id));
+  pintarBotonesFicha();
+  actualizar();
+  aviso('Recuperada: ' + buscarZona(id).n, { tipo: 'exito' });
+}
+
 // En la ficha de un pueblo de la provincia (pueblos.js) los botones marcan el pueblo
 const fichaDePueblo = () => typeof puebloAbierto != 'undefined' && puebloAbierto;
 
+const fichaDeVisita = () => typeof visitaAbierta != 'undefined' && visitaAbierta;
+
 function pintarBotonesFicha() {
-  const marca = fichaDePueblo() ? estadoMunicipio(puebloAbierto) : progreso.z[zonaAbierta];
+  const marca = fichaDeVisita()
+    ? estaVisitada(visitaAbierta)
+      ? 'v'
+      : ''
+    : fichaDePueblo()
+      ? estadoMunicipio(puebloAbierto)
+      : progreso.z[zonaAbierta];
   document
     .querySelectorAll('.bt button[data-s]')
     .forEach(b => b.classList.toggle('on', marca == b.dataset.s));
@@ -220,7 +262,8 @@ function cerrarFicha() {
 document.querySelectorAll('.bt button[data-s]').forEach(
   b =>
     (b.onclick = () => {
-      if (fichaDePueblo()) {
+      if (fichaDeVisita()) marcarVisita();
+      else if (fichaDePueblo()) {
         marcarMunicipio(puebloAbierto, b.dataset.s);
         pintarBotonesFicha();
       } else marcarZona(zonaAbierta, b.dataset.s);
