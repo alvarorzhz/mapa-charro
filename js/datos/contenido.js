@@ -754,13 +754,14 @@ const DONDE_COMER = {
       s: 'Tripadvisor, oct. 2026'
     }
   ],
-  garridosur: [
+  garridonorte: [
     {
+      // Avenida de los Cedros, 30: en Garrido Norte, no en Garrido Sur (OpenStreetMap, web del bar)
       n: 'Café Bar Leyma',
-      t: 'Bar de toda la vida',
-      a: 'Barrio de Garrido, cerca de la estación',
-      p: 'Una institución del barrio, famosa por sus montaditos.',
-      s: 'blog La Eternidad del Viaje y Tripadvisor'
+      t: 'Bar de barrio',
+      a: 'Avenida de los Cedros, 30',
+      p: 'Montaditos, tostas, hamburguesas y torreznos; 9,2 sobre 10 en Google con unas 1.150 opiniones.',
+      s: 'web del bar y Gastroranking, oct. 2026'
     }
   ],
   estacion: [

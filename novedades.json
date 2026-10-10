@@ -1,5 +1,15 @@
 [
   {
+    "version": "2.0.1",
+    "fecha": "2026-10-10",
+    "titulo": "Fichas que no se mueven de lado",
+    "usuario": [
+      "En el móvil, las fichas, el perfil y las rutas ya no se desplazan hacia los lados: solo arriba y abajo.",
+      "El Café Bar Leyma está en Garrido Norte (Avenida de los Cedros, 30), no en Garrido Sur, y su ficha dice ahora lo que ofrece."
+    ],
+    "tecnico": "estilos.css: .sh .sb con overflow-x hidden; .mapa-ruta-prov y las .pb del perfil con box-sizing border-box y sin margen; .idx sin márgenes negativos. Prueba «Las fichas no se desplazan de lado». contenido.js: Leyma de garridosur a garridonorte, con dirección y fuente fechada (web del bar y Gastroranking, oct. 2026)."
+  },
+  {
     "version": "2.0.0",
     "fecha": "2026-10-10",
     "titulo": "Capital y provincia",

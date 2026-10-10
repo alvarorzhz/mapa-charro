@@ -1178,6 +1178,29 @@ prueba(
   }
 );
 
+prueba('Las fichas no se desplazan de lado', async p => {
+  // Nada más ancho que la ficha: en el móvil, si no, se puede arrastrar hacia los lados
+  const fichas = [
+    () => abrirFicha('centro'),
+    () => abrirPerfil(),
+    () => abrirRutas(),
+    () => abrirRuta(0),
+    () => (location.hash = '#ruta-arribes-norte'),
+    () => (location.hash = '#ruta-arribes-norte/5'),
+    () => abrirMonumento(MONUMENTOS[0].id)
+  ];
+  for (const abrir of fichas) {
+    await p.evaluate(abrir);
+    await p.waitForTimeout(250);
+    const [ancho, visible, k] = await p.$eval('.sb', e => [
+      e.scrollWidth,
+      e.clientWidth,
+      document.querySelector('#nm').textContent
+    ]);
+    cierto(ancho <= visible, 'sin desplazamiento lateral en «' + k + '» (' + ancho + ' > ' + visible + ')');
+  }
+});
+
 prueba('Ficha de «Resto de la provincia»', async p => {
   await p.evaluate(() => abrirFicha('resto'));
   cierto(await fichaAbierta(p), 'se abre');
