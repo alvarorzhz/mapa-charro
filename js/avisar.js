@@ -15,13 +15,26 @@ function contextoAviso() {
   };
 }
 
-function enlaceAviso(texto, href) {
+// Enlace de la ventana. El de «mailto:» va sin «target»: abierto en otra pestaña, muchos navegadores (y el
+// visor de Claude) no llegan a pasarlo al programa de correo. Por eso hay también Gmail y «Copiar el aviso».
+function enlaceAviso(texto, href, otraPestana = true) {
   const a = crear('a', 'boton-enlace', texto);
   a.href = href;
-  a.target = '_blank';
-  a.rel = 'noopener';
-  a.onclick = () => setTimeout(cerrarVentana, 300);
+  if (otraPestana) {
+    a.target = '_blank';
+    a.rel = 'noopener';
+  }
   return a;
+}
+
+// Copia el aviso entero (para quien no tenga programa de correo configurado)
+async function copiarAviso(texto) {
+  try {
+    await navigator.clipboard.writeText(texto);
+    aviso('Aviso copiado: pégalo en un correo a ' + CORREO_AVISOS, { tipo: 'exito' });
+  } catch (e) {
+    aviso('No se ha podido copiar. Escribe a ' + CORREO_AVISOS, { tipo: 'error' });
+  }
 }
 
 function abrirAvisoError(volverA = document.activeElement) {
@@ -44,7 +57,18 @@ function abrirAvisoError(volverA = document.activeElement) {
       encodeURIComponent(asunto) +
       '&body=' +
       encodeURIComponent(cuerpo),
-    github = INCIDENCIAS + '?title=' + encodeURIComponent(asunto) + '&body=' + encodeURIComponent(cuerpo);
+    github = INCIDENCIAS + '?title=' + encodeURIComponent(asunto) + '&body=' + encodeURIComponent(cuerpo),
+    gmail =
+      'https://mail.google.com/mail/?view=cm&fs=1&to=' +
+      CORREO_AVISOS +
+      '&su=' +
+      encodeURIComponent(asunto) +
+      '&body=' +
+      encodeURIComponent(cuerpo),
+    copiar = crear('button', 'boton-enlace', '📋 Copiar el aviso'),
+    enlaceGithub = enlaceAviso('O ábrelo en GitHub', github);
+  enlaceGithub.className = '';
+  copiar.onclick = () => copiarAviso('Para: ' + CORREO_AVISOS + '\nAsunto: ' + asunto + '\n\n' + cuerpo);
   const caja = crear(
     'div',
     'aviso-error',
@@ -57,10 +81,11 @@ function abrirAvisoError(volverA = document.activeElement) {
     crear(
       'div',
       'botones-aviso',
-      enlaceAviso('✉️ Por correo', correo),
-      enlaceAviso('En GitHub (si tienes cuenta)', github)
+      enlaceAviso('✉️ Abrir mi correo', correo, false),
+      enlaceAviso('Con Gmail', gmail),
+      copiar
     ),
-    crear('p', 'mu', 'También puedes escribir a ' + CORREO_AVISOS + '.')
+    crear('p', 'mu', 'Si no se abre tu correo, cópialo y mándalo a ' + CORREO_AVISOS + '. ', enlaceGithub)
   );
   abrirVentana('Avisar de un error', caja, [['Cerrar', cerrarVentana]], volverA);
 }

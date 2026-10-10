@@ -133,6 +133,8 @@ function irAApartado(sel) {
   requestAnimationFrame(() => $(sel).scrollIntoView({ behavior: comoDesplazar(), block: 'start' }));
 }
 
+// La ficha lleva «Cultura y tradiciones» (cultura.js: pintarCulturaEnFicha)
+let fichaConCultura = false;
 // La ficha se abre desde «¿Qué puedo descubrir hoy?» (hoy.js): lleva el botón para volver allí
 let fichaDesdeHoy = false;
 
@@ -150,6 +152,8 @@ function mostrarFicha() {
   $('#idx').hidden = !fichaConIndice;
   fichaConPalabra = fichaConIndice = false;
   $('#volverhoy').hidden = !fichaDesdeHoy;
+  $('#culf').hidden = !fichaConCultura;
+  fichaConCultura = false;
   // En el móvil, sube la página hasta el mapa (el de la provincia en su pestaña) para que se vea por encima del panel
   const mapaVisible = { map: '.mw', prov: '#pm' }[pestana];
   if (!esEscritorio() && mapaVisible && document.querySelector(mapaVisible)) {
@@ -180,6 +184,7 @@ function abrirFicha(id) {
   $('#otros').textContent = z.otros.length ? 'También: ' + z.otros.join(' · ') : '';
   $('#hc').hidden = false;
   pintarMonumentosDeZona(z);
+  pintarCulturaEnFicha(culturaDeZona(z));
   pintarCuriosidades(z);
   pintarLeyendas(z);
   pintarPalabraDeZona(z); // palabras.js

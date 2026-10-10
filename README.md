@@ -12,6 +12,8 @@ App web para ir marcando los barrios de Salamanca y los pueblos de su provincia:
 - **Provincia:** los 361 municipios con sus pedanías y sus habitantes (INE), fichas de pueblo, autovías y nacionales.
 - **Rutas:** a pie por la ciudad y en coche por la provincia, con su mapa, sus tiempos y el seguimiento «La he hecho» / «La quiero hacer».
 - **Explora:** listas de monumentos y de sitios para comer, rutas, «Salamanca en el tiempo» y el reto «¿Dónde está?». Filtros del mapa que se combinan (zonas pisadas o no, parte de la ciudad y tipo de monumento).
+- **Cultura y tradiciones:** fiestas, tradiciones, gastronomía, artesanía, folklore y personajes de la capital y la provincia, cada uno con sus municipios marcados en el mapa, sus fuentes y lo documentado separado de lo que cuenta la tradición.
+- **Mi Salamanca:** tus cifras, con la capital y la provincia por separado (barrios, municipios, pedanías, monumentos, rutas, colecciones y logros), mes a mes y con acceso directo al mapa filtrado.
 - **Lo tuyo:** progreso guardado en el navegador o en la cuenta (Google en la web, Claude dentro de Claude), perfil con nivel, historial y logros.
 - **«¿Qué puedo descubrir hoy?»:** al abrir la app cada día, un resumen, lo que tienes a medias, lo pendiente cerca de ti (con tu permiso), un sitio recomendado del día y un objetivo.
 - **Avisar de un error** desde arriba, desde cada ficha o desde el pie.
@@ -32,6 +34,7 @@ js/datos/              Solo datos, sin lógica (cada archivo explica su formato 
   rutas.js, tramos.js  Rutas a pie y su camino por calles reales (generado)
   rutas-provincia.js   Rutas en coche; tramos-provincia.js, su camino por carretera (generado)
   pueblos.js           Fichas de pueblos de la provincia
+  cultura.js           Cultura y tradiciones (fiestas, gastronomía, artesanía, personajes…)
   habitantes.js        Habitantes por municipio, del INE (generado)
   provincia.js         Municipios, comarcas y pedanías
   geometria.js, alfoz.js, carreteras.js, carreteras-provincia.js, parques.js   Lindes y trazados

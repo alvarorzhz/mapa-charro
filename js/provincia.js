@@ -306,6 +306,17 @@ function construirComarcas(contenedor) {
       cuerpo = crear('div'),
       det = crear('details', 'pcd', titulo, cuerpo);
     const municipios = PROVINCIA.m.filter(m => m.c == ci).sort((a, b) => a.n.localeCompare(b.n, 'es'));
+    // Las tradiciones de la comarca (cultura.js), arriba del todo
+    const cultura = culturaDeComarca(ci);
+    if (cultura.length) {
+      const nb = crear('div', 'nb cul-comarca', '🎭 Cultura y tradiciones: ');
+      cultura.forEach(c => {
+        const b = crear('button', '', c.n);
+        b.onclick = () => abrirElementoCultura(c.id);
+        nb.appendChild(b);
+      });
+      cuerpo.appendChild(nb);
+    }
     municipios.forEach(m => {
       const grupo = crear('div', 'pg'),
         nombreBoton = crear('button', 'nm', m.n),
@@ -350,6 +361,16 @@ function construirProvincia() {
   seleccion.id = 'psb';
   seleccion.innerHTML = '<p class="mu" style="margin:0">Pulsa un municipio del mapa para verlo aquí.</p>';
   caja.appendChild(seleccion);
+
+  // Marcar en el mapa los pueblos con alguna tradición (cultura.js)
+  const conCultura = crear('button', 'capa ver-cultura', '🎭 Pueblos con tradiciones');
+  marcarInterruptor(conCultura, false);
+  conCultura.onclick = () => {
+    const si = conCultura.getAttribute('aria-pressed') != 'true';
+    marcarInterruptor(conCultura, si);
+    marcarPueblosConCultura(si);
+  };
+  caja.appendChild(conCultura);
 
   vistaProvincia.filtros = crearBotonesFiltro(filtroProvincia, clave => {
     filtroProvincia = clave;
@@ -418,6 +439,17 @@ function seleccionarPueblo(m, encuadrar) {
   // pueblos.js carga después, pero esto solo se llama al usar la pestaña
   const ficha = botonFichaPueblo(m);
   if (ficha) barra.appendChild(ficha);
+  // Sus tradiciones (cultura.js)
+  const cultura = culturaDeMunicipio(m);
+  if (cultura.length) {
+    const nb = crear('div', 'nb cul-psb', '🎭 ');
+    cultura.forEach(c => {
+      const b = crear('button', '', c.n);
+      b.onclick = () => abrirElementoCultura(c.id);
+      nb.appendChild(b);
+    });
+    barra.appendChild(nb);
+  }
   vistaProvincia.caminos.forEach((p, mm) => p.classList.toggle('sel', mm == m));
   vistaProvincia.resaltar(m);
   enlaceVista();

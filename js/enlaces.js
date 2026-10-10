@@ -35,6 +35,9 @@ const esHashDeFicha = h =>
   h == 'perfil' ||
   h == 'monumentos' ||
   h == 'hoy' ||
+  h == 'mi-salamanca' ||
+  h == 'cultura' ||
+  h.startsWith('cultura/') ||
   h == 'comer' ||
   todasLasZonas.some(z => z.id == h);
 
@@ -90,6 +93,12 @@ function aplicarEnlace() {
       if (!fichaAbierta || nombreFicha != 'Tu perfil') abrirPerfil();
     } else if (a == 'rutas') {
       if (!fichaAbierta || rutaActiva) abrirRutas();
+    } else if (a == 'cultura') {
+      if (b && elementoCultura(b)) {
+        if (!fichaAbierta || nombreFicha != elementoCultura(b).n) abrirElementoCultura(b);
+      } else if (!fichaAbierta || nombreFicha != 'Cultura y tradiciones') abrirCultura();
+    } else if (a == 'mi-salamanca') {
+      if (!fichaAbierta || nombreFicha != 'Mi Salamanca') abrirEstadisticas();
     } else if (a == 'hoy') {
       if (!fichaAbierta || nombreFicha != '¿Qué puedo descubrir hoy?') abrirHoy();
     } else if (a == 'monumentos') {

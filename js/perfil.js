@@ -170,11 +170,7 @@ function abrirPerfil() {
     porVisitar = todasLasZonas.filter(z => progreso.z[z.id] == 'w'),
     logros = calcularLogros(),
     hechos = logros.filter(conseguido),
-    pueblosPisados = pueblos.filter(m => estadoMunicipio(m) == 'v'),
-    pedaniasPisadas = pedanias.filter(p => estadoClave(p.k) == 'v'),
-    comarcas = new Set(pueblosPisados.map(m => m.c)),
     todasRutas = [...RUTAS, ...RUTAS_PROVINCIA],
-    paradas = todasRutas.reduce((s, r) => s + r.paradas.filter(p => paradaVisitada(r, p)).length, 0),
     cuenta = cuentaDelPerfil(),
     nombre = nombreUsuario(),
     titulo = nivel(zonasPisadas.length, todasLasZonas.length),
@@ -233,42 +229,14 @@ function abrirPerfil() {
   caja.appendChild(hoy);
 
   const apartado = (titulo, ...hijos) => caja.append(crear('h3', '', titulo), ...hijos);
-  apartado(
-    'La ciudad',
-    cajaDatos([
-      ['Zonas pisadas', zonasPisadas.length + ' / ' + todasLasZonas.length],
-      ['Quiero ir', String(porVisitar.length)],
-      ['Con GPS', String((progreso.gv || []).length)],
-      ['Monumentos', (j.mo || []).length + ' / ' + MONUMENTOS.length]
-    ]),
-    crear(
-      'div',
-      'perfil-grupos',
-      ...NOMBRES_GRUPOS.map((n, g) => {
-        const del = todasLasZonas.filter(z => z.g == g),
-          pis = del.filter(z => progreso.z[z.id] == 'v').length;
-        return crear(
-          'div',
-          'pg',
-          crear('span', '', n),
-          crear('small', '', pis + '/' + del.length),
-          barra(pis / del.length)
-        );
-      })
-    )
+  // Las cifras de la capital y la provincia, en «Mi Salamanca» (mi-salamanca.js)
+  const cifras = crear(
+    'button',
+    'boton-hoy perfil-hoy',
+    '📊 Mi Salamanca: tus cifras de la capital y la provincia'
   );
-  apartado(
-    'La provincia y las rutas',
-    cajaDatos([
-      ['Pueblos', pueblosPisados.length + ' / ' + pueblos.length],
-      ['Pedanías', String(pedaniasPisadas.length)],
-      ['Comarcas', comarcas.size + ' / ' + PROVINCIA.com.length],
-      ['Rutas hechas', rutasHechas.length + ' / ' + todasRutas.length],
-      ['Quieres hacer', String(rutasQuiero.length)],
-      ['Con todas sus paradas', String(todasRutas.filter(rutaCompleta).length)],
-      ['Paradas de ruta', String(paradas)]
-    ])
-  );
+  cifras.onclick = () => abrirEstadisticas();
+  caja.appendChild(cifras);
   // Atajos a las rutas: las que quieres hacer y las hechas
   const botonesRutas = lista => {
     const nb = crear('div', 'nb');
@@ -374,7 +342,7 @@ function abrirPerfil() {
   apartado('Historial', historial);
 
   const foto = crear('button', 'principal', '📸 Crear mi imagen «Mi Salamanca»');
-  foto.onclick = () => $('#foto').click();
+  foto.onclick = () => abrirImagenMiSalamanca(foto);
   $('#nb').append(foto);
   $('#ap').textContent =
     'Todo esto sale de tu progreso: se guarda en este navegador y, si has entrado, en tu cuenta. Nadie más lo ve.';

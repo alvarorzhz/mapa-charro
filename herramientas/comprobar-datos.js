@@ -27,12 +27,13 @@ const datos = [
   'habitantes',
   'parques',
   'firebase',
-  'palabras'
+  'palabras',
+  'cultura'
 ];
 const codigo =
   datos.map(d => leer('js/datos/' + d + '.js')).join('\n;\n') +
   '\n;({ NOMBRES_GRUPOS, ZONAS_GRANDES, ZONAS, OTROS_NOMBRES, SEMILLAS_REPARTO, MONUMENTOS, RUTAS, TRAMOS_RUTAS, PUEBLOS, CURIOSIDADES, LEYENDAS, FOTOS, DONDE_COMER,' +
-  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA, PALABRAS_CHARRAS, FUENTES_PALABRAS, RUTAS_PROVINCIA, SALIDA_PROVINCIA, TRAMOS_PROVINCIA, CARRETERAS_PROVINCIA, HABITANTES, PARQUES })';
+  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA, PALABRAS_CHARRAS, FUENTES_PALABRAS, RUTAS_PROVINCIA, SALIDA_PROVINCIA, TRAMOS_PROVINCIA, CARRETERAS_PROVINCIA, HABITANTES, PARQUES, CULTURA, CATEGORIAS_CULTURA, TIPOS_TEXTO_CULTURA })';
 const D = vm.runInNewContext(codigo, {});
 
 const WEB_PUBLICA = 'https://alvarorzhz.github.io/mapa-charro/';
@@ -524,6 +525,102 @@ for (const f of fs.readdirSync(path.join(RAIZ, 'js')).filter(f => f.endsWith('.j
 for (const f of fs.readdirSync(path.join(RAIZ, 'js/datos')).filter(f => f.endsWith('.js')))
   comprobar(html.includes('js/datos/' + f + '?'), `js/datos/${f} no está enlazado en index.html`);
 
+// --- Cultura y tradiciones -------------------------------------------------------------------------
+{
+  const vistos = new Set(),
+    categorias = new Set(D.CATEGORIAS_CULTURA.map(c => c[0])),
+    municipios = new Set(D.PROVINCIA.m.map(m => m.n)),
+    hoy = new Date().toISOString().slice(0, 10),
+    LICENCIAS = /^(CC0|CC BY(-SA)? [1-4]\.0|Dominio público)$/;
+  D.CULTURA.forEach(c => {
+    const que = `Cultura «${c.id}»`;
+    comprobar(/^[a-z0-9-]+$/.test(c.id || '') && !vistos.has(c.id), `${que}: id vacío, raro o repetido`);
+    vistos.add(c.id);
+    for (const campo of ['n', 'resumen'])
+      comprobar(typeof c[campo] == 'string' && c[campo].trim(), `${que}: falta «${campo}»`);
+    comprobar(categorias.has(c.cat), `${que}: la categoría «${c.cat}» no existe`);
+    // Dónde: algún municipio, pedanía o comarca, y que existan de verdad (nada de sitios inventados)
+    comprobar(
+      (c.municipios || []).length + (c.pedanias || []).length + (c.comarcas || []).length > 0,
+      `${que}: no dice dónde (municipios, pedanías o comarcas)`
+    );
+    (c.municipios || []).forEach(n =>
+      comprobar(municipios.has(n), `${que}: el municipio «${n}» no está en PROVINCIA`)
+    );
+    (c.pedanias || []).forEach(([n, p]) =>
+      comprobar(
+        (D.PROVINCIA.m.find(m => m.n == n) || { ped: [] }).ped.includes(p),
+        `${que}: «${p}» no es una pedanía de «${n}»`
+      )
+    );
+    (c.comarcas || []).forEach(n =>
+      comprobar(D.PROVINCIA.com.includes(n), `${que}: la comarca «${n}» no existe`)
+    );
+    comprobar(
+      c.cuando === undefined || (typeof c.cuando == 'string' && c.cuando.trim()),
+      `${que}: «cuando» vacío`
+    );
+    // Textos con su tipo: documentado, tradición o divulgativo
+    comprobar(Array.isArray(c.textos) && c.textos.length, `${que}: sin textos`);
+    (c.textos || []).forEach(([tipo, texto], i) => {
+      comprobar(
+        D.TIPOS_TEXTO_CULTURA[tipo],
+        `${que}: el texto ${i + 1} tiene un tipo desconocido («${tipo}»)`
+      );
+      comprobar(typeof texto == 'string' && texto.length > 20, `${que}: el texto ${i + 1} está vacío`);
+    });
+    comprobar(
+      (c.textos || []).some(([tipo]) => tipo == 'hecho'),
+      `${que}: necesita al menos un dato documentado`
+    );
+    // Relacionados: que existan
+    const rel = c.relacionados || {};
+    (rel.zonas || []).forEach(id => comprobar(idsZona.has(id), `${que}: la zona «${id}» no existe`));
+    (rel.monumentos || []).forEach(id =>
+      comprobar(
+        D.MONUMENTOS.some(m => m.id == id),
+        `${que}: el monumento «${id}» no existe`
+      )
+    );
+    (rel.cultura || []).forEach(id =>
+      comprobar(
+        D.CULTURA.some(o => o.id == id && o != c),
+        `${que}: el elemento cultural «${id}» no existe`
+      )
+    );
+    // Fuentes: al menos una, con enlace https
+    comprobar(Array.isArray(c.fuentes) && c.fuentes.length, `${que}: sin fuentes`);
+    (c.fuentes || []).forEach(([medio, url]) =>
+      comprobar(medio && /^https:\/\/[^\s]+$/.test(url || ''), `${que}: fuente mal escrita («${medio}»)`)
+    );
+    comprobar(
+      /^\d{4}-\d\d-\d\d$/.test(c.revisado || '') && c.revisado <= hoy,
+      `${que}: «revisado» tiene que ser una fecha (AAAA-MM-DD) que no sea futura`
+    );
+    // Foto: archivo, autor, licencia y página en Wikimedia Commons
+    if (c.foto) {
+      const f = c.foto;
+      comprobar(fs.existsSync(path.join(RAIZ, f.src || '')), `${que}: no existe la foto ${f.src}`);
+      comprobar(f.pie && f.autor, `${que}: la foto necesita pie y autor`);
+      comprobar(
+        LICENCIAS.test(f.licencia || ''),
+        `${que}: licencia de la foto desconocida («${f.licencia}»)`
+      );
+      comprobar(
+        /^https:\/\/commons\.wikimedia\.org\/wiki\/File:/.test(f.url || ''),
+        `${que}: la foto necesita el enlace a su página en Commons`
+      );
+    }
+  });
+  // Categorías: solo las que tienen contenido
+  D.CATEGORIAS_CULTURA.forEach(([k, n]) =>
+    comprobar(
+      D.CULTURA.some(c => c.cat == k),
+      `Cultura: la categoría «${n}» no tiene ningún elemento`
+    )
+  );
+}
+
 // --- sitemap.xml y tipografías propias ---------------------------------------------
 {
   const mapa = fs.readFileSync(path.join(RAIZ, 'sitemap.xml'), 'utf8'),
@@ -549,5 +646,5 @@ if (errores.length) {
 }
 console.log(
   `✓ Datos correctos: ${ids.length} zonas, ${D.MONUMENTOS.length} monumentos, ${D.RUTAS.length} rutas a pie, ${D.PALABRAS_CHARRAS.length} palabras charras, ${D.RUTAS_PROVINCIA.length} ${D.RUTAS_PROVINCIA.length == 1 ? 'ruta' : 'rutas'} por la provincia, ` +
-    `${Object.keys(D.PUEBLOS).length} pueblos con ficha, ${Object.keys(D.DONDE_COMER).length} zonas con dónde comer.`
+    `${Object.keys(D.PUEBLOS).length} pueblos con ficha, ${Object.keys(D.DONDE_COMER).length} zonas con dónde comer, ${D.CULTURA.length} de cultura y tradiciones.`
 );

@@ -1,5 +1,5 @@
 // Logros. Cada logro es { id, n (nombre), d (descripción), c (llevas), m (meta), cat (categoría, para su
-// medalla) }; está conseguido si c >= m. Los ids solo se usan para saber cuáles acaban de conseguirse
+// medalla), col (si es una colección) }; está conseguido si c >= m. Los ids solo se usan para saber cuáles acaban de conseguirse
 // (no se guardan), pero conviene no cambiarlos.
 //
 // Se generan solos a partir de los datos, con dos moldes:
@@ -44,7 +44,7 @@ const escalones = (cat, c, total, metas) =>
     })
     .filter((a, i, l) => a.m > 0 && a.m <= total && l.findIndex(o => o.m == a.m) == i); // sin metas repetidas
 const coleccion = (id, cat, n, d, cosas, hecha) =>
-  cosas.length >= 2 ? [{ id, cat, n, d, c: cosas.filter(hecha).length, m: cosas.length }] : [];
+  cosas.length >= 2 ? [{ id, cat, n, d, c: cosas.filter(hecha).length, m: cosas.length, col: true }] : [];
 const slugLogro = t =>
   t
     .toLowerCase()

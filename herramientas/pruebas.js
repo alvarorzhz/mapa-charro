@@ -403,7 +403,11 @@ prueba('Contraste de los textos', async (p, url) => {
       ['#rutas', null],
       ['#ruta-arribes-norte', null],
       ['#ruta-arribes-norte/5', null],
-      ['#perfil', null]
+      ['#perfil', null],
+      ['#hoy', null],
+      ['#mi-salamanca', null],
+      ['#cultura', null],
+      ['#cultura/lunes-de-aguas', null]
     ]) {
       await p.emulateMedia({ colorScheme: tema });
       await p.goto(url + 'index.html?' + tema + hash);
@@ -1397,7 +1401,8 @@ prueba('Imagen «Mi Salamanca»', async p => {
   });
   igual([info.tipo, info.ancho, info.alto], ['image/png', 1080, 1350], 'imagen PNG de 1080×1350');
   igual([info.resumen.pisadas, info.resumen.porVisitar], [2, 1], 'cuenta lo pisado y lo pendiente');
-  await p.click('#foto');
+  await p.click('#foto'); // abre «Mi Salamanca»; la imagen, con su botón
+  await p.click('text=Crear mi imagen para compartir');
   await p.waitForSelector('.modal img');
   cierto(
     await p.$eval('.modal img', i => i.complete && i.naturalWidth == 1080),
@@ -1817,8 +1822,25 @@ prueba('Avisar de un error', async p => {
   cierto(correo.includes('Error en el Mapa charro: La Vega'), 'asunto con el sitio');
   cierto(correo.includes('#vega'), 'y su enlace');
   cierto(
+    await p.$eval('.modal a[href^="mailto:"]', a => !a.target),
+    'el correo se abre sin otra pestaña (si no, muchos navegadores no lo pasan al programa de correo)'
+  );
+  cierto(
+    await p.$eval('.modal a[href^="https://mail.google.com/"]', a => a.href.includes('to=alvarorzhz')),
+    'también con Gmail'
+  );
+  cierto(
     await p.$eval('.modal a[href*="github.com"]', a => a.href.includes('/issues/new')),
     'también por GitHub'
+  );
+  await p.context().grantPermissions(['clipboard-read', 'clipboard-write']);
+  await p.click('.modal button:has-text("Copiar el aviso")');
+  await p.waitForTimeout(200);
+  cierto(
+    (await p.evaluate(() => navigator.clipboard.readText())).includes(
+      'Asunto: Error en el Mapa charro: La Vega'
+    ),
+    'y se puede copiar el aviso entero'
   );
   await p.click('.modal .cerrar');
   cierto(await p.$('#ver button >> text=Avisar de un error'), 'también al pie');
@@ -1922,6 +1944,281 @@ prueba(
   },
   { geolocation: { latitude: 40.9651, longitude: -5.6641 }, permissions: ['geolocation'] }
 );
+
+// Progreso de prueba para «Mi Salamanca»: ids sacados de los datos para no depender de ninguno en concreto
+const progresoDePrueba = () => {
+  const alfoz = zonas.find(z => z.g == 5),
+    deAlfoz = PROVINCIA.m.find(m => m.z == alfoz.id),
+    sueltos = pueblos.filter(m => !m.z),
+    muni = sueltos[0],
+    muni2 = sueltos.find(m => m.c != muni.c),
+    ped = pedanias.find(p => p.m != muni),
+    pie = RUTAS.find(r => r.paradas.some(x => typeof x != 'string')),
+    propia = pie.paradas.find(x => typeof x != 'string'),
+    coche = RUTAS_PROVINCIA[0];
+  return {
+    ids: {
+      alfoz: alfoz.id,
+      deAlfoz: deAlfoz.k,
+      muni: muni.k,
+      muni2: muni2.k,
+      ped: ped.k,
+      pie: pie.id,
+      coche: coche.id
+    },
+    comarcas: new Set([muni.c, deAlfoz.c]).size,
+    progreso: {
+      z: { centro: 'v', univ: 'v', vega: 'w', [alfoz.id]: 'v', resto: 'v' },
+      p: { [muni.k]: 'v', [muni2.k]: 'w', [ped.k]: 'v' },
+      gv: [],
+      f: 0,
+      t: 5,
+      j: {
+        mo: ['catedrales', 'catedrales', 'no-existe'],
+        r: { [pie.id]: [propia.id] },
+        rs: { [pie.id]: 'v', [coche.id]: 'w' },
+        hi: [
+          ['2026-08-03', 'z', 'centro'],
+          ['2026-09-10', 'z', 'univ'],
+          ['', 'z', alfoz.id],
+          ['2026-09-11', 'p', muni.k],
+          ['2026-09-11', 'p', muni.k],
+          ['2026-09-12', 'mo', 'catedrales'],
+          ['2026-09-12', 'lo', 'p']
+        ]
+      }
+    }
+  };
+};
+
+prueba('Mi Salamanca: progreso vacío', async p => {
+  await p.click('#foto');
+  igual(await texto(p, '#nm'), 'Mi Salamanca', 'abre el panel');
+  igual(await p.evaluate(() => location.hash), '#mi-salamanca', 'con su enlace');
+  cierto((await texto(p, '#info')).includes('Aún no has marcado nada'), 'estado vacío útil');
+  cierto(await p.isVisible('#info .ms-vacio button'), 'con atajos para empezar');
+  cierto(!(await p.$('#info [aria-label="Periodo"]')), 'sin fechas no hay filtro de periodo');
+  cierto(!(await texto(p, '#info')).includes('Mes a mes'), 'ni gráfico');
+  const e = await p.evaluate(() => estadisticas());
+  igual([e.capital.barrios.v, e.provincia.municipios.v, e.capital.monumentos.v], [0, 0, 0], 'todo a cero');
+});
+
+prueba('Mi Salamanca: cálculos con datos controlados y capital y provincia por separado', async (p, url) => {
+  // La función se evalúa en la página (usa los datos de la app)
+  const prueba = await p.evaluate(`(${progresoDePrueba.toString()})()`);
+  await p.evaluate(pr => localStorage.setItem('charro2', JSON.stringify(pr)), prueba.progreso);
+  await p.goto(url + '#mi-salamanca');
+  await p.reload();
+  await p.waitForSelector('#sh.o');
+  const e = await p.evaluate(() => estadisticas()),
+    totales = await p.evaluate(() => ({
+      barrios: zonas.filter(z => z.g < 5).length,
+      municipios: PROVINCIA.m.filter(m => !m.cap).length,
+      pedanias: pedanias.length,
+      propiasPie: RUTAS.flatMap(r => r.paradas.filter(x => typeof x != 'string')).length
+    }));
+  // Capital: solo barrios de la ciudad (ni los pueblos de alrededor ni «resto»)
+  igual(
+    [e.capital.barrios.v, e.capital.barrios.total],
+    [2, totales.barrios],
+    'barrios pisados de los de la ciudad'
+  );
+  igual(e.capital.quiero, 1, 'un barrio en «Quiero ir»');
+  igual(e.capital.monumentos.v, 1, 'un monumento, sin repetir ni contar ids que no existen');
+  igual(
+    [e.capital.sitios.v, e.capital.sitios.total],
+    [1, totales.propiasPie],
+    'sitios propios de las rutas a pie'
+  );
+  igual(e.capital.rutas.v, 1, 'una ruta a pie hecha');
+  // Provincia: el pueblo de alrededor cuenta como municipio (por su zona), no como barrio
+  igual(
+    [e.provincia.municipios.v, e.provincia.municipios.total],
+    [2, totales.municipios],
+    'municipios sin la capital'
+  );
+  igual(e.provincia.quiero, 1, 'un municipio en «Quiero ir»');
+  igual(
+    [e.provincia.pedanias.v, e.provincia.pedanias.total],
+    [1, totales.pedanias],
+    'pedanías aparte de los municipios'
+  );
+  igual(e.provincia.comarcas.v, prueba.comarcas, 'comarcas con algún pueblo pisado');
+  igual(e.provincia.rutas.w, 1, 'una ruta en coche en «La quiero hacer»');
+  // Historial: cada cosa una vez; lo que no tiene fecha no va a ningún mes; los logros no son visitas
+  igual(e.historial.conFecha.length, 4, 'cuatro visitas con fecha (sin el duplicado ni el logro)');
+  igual(e.historial.sinFecha, { capital: 0, provincia: 1 }, 'el pueblo de alrededor sin fecha, aparte');
+  igual(
+    await p.evaluate(() => visitasPorMes(estadisticas().historial.conFecha, 'todo', new Date(2026, 9, 15))),
+    {
+      '2026-08': { capital: 1, provincia: 0 },
+      '2026-09': { capital: 2, provincia: 1 },
+      '2026-10': { capital: 0, provincia: 0 }
+    },
+    'visitas por mes, con los meses sin nada'
+  );
+  igual(
+    Object.keys(
+      await p.evaluate(() => visitasPorMes(estadisticas().historial.conFecha, 'año', new Date(2027, 1, 1)))
+    ),
+    ['2027-01', '2027-02'],
+    '«Este año» empieza en enero'
+  );
+  // Lo que se ve
+  const info = await texto(p, '#info');
+  cierto(info.includes('Salamanca capital') && info.includes('Provincia de Salamanca'), 'dos apartados');
+  cierto(info.includes('Mes a mes') && (await p.$('.ms-grafico')), 'gráfico con dos meses con datos');
+  cierto(
+    info.includes('1 sitio marcado antes de que la app apuntara las fechas'),
+    'avisa de lo que no tiene fecha'
+  );
+  igual(
+    await p.$eval('.ms-barra', b => b.getAttribute('aria-valuetext')),
+    `2 de ${totales.barrios} (${Math.round((2 / totales.barrios) * 100)} %)`,
+    'barra con texto accesible'
+  );
+  // Filtro por ámbito
+  await p.click('#info [aria-label="Mostrar"] button:nth-child(3)');
+  cierto(!(await texto(p, '#info')).includes('Salamanca capital'), 'solo la provincia');
+  await p.click('#info [aria-label="Mostrar"] button:nth-child(2)');
+  cierto(!(await texto(p, '#info')).includes('Provincia de Salamanca'), 'solo la capital');
+  cierto(await p.$('#info [aria-label="Periodo"]'), 'con fechas, filtro de periodo');
+  // Recargar: las cifras salen otra vez del progreso guardado
+  await p.reload();
+  await p.waitForSelector('#sh.o');
+  igual(await p.evaluate(() => estadisticas().capital.barrios.v), 2, 'igual tras recargar');
+});
+
+prueba('Mi Salamanca: cambios de estado, sincronización y acceso al mapa filtrado', async p => {
+  await p.evaluate(() => marcarZona('centro', 'v'));
+  await p.click('#foto');
+  const barrios = () => p.$eval('.ms-tarjeta .ms-cifra b', b => b.textContent);
+  igual(await barrios(), '1', 'un barrio');
+  // Un cambio con el panel abierto (como los que llegan de la cuenta) lo repinta
+  await p.evaluate(() => marcarZona('vega', 'v'));
+  igual(await barrios(), '2', 'se actualiza al marcar');
+  igual(await p.evaluate(() => estadisticas().historial.conFecha.length), 2, 'con fecha de hoy');
+  await p.evaluate(() => aplicarDesdeNube({ ...progreso, z: { ...progreso.z, tejares: 'v' } }));
+  igual(await barrios(), '3', 'y al llegar cambios de la cuenta');
+  // Una entrada repetida en el historial (p. ej. al juntar dos copias) no cuenta dos veces
+  const antes = await p.evaluate(() => estadisticas().historial.conFecha.length);
+  await p.evaluate(() => progreso.j.hi.push([...progreso.j.hi[progreso.j.hi.length - 1]]));
+  igual(
+    await p.evaluate(() => estadisticas().historial.conFecha.length),
+    antes,
+    'una visita no cuenta dos veces'
+  );
+  // Desde la cifra, al mapa ya filtrado
+  await p.click('.ms-tarjeta .ms-ir');
+  cierto(!(await fichaAbierta(p)), 'se cierra el panel');
+  igual(await p.evaluate(() => [...filtrosMapa.estados]), ['v'], 'mapa con solo lo pisado');
+  igual(
+    await p.$$eval('#zg .z:not(.fuera)', a => a.length),
+    await p.evaluate(() => zonas.filter(z => z.g < 5 && progreso.z[z.id] == 'v').length),
+    'se ven solo los barrios pisados'
+  );
+  await p.evaluate(() => quitarFiltrosMapa());
+  // Y a la provincia, con su filtro
+  await p.evaluate(() => verProvinciaFiltrada('v'));
+  igual(await p.evaluate(() => [pestana, filtroProvincia]), ['prov', 'v'], 'la provincia, con lo pisado');
+});
+
+prueba('Cultura y tradiciones: lista, búsqueda y filtros', async p => {
+  await p.click('#cult');
+  igual(await texto(p, '#nm'), 'Cultura y tradiciones', 'abre la lista');
+  igual(await p.evaluate(() => location.hash), '#cultura', 'con su enlace');
+  const total = await p.evaluate(() => CULTURA.length),
+    filas = () => p.$$eval('#info .cul-lista .fila-explora', a => a.length);
+  igual(await filas(), total, 'están todos');
+  // Solo hay botones de las categorías con contenido
+  igual(
+    await p.$$eval('#info [aria-label="Categoría"] button', a => a.length),
+    1 + (await p.evaluate(() => CATEGORIAS_CULTURA.filter(([k]) => CULTURA.some(c => c.cat == k)).length)),
+    'categorías con contenido, más «Todas»'
+  );
+  await p.click('#info [aria-label="Categoría"] button:has-text("Gastronomía")');
+  igual(
+    await filas(),
+    await p.evaluate(() => CULTURA.filter(c => c.cat == 'gastronomia').length),
+    'filtro por categoría'
+  );
+  await p.click('#info [aria-label="Categoría"] button:first-child');
+  await p.selectOption('#cterr', 'capital');
+  igual(await filas(), await p.evaluate(() => CULTURA.filter(esDeCapital).length), 'solo la capital');
+  const armuna = await p.evaluate(() => 'c' + PROVINCIA.com.indexOf('La Armuña'));
+  await p.selectOption('#cterr', armuna);
+  cierto((await texto(p, '#info .cul-lista')).includes('Lenteja de La Armuña'), 'por comarca');
+  await p.selectOption('#cterr', 'todo');
+  await p.fill('#cq', 'lisboa');
+  igual(
+    await p.$$eval('#info .cul-lista .fila-explora b', a => a.map(b => b.textContent)),
+    ['El Mariquelo'],
+    'busca en los textos'
+  );
+  await p.fill('#cq', '');
+  // El buscador general también las encuentra
+  await p.click('#x');
+  await p.fill('#q', 'farinato');
+  await p.waitForSelector('#sr button');
+  cierto((await texto(p, '#sr')).includes('Cultura · Gastronomía tradicional'), 'en el buscador general');
+});
+
+prueba('Cultura y tradiciones: ficha, mapa sin puntos inventados y enlaces con el resto', async (p, url) => {
+  await p.goto(url + '#cultura/lenteja-de-la-armuna');
+  await p.waitForSelector('#sh.o');
+  igual(await texto(p, '#nm'), 'Lenteja de La Armuña', 'abre por su enlace');
+  // Varios municipios: se marcan sus términos (polígonos), sin puntos
+  igual(
+    await p.$$eval('#info .mapa-cultura .cul-m', a => a.length),
+    await p.evaluate(() => elementoCultura('lenteja-de-la-armuna').municipios.length),
+    'un término por municipio'
+  );
+  igual(await p.$$eval('#info .mapa-cultura circle', a => a.length), 0, 'ningún punto en el mapa');
+  cierto((await texto(p, '#info')).includes('no hay un único punto'), 'y lo explica');
+  // Tipos de texto y fuentes con fecha de revisión
+  cierto(await p.$('#info .cul-t.hecho .cul-tipo'), 'textos documentados marcados');
+  cierto((await texto(p, '#ap')).includes('Revisado el'), 'fecha de revisión');
+  cierto((await p.$$('#ap a')).length >= 2, 'fuentes con enlace');
+  // Una con foto: autor, licencia y enlace a Commons
+  await p.goto(url + '#cultura/hornazo');
+  await p.waitForFunction(() => document.querySelector('#nm').textContent == 'Hornazo');
+  cierto(await p.isVisible('#ph'), 'foto');
+  cierto((await texto(p, '#pc')).includes('CC0'), 'con su licencia en el pie');
+  cierto(await p.$('#ap a[href^="https://commons.wikimedia.org/wiki/File:"]'), 'y enlace a su página');
+  // De una pedanía: se marca el término al que pertenece y se dice
+  await p.evaluate(() => abrirElementoCultura('julian-sanchez-el-charro'));
+  cierto((await texto(p, '#info')).includes('Muñoz (pedanía de La Fuente de San Esteban)'), 'la pedanía');
+  cierto(await p.$('#info .mapa-cultura .cul-m.ped'), 'su término, marcado como de una pedanía');
+  // Enlaces con el resto: ficha de pueblo, monumento, provincia
+  await p.evaluate(() => abrirPueblo(PROVINCIA.m.find(m => m.n == 'Tamames')));
+  cierto((await texto(p, '#culf')).includes('Julián Sánchez'), 'en la ficha del pueblo');
+  await p.evaluate(() => abrirMonumento('catedrales'));
+  cierto((await texto(p, '#culf')).includes('El Mariquelo'), 'en la ficha del monumento');
+  await p.evaluate(() => abrirFicha('tejares'));
+  cierto(!(await p.isVisible('#culf')), 'y no en las que no tienen nada');
+  await p.click('#x');
+  await p.click('#vprov');
+  await p.evaluate(() =>
+    seleccionarPueblo(
+      PROVINCIA.m.find(m => m.n == 'Béjar'),
+      true
+    )
+  );
+  await p.click('#psb .cul-psb button');
+  igual(
+    await texto(p, '#nm'),
+    'Corpus Christi y hombres de musgo',
+    'desde el pueblo elegido en la provincia'
+  );
+  await p.click('#x');
+  await p.click('.ver-cultura');
+  igual(
+    await p.$$eval('#pm path.cul', a => a.length),
+    await p.evaluate(() => PROVINCIA.m.filter(m => culturaDeMunicipio(m).length).length),
+    'el mapa de la provincia marca los pueblos con tradiciones'
+  );
+  cierto((await texto(p, '#pcl')).includes('Cultura y tradiciones'), 'y las comarcas las enlazan');
+});
 
 // --- Ejecución ----------------------------------------------------------------
 (async () => {

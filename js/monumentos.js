@@ -202,6 +202,7 @@ function abrirMonumento(id, parada) {
   $('#ap').textContent = '';
   pintarFoto(m.foto);
   pintarInfografia(m);
+  pintarCulturaEnFicha(culturaDeMonumento(id));
   const comoParada = typeof parada == 'number';
   if (comoParada) pintarNavegacionRuta(parada);
   else if (typeof paradaActual != 'undefined') paradaActual = -1;

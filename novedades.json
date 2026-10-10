@@ -1,5 +1,21 @@
 [
   {
+    "version": "2.4.0",
+    "fecha": "2026-10-10",
+    "titulo": "Mi Salamanca y cultura charra",
+    "usuario": [
+      "«Mi Salamanca» es ahora tu panel de cifras: barrios de la capital, municipios y pedanías de la provincia, monumentos, rutas, colecciones y logros, cada cosa en su sitio y sin mezclar la capital con la provincia.",
+      "Mes a mes: lo que has ido marcando, con filtros por capital, provincia y periodo. Lo marcado antes de que la app apuntara fechas se cuenta aparte.",
+      "Desde cada cifra vas al mapa ya filtrado, a la provincia o a su lista.",
+      "Nueva sección «Cultura y tradiciones» en «Explora»: fiestas, tradiciones, gastronomía, artesanía, folklore y personajes de la capital y la provincia, con buscador y filtros por categoría y territorio.",
+      "Cada tradición marca sus pueblos en el mapa de la provincia (sin puntos inventados), separa lo documentado de lo que cuenta la tradición y lleva sus fuentes y la fecha de revisión.",
+      "Las tradiciones salen también en las fichas de pueblos, barrios y monumentos, en el pueblo elegido de la pestaña Provincia, en las comarcas y en el buscador; y el botón «Pueblos con tradiciones» las marca en el mapa.",
+      "Arreglado: «Avisar de un error» ya abre bien el correo. Además se puede enviar con Gmail o copiar el aviso entero.",
+      "El perfil enlaza con «Mi Salamanca» en vez de repetir las cifras."
+    ],
+    "tecnico": "js/mi-salamanca.js (#mi-salamanca, botón #foto): estadisticas() desde progreso (barrios = grupos 0-4; municipios = pueblos, alfoz por su zona; pedanías; comarcas; sitios propios de rutas; logros con col: true), visitasPorMes desde j.hi sin duplicados ni fechas inventadas, verEnMapaFiltrado/quitarFiltrosMapa (vistas.js), verProvinciaFiltrada, refrescarEstadisticas desde actualizar. abrirImagenMiSalamanca (imagen.js). js/datos/cultura.js (15 elementos, 6 categorías con contenido, textos hecho/tradicion/divulgativo, fotos Commons con autor y licencia, fuentes y revisado) y js/cultura.js (#cultura, #cultura/<id>, mapaCultura con términos municipales, #culf en fichas, provincia y comarcas, marcarPueblosConCultura, buscador). comprobar-datos valida cultura. avisar.js: mailto sin target, Gmail y copiar. Contraste de #hoy en oscuro. Pruebas: 118 (contraste también en #hoy, #mi-salamanca y #cultura)."
+  },
+  {
     "version": "2.3.0",
     "fecha": "2026-10-10",
     "titulo": "¿Qué puedo descubrir hoy?",

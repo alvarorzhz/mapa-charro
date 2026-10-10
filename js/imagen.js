@@ -353,9 +353,9 @@ function abrirVentana(titulo, contenido, botones, volverA = document.activeEleme
   return v;
 }
 
-async function abrirMiSalamanca() {
-  const boton = $('#foto');
-  boton.disabled = true;
+// La imagen para compartir de «Mi Salamanca» (se abre desde el panel de estadísticas y desde el perfil)
+async function abrirImagenMiSalamanca(boton = document.activeElement) {
+  if (boton) boton.disabled = true;
   try {
     const blob = await crearImagenMiSalamanca(),
       url = URL.createObjectURL(blob),
@@ -377,11 +377,9 @@ async function abrirMiSalamanca() {
     console.error(e);
     aviso('Vaya chaperón: no se ha podido crear la imagen. Vuelve a probar', { tipo: 'error' });
   } finally {
-    boton.disabled = false;
+    if (boton) boton.disabled = false;
   }
 }
-
-$('#foto').onclick = abrirMiSalamanca;
 addEventListener('keydown', e => {
   if (e.key != 'Escape' || e.defaultPrevented || !$('.modal')) return;
   cerrarVentana();

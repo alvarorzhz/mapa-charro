@@ -128,6 +128,17 @@ function candidatos() {
       poner(s.n, 'Dónde comer · ' + buscarZona(id).n, 'comer', id + '|' + s.n, 5, () => abrirFicha(id))
     )
   );
+  CULTURA.forEach(c =>
+    poner(
+      c.n,
+      'Cultura · ' + categoriaCultura(c.cat)[1],
+      'cultura',
+      c.id,
+      3,
+      () => abrirElementoCultura(c.id),
+      ['cultura tradicion', ...(c.municipios || []), ...(c.pedanias || []).map(x => x[1])].join(' ')
+    )
+  );
   Object.keys(INFO_VIAS).forEach(k =>
     poner(k, INFO_VIAS[k][0] + ' · ' + INFO_VIAS[k][1], 'via', k, 6, () => abrirFichaVia(k), INFO_VIAS[k][1])
   );

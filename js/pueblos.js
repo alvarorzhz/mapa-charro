@@ -24,6 +24,7 @@ function abrirPueblo(m) {
   $('#nm').textContent = m.n;
   $('#mz').hidden = true;
   pintarFoto(null);
+  pintarCulturaEnFicha(culturaDeMunicipio(m));
 
   // Cabecera: habitantes y monumento o lugar principal
   const caja = $('#info');

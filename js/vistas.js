@@ -19,6 +19,7 @@ function actualizar() {
   try {
     pintarLogros();
     pintarFiltrosMapa();
+    if (typeof refrescarEstadisticas == 'function') refrescarEstadisticas(); // mi-salamanca.js
     if (typeof pintarCuenta == 'function') pintarCuenta(); // cuenta.js: «para no perder tu progreso»
     if (pestana == 'list') pintarLista();
     if (pestana == 'prov') actualizarProvincia();
@@ -140,10 +141,7 @@ function pintarFiltrosMapa() {
   if (hayFiltrosMapa()) {
     const quitar = crear('button', 'enlace', 'Quitar filtros');
     quitar.onclick = () => {
-      filtrosMapa.estados = new Set(ESTADOS_FILTRO.map(f => f[0]));
-      filtrosMapa.grupos = new Set(GRUPOS_FILTRO.map(f => f[0]));
-      filtrosMapa.monumentos = new Set(CATEGORIAS_MONUMENTO.map(c => c[0]));
-      aplicarFiltrosMapa();
+      quitarFiltrosMapa();
       $('#fmap button').focus();
     };
     resumen.append(' · ', quitar);
@@ -155,6 +153,23 @@ function pintarFiltrosMapa() {
     'aria-label',
     hayFiltrosMapa() ? 'Capas, leyenda y filtros (hay filtros puestos)' : 'Capas, leyenda y filtros'
   );
+}
+function quitarFiltrosMapa() {
+  filtrosMapa.estados = new Set(ESTADOS_FILTRO.map(f => f[0]));
+  filtrosMapa.grupos = new Set(GRUPOS_FILTRO.map(f => f[0]));
+  filtrosMapa.monumentos = new Set(CATEGORIAS_MONUMENTO.map(c => c[0]));
+  aplicarFiltrosMapa();
+}
+// Lleva al mapa de la capital ya filtrado (desde las estadísticas de «Mi Salamanca»), con aviso para quitarlo
+function verEnMapaFiltrado(estados, grupos, explicacion) {
+  cerrarFicha();
+  if (pestana != 'map') cambiarPestana('map');
+  quitarFiltrosMapa();
+  filtrosMapa.estados = new Set(estados);
+  filtrosMapa.grupos = new Set(grupos);
+  aplicarFiltrosMapa();
+  document.querySelector('.mw').scrollIntoView({ behavior: comoDesplazar(), block: 'start' });
+  aviso('Mapa filtrado: ' + explicacion, { accion: ['Quitar filtros', quitarFiltrosMapa] });
 }
 function aplicarFiltrosMapa() {
   todasLasZonas.forEach(pintarZona);
