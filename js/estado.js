@@ -156,40 +156,100 @@ function limpiarParadas(r) {
   });
   return limpio;
 }
-const datosParaGuardar = o => ({
-  z: o.z,
-  f: o.f,
-  t: o.t || 0,
-  gv: o.gv || [],
-  p: o.p || {},
-  j: o.j || {
-    m: 0,
-    d: '',
-    s: 0,
-    h: [],
-    pf: 0,
-    mo: [],
-    r: {},
-    rs: {},
-    fl: [],
-    et: [],
-    n: 0,
-    ms: 0,
-    cp: 0,
-    pv: []
-  },
-  v: 1
-});
+// --- Lo que esta versión de la app no conoce -------------------------------------------------------
+// Un dispositivo con una versión vieja de la app (por ejemplo, la guardada para usarla sin conexión) puede
+// leer progreso escrito por una versión más nueva, con zonas, monumentos, rutas o campos de «j» que aún no
+// conoce. limpiarProgreso los deja fuera de lo que usa la app, pero no se pueden perder al volver a guardar:
+// se apartan aquí y se añaden tal cual al guardar, en el navegador y en la cuenta.
+const CLAVES_J = ['m', 'd', 's', 'h', 'pf', 'mo', 'r', 'rs', 'fl', 'et', 'n', 'ms', 'cp', 'pv', 'hi'];
+const esIdCorto = k => typeof k == 'string' && /^[a-z0-9-]{1,60}$/.test(k);
+// Nombre de un campo de «j» que esta versión no conoce (sin los nombres especiales de los objetos)
+const esCampoNuevo = k =>
+  typeof k == 'string' &&
+  /^[a-zA-Z][a-zA-Z0-9_-]{0,39}$/.test(k) &&
+  !['constructor', 'prototype', '__proto__'].includes(k);
+const esClaveProvincia = k => typeof k == 'string' && /^(m\d{5}|p\d{5}:[a-z0-9-]{1,60})$/.test(k);
+const desconocidos = { z: {}, p: {}, mo: [], rs: {}, r: {}, j: {} };
+function apartarDesconocidos(o) {
+  if (!o || typeof o != 'object') return;
+  const d = desconocidos,
+    marca = x => x == 'v' || x == 'w',
+    rutas = new Set([...RUTAS, ...RUTAS_PROVINCIA].map(r => r.id)),
+    j = o.j && typeof o.j == 'object' ? o.j : {};
+  if (o.z && typeof o.z == 'object')
+    for (const k in o.z) if (!idsValidos.has(k) && esIdCorto(k) && marca(o.z[k])) d.z[k] = o.z[k];
+  if (o.p && typeof o.p == 'object')
+    for (const k in o.p) if (!clavesProvincia.has(k) && esClaveProvincia(k) && marca(o.p[k])) d.p[k] = o.p[k];
+  if (Array.isArray(j.mo))
+    d.mo = [...new Set([...d.mo, ...j.mo.filter(id => esIdCorto(id) && !idsMonumentos.has(id))])];
+  if (j.rs && typeof j.rs == 'object')
+    for (const k in j.rs) if (!rutas.has(k) && esIdCorto(k) && marca(j.rs[k])) d.rs[k] = j.rs[k];
+  if (j.r && typeof j.r == 'object')
+    for (const k in j.r)
+      if (!rutas.has(k) && esIdCorto(k) && Array.isArray(j.r[k]))
+        d.r[k] = j.r[k].filter(esIdCorto).slice(0, 200);
+  for (const k in j)
+    if (!CLAVES_J.includes(k) && esCampoNuevo(k))
+      try {
+        const texto = JSON.stringify(j[k]);
+        if (texto !== undefined && texto.length < 20000) d.j[k] = JSON.parse(texto);
+      } catch (e) {}
+}
+// El progreso tal como se guarda: lo de la app más lo apartado, y sin valores «undefined» (la cuenta no los
+// acepta y JSON los quita)
+function conDesconocidos(o) {
+  const d = desconocidos,
+    j = o.j || {};
+  return JSON.parse(
+    JSON.stringify({
+      ...o,
+      z: { ...d.z, ...(o.z || {}) },
+      p: { ...d.p, ...(o.p || {}) },
+      j: {
+        ...d.j,
+        ...j,
+        mo: [...new Set([...(j.mo || []), ...d.mo])],
+        rs: { ...d.rs, ...(j.rs || {}) },
+        r: { ...d.r, ...(j.r || {}) }
+      }
+    })
+  );
+}
 
+const datosParaGuardar = o =>
+  conDesconocidos({ z: o.z, f: o.f, t: o.t || 0, gv: o.gv || [], p: o.p || {}, j: o.j || {}, v: 1 });
+
+// Al arrancar, lo guardado en este navegador. Si está ilegible (JSON roto), se aparta tal cual en
+// CLAVE_DANADO antes de que nada lo pise y se empieza de cero (inicio.js lo avisa)
+const CLAVE_DANADO = 'charro2-danado';
+let progresoDanado = false;
 let progreso = { z: {}, f: 0 };
 try {
-  progreso = JSON.parse(localStorage.getItem(CLAVE_LOCAL)) || progreso;
+  const crudo = localStorage.getItem(CLAVE_LOCAL);
+  if (crudo)
+    try {
+      progreso = JSON.parse(crudo) || progreso;
+    } catch (e) {
+      progresoDanado = true;
+      try {
+        if (localStorage.getItem(CLAVE_DANADO) == null) localStorage.setItem(CLAVE_DANADO, crudo);
+      } catch (e2) {}
+    }
 } catch (e) {}
+apartarDesconocidos(progreso);
 progreso = limpiarProgreso(progreso);
+// Guarda en el navegador. Devuelve false si no se puede (modo privado, sin espacio…) y lo avisa una vez
+let guardadoLocalFalla = false;
 const guardarLocal = () => {
   try {
-    localStorage.setItem(CLAVE_LOCAL, JSON.stringify(progreso));
-  } catch (e) {}
+    localStorage.setItem(CLAVE_LOCAL, JSON.stringify(conDesconocidos(progreso)));
+    guardadoLocalFalla = false;
+    return true;
+  } catch (e) {
+    if (!guardadoLocalFalla && typeof avisarFalloLocal == 'function') avisarFalloLocal();
+    guardadoLocalFalla = true;
+    return false;
+  }
 };
 
 // --- Vista actual -----------------------------------------------------------

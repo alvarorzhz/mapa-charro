@@ -11,8 +11,27 @@ const nube = {
   pendiente: false, // ha habido cambios durante la subida: hay que volver a subir
   ultimoSubido: '', // JSON de lo último que hay en la cuenta, para no subir lo mismo
   temporizador: 0,
-  reintentado: false
+  reintentado: false,
+  cuenta: '' // id de la cuenta conectada (Claude o Google), para saber hasta dónde se sincronizó
 };
+// Hasta dónde están sincronizados este navegador y la cuenta: { cuenta, t } con la hora (t) del progreso
+// que se subió o se trajo por última vez. Sirve para saber si, mientras tanto, han cambiado los dos lados
+// (entonces se juntan en vez de que uno pise al otro).
+const CLAVE_SINCRONIZADO = 'charro-sincronizado';
+function baseSincronizada() {
+  try {
+    const s = JSON.parse(localStorage.getItem(CLAVE_SINCRONIZADO));
+    return s && s.cuenta == nube.cuenta && +s.t > 0 ? +s.t : 0;
+  } catch (e) {
+    return 0;
+  }
+}
+function marcarSincronizado(t) {
+  if (!nube.cuenta || !(t > 0)) return;
+  try {
+    localStorage.setItem(CLAVE_SINCRONIZADO, JSON.stringify({ cuenta: nube.cuenta, t }));
+  } catch (e) {}
+}
 // Errores con los que no tiene sentido volver a intentarlo: se pasa a solo lectura
 const ERRORES_DEFINITIVOS = [
   'invalid_argument',
@@ -23,12 +42,15 @@ const ERRORES_DEFINITIVOS = [
 ];
 
 function mostrarEstadoGuardado(estado) {
+  // Mientras el navegador no deje guardar, el estado lo sigue diciendo aunque la cuenta vaya bien
+  if (guardadoLocalFalla && (estado == 'local' || estado == 'ok')) estado = 'errlocal';
   const [texto, clase] = {
     local: ['Guardado en este navegador', ''],
     sync: ['Conectando con tu cuenta…', 'sy'],
     ok: [nube.textoOk, 'ok'],
     ro: ['Solo lectura: tu progreso se guarda en este navegador', ''],
-    err: ['No se pudo guardar en tu cuenta; queda en este navegador', 'er']
+    err: ['No se pudo guardar en tu cuenta; queda en este navegador', 'er'],
+    errlocal: ['No se puede guardar en este navegador (¿modo privado o sin espacio?)', 'er']
   }[estado];
   const e = $('#sv');
   e.textContent = texto;
@@ -49,6 +71,8 @@ async function subirANube() {
     await nube.ref.set(datos);
     nube.ultimoSubido = json;
     nube.reintentado = false;
+    nube.fallo = false;
+    marcarSincronizado(datos.t);
     mostrarEstadoGuardado('ok');
   } catch (e) {
     const codigo = e && e.code;
@@ -61,7 +85,10 @@ async function subirANube() {
       nube.ocupada = false;
       setTimeout(subirANube, 600 + Math.random() * 900);
       return;
-    } else mostrarEstadoGuardado('err');
+    } else {
+      nube.fallo = true; // se reintenta al volver la conexión o en el siguiente cambio
+      mostrarEstadoGuardado('err');
+    }
   }
   nube.ocupada = false;
   if (nube.pendiente) {
@@ -83,6 +110,16 @@ const guardar = ({ uso = false } = {}) => {
     nube.temporizador = setTimeout(subirANube, 700);
   }
 };
+
+// Si no se puede guardar en el navegador (inicio en modo privado, sin espacio…), se avisa una vez
+function avisarFalloLocal() {
+  mostrarEstadoGuardado('errlocal');
+  aviso(
+    'No se puede guardar en este navegador (¿modo privado o sin espacio?): lo que marques ahora se perderá al cerrarlo' +
+      (nube.ref ? ', salvo lo que llegue a tu cuenta.' : '.'),
+    { tipo: 'error' }
+  );
+}
 
 function aplicarDesdeNube(datos) {
   progreso = datos;
@@ -165,8 +202,9 @@ function juntarHistoriales(a, b) {
 // modificada más tarde; con juntar (la primera vez que esa cuenta se conecta en este navegador), se
 // juntan siempre las dos, para que nada de lo que haya en la cuenta se pierda.
 // Devuelve false si no se ha podido leer la cuenta (y se queda en el navegador).
-async function conectarNube(ref, textoOk, juntar = false) {
+async function conectarNube(ref, textoOk, juntar = false, cuenta = '') {
   nube.textoOk = textoOk;
+  nube.cuenta = cuenta;
   mostrarEstadoGuardado('sync');
   let instantanea;
   try {
@@ -186,14 +224,26 @@ async function conectarNube(ref, textoOk, juntar = false) {
     }
   }
   nube.ref = ref;
-  const enCuenta = instantanea.exists ? limpiarProgreso(instantanea.data()) : null;
+  const crudo = instantanea.exists ? instantanea.data() : null;
+  if (crudo) apartarDesconocidos(crudo); // lo que esta versión no conoce no se pierde al volver a subir
+  const enCuenta = crudo ? limpiarProgreso(crudo) : null,
+    base = baseSincronizada();
   if (enCuenta && juntar) {
     aplicarDesdeNube(juntarProgresos(enCuenta, progreso));
     subirANube();
   } else if (enCuenta) {
     nube.ultimoSubido = JSON.stringify(datosParaGuardar(enCuenta));
-    if ((enCuenta.t || 0) >= (progreso.t || 0)) aplicarDesdeNube(enCuenta);
-    else subirANube();
+    // ¿Han cambiado los dos lados desde la última vez que se sincronizaron? Entonces se juntan
+    const cambioAqui = (progreso.t || 0) > base,
+      cambioEnCuenta = (enCuenta.t || 0) > base;
+    if (base && cambioAqui && cambioEnCuenta) {
+      aplicarDesdeNube(juntarProgresos(enCuenta, progreso));
+      subirANube();
+      aviso('Se han juntado tus cambios de este dispositivo con los de tu cuenta');
+    } else if ((enCuenta.t || 0) >= (progreso.t || 0)) {
+      aplicarDesdeNube(enCuenta);
+      marcarSincronizado(enCuenta.t);
+    } else subirANube();
   } else if (tieneProgreso(progreso)) {
     if (!progreso.t) progreso.t = Date.now();
     guardarLocal();
@@ -204,10 +254,20 @@ async function conectarNube(ref, textoOk, juntar = false) {
   nube.cancelar = ref.onSnapshot(
     sn => {
       if (!sn.exists || sn.metadata.hasPendingWrites) return;
-      const nuevo = limpiarProgreso(sn.data());
+      const crudo = sn.data();
+      apartarDesconocidos(crudo);
+      const nuevo = limpiarProgreso(crudo),
+        base = baseSincronizada();
       if ((nuevo.t || 0) > (progreso.t || 0)) {
-        nube.ultimoSubido = JSON.stringify(datosParaGuardar(nuevo));
-        aplicarDesdeNube(nuevo);
+        if (base && (progreso.t || 0) > base) {
+          // Aquí hay cambios que aún no han subido: se juntan con los que llegan, no se pisan
+          aplicarDesdeNube(juntarProgresos(nuevo, progreso));
+          subirANube();
+        } else {
+          nube.ultimoSubido = JSON.stringify(datosParaGuardar(nuevo));
+          aplicarDesdeNube(nuevo);
+          marcarSincronizado(nuevo.t);
+        }
         aviso('Progreso actualizado desde otro dispositivo');
       }
     },
@@ -220,7 +280,7 @@ async function conectarNube(ref, textoOk, juntar = false) {
 function desconectarNube() {
   if (typeof nube.cancelar == 'function') nube.cancelar();
   clearTimeout(nube.temporizador);
-  Object.assign(nube, { ref: null, cancelar: null, ultimoSubido: '', pendiente: false });
+  Object.assign(nube, { ref: null, cancelar: null, ultimoSubido: '', pendiente: false, cuenta: '' });
   mostrarEstadoGuardado('local');
 }
 
@@ -260,7 +320,8 @@ async function iniciarNube() {
           conectada = await conectarNube(
             db.doc('data/users/' + id + '/progreso'),
             'Guardado en tu cuenta',
-            juntar
+            juntar,
+            'claude:' + id
           );
         if (conectada) escribirClave(CLAVE_NUBE_CLAUDE, id);
         return conectada;
@@ -272,3 +333,33 @@ async function iniciarNube() {
   }
   iniciarCuentaWeb();
 }
+
+// --- Que no se pierda nada al cerrar, al quedarse sin conexión o con la app abierta en dos pestañas ----
+// Al ocultar la página (cerrar la pestaña, cambiar de app en el móvil) sube ya lo pendiente
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState == 'hidden' && nube.ref) {
+    clearTimeout(nube.temporizador);
+    subirANube();
+  }
+});
+// Al volver la conexión, reintenta la subida que falló
+addEventListener('online', () => {
+  if (nube.ref && nube.fallo) subirANube();
+});
+// Otra pestaña de este navegador ha guardado: se usa su progreso si es igual de nuevo o más (si no, al
+// guardar aquí se pisaría lo que se marcó allí)
+addEventListener('storage', e => {
+  if (e.key != CLAVE_LOCAL || !e.newValue) return;
+  let otro;
+  try {
+    otro = JSON.parse(e.newValue);
+  } catch (x) {
+    return;
+  }
+  apartarDesconocidos(otro);
+  otro = limpiarProgreso(otro);
+  if ((otro.t || 0) < (progreso.t || 0)) return;
+  progreso = otro;
+  todasLasZonas.forEach(pintarZona);
+  actualizar();
+});

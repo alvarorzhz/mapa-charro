@@ -78,6 +78,12 @@ if (!EN_MARCO) {
   enlace.href = 'privacidad.html';
   $('#ver').append(' · ', enlace);
 }
+// Si lo guardado en el navegador estaba ilegible, se apartó sin borrarlo (estado.js) y se avisa
+if (progresoDanado)
+  aviso(
+    'Lo guardado en este navegador estaba dañado y no se ha podido leer. Lo hemos apartado sin borrarlo; si tienes cuenta, tu progreso vuelve de ella.',
+    { tipo: 'error' }
+  );
 // Historial del perfil: lo que ya estaba marcado antes de que existiera queda apuntado sin fecha
 if (!Array.isArray(progreso.j.hi)) {
   anotarHistorial();

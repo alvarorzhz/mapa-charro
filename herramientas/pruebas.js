@@ -41,8 +41,19 @@ function servir() {
 
 const pruebas = [];
 const prueba = (nombre, fn, opciones = {}) => pruebas.push({ nombre, fn, opciones });
+// Compara por valor: el orden de las claves de un objeto no cuenta (el de las listas, sí)
+const ordenarClaves = x =>
+  Array.isArray(x)
+    ? x.map(ordenarClaves)
+    : x && typeof x == 'object'
+      ? Object.fromEntries(
+          Object.keys(x)
+            .sort()
+            .map(k => [k, ordenarClaves(x[k])])
+        )
+      : x;
 const igual = (a, b, que) => {
-  if (JSON.stringify(a) !== JSON.stringify(b))
+  if (JSON.stringify(ordenarClaves(a)) !== JSON.stringify(ordenarClaves(b)))
     throw new Error(`${que}: esperaba ${JSON.stringify(b)} y es ${JSON.stringify(a)}`);
 };
 const cierto = (c, que) => {
@@ -1281,8 +1292,26 @@ prueba('Las fichas no se desplazan de lado', async p => {
     () => abrirRuta(0),
     () => (location.hash = '#ruta-arribes-norte'),
     () => (location.hash = '#ruta-arribes-norte/5'),
-    () => abrirMonumento(MONUMENTOS[0].id)
+    () => abrirMonumento(MONUMENTOS[0].id),
+    () => abrirHoy(),
+    () => abrirEstadisticas(),
+    () => abrirMonumentos(),
+    () => abrirDondeComer(),
+    () => abrirCultura(),
+    () => abrirElementoCultura('lenteja-de-la-armuna'),
+    () => abrirElementoCultura('julian-sanchez-el-charro'),
+    () => abrirPueblo(PROVINCIA.m.find(m => m.n == 'Ciudad Rodrigo'))
   ];
+  // Tampoco la página: nada se sale por los lados en el móvil (360 px, el más estrecho habitual)
+  if (!(await p.evaluate(() => esEscritorio()))) {
+    await p.setViewportSize({ width: 360, height: 760 });
+    await p.waitForTimeout(200);
+    igual(
+      await p.evaluate(() => document.documentElement.scrollWidth),
+      360,
+      'la página no se sale por los lados a 360 px'
+    );
+  }
   for (const abrir of fichas) {
     await p.evaluate(abrir);
     await p.waitForTimeout(250);
@@ -1293,6 +1322,43 @@ prueba('Las fichas no se desplazan de lado', async p => {
     ]);
     cierto(ancho <= visible, 'sin desplazamiento lateral en «' + k + '» (' + ancho + ' > ' + visible + ')');
   }
+  // Y las ventanas (la de «Avisar de un error», la más cargada)
+  await p.evaluate(() => abrirAvisoError());
+  const [ancho, visible] = await p.$eval('.modal .caja', e => [e.scrollWidth, e.clientWidth]);
+  cierto(ancho <= visible, 'la ventana de avisar de un error no se sale');
+});
+
+prueba('Coherencia visual: alturas, foco y enlaces', async p => {
+  // Los botones de «Avisar de un error» tienen la misma altura
+  await p.evaluate(() => abrirAvisoError());
+  const alturas = await p.$$eval('.botones-aviso > *', a =>
+    a.map(b => Math.round(b.getBoundingClientRect().height))
+  );
+  igual(new Set(alturas).size, 1, 'botones del aviso de la misma altura (' + alturas.join(', ') + ')');
+  // Los enlaces de las ventanas llevan el color de la app (no el azul del navegador)
+  const [colorEnlace, colorApp] = await p.evaluate(() => [
+    getComputedStyle(document.querySelector('.modal .caja p a')).color,
+    getComputedStyle(document.querySelector('.modal h2')).color
+  ]);
+  igual(colorEnlace, colorApp, 'enlace de la ventana con el color de la app');
+  await p.evaluate(() => cerrarVentana());
+  // «Explora»: todos los accesos con la misma altura
+  const explora = await p.$$eval('#explorar .acc button', a =>
+    a.map(b => Math.round(b.getBoundingClientRect().height))
+  );
+  igual(new Set(explora).size, 1, 'accesos de «Explora» iguales (' + explora.join(', ') + ')');
+  // Foco visible en los campos, como en los botones
+  await p.focus('#q');
+  await p.keyboard.press('Shift+Tab');
+  await p.keyboard.press('Tab');
+  igual(
+    await p.$eval('#q', e => getComputedStyle(e).outlineStyle),
+    'solid',
+    'el buscador enseña el foco con el mismo borde que los botones'
+  );
+  // El enlace «¿Algo está mal…?» de la ficha es un enlace, no un botón con borde
+  await p.evaluate(() => abrirFicha('centro'));
+  igual(await p.$eval('#errf', e => getComputedStyle(e).borderTopWidth), '0px', '«Avísanos», como enlace');
 });
 
 prueba('Accesibilidad: estados, nombres y avisos', async p => {
@@ -2218,6 +2284,256 @@ prueba('Cultura y tradiciones: ficha, mapa sin puntos inventados y enlaces con e
     'el mapa de la provincia marca los pueblos con tradiciones'
   );
   cierto((await texto(p, '#pcl')).includes('Cultura y tradiciones'), 'y las comarcas las enlazan');
+});
+
+// --- Guardado y recuperación del progreso --------------------------------------------------------------
+const leerGuardado = p => p.evaluate(() => JSON.parse(localStorage.getItem('charro2')));
+
+prueba('Guardado: primera ejecución y recarga', async p => {
+  igual(await p.evaluate(() => Object.keys(progreso.z).length), 0, 'sin nada marcado');
+  await p.evaluate(() => marcarZona('vega', 'v'));
+  const g = await leerGuardado(p);
+  igual(g.z, { vega: 'v' }, 'se guarda al momento en el navegador');
+  cierto(g.t > 0 && typeof g.j == 'object', 'con su hora y sus datos de logros');
+  await p.reload();
+  igual(await p.evaluate(() => progreso.z), { vega: 'v' }, 'y sigue ahí al recargar');
+});
+
+prueba(
+  'Guardado: datos existentes, antiguos o de una versión más nueva',
+  async p => {
+    // Lo válido se usa; lo que no es válido se descarta; lo que esta versión no conoce se conserva
+    igual(await p.evaluate(() => progreso.z), { centro: 'v' }, 'usa lo válido');
+    igual(await p.evaluate(() => progreso.j.mo), ['catedrales'], 'sin repetir monumentos');
+    igual(await p.evaluate(() => progreso.f), 1, 'la rana');
+    await p.evaluate(() => marcarZona('vega', 'w'));
+    const g = await leerGuardado(p);
+    igual(g.z, { 'barrio-futuro': 'v', centro: 'v', vega: 'w' }, 'conserva la zona que no conoce');
+    igual(g.z.tejares, undefined, 'y descarta las marcas que no son válidas');
+    cierto(
+      g.j.mo.includes('monumento-futuro') && g.j.mo.includes('catedrales'),
+      'conserva el monumento nuevo'
+    );
+    igual(g.j.campoNuevo, { a: 1 }, 'y los campos nuevos');
+    igual(g.j.m, 120, 'sin tocar los demás campos');
+    igual(g.j.rs, { monumental: 'v' }, 'ni el seguimiento de rutas');
+    cierto(Array.isArray(g.j.hi) && g.j.hi.every(e => Array.isArray(e)), 'historial limpio');
+  },
+  {
+    antes: () =>
+      localStorage.setItem(
+        'charro2',
+        JSON.stringify({
+          z: { centro: 'v', 'barrio-futuro': 'v', tejares: 'x', __proto__: 'v' },
+          p: 'raro',
+          gv: 'raro',
+          f: 1,
+          t: 50,
+          j: {
+            m: 120,
+            mo: ['catedrales', 'catedrales', 'monumento-futuro'],
+            rs: { monumental: 'v' },
+            campoNuevo: { a: 1 },
+            hi: [['2026-01-01', 'z', 'centro'], 'basura', [3, 'x']]
+          }
+        })
+      )
+  }
+);
+
+prueba(
+  'Guardado: datos dañados',
+  async p => {
+    cierto((await texto(p, '#ts')).includes('estaba dañado'), 'lo avisa');
+    igual(
+      await p.evaluate(() => localStorage.getItem('charro2-danado')),
+      '{roto',
+      'aparta el original sin borrarlo'
+    );
+    await p.evaluate(() => marcarZona('vega', 'v'));
+    igual((await leerGuardado(p)).z, { vega: 'v' }, 'y la app sigue funcionando');
+    igual(
+      await p.evaluate(() => localStorage.getItem('charro2-danado')),
+      '{roto',
+      'sin pisar la copia apartada'
+    );
+  },
+  { antes: () => localStorage.getItem('charro2-danado') || localStorage.setItem('charro2', '{roto') }
+);
+
+prueba(
+  'Guardado: si el navegador no deja guardar',
+  async p => {
+    await p.evaluate(() => marcarZona('vega', 'v'));
+    cierto(
+      (await texto(p, '#sv')).startsWith('No se puede guardar en este navegador'),
+      'lo dice en el estado'
+    );
+    igual(await p.evaluate(() => progreso.z.vega), 'v', 'y la marca sigue en la app mientras está abierta');
+  },
+  {
+    antes: () => {
+      const original = Storage.prototype.setItem;
+      Storage.prototype.setItem = function (k, v) {
+        if (k == 'charro2') throw new DOMException('Lleno', 'QuotaExceededError');
+        return original.call(this, k, v);
+      };
+    }
+  }
+);
+
+prueba('Guardado: marcar dos veces no duplica y no borra otros campos', async p => {
+  await p.evaluate(() => {
+    progreso.j.m = 300;
+    progreso.j.rs = { monumental: 'w' };
+    guardar();
+    // Marcar, quitar y volver a marcar la misma zona; visitar dos veces el mismo monumento; leer dos veces
+    marcarZona('vega', 'v');
+    marcarZona('vega', 'v');
+    marcarZona('vega', 'v');
+    ponerVisita({ tipo: 'mo', id: 'catedrales', n: 'Catedrales' }, true);
+    ponerVisita({ tipo: 'mo', id: 'catedrales', n: 'Catedrales' }, true);
+    apuntarUso('fl', 'centro');
+    apuntarUso('fl', 'centro');
+  });
+  const g = await leerGuardado(p);
+  igual(g.z, { vega: 'v' }, 'la zona, una vez');
+  igual(g.j.mo, ['catedrales'], 'el monumento, una vez');
+  igual(g.j.fl.filter(x => x == 'centro').length, 1, 'la ficha leída, una vez');
+  igual(g.j.hi.filter(e => e[1] == 'z' && e[2] == 'vega').length, 1, 'una sola entrada en el historial');
+  igual([g.j.m, g.j.rs], [300, { monumental: 'w' }], 'y el resto de campos sigue igual');
+});
+
+// En estas pruebas la cuenta de Claude va simulada, con su documento en memoria (window.__nube)
+prueba(
+  'Sincronización: si cambian los dos lados, se juntan',
+  async p => {
+    await p.waitForFunction(() => window.__nube.subidas > 0, null, { timeout: 4000 });
+    igual(await p.evaluate(() => progreso.z), { centro: 'v', vega: 'v' }, 'lo de aquí y lo de la cuenta');
+    igual(
+      await p.evaluate(() => window.__nube.datos.z),
+      { centro: 'v', vega: 'v', 'barrio-futuro': 'w' },
+      'y sube todo, también lo que no conoce'
+    );
+    // Llega un cambio de otro dispositivo mientras aquí hay algo sin subir: se juntan
+    await p.evaluate(() => {
+      progreso.z.tejares = 'v';
+      progreso.t = Date.now();
+      window.__nube.avisar({ z: { centro: 'v', vega: 'v', chamberi: 'v' }, t: Date.now() + 5000, v: 1 });
+    });
+    igual(
+      await p.evaluate(() => Object.keys(progreso.z).sort()),
+      ['centro', 'chamberi', 'tejares', 'vega'],
+      'no se pisa lo que aún no había subido'
+    );
+  },
+  {
+    antes: () => {
+      // Sincronizados la última vez en t=100; desde entonces cambiaron este navegador (t=300) y la cuenta (t=200)
+      localStorage.setItem('charro2', JSON.stringify({ z: { centro: 'v' }, t: 300 }));
+      localStorage.setItem('charro-sincronizado', JSON.stringify({ cuenta: 'claude:prueba', t: 100 }));
+      localStorage.setItem('charro-cuenta-claude', 'prueba');
+      window.__nube = {
+        datos: { z: { vega: 'v', 'barrio-futuro': 'w' }, t: 200, v: 1 },
+        subidas: 0,
+        fallar: 0
+      };
+      window.claude = {
+        use: async k =>
+          k == 'user'
+            ? { id: async () => 'prueba' }
+            : {
+                doc: () => ({
+                  get: async () => ({ exists: true, data: () => window.__nube.datos }),
+                  set: async d => {
+                    window.__nube.datos = d;
+                    window.__nube.subidas++;
+                  },
+                  onSnapshot: f => {
+                    window.__nube.avisar = d => f({ exists: true, metadata: {}, data: () => d });
+                    return () => {};
+                  }
+                })
+              }
+      };
+    }
+  }
+);
+
+prueba(
+  'Sincronización: sin conexión y recuperación',
+  async p => {
+    await p.waitForTimeout(300);
+    await p.evaluate(() => {
+      window.__nube.fallar = 2; // la subida falla (y su reintento también)
+      marcarZona('vega', 'v');
+    });
+    await p.waitForFunction(
+      () => document.querySelector('#sv').textContent.startsWith('No se pudo guardar'),
+      null,
+      {
+        timeout: 5000
+      }
+    );
+    igual((await leerGuardado(p)).z, { vega: 'v' }, 'mientras, queda en el navegador');
+    await p.evaluate(() => dispatchEvent(new Event('online')));
+    await p.waitForFunction(() => window.__nube.datos && window.__nube.datos.z.vega == 'v', null, {
+      timeout: 3000
+    });
+    igual(await texto(p, '#sv'), 'Guardado en tu cuenta', 'al volver la conexión, sube');
+    // Al cerrar o cambiar de app, lo pendiente sube sin esperar
+    await p.evaluate(() => {
+      marcarZona('tejares', 'v');
+      Object.defineProperty(document, 'visibilityState', { value: 'hidden', configurable: true });
+      document.dispatchEvent(new Event('visibilitychange'));
+    });
+    await p.waitForTimeout(150);
+    igual(await p.evaluate(() => window.__nube.datos.z.tejares), 'v', 'sube al ocultar la página');
+    // Recargar: viene lo mismo
+    await p.reload();
+    await p.waitForTimeout(400);
+    igual(await p.evaluate(() => progreso.z), { tejares: 'v', vega: 'v' }, 'y tras recargar sigue todo');
+  },
+  {
+    antes: () => {
+      if (!window.__nube) {
+        localStorage.setItem('charro-cuenta-claude', 'prueba');
+        window.__nube = { datos: null, subidas: 0, fallar: 0 };
+      }
+      window.claude = {
+        use: async k =>
+          k == 'user'
+            ? { id: async () => 'prueba' }
+            : {
+                doc: () => ({
+                  get: async () => ({ exists: !!window.__nube.datos, data: () => window.__nube.datos }),
+                  set: async d => {
+                    if (window.__nube.fallar > 0) {
+                      window.__nube.fallar--;
+                      throw { code: 'unavailable' };
+                    }
+                    window.__nube.datos = d;
+                  },
+                  onSnapshot: () => () => {}
+                })
+              }
+      };
+    }
+  }
+);
+
+prueba('Guardado: con la app abierta en dos pestañas no se pisan', async (p, url, ctx) => {
+  const otra = await ctx.newPage();
+  await otra.goto(url);
+  await otra.waitForTimeout(300);
+  await p.evaluate(() => marcarZona('vega', 'v'));
+  await otra.waitForTimeout(150);
+  igual(await otra.evaluate(() => progreso.z), { vega: 'v' }, 'la otra pestaña se entera');
+  await otra.evaluate(() => marcarZona('tejares', 'v'));
+  await p.waitForTimeout(150);
+  igual(await leerGuardado(p).then(g => g.z), { tejares: 'v', vega: 'v' }, 'y lo de las dos queda guardado');
+  igual(await p.evaluate(() => progreso.z), { tejares: 'v', vega: 'v' }, 'también en la primera');
+  await otra.close();
 });
 
 // --- Ejecución ----------------------------------------------------------------

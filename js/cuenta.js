@@ -67,7 +67,8 @@ function escucharCuenta() {
         conectada = await conectarNube(
           ref,
           'Guardado en tu cuenta' + (usuario.email ? ' (' + usuario.email + ')' : ''),
-          juntar
+          juntar,
+          'google:' + usuario.uid
         );
       if (conectada) recordarCuenta(usuario.uid);
     } else if (!usuario && cuentaWeb.usuario) {

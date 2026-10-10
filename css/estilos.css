@@ -182,7 +182,7 @@ button,input,#q,.seg button,.sig{line-height:1.25}
 .acc button[hidden],#volverhoy[hidden]{display:none}
 /* «¿Qué puedo descubrir hoy?» (hoy.js) */
 .volver-hoy{display:inline-flex;align-items:center;margin:0 0 6px;padding:4px 12px;border-radius:99px;font-size:13px;min-height:32px}
-.hoy-apartado{margin:12px 0 4px;padding:12px 14px;border:2px solid var(--line);border-radius:14px;background:var(--card)}.hoy-apartado h3{margin:0 0 6px!important;font-size:15px!important;color:var(--ink)!important}.hoy-apartado>.mu,.hoy-cerca>.mu{margin:2px 0 8px;font-size:13.5px;line-height:1.45}
+.hoy-apartado{margin:12px 0 4px;padding:12px 14px;border:2px solid var(--line);border-radius:12px;background:var(--card)}.hoy-apartado h3{margin:0 0 6px!important;font:16px 'Alfa Slab One',Georgia,serif!important;color:var(--ink)!important;letter-spacing:.2px}.hoy-apartado>.mu,.hoy-cerca>.mu{margin:2px 0 8px;font-size:13.5px;line-height:1.45}
 .hoy-rec{display:flex;flex-direction:column;gap:4px}.hoy-rec img{width:100%;max-height:170px;object-fit:cover;border-radius:10px;margin-bottom:4px}.hoy-rec small{font-size:12px;text-transform:uppercase;letter-spacing:.4px}.hoy-rec b{font:20px 'Alfa Slab One',Georgia,serif;color:var(--vit-texto);line-height:1.2}.hoy-rec p{margin:2px 0;line-height:1.45}
 .boton-hoy{align-self:flex-start;margin-top:6px;padding:8px 16px;border-radius:12px;font-weight:600;min-height:40px}.hoy-rec .boton-hoy{background:var(--vit);border-color:var(--vit);color:#fff}.perfil-hoy{width:100%;margin:4px 0 6px}
 .icono-hoy{flex:none;width:28px;font-size:22px;text-align:center}.hoy-obj{display:block;font-size:16px;margin-bottom:2px}.hoy-barra{height:8px;border:1px solid var(--line);border-radius:5px;overflow:hidden;margin:6px 0 8px}.hoy-barra i{display:block;height:100%;background:var(--vit)}
@@ -218,3 +218,10 @@ button,input,#q,.seg button,.sig{line-height:1.25}
 .cul-psb,.cul-comarca{margin:6px 0}.ver-cultura{margin:8px 0 4px;width:100%}
 #pm path.cul{fill:color-mix(in srgb,var(--vit) 55%,var(--campo))}
 #cq{width:100%;box-sizing:border-box;padding:9px 12px;border:2px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:15px Lora,Georgia,serif}.cul-muchos{margin:4px 0 8px}.cul-muchos summary{cursor:pointer;font-weight:600;min-height:32px;display:flex;align-items:center}
+/* Coherencia visual (repaso 2.4.1) */
+.modal .caja a:not(.boton-enlace){color:var(--vit-texto);font-weight:600}
+.avisar-ficha .enlace,.fmap-r .enlace{background:none;border:0;padding:4px 0;min-height:0;font:600 13px Lora,Georgia,serif;color:var(--vit-texto);text-decoration:underline;cursor:pointer}
+.botones-aviso>*{min-height:44px;box-sizing:border-box;font:600 15px/1.25 Lora,Georgia,serif;border-radius:12px}
+:is(main,.sh,.modal) :is(a,input,select):focus-visible{outline:3px solid var(--vit);outline-offset:2px}
+:is(.acc,.zb,.botones,.sb,.bt) button:disabled{opacity:.55;cursor:default}
+@media(min-width:900px){#explorar .acc{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-flow:row}}

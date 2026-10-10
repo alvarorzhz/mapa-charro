@@ -1,5 +1,23 @@
 [
   {
+    "version": "2.4.1",
+    "fecha": "2026-10-10",
+    "titulo": "Tu progreso, más a salvo",
+    "usuario": [
+      "Si usas la app en el móvil y en el ordenador y cambias cosas en los dos, ahora se juntan en vez de quedarse solo lo último.",
+      "Lo que marques sin conexión se sube a tu cuenta en cuanto vuelve la conexión o al cerrar la app.",
+      "Con la app abierta en dos pestañas, ya no se pisan.",
+      "Si el navegador no deja guardar (modo privado o sin espacio), te lo avisamos; y si lo guardado estaba dañado, se aparta una copia en vez de perderlo.",
+      "Retoques visuales: enlaces con el color de la app también en modo oscuro, botones iguales en «Avisar de un error», foco del teclado más visible y «Explora» ordenado en escritorio."
+    ],
+    "tecnico": [
+      "estado.js: apartarDesconocidos/conDesconocidos conservan zonas, pueblos, monumentos, rutas y campos de j de versiones más nuevas; JSON ilegible se copia a charro2-danado; guardarLocal avisa del fallo (estado errlocal).",
+      "guardado.js: charro-sincronizado ({cuenta, t}) como base; si cambian los dos lados desde la base, juntarProgresos; subida al ocultar la página, reintento con online y adopción entre pestañas con storage.",
+      "pruebas.js: 8 pruebas de guardado y sincronización; igual() compara sin tener en cuenta el orden de las claves.",
+      "estilos.css: bloque de coherencia visual y títulos de «Hoy»."
+    ]
+  },
+  {
     "version": "2.4.0",
     "fecha": "2026-10-10",
     "titulo": "Mi Salamanca y cultura charra",
