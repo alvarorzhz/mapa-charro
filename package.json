@@ -1,6 +1,6 @@
 {
   "name": "mapa-charro",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "private": true,
   "description": "Mapa charro de Salamanca: barrios de la capital, pueblos de la provincia, rutas, curiosidades y dónde comer",
   "scripts": {

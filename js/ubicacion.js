@@ -1,6 +1,6 @@
 // Botón «Estoy aquí» (geolocalización). La ubicación solo se usa en el dispositivo: no se guarda ni se envía.
 
-// Última ubicación: { id (zona del mapa, 'resto' o null), t (cuándo), acc (precisión en m), pid (clave del pueblo) }
+// Última ubicación: { id (zona del mapa, 'resto' o null), la y lo, t (cuándo), acc (precisión en m), pid (clave del pueblo) }
 let ubicacion = null;
 let marcaPosicion = null; // { m (grupo SVG), x, y } del punto azul en el mapa
 const VIGENCIA_UBICACION = 30 * 60 * 1000; // durante 30 min, lo que marques cuenta como «pisado con GPS»
@@ -119,6 +119,8 @@ function alLocalizar(pos) {
   }
   ubicacion = {
     id,
+    la,
+    lo,
     t: Date.now(),
     acc: precision,
     pid: municipio && !municipio.z && !municipio.cap ? municipio.k : null

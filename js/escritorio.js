@@ -69,4 +69,5 @@ addEventListener('keydown', e => {
 });
 
 // --- Logros a la vista en escritorio ---------------------------------------------------
-if (esEscritorio()) $('#lgr').open = true;
+// Vienen abiertos en index.html (así no empujan nada al rellenarse); en el móvil se cierran
+if (!esEscritorio()) $('#lgr').open = false;

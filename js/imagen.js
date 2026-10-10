@@ -253,25 +253,28 @@ const descargasClaude =
     ? window.claude.use('downloads').catch(() => null)
     : Promise.resolve(null);
 
-async function guardarImagen(blob) {
+// Guarda un archivo en el dispositivo (la imagen de «Mi Salamanca», la copia de seguridad…)
+async function guardarArchivo(blob, nombre) {
   const descargas = await descargasClaude;
   if (descargas) {
     try {
-      await descargas.save({ filename: NOMBRE_IMAGEN, data: blob });
+      await descargas.save({ filename: nombre, data: blob });
     } catch (e) {
       if (e && e.code != 'declined')
-        aviso('Vaya chaperón: no se ha podido guardar la imagen', { tipo: 'error' });
+        aviso('Vaya chaperón: no se ha podido guardar el archivo', { tipo: 'error' });
     }
     return;
   }
   const a = crear('a');
   a.href = URL.createObjectURL(blob);
-  a.download = NOMBRE_IMAGEN;
+  a.download = nombre;
   document.body.appendChild(a);
   a.click();
   a.remove();
   setTimeout(() => URL.revokeObjectURL(a.href), 4000);
 }
+
+const guardarImagen = blob => guardarArchivo(blob, NOMBRE_IMAGEN);
 
 async function compartirImagen(blob) {
   const archivo = new File([blob], NOMBRE_IMAGEN, { type: 'image/png' });
@@ -334,7 +337,7 @@ function abrirVentana(titulo, contenido, botones, volverA = document.activeEleme
   // Tab y Mayús+Tab dan la vuelta dentro de la ventana
   caja.addEventListener('keydown', e => {
     if (e.key != 'Tab') return;
-    const enfocables = [...caja.querySelectorAll('button')],
+    const enfocables = [...caja.querySelectorAll('button, a[href]')],
       primero = enfocables[0],
       ultimo = enfocables[enfocables.length - 1];
     if (e.shiftKey && document.activeElement == primero) {

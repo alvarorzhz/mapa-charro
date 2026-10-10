@@ -182,7 +182,7 @@ function abrirPerfil() {
     rutasHechas = todasRutas.filter(r => estadoRuta(r.id) == 'v'),
     rutasQuiero = todasRutas.filter(r => estadoRuta(r.id) == 'w');
 
-  const caja = fichaLimpia('Tu perfil', nombre ? 'Hola, ' + nombre : 'Tu perfil');
+  const caja = fichaLimpia('Tu perfil', nombre ? 'Hola, ' + nombre : 'Tu progreso');
   caja.appendChild(
     crear(
       'div',
@@ -201,7 +201,7 @@ function abrirPerfil() {
             todasLasZonas.length +
             ' zonas pisadas · ' +
             hechos.length +
-            ' logros'
+            (hechos.length == 1 ? ' logro' : ' logros')
         ),
         barra(zonasPisadas.length / todasLasZonas.length),
         crear(
@@ -227,6 +227,10 @@ function abrirPerfil() {
         : 'Sin cuenta: tu progreso se guarda solo en este navegador.'
     )
   );
+  // La pantalla de inicio del día (hoy.js), también desde aquí
+  const hoy = crear('button', 'boton-hoy perfil-hoy', '🌅 ¿Qué puedo descubrir hoy?');
+  hoy.onclick = () => desdeHoy(abrirHoy)();
+  caja.appendChild(hoy);
 
   const apartado = (titulo, ...hijos) => caja.append(crear('h3', '', titulo), ...hijos);
   apartado(

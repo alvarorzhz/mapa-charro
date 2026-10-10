@@ -97,6 +97,8 @@ function modoBotonesFicha(modo) {
   if (modo != 'ruta' && typeof rutaSeguida != 'undefined') rutaSeguida = null;
   document.querySelector('.bt').style.display = '';
   const textos = TEXTOS_BOTONES[modo] || ['', ''];
+  // Si solo queda el botón de compartir, lleva también su texto (un icono suelto se entiende peor)
+  document.querySelector('.bt').classList.toggle('solo-compartir', !textos[0] && !textos[1]);
   document.querySelectorAll('.bt button[data-s]').forEach(b => {
     const texto = textos[b.dataset.s == 'v' ? 0 : 1];
     b.hidden = !texto;
@@ -120,14 +122,19 @@ function pintarIndiceFicha() {
   fichaConIndice = apartados.length > 1;
   apartados.forEach(([sel, texto]) => {
     const b = crear('button', '', texto);
-    b.onclick = () => {
-      if (!esEscritorio()) $('#sh').classList.add('grande');
-      // Después de agrandar la ficha, para que el apartado quede arriba
-      requestAnimationFrame(() => $(sel).scrollIntoView({ behavior: comoDesplazar(), block: 'start' }));
-    };
+    b.onclick = () => irAApartado(sel);
     indice.appendChild(b);
   });
 }
+
+// Lleva a un apartado de la ficha abierta (en el móvil, agrandándola antes para que quede arriba)
+function irAApartado(sel) {
+  if (!esEscritorio()) $('#sh').classList.add('grande');
+  requestAnimationFrame(() => $(sel).scrollIntoView({ behavior: comoDesplazar(), block: 'start' }));
+}
+
+// La ficha se abre desde «¿Qué puedo descubrir hoy?» (hoy.js): lleva el botón para volver allí
+let fichaDesdeHoy = false;
 
 // Dónde estaba el foco antes de abrir la ficha, para devolverlo al cerrarla
 let focoAntesDeFicha = null;
@@ -142,9 +149,11 @@ function mostrarFicha() {
   $('#pch').hidden = !fichaConPalabra;
   $('#idx').hidden = !fichaConIndice;
   fichaConPalabra = fichaConIndice = false;
-  // En el móvil, sube la página hasta el mapa para que se vea por encima del panel
-  if (!esEscritorio() && pestana == 'map') {
-    const arriba = document.querySelector('.mw').getBoundingClientRect().top;
+  $('#volverhoy').hidden = !fichaDesdeHoy;
+  // En el móvil, sube la página hasta el mapa (el de la provincia en su pestaña) para que se vea por encima del panel
+  const mapaVisible = { map: '.mw', prov: '#pm' }[pestana];
+  if (!esEscritorio() && mapaVisible && document.querySelector(mapaVisible)) {
+    const arriba = document.querySelector(mapaVisible).getBoundingClientRect().top;
     if (Math.abs(arriba - 8) > 4)
       window.scrollTo({ top: window.scrollY + arriba - 8, behavior: comoDesplazar() });
   }

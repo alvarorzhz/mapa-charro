@@ -33,6 +33,9 @@ const esHashDeFicha = h =>
   h.startsWith('tiempo/') ||
   h.startsWith('pueblo/') ||
   h == 'perfil' ||
+  h == 'monumentos' ||
+  h == 'hoy' ||
+  h == 'comer' ||
   todasLasZonas.some(z => z.id == h);
 
 function hashDeVista() {
@@ -87,6 +90,12 @@ function aplicarEnlace() {
       if (!fichaAbierta || nombreFicha != 'Tu perfil') abrirPerfil();
     } else if (a == 'rutas') {
       if (!fichaAbierta || rutaActiva) abrirRutas();
+    } else if (a == 'hoy') {
+      if (!fichaAbierta || nombreFicha != '¿Qué puedo descubrir hoy?') abrirHoy();
+    } else if (a == 'monumentos') {
+      if (!fichaAbierta || nombreFicha != 'Monumentos') abrirMonumentos();
+    } else if (a == 'comer') {
+      if (!fichaAbierta || nombreFicha != 'Dónde comer') abrirDondeComer();
     } else if (RUTAS_PROVINCIA.some(r => hashRutaProvincia(r) == a)) {
       // Ruta por la provincia: #ruta-arribes o #ruta-arribes/2
       const kp = RUTAS_PROVINCIA.findIndex(r => hashRutaProvincia(r) == a),

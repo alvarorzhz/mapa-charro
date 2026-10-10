@@ -11,7 +11,10 @@ App web para ir marcando los barrios de Salamanca y los pueblos de su provincia:
 - **Capital:** 50 barrios y 12 pueblos de alrededor con su ficha (curiosidades, leyendas, fotos, dónde comer), monumentos, parques, carreteras y «Salamanca en el tiempo».
 - **Provincia:** los 361 municipios con sus pedanías y sus habitantes (INE), fichas de pueblo, autovías y nacionales.
 - **Rutas:** a pie por la ciudad y en coche por la provincia, con su mapa, sus tiempos y el seguimiento «La he hecho» / «La quiero hacer».
-- **Para cada persona:** progreso guardado en el navegador o en la cuenta (Google en la web, Claude dentro de Claude), perfil con nivel, historial y logros.
+- **Explora:** listas de monumentos y de sitios para comer, rutas, «Salamanca en el tiempo» y el reto «¿Dónde está?». Filtros del mapa que se combinan (zonas pisadas o no, parte de la ciudad y tipo de monumento).
+- **Lo tuyo:** progreso guardado en el navegador o en la cuenta (Google en la web, Claude dentro de Claude), perfil con nivel, historial y logros.
+- **«¿Qué puedo descubrir hoy?»:** al abrir la app cada día, un resumen, lo que tienes a medias, lo pendiente cerca de ti (con tu permiso), un sitio recomendado del día y un objetivo.
+- **Avisar de un error** desde arriba, desde cada ficha o desde el pie.
 - **Funciona sin conexión** en la web (service worker) y se puede instalar en el móvil.
 
 ## Cómo está hecha
@@ -37,6 +40,8 @@ js/datos/              Solo datos, sin lógica (cada archivo explica su formato 
   firebase.js          Configuración pública de Firebase (ver «Seguridad»)
 js/*.js                La lógica: mapa, fichas, provincia, rutas, logros, perfil, juego, buscador, cuenta…
 img/, icons/           Fotos e iconos (icons/icono.svg es el original del icono)
+fuentes/               Tipografías (woff2) con su licencia
+sitemap.xml            Páginas para los buscadores
 sw.js                  Service worker: la web sin conexión
 herramientas/          Generadores de datos, comprobaciones y pruebas
 ```
@@ -80,6 +85,6 @@ Ningún dato está inventado: cada curiosidad, leyenda, restaurante y cifra llev
 - **Habitantes:** INE, Padrón municipal (cifras oficiales).
 - **Fotos:** Wikimedia Commons, con su autor y licencia en cada ficha.
 - **Textos:** resúmenes propios a partir de Wikipedia, Turismo de Castilla y León, el Ayuntamiento, la prensa local y guías como Repsol, Michelin y Gastroranking; cada ficha enlaza las suyas.
-- **Tipografías:** Alfa Slab One y Lora (SIL Open Font License).
+- **Tipografías:** Alfa Slab One y Lora (SIL Open Font License), servidas desde la propia web (`fuentes/`).
 
 El código no tiene todavía una licencia de código abierto: se puede leer y aprender de él, pero para reutilizarlo hay que pedir permiso.

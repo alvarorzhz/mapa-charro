@@ -715,6 +715,19 @@ prueba('Ficha de pueblo', async (p, url) => {
   igual(await p.evaluate(() => JSON.parse(localStorage.charro2).p), { m37010: 'w' }, 'marca el pueblo');
 });
 
+prueba('La ficha del pueblo deja ver el mapa de la provincia', async p => {
+  await p.click('#vprov');
+  await p.evaluate(() => abrirPueblo(PROVINCIA.m.find(m => m.n == 'Ledesma')));
+  await p.waitForTimeout(600);
+  const [mapa, ficha] = await p.evaluate(() =>
+    ['#pm', '#sh'].map(s => document.querySelector(s).getBoundingClientRect().top)
+  );
+  // En el móvil el mapa sube hasta arriba, por encima del panel; en el escritorio la ficha va al lado
+  if (!(await p.evaluate(() => esEscritorio())))
+    cierto(mapa >= 0 && mapa < ficha - 200, 'el mapa queda a la vista');
+  igual(await texto(p, '#nm'), 'Ledesma', 'ficha abierta');
+});
+
 prueba('Monumentos', async (p, url) => {
   await p.goto(url + '#monumento/catedrales');
   igual(await texto(p, '#nm'), 'Catedrales Nueva y Vieja', 'abre el monumento');
@@ -768,14 +781,15 @@ prueba('Panel de capas y leyenda', async p => {
   await p.click('#zc');
   await p.mouse.click(5, 5);
   cierto(await p.$eval('#capas', e => e.hidden), 'tocar fuera lo cierra');
-  // La ruta a pie y Salamanca en el tiempo, a la vista: en el móvil con los demás accesos de arriba;
-  // en escritorio bajo el mapa, donde no los tapa la ficha
-  const dondeAccesos = (await p.evaluate(() => esEscritorio())) ? '.modos' : '.acc';
-  cierto(await p.$eval(dondeAccesos + ' #rt', e => e.offsetParent != null), 'Rutas a pie a la vista');
-  cierto(
-    await p.$eval(dondeAccesos + ' #tm', e => e.offsetParent != null),
-    'Salamanca en el tiempo a la vista'
-  );
+  // «Explora», bajo el mapa (en escritorio no lo tapa la ficha)
+  for (const [id, que] of [
+    ['#mns', 'Monumentos'],
+    ['#rt', 'Rutas'],
+    ['#tm', 'Salamanca en el tiempo'],
+    ['#dc', 'Dónde comer'],
+    ['#jug', '¿Dónde está?']
+  ])
+    cierto(await p.$eval('#explorar ' + id, e => e.offsetParent != null), que + ' a la vista en «Explora»');
   igual(
     await p.$eval('#cmp', e => e.getAttribute('aria-label')),
     'Compartir este sitio',
@@ -828,6 +842,11 @@ prueba(
     );
     await p.click('#perfil');
     igual(await p.evaluate(() => location.hash), '#perfil', 'abre el perfil');
+    igual(await texto(p, '#nm'), 'Tu progreso', 'sin nombre, el título no repite «Tu perfil»');
+    cierto(
+      await p.$eval('.bt', e => e.classList.contains('solo-compartir')),
+      'compartir lleva texto cuando va solo'
+    );
     cierto((await texto(p, '#info')).includes('2 de 63 zonas pisadas'), 'zonas pisadas');
     cierto((await texto(p, '.historial')).includes('Pisaste Vidal'), 'historial');
     cierto(await p.isVisible('.actividad'), 'actividad de las últimas semanas');
@@ -1679,6 +1698,231 @@ prueba(
   { conServiceWorker: true }
 );
 
+prueba('Tres niveles: lo principal, «Explora» y «Lo tuyo»', async p => {
+  const arriba = s => p.$eval(s, e => e.getBoundingClientRect().top + scrollY);
+  // En el móvil el mapa sale antes que «Explora» y esta antes que «Lo tuyo»
+  if (!(await p.evaluate(() => esEscritorio()))) {
+    cierto((await arriba('.mw')) < 400, 'el mapa se ve sin bajar');
+    cierto((await arriba('.mw')) < (await arriba('#explorar')), 'Explora, bajo el mapa');
+    cierto((await arriba('#explorar')) < (await arriba('#tuyo')), 'Lo tuyo, después');
+  }
+  for (const id of ['#perfil', '#foto', '#sv', '#lgr'])
+    cierto(await p.$('#tuyo ' + id), id + ' en «Lo tuyo»');
+  cierto(await p.isVisible('#error'), '«Avisar de un error» a la vista arriba');
+});
+
+prueba('Monumentos y Dónde comer, en listas', async (p, url) => {
+  await p.click('#mns');
+  igual(await texto(p, '#nm'), 'Monumentos', 'abre la lista de monumentos');
+  igual(
+    await p.$$eval('#info .fila-explora', a => a.length),
+    await p.evaluate(() => MONUMENTOS.length),
+    'están todos'
+  );
+  await p.evaluate(() => {
+    progreso.j.mo = ['catedrales'];
+    guardar();
+  });
+  await p.click('#info .fl button:nth-child(2)'); // Visitados
+  igual(await p.$$eval('#info .fila-explora', a => a.length), 1, 'el filtro deja el visitado');
+  await p.click('#info .fila-explora');
+  igual(await p.evaluate(() => location.hash), '#monumento/catedrales', 'abre su ficha');
+  await p.goto(url + '#comer');
+  igual(await texto(p, '#nm'), 'Dónde comer', 'el enlace abre la lista de sitios');
+  const total = await p.evaluate(
+    () =>
+      Object.values(DONDE_COMER).flat().length +
+      Object.values(PUEBLOS).reduce((s, f) => s + (f.comer || []).length, 0)
+  );
+  igual(await p.$$eval('#info .fila-explora', a => a.length), total, 'todos los sitios con fuente');
+  await p.click('#info .fl button:nth-child(3)'); // En los pueblos
+  cierto(
+    (await p.$$eval('#info .fila-explora', a => a.length)) < total,
+    'el filtro deja solo los de los pueblos'
+  );
+  await p.click('#info .fila-explora');
+  cierto(!(await p.$eval('#he', e => e.hidden)), 'abre la ficha del pueblo por «Dónde comer»');
+});
+
+prueba('Filtros combinables del mapa', async p => {
+  const atenuadas = () => p.$$eval('#zg .z.fuera', a => a.length);
+  igual(await atenuadas(), 0, 'sin filtros no se atenúa nada');
+  await p.evaluate(() => marcarZona('tejares', 'v'));
+  await p.click('#zc');
+  // Solo «Sin pisar» y solo el sur: se combinan
+  await p.click('#fmap [aria-label="Zonas"] button:nth-child(1)');
+  await p.click('#fmap [aria-label="Zonas"] button:nth-child(2)');
+  const sinPisarSur = await p.evaluate(() => zonas.filter(z => z.g == 4 && !progreso.z[z.id]).length);
+  await p.evaluate(() => GRUPOS_FILTRO.forEach(([g]) => g != 4 && filtrosMapa.grupos.delete(g)));
+  await p.evaluate(() => aplicarFiltrosMapa());
+  igual(
+    await p.$$eval('#zg .z:not(.fuera)', a => a.length),
+    sinPisarSur,
+    'quedan a la vista las zonas del sur sin pisar'
+  );
+  cierto(
+    await p.evaluate(() => buscarZona('tejares').e.classList.contains('fuera')),
+    'Tejares (pisada) se atenúa'
+  );
+  cierto(
+    (await texto(p, '#fmap .fmap-r')).startsWith('Se ven ' + sinPisarSur + ' de '),
+    'el resumen lo cuenta'
+  );
+  cierto(await p.$eval('#zc', e => e.classList.contains('filtrado')), 'el botón de capas avisa del filtro');
+  // Monumentos: quitar «Iglesias» los quita del mapa
+  await p.click('#fmap [aria-label="Monumentos"] button:nth-child(1)');
+  cierto(
+    await p.evaluate(() =>
+      MONUMENTOS.filter(m => categoriaMonumento(m) == 'religioso').every(m => m.g.style.display == 'none')
+    ),
+    'sin iglesias en el mapa'
+  );
+  await p.click('#fmap .fmap-r button');
+  igual(await atenuadas(), 0, '«Quitar filtros» lo deja como estaba');
+  cierto(!(await p.$eval('#zc', e => e.classList.contains('filtrado'))), 'y el aviso se quita');
+});
+
+prueba('Copia de seguridad: descargar y cargar', async p => {
+  await p.evaluate(() => marcarZona('vega', 'v'));
+  const copia = await p.evaluate(() => textoCopia());
+  cierto(JSON.parse(copia).app == 'mapa-charro', 'la copia dice de qué app es');
+  // En otro navegador (aquí: progreso vacío) se carga y se junta
+  await p.evaluate(() => {
+    progreso.z = { tejares: 'w' };
+  });
+  cierto(await p.evaluate(c => cargarCopia(c), copia), 'se carga');
+  igual(
+    await p.evaluate(() => [progreso.z.vega, progreso.z.tejares]),
+    ['v', 'w'],
+    'junta la copia con lo que había'
+  );
+  igual(await p.evaluate(() => JSON.parse(localStorage.charro2).z.vega), 'v', 'y lo guarda');
+  cierto(!(await p.evaluate(() => cargarCopia('{"no":1}'))), 'un archivo que no es copia no se carga');
+  // De momento el botón está oculto (index.html): se abre la ventana directamente
+  cierto(!(await p.isVisible('#copia')), 'el botón de la copia está oculto de momento');
+  await p.evaluate(() => abrirCopia());
+  cierto(await p.isVisible('.modal >> text=Descargar copia'), 'ventana con descargar');
+  const [descarga] = await Promise.all([
+    p.waitForEvent('download'),
+    p.click('.modal >> text=Descargar copia')
+  ]);
+  cierto(/^mapa-charro-copia-\d{4}-\d\d-\d\d\.json$/.test(descarga.suggestedFilename()), 'archivo con fecha');
+});
+
+prueba('Avisar de un error', async p => {
+  await p.evaluate(() => abrirFicha('vega'));
+  await p.click('#errf');
+  cierto((await texto(p, '.modal')).includes('La Vega'), 'apunta lo que se está viendo');
+  const correo = await p.$eval('.modal a[href^="mailto:"]', a => decodeURIComponent(a.href));
+  cierto(correo.includes('Error en el Mapa charro: La Vega'), 'asunto con el sitio');
+  cierto(correo.includes('#vega'), 'y su enlace');
+  cierto(
+    await p.$eval('.modal a[href*="github.com"]', a => a.href.includes('/issues/new')),
+    'también por GitHub'
+  );
+  await p.click('.modal .cerrar');
+  cierto(await p.$('#ver button >> text=Avisar de un error'), 'también al pie');
+});
+
+prueba(
+  '«¿Qué puedo descubrir hoy?»: sola la primera vez del día',
+  async (p, url) => {
+    await p.waitForSelector('#sh.o');
+    igual(await p.evaluate(() => location.hash), '#hoy', 'sale sola y con su enlace');
+    cierto((await texto(p, '#k')).startsWith('¿Qué puedo descubrir hoy?'), 'con su título');
+    // Usuario nuevo: estados vacíos útiles y una recomendación con su porqué
+    cierto((await texto(p, '#info')).includes('Aún no has marcado nada'), 'resumen para quien empieza');
+    cierto((await texto(p, '#info')).includes('Aún no tienes nada a medias'), 'Continúa explorando, vacío');
+    cierto((await texto(p, '.hoy-rec')).includes('Por qué hoy'), 'la recomendación explica por qué');
+    cierto((await texto(p, '#info')).includes('Pisa tu primera zona'), 'objetivo para empezar');
+    // Sin permiso de ubicación: la alternativa, y el botón para usarla solo si se pulsa
+    cierto((await texto(p, '.hoy-cerca')).includes('Centro'), 'Cerca de ti sin ubicación: junto al Centro');
+    igual(
+      await p.$$eval('.hoy-accesos button', a => a.map(b => b.textContent.replace(/[^\p{L}]/gu, ''))),
+      ['Mapa', 'Buscar', 'Rutas'],
+      'accesos directos'
+    );
+    // Al recargar el mismo día ya no sale
+    await p.goto(url);
+    await p.waitForTimeout(600);
+    cierto(!(await fichaAbierta(p)), 'el mismo día no vuelve a salir');
+  },
+  { conHoy: true }
+);
+
+prueba('«¿Qué puedo descubrir hoy?»: recomendación, ir a la ficha y volver', async (p, url) => {
+  await p.evaluate(() => {
+    marcarZona('centro', 'v');
+    marcarZona('vega', 'w');
+  });
+  await p.goto(url + '#hoy');
+  await p.waitForSelector('#sh.o');
+  // La recomendación es la misma durante el día y no es algo ya pisado
+  const rec = await p.evaluate(() => recomendacionDelDia().lugar);
+  igual(await p.evaluate(() => recomendacionDelDia().lugar.id), rec.id, 'misma recomendación en el día');
+  cierto(!rec.hecho, 'recomienda algo pendiente');
+  cierto((await texto(p, '.hoy-rec b')) == rec.n, 'se ve en la tarjeta');
+  cierto((await texto(p, '#info')).includes('La Vega'), 'Continúa explorando: lo de «Quiero ir»');
+  cierto((await texto(p, '#info')).includes('Llevas 1 de'), 'resumen del progreso');
+  // Abrir la recomendación en su ficha y volver con el botón
+  await p.click('.hoy-rec .boton-hoy');
+  igual(await texto(p, '#nm'), rec.n, 'abre su ficha');
+  cierto(await p.isVisible('#volverhoy'), 'con el botón para volver');
+  await p.click('#volverhoy');
+  cierto((await texto(p, '#k')).startsWith('¿Qué puedo descubrir hoy?'), 'el botón vuelve a Hoy');
+  await p.click('.lista-explora .fila-explora');
+  igual(await texto(p, '#nm'), 'La Vega', 'Continúa explorando abre su ficha');
+  // La × cierra la ficha (no se queda dando vueltas entre Hoy y la ficha)
+  await p.click('#x');
+  cierto(!(await fichaAbierta(p)), 'la × la cierra');
+  // Abrir una ficha normal no enseña el botón de volver
+  await p.evaluate(() => abrirFicha('tejares'));
+  cierto(!(await p.isVisible('#volverhoy')), 'sin botón en las fichas que no vienen de Hoy');
+  // Desde el perfil (en escritorio la ficha tapa el botón: se cierra antes)
+  await p.click('#x');
+  cierto(!(await fichaAbierta(p)), 'la × cierra la ficha');
+  await p.click('#perfil');
+  await p.click('.perfil-hoy');
+  cierto((await texto(p, '#k')).startsWith('¿Qué puedo descubrir hoy?'), 'se abre desde el perfil');
+  // Que no salga sola cada día
+  await p.click('#hoyauto');
+  igual(await p.evaluate(() => localStorage.getItem('charro-hoy-auto')), '0', 'se puede quitar');
+});
+
+prueba('«¿Qué puedo descubrir hoy?»: con todo pisado, una recomendación general', async p => {
+  await p.evaluate(() => {
+    todosLosLugares().forEach(l => {
+      if (l.tipo == 'z') progreso.z[l.id] = 'v';
+      else if (l.tipo == 'p') progreso.p[l.id] = 'v';
+    });
+    progreso.j.mo = MONUMENTOS.map(m => m.id);
+    guardar();
+    // Pisado antes de hoy (si no, sería «lo has marcado hoy»)
+    progreso.j.hi = progreso.j.hi.map(([, t, id]) => ['', t, id]);
+    abrirHoy();
+  });
+  cierto(
+    (await texto(p, '.hoy-rec')).includes('Ya has pisado todos los sitios con ficha'),
+    'explica por qué la recomendación es general'
+  );
+});
+
+prueba(
+  '«¿Qué puedo descubrir hoy?»: cerca de ti, con permiso de ubicación',
+  async p => {
+    await p.evaluate(() => abrirHoy());
+    await p.waitForFunction(() => document.querySelector('.hoy-cerca').textContent.includes('línea recta'));
+    const filas = await p.$$eval('.hoy-cerca .fila-explora', a => a.map(b => b.textContent));
+    cierto(filas.length >= 1 && filas.length <= 3, 'hasta tres sitios pendientes cerca');
+    cierto(
+      filas.every(t => / a \d/.test(t)),
+      'con la distancia calculada'
+    );
+    cierto(!(await p.$('.hoy-cerca .boton-hoy')), 'sin botón de pedir permiso: ya lo hay');
+  },
+  { geolocation: { latitude: 40.9651, longitude: -5.6641 }, permissions: ['geolocation'] }
+);
+
 // --- Ejecución ----------------------------------------------------------------
 (async () => {
   const srv = await servir();
@@ -1705,6 +1949,19 @@ prueba(
       // La bienvenida de la primera vez taparía la app: se da por vista salvo en su propia prueba
       if (!opciones.conBienvenida)
         await p.addInitScript(() => localStorage.setItem('charro-bienvenida', '1'));
+      // «¿Qué puedo descubrir hoy?» sale sola una vez al día: se da por vista hoy salvo en sus pruebas
+      if (!opciones.conHoy)
+        await p.addInitScript(() => {
+          const d = new Date();
+          localStorage.setItem(
+            'charro-hoy',
+            d.getFullYear() +
+              '-' +
+              String(d.getMonth() + 1).padStart(2, '0') +
+              '-' +
+              String(d.getDate()).padStart(2, '0')
+          );
+        });
       if (opciones.antes) await p.addInitScript(opciones.antes);
       try {
         await p.goto(url + (opciones.hash || ''));

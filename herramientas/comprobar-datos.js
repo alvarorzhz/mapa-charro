@@ -35,6 +35,7 @@ const codigo =
   ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA, PALABRAS_CHARRAS, FUENTES_PALABRAS, RUTAS_PROVINCIA, SALIDA_PROVINCIA, TRAMOS_PROVINCIA, CARRETERAS_PROVINCIA, HABITANTES, PARQUES })';
 const D = vm.runInNewContext(codigo, {});
 
+const WEB_PUBLICA = 'https://alvarorzhz.github.io/mapa-charro/';
 const errores = [],
   avisos = [];
 const mal = texto => errores.push(texto);
@@ -522,6 +523,22 @@ for (const f of fs.readdirSync(path.join(RAIZ, 'js')).filter(f => f.endsWith('.j
   comprobar(html.includes('js/' + f + '?'), `js/${f} no está enlazado en index.html`);
 for (const f of fs.readdirSync(path.join(RAIZ, 'js/datos')).filter(f => f.endsWith('.js')))
   comprobar(html.includes('js/datos/' + f + '?'), `js/datos/${f} no está enlazado en index.html`);
+
+// --- sitemap.xml y tipografías propias ---------------------------------------------
+{
+  const mapa = fs.readFileSync(path.join(RAIZ, 'sitemap.xml'), 'utf8'),
+    urls = [...mapa.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
+  comprobar(mapa.startsWith('<?xml') && mapa.includes('</urlset>'), 'sitemap.xml no está bien formado');
+  urls.forEach(u => {
+    comprobar(u.startsWith(WEB_PUBLICA), `sitemap.xml: ${u} no es de la web`);
+    const archivo = u.slice(WEB_PUBLICA.length) || 'index.html';
+    comprobar(fs.existsSync(path.join(RAIZ, archivo)), `sitemap.xml: no existe ${archivo}`);
+  });
+  comprobar(urls.includes(WEB_PUBLICA), 'sitemap.xml: falta la página principal');
+  comprobar(!html.includes('fonts.googleapis.com'), 'index.html pide las fuentes a Google: van en fuentes/');
+  for (const f of ['alfa-slab-one.woff2', 'lora.woff2'])
+    comprobar(fs.existsSync(path.join(RAIZ, 'fuentes', f)), `falta fuentes/${f}`);
+}
 
 // --- Resultado ----------------------------------------------------------------
 avisos.forEach(a => console.log('! Aviso: ' + a));

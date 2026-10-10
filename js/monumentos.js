@@ -75,7 +75,7 @@ function colocarMonumentos(u) {
       tocaZoom = v.w <= (m.top ? ANCHO_MAX_IMPRESCINDIBLES : ANCHO_MAX_RESTO),
       libre = !puestos.some(p => Math.abs(p[0] - px) < SEPARACION_PX && Math.abs(p[1] - py) < SEPARACION_PX),
       enRuta = typeof rutaActiva != 'undefined' && rutaActiva && rutaActual().paradas.includes(m.id),
-      ver = (tocaZoom && libre) || m.id == monumentoAbierto || enRuta;
+      ver = (tocaZoom && libre && monumentoPasaFiltros(m)) || m.id == monumentoAbierto || enRuta;
     m.g.style.display = ver ? '' : 'none';
     if (!ver) return;
     puestos.push([px, py]);

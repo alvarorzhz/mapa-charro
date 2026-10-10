@@ -18,12 +18,12 @@ const PASOS_BIENVENIDA = [
   [
     '🏛️',
     'Mucho por descubrir',
-    'Con el botón de capas, junto al zoom, enciendes los monumentos y las carreteras y ves la leyenda. Debajo del mapa, una ruta a pie por el centro y «Salamanca en el tiempo». En «Provincia» están todos los pueblos y en «Lista», todas las zonas.'
+    'Debajo del mapa, «Explora»: monumentos, rutas, «Salamanca en el tiempo» y dónde comer. Con el botón de capas, junto al zoom, filtras el mapa y ves la leyenda. En «Provincia» están todos los pueblos, y en «Lo tuyo», tu perfil y tus logros.'
   ],
   [
     '🎯',
     'Juega y comparte',
-    'Haz el reto diario «¿Dónde está?», saca la imagen de «Mi Salamanca» para compartirla y ve sumando logros. ¡Y busca la rana!'
+    'Cada día, «¿Qué puedo descubrir hoy?» te propone un sitio. Haz el reto «¿Dónde está?», saca la imagen de «Mi Salamanca» para compartirla y ve sumando logros. ¡Y busca la rana!'
   ]
 ];
 

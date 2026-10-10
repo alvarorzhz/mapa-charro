@@ -199,3 +199,38 @@ let zonaAbierta = null; // id de la zona cuya ficha está abierta
 // Encuadre inicial del mapa (viewBox): el centro de la ciudad
 const encuadreInicial = () => ({ x: 131, y: 200, w: esEscritorio() ? 190 : 150, h: 180 });
 let vistaMapa = encuadreInicial();
+
+// --- Filtros del mapa (panel de capas): se combinan entre sí ------------------------------
+// Las zonas que no pasan se atenúan; los monumentos que no pasan no se dibujan.
+const CATEGORIAS_MONUMENTO = [
+  ['religioso', 'Iglesias', ['catedral', 'iglesia', 'redonda']],
+  ['civil', 'Plazas y palacios', ['plaza', 'universidad', 'palacio', 'torre', 'concha', 'mercado']],
+  ['ocio', 'Ocio y deporte', ['toros', 'estadio', 'jardin']],
+  ['otros', 'Puentes y museos', ['puente', 'cueva', 'museo', 'presa', 'roca']]
+];
+const categoriaMonumento = m => (CATEGORIAS_MONUMENTO.find(c => c[2].includes(m.tipo)) || ['otros'])[0];
+const ESTADOS_FILTRO = [
+  ['v', 'He estado'],
+  ['w', 'Quiero ir'],
+  ['n', 'Sin pisar']
+];
+const GRUPOS_FILTRO = [
+  [0, 'Centro'],
+  [1, 'Norte'],
+  [2, 'Este'],
+  [3, 'Oeste'],
+  [4, 'Sur'],
+  [5, 'Alrededores']
+];
+const filtrosMapa = {
+  estados: new Set(ESTADOS_FILTRO.map(f => f[0])),
+  grupos: new Set(GRUPOS_FILTRO.map(f => f[0])),
+  monumentos: new Set(CATEGORIAS_MONUMENTO.map(c => c[0]))
+};
+const zonaPasaFiltros = z =>
+  filtrosMapa.estados.has(progreso.z[z.id] || 'n') && (z.g > 5 || filtrosMapa.grupos.has(z.g));
+const monumentoPasaFiltros = m => filtrosMapa.monumentos.has(categoriaMonumento(m));
+const hayFiltrosMapa = () =>
+  filtrosMapa.estados.size < ESTADOS_FILTRO.length ||
+  filtrosMapa.grupos.size < GRUPOS_FILTRO.length ||
+  filtrosMapa.monumentos.size < CATEGORIAS_MONUMENTO.length;

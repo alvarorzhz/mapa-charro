@@ -212,7 +212,7 @@ const tarjetaRuta = (id, icono, nombre, detalle, resumen, abrir) => {
 };
 function abrirRutas() {
   activarRuta(false);
-  const caja = fichaLimpia('Rutas', 'Rutas');
+  const caja = fichaLimpia(todasLasRutas().length + ' rutas · a pie y en coche', 'Rutas');
   caja.appendChild(
     crear(
       'p',

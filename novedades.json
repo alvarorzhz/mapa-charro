@@ -1,5 +1,22 @@
 [
   {
+    "version": "2.3.0",
+    "fecha": "2026-10-10",
+    "titulo": "¿Qué puedo descubrir hoy?",
+    "usuario": [
+      "Nueva pantalla «¿Qué puedo descubrir hoy?»: sale al abrir la app cada día (y desde tu perfil) con un resumen de lo que llevas, un sitio recomendado del día, lo que tienes a medias, lo pendiente cerca de ti y un pequeño objetivo.",
+      "«Cerca de ti» solo usa tu ubicación si ya le has dado permiso o pulsas el botón; si no, te enseña lo que te queda junto a la última zona que pisaste.",
+      "La página se ordena en tres partes: arriba lo principal (buscar, Capital y Provincia, tu progreso y el mapa), debajo del mapa «Explora» y después «Lo tuyo».",
+      "En «Explora», listas nuevas de todos los monumentos y de todos los sitios para comer, de la capital y de los pueblos.",
+      "Filtros del mapa en el botón de capas, que se pueden combinar: zonas pisadas o no, parte de la ciudad y tipo de monumento.",
+      "Botón «Avisar de un error» arriba, en cada ficha y al pie: abre el correo con el sitio que estás viendo ya apuntado.",
+      "La web carga antes y ya no da saltos al abrirla: los tipos de letra van con la propia web (ya no se piden a Google).",
+      "Repaso visual: títulos de los apartados de las fichas más claros, datos sin huecos, botón de cerrar más fácil de pulsar y la ficha del pueblo deja ver el mapa de la provincia.",
+      "Arreglado: el botón «Lista de zonas» y los del mapa ya no flotan por encima de la ficha."
+    ],
+    "tecnico": "js/hoy.js (#hoy): recomendación determinista por fecha (semillaDia sobre todosLosLugares con curiosidad; recomendacionGeneral si no queda nada), cosasAMedias (rutas a medias o «w», «Quiero ir»), Cerca de ti (navigator.permissions; distanciaKm en línea recta; alternativa junto a ultimaZonaPisada), objetivoDelDia; charro-hoy y charro-hoy-auto en localStorage; desdeHoy + #volverhoy (fichaDesdeHoy, ficha.js); ubicacion guarda la y lo. Tres niveles en index.html (.top, #explorar bajo el mapa, #tuyo en .rest; .ayudas arriba). js/explorar.js (abrirMonumentos, abrirDondeComer; #monumentos, #comer). Filtros combinables (filtrosMapa, zonaPasaFiltros, CATEGORIAS_MONUMENTO en estado.js; clase .fuera; #fmap en #capas). js/avisar.js (mailto/GitHub con nombreFicha y enlace) y js/copia.js (oculta: #copia hidden). guardarArchivo en imagen.js. fuentes/ (woff2 + OFL) con @font-face y preload; sin Google Fonts (comprobar-datos). CLS: line-height fijo en botones y campos, .guardado con min-height y #lgr abierto en el HTML (escritorio.js lo cierra en el móvil); lighthouserc con CLS ≤ 0,1. sitemap.xml (comprobado en comprobar-datos). .sh con z-index 10. Pruebas: 108 (+ conHoy)."
+  },
+  {
     "version": "2.2.0",
     "fecha": "2026-10-10",
     "titulo": "Más pueblos, fotos y parques",

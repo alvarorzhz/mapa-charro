@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Páginas de la web para los buscadores. La app es una sola página: las fichas van con # y los
+     buscadores no las indexan por separado. Las de z/ (tarjetas para compartir) redirigen a la app
+     y por eso no van aquí. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://alvarorzhz.github.io/mapa-charro/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://alvarorzhz.github.io/mapa-charro/privacidad.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+</urlset>

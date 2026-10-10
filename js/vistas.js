@@ -18,6 +18,7 @@ function actualizar() {
   $('#fr').style.opacity = progreso.f ? 1 : 0.45;
   try {
     pintarLogros();
+    pintarFiltrosMapa();
     if (typeof pintarCuenta == 'function') pintarCuenta(); // cuenta.js: «para no perder tu progreso»
     if (pestana == 'list') pintarLista();
     if (pestana == 'prov') actualizarProvincia();
@@ -35,7 +36,7 @@ function cambiarPestana(nueva) {
   const enMapa = nueva == 'map',
     mapaVisible = enMapa || esEscritorio();
   document.querySelector('.mw').style.display =
-    document.querySelector('.modos').style.display =
+    $('#explorar').style.display =
     $('#palabra').style.display =
       mapaVisible ? '' : 'none';
   if (!mapaVisible) abrirCapas(false);
@@ -101,21 +102,66 @@ function pintarLista() {
     caja.appendChild(crear('p', 'mu', LISTA_VACIA[filtroLista] || 'Nada que mostrar con este filtro.'));
 }
 
-// Rutas a pie y Salamanca en el tiempo: en el móvil, con los demás accesos de arriba; en escritorio,
-// bajo el mapa (arriba a la derecha los taparía la ficha abierta)
-function colocarAccesos() {
-  const destino = document.querySelector(esEscritorio() ? '.modos' : '.acc'),
-    ayuda = $('#ayuda');
-  ['#rt', '#tm'].forEach(s =>
-    destino.classList.contains('acc') ? destino.insertBefore($(s), ayuda) : destino.appendChild($(s))
-  );
-}
-colocarAccesos();
-matchMedia('(min-width: 900px)').addEventListener('change', colocarAccesos);
-
 $('#vmap').onclick = () => cambiarPestana('map');
 $('#vprov').onclick = () => cambiarPestana('prov');
 $('#vlist').onclick = () => cambiarPestana('list');
+
+// --- Filtros del mapa (en el panel de capas): estado de la zona, parte de la ciudad y monumentos ---
+// Se combinan: p. ej. «Sin pisar» + «Sur» deja a la vista las zonas del sur que faltan.
+function pintarFiltrosMapa() {
+  const caja = $('#fmap');
+  caja.textContent = '';
+  const grupo = (titulo, opciones, conjunto) => {
+    const fila = crear('div', 'fl');
+    fila.setAttribute('role', 'group');
+    fila.setAttribute('aria-label', titulo);
+    opciones.forEach(([clave, texto]) => {
+      const b = crear('button', '', texto);
+      marcarInterruptor(b, conjunto.has(clave));
+      b.onclick = () => {
+        if (conjunto.has(clave)) conjunto.delete(clave);
+        else conjunto.add(clave);
+        aplicarFiltrosMapa();
+        $('#fmap [aria-label="' + titulo + '"]').children[opciones.findIndex(o => o[0] == clave)].focus();
+      };
+      fila.appendChild(b);
+    });
+    caja.append(crear('small', 'fmap-t', titulo), fila);
+  };
+  grupo('Zonas', ESTADOS_FILTRO, filtrosMapa.estados);
+  grupo('Parte de la ciudad', GRUPOS_FILTRO, filtrosMapa.grupos);
+  grupo(
+    'Monumentos',
+    CATEGORIAS_MONUMENTO.map(([clave, texto]) => [clave, texto]),
+    filtrosMapa.monumentos
+  );
+  const visibles = zonas.filter(zonaPasaFiltros).length,
+    resumen = crear('p', 'fmap-r', 'Se ven ' + visibles + ' de ' + zonas.length + ' zonas');
+  if (hayFiltrosMapa()) {
+    const quitar = crear('button', 'enlace', 'Quitar filtros');
+    quitar.onclick = () => {
+      filtrosMapa.estados = new Set(ESTADOS_FILTRO.map(f => f[0]));
+      filtrosMapa.grupos = new Set(GRUPOS_FILTRO.map(f => f[0]));
+      filtrosMapa.monumentos = new Set(CATEGORIAS_MONUMENTO.map(c => c[0]));
+      aplicarFiltrosMapa();
+      $('#fmap button').focus();
+    };
+    resumen.append(' · ', quitar);
+  }
+  caja.appendChild(resumen);
+  // El botón de capas avisa de que hay filtros puestos aunque el panel esté cerrado
+  $('#zc').classList.toggle('filtrado', hayFiltrosMapa());
+  $('#zc').setAttribute(
+    'aria-label',
+    hayFiltrosMapa() ? 'Capas, leyenda y filtros (hay filtros puestos)' : 'Capas, leyenda y filtros'
+  );
+}
+function aplicarFiltrosMapa() {
+  todasLasZonas.forEach(pintarZona);
+  ajustarVista(); // vuelve a colocar los monumentos
+  pintarFiltrosMapa();
+}
+pintarFiltrosMapa();
 
 // --- Panel de capas: interruptores de carreteras y monumentos, y la leyenda ----------
 function abrirCapas(abrir = $('#capas').hidden) {

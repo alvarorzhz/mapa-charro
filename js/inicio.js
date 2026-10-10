@@ -108,5 +108,9 @@ if (
     .catch(e => console.warn('Sin modo sin conexión:', e));
 }
 
-// La primera vez, la bienvenida (bienvenida.js), cuando ya se ha pintado el mapa
-if (tocaBienvenida()) setTimeout(() => mostrarBienvenida(), 300);
+// La primera vez, la bienvenida (bienvenida.js), cuando ya se ha pintado el mapa. Si no, la primera vez
+// de cada día, «¿Qué puedo descubrir hoy?» (hoy.js); el día de la bienvenida ya no sale
+if (tocaBienvenida()) {
+  escribirLocal(CLAVE_HOY, fechaHoy());
+  setTimeout(() => mostrarBienvenida(), 300);
+} else if (tocaHoy()) setTimeout(() => abrirHoy(), 300);
