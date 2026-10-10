@@ -81,7 +81,7 @@ jobs:
           rm -rf .github herramientas package.json package-lock.json eslint.config.js lighthouserc.json \
             .prettierrc.json .prettierignore CLAUDE.md
       - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v4
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: _site
       - id: despliegue
