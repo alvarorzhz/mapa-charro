@@ -100,6 +100,55 @@ const ETAPAS = [
     [FUENTE_WIKI_SALAMANCA]
   ]
 ];
+// Lo de cada etapa que tiene ficha propia en la app (por el índice de ETAPAS): monumentos según su época
+// (la de su infografía) y elementos de «Cultura y tradiciones» fechados en ella (con su fuente en su ficha).
+// Solo enlaces: los datos están en su sitio. Los pueblos de la provincia se reparten solos por los años
+// que citan sus curiosidades (pueblos.js), con RANGOS_ETAPA: [primer año, último año] de cada etapa.
+const RANGOS_ETAPA = [
+  [-1000, 0],
+  [1, 899],
+  [900, 1217],
+  [1218, 1811],
+  [1812, 1899],
+  [1900, 1962],
+  [1963, 2100]
+];
+const RELACIONES_ETAPA = [
+  { monumentos: [], cultura: [] },
+  { monumentos: ['puenteromano'], cultura: [] },
+  { monumentos: ['catedrales', 'sanmarcos'], cultura: [] },
+  {
+    monumentos: [
+      'universidad',
+      'conchas',
+      'clavero',
+      'duenas',
+      'fonseca',
+      'sanesteban',
+      'monterrey',
+      'clerecia',
+      'plazamayor'
+    ],
+    cultura: [
+      'carnaval-del-toro',
+      'nebrija',
+      'beatriz-galindo',
+      'juan-del-encina',
+      'francisco-maldonado',
+      'fray-luis-de-leon',
+      'francisco-salinas',
+      'santa-teresa-alba',
+      'torres-villarroel',
+      'mariquelo'
+    ]
+  },
+  { monumentos: ['glorieta'], cultura: ['julian-sanchez-el-charro', 'tomas-breton'] },
+  {
+    monumentos: ['casalis', 'mercado'],
+    cultura: ['gabriel-y-galan', 'unamuno', 'cancioneros-salmantinos', 'rafael-farina', 'martin-gaite']
+  },
+  { monumentos: ['helmantico', 'huerto', 'aldehuela'], cultura: ['mayalde'] }
+];
 const EPOCA_ZONA = {
   sanvicente: [0, 'Cuna de la ciudad: castro vetón en su cerro'],
   univ: [0, 'Teso de las Catedrales, donde estuvo el castro y después la ciudad romana'],

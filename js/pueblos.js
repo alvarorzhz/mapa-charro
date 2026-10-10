@@ -23,8 +23,11 @@ function abrirPueblo(m) {
   $('#k').textContent = 'Pueblo · ' + PROVINCIA.com[m.c];
   $('#nm').textContent = m.n;
   $('#mz').hidden = true;
-  pintarFoto(null);
-  pintarCulturaEnFicha(culturaDeMunicipio(m));
+  const paradas = paradasDeMunicipio(m),
+    cultura = culturaDeMunicipio(m);
+  pintarFotoDe(fotoDePueblo(paradas, cultura));
+  pintarCulturaEnFicha(cultura);
+  pintarRelacionados(relacionadosDePueblo(m, paradas));
 
   // Cabecera: habitantes y monumento o lugar principal
   const caja = $('#info');
@@ -38,6 +41,15 @@ function abrirPueblo(m) {
         (m.P.length ? ' · ' + m.P.length + (m.P.length == 1 ? ' pedanía' : ' pedanías') : '')
     )
   );
+  // Los nombres de las pedanías (con muchas, plegados)
+  if (m.P.length) {
+    const nombres = m.P.map(p => p.n).join(', ');
+    caja.appendChild(
+      m.P.length > 8
+        ? crear('details', 'peds', crear('summary', '', 'Sus pedanías'), crear('p', '', nombres))
+        : crear('p', 'peds', (m.P.length == 1 ? 'Pedanía: ' : 'Pedanías: ') + nombres + '.')
+    );
+  }
   if (f.mon) {
     const mon = f.mon,
       linea = [mon.epoca, mon.estilo].filter(Boolean).join(' · ');
@@ -94,6 +106,90 @@ function abrirPueblo(m) {
   pintarBotonesFicha();
   mostrarFicha();
   enlaceFicha('pueblo/' + slug(m.n), m.n);
+}
+
+// Paradas de las rutas por la provincia que están en el municipio. En los datos, «municipio» puede llevar
+// la pedanía entre paréntesis: «Aldeadávila de la Ribera (Corporario)».
+const municipioDeParada = p => p.municipio.replace(/ \(.*\)$/, '');
+const pedaniaDeParada = p => (p.municipio.match(/ \((.*)\)$/) || [])[1] || '';
+function paradasDeMunicipio(m) {
+  const lista = [];
+  RUTAS_PROVINCIA.forEach((r, k) =>
+    r.paradas.forEach((p, i) => {
+      if (municipioDeParada(p) == m.n) lista.push({ r, k, p, i });
+    })
+  );
+  return lista;
+}
+
+// Foto de la ficha: la de una parada de ruta del pueblo o, si no hay, la de una de sus tradiciones (cultura.js)
+function fotoDePueblo(paradas, cultura) {
+  const conFoto = paradas.find(x => x.p.foto);
+  if (conFoto) return conFoto.p.foto;
+  const c = cultura.find(c => c.foto);
+  return c
+    ? [c.foto.src, c.foto.pie + '. Foto: ' + c.foto.autor + ' · ' + c.foto.licencia + ' · Wikimedia Commons']
+    : null;
+}
+
+// Centro aproximado del término municipal (media de los puntos de su linde más larga)
+const centroDeMunicipio = m => centroDe(m.R.slice().sort((a, b) => b.length - a.length)[0]);
+const DISTANCIA_CERCA_PUEBLO = 30; // km en línea recta
+
+function relacionadosDePueblo(m, paradas) {
+  // Una parada que sale en varias rutas, una vez
+  const vistas = new Set(),
+    unicas = paradas.filter(x => !vistas.has(x.p.id) && vistas.add(x.p.id)),
+    rutas = [...new Set(paradas.map(x => x.k))],
+    [la, lo] = centroDeMunicipio(m),
+    cerca = pueblos
+      .filter(o => o != m && PUEBLOS[o.n] && !o.z)
+      .map(o => [distanciaKm(la, lo, ...centroDeMunicipio(o)), o])
+      .filter(([d]) => d <= DISTANCIA_CERCA_PUEBLO)
+      .sort((a, b) => a[0] - b[0])
+      .slice(0, 3);
+  return [
+    [
+      'Qué ver',
+      unicas.map(({ r, k, p, i }) => ({
+        texto: '📍 ' + p.n,
+        detalle: [pedaniaDeParada(p) && 'en ' + pedaniaDeParada(p), 'unos ' + p.min + ' min']
+          .filter(Boolean)
+          .join(', '),
+        hecho: estaVisitada({ tipo: 'ru', ruta: r.id, id: p.id }),
+        abrir: () => abrirParadaProvincia(i, k)
+      }))
+    ],
+    [
+      'Rutas en coche que pasan por aquí',
+      rutas.map(k => {
+        const r = RUTAS_PROVINCIA[k];
+        return {
+          icono: r.icono + ' ',
+          texto: r.nombre.split(':')[0],
+          detalle: DURACIONES[r.duracion].toLowerCase(),
+          hecho: estadoRuta(r.id) == 'v',
+          abrir: () => abrirRutaProvincia(k)
+        };
+      })
+    ],
+    [
+      'En «Salamanca en el tiempo»',
+      etapasDePueblo(m).map(i => ({
+        texto: '📜 ' + ETAPAS[i][0] + ' · ' + ETAPAS[i][1],
+        abrir: () => abrirTiempo(i)
+      }))
+    ],
+    [
+      'Otros pueblos cerca, en línea recta',
+      cerca.map(([d, o]) => ({
+        texto: o.n,
+        detalle: 'a ' + Math.max(1, Math.round(d)) + ' km',
+        hecho: estadoMunicipio(o) == 'v',
+        abrir: () => abrirPueblo(o)
+      }))
+    ]
+  ];
 }
 
 // Botón «Ver ficha» en la barra del pueblo seleccionado de la pestaña Provincia

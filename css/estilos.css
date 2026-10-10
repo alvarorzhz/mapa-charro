@@ -225,3 +225,15 @@ button,input,#q,.seg button,.sig{line-height:1.25}
 :is(main,.sh,.modal) :is(a,input,select):focus-visible{outline:3px solid var(--vit);outline-offset:2px}
 :is(.acc,.zb,.botones,.sb,.bt) button:disabled{opacity:.55;cursor:default}
 @media(min-width:900px){#explorar .acc{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-flow:row}}
+/* Para seguir explorando (#rel): rutas, qué ver, parques y lo que hay cerca, en filas de botones */
+.rel{margin:2px 0 4px}.rel-fila{margin-top:6px}.rel-t{margin-right:4px}
+.rel-fila button small,.rel-etq small{font-size:12px;opacity:.8}.rel-etq{display:inline-block;padding:3px 10px;font-size:13px;border:1px dashed var(--line);border-radius:99px;margin:3px 5px 0 0}
+.rel-hecho{color:var(--vit-texto);font-weight:700}.nb button .rel-hecho{color:inherit}
+.info .peds{margin:2px 0 6px;font-size:13px;opacity:.85}.info details.peds summary{font-size:13px}.info details.peds p{margin:4px 0 0}
+/* Grabaciones en las fichas de cultura */
+.cul-audio{margin:8px 0 10px;padding:10px 12px;border:2px solid var(--line);border-radius:12px;background:var(--card)}.cul-audio figcaption{font-size:14px;margin-bottom:6px}.cul-audio figcaption small{display:block;font-size:12.5px;opacity:.8;margin-top:2px}.cul-audio audio{display:block;width:100%;height:40px}
+/* Mi Salamanca: resumen en porcentajes y logros recientes */
+.ms-resumen{list-style:none;margin:4px 0 10px;padding:10px 12px;border:2px solid var(--line);border-radius:12px;background:var(--card);font-size:14px}.ms-resumen li{margin:2px 0}.ms-resumen b{font:17px 'Alfa Slab One',Georgia,serif;color:var(--vit-texto);margin-right:2px}
+.ms-recientes{margin-top:8px}.ms-reciente{margin:2px 0;font-size:14px}.ms-reciente small{opacity:.8}
+/* «Salamanca en el tiempo»: lo de cada etapa con su ficha */
+.tetapa-rel{margin:10px 0 6px}.tetapa-rel h4{font:600 14px Lora,Georgia,serif;color:var(--oro-texto);margin:0 0 2px}.tetapa-rel .nb small{opacity:.8}

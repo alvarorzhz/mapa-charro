@@ -228,8 +228,16 @@ function abrirParadaProvincia(i, k = rutaProvinciaAbierta) {
   const resumen = crear('button', '', 'Ver toda la ruta');
   resumen.onclick = () => abrirRutaProvincia(k);
   nav.appendChild(resumen);
+  // La ficha del pueblo, si la tiene (pueblos.js)
+  const municipio = municipioPorNombre(municipioDeParada(p)),
+    fichaDelPueblo =
+      municipio && PUEBLOS[municipio.n] && !municipio.cap
+        ? crear('button', '', 'Ver la ficha de ' + municipio.n)
+        : null;
+  if (fichaDelPueblo) fichaDelPueblo.onclick = () => abrirPueblo(municipio);
   $('#nb').append(
     nav,
+    fichaDelPueblo || '',
     enlaceExterno('Cómo llegar (Google Maps)', urlGoogleParada(p)),
     enlaceExterno('Cómo llegar (OpenStreetMap)', urlOsmParada(p))
   );

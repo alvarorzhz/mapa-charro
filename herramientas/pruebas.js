@@ -295,6 +295,48 @@ prueba('Mapa con teclado y lector de pantalla', async p => {
   cierto(!(await p.$('#rs')), 'sin botón de Resto de la provincia');
 });
 
+prueba('Salamanca en el tiempo: cada etapa enlazada con monumentos, personajes y pueblos', async (p, url) => {
+  await p.goto(url + '#tiempo/5');
+  await p.waitForSelector('#sh.o .tetapa-rel');
+  const rel = await texto(p, '.tetapa-rel');
+  cierto(rel.includes('Plaza de Toros') || rel.includes('Glorieta'), 'el monumento de su época');
+  cierto(rel.includes('Julián Sánchez') && rel.includes('Tomás Bretón'), 'personajes de su época');
+  // Los pueblos salen por los años de sus fichas: Arapiles (1812) está en esta etapa y no en otra
+  cierto(rel.includes('Arapiles') && rel.includes('1812'), 'pueblos con un hecho fechado en la etapa');
+  igual(
+    await p.evaluate(() => etapasDePueblo(municipioPorNombre('Arapiles'))),
+    [4],
+    'Arapiles solo en su etapa'
+  );
+  // Ida y vuelta: del personaje a la etapa, y de la etapa al pueblo
+  await p.evaluate(() => abrirElementoCultura('tomas-breton'));
+  cierto((await texto(p, '#info')).includes('📜 1812–1899'), 'la ficha cultural lleva a su etapa');
+  await p.evaluate(() =>
+    [...document.querySelectorAll('#info button')].find(b => b.textContent.startsWith('📜')).click()
+  );
+  igual(await p.evaluate(() => location.hash), '#tiempo/5', 'y la abre');
+  await p.evaluate(() => abrirPueblo(municipioPorNombre('Arapiles')));
+  cierto((await texto(p, '#rel')).includes('📜 1812–1899'), 'la ficha del pueblo también');
+  await p.evaluate(() => abrirMonumento('glorieta'));
+  cierto((await texto(p, '#rel')).includes('📜 1812–1899'), 'y la del monumento');
+});
+
+prueba('Ruta «Personajes en bronce»: cada estatua con su personaje', async (p, url) => {
+  const k = await p.evaluate(() => RUTAS.findIndex(r => r.id == 'personajes'));
+  cierto(k >= 0, 'la ruta existe');
+  await p.goto(url + '#ruta-personajes/2');
+  await p.waitForSelector('#sh.o');
+  igual(await texto(p, '#nm'), 'Monumento a Carmen Martín Gaite', 'la parada');
+  await p.evaluate(() =>
+    [...document.querySelectorAll('#nb button')].find(b => b.textContent.includes('su historia')).click()
+  );
+  igual(await p.evaluate(() => location.hash), '#cultura/martin-gaite', 'lleva a su ficha de cultura');
+  cierto(
+    (await texto(p, '#info')).includes('Personajes en bronce, parada 2'),
+    'que a su vez lleva a la parada'
+  );
+});
+
 prueba('Salamanca en el tiempo', async p => {
   // Una zona marcada como «He estado»: en este modo no se ve la marca y al salir vuelve
   // (el color cambia con una transición de 0,25 s: se espera a que acabe)
@@ -769,6 +811,67 @@ prueba('Monumentos', async (p, url) => {
   await p.click('#zc');
   await p.click('#mb');
   igual(await p.$eval('#mon', e => e.style.display), 'none', 'el interruptor oculta los monumentos');
+});
+
+prueba('Fichas: para seguir explorando', async (p, url) => {
+  const filas = () =>
+    p.$$eval('#rel .rel-fila', fs =>
+      fs.map(f => [f.querySelector('.rel-t').textContent, f.querySelectorAll('button,.rel-etq').length])
+    );
+  // Monumento: la ruta que pasa (con su parada) y lo que hay cerca, con distancia calculada
+  await p.goto(url + '#monumento/catedrales');
+  const mo = await filas();
+  igual(mo[0], ['En la ruta:', 1], 'la ruta monumental');
+  cierto((await texto(p, '#rel')).includes('parada 5 de 9'), 'con su número de parada');
+  cierto(
+    mo.some(f => f[0] == 'Cerca, en línea recta:' && f[1] >= 1),
+    'monumentos cercanos'
+  );
+  cierto(
+    mo.some(f => f[0] == 'En «Salamanca en el tiempo»:'),
+    'y su etapa de la historia'
+  );
+  await p.evaluate(() =>
+    [...document.querySelectorAll('#rel button')].find(b => b.textContent.includes('Casa Lis')).click()
+  );
+  igual(await p.evaluate(() => location.hash), '#monumento/casalis', 'y se abren');
+  // Zona: rutas a pie y parques dentro de su límite; los monumentos visitados, con ✓
+  await p.evaluate(() => {
+    ponerVisita({ tipo: 'mo', id: 'catedrales', n: 'Catedrales' }, true);
+    abrirFicha('univ');
+  });
+  cierto((await texto(p, '#rel')).includes('Ruta monumental'), 'la ruta que pasa por el barrio');
+  cierto((await texto(p, '#mz')).includes('Catedrales Nueva y Vieja ✓'), 'monumento visitado marcado');
+  await p.evaluate(() => abrirFicha('arrabal'));
+  cierto((await texto(p, '#rel')).includes('Parque Elio Antonio de Nebrija'), 'sus parques');
+  await p.evaluate(() => abrirFicha('garridosur'));
+  cierto(await p.$eval('#rel', e => e.hidden), 'sin nada relacionado, no sale');
+  // Pueblo: qué ver (paradas de las rutas, con su tiempo de visita), rutas en coche, pedanías, foto y cercanos
+  await p.goto(url + '#pueblo/la-alberca');
+  const pu = await filas();
+  igual(
+    pu.map(f => f[0]),
+    [
+      'Qué ver:',
+      'Rutas en coche que pasan por aquí:',
+      'En «Salamanca en el tiempo»:',
+      'Otros pueblos cerca, en línea recta:'
+    ],
+    'apartados del pueblo'
+  );
+  cierto((await texto(p, '#rel')).includes('unos 90 min'), 'tiempo de visita de los datos de la ruta');
+  cierto((await texto(p, '#info .peds')).includes('Las Batuecas'), 'nombres de las pedanías');
+  cierto(!(await p.$eval('#ph', e => e.hidden)), 'con foto (de la parada de la ruta)');
+  cierto((await texto(p, '#pc')).includes('Wikimedia Commons'), 'y su autoría');
+  await p.click('#rel button');
+  igual(await p.evaluate(() => location.hash), '#ruta-sierra-francia/2', 'Qué ver abre la parada');
+  cierto(
+    (await texto(p, '#nb')).includes('Ver la ficha de La Alberca'),
+    'y la parada lleva de vuelta al pueblo'
+  );
+  // Un sitio propio de una ruta a pie lleva a su barrio
+  await p.goto(url + '#ruta-murales/3');
+  cierto((await texto(p, '#nb')).includes('Ver Barrio del Oeste'), 'el mural lleva a su barrio');
 });
 
 prueba('Panel de capas y leyenda', async p => {
@@ -2011,6 +2114,48 @@ prueba(
   { geolocation: { latitude: 40.9651, longitude: -5.6641 }, permissions: ['geolocation'] }
 );
 
+prueba(
+  'Provincia: «Estoy aquí» en el minimapa',
+  async p => {
+    await p.click('#vprov');
+    await p.click('.pmw .pzl');
+    await p.waitForFunction(() => puebloSeleccionado && puebloSeleccionado.n == 'La Alberca');
+    cierto(
+      (await texto(p, '#psb')).includes('Estás en el término de La Alberca'),
+      'elige el pueblo donde estás'
+    );
+    igual(await p.$$eval('#pm .pmp circle', a => a.length), 3, 'y pinta el punto azul con su precisión');
+    cierto(
+      await p.evaluate(
+        () =>
+          !Object.keys(localStorage).some(k => /ubica|posici/i.test(k)) &&
+          !/40\.48/.test(localStorage.charro2 || '')
+      ),
+      'la ubicación no se guarda'
+    );
+    // En la capital: lo dice y ofrece ir a su mapa
+    // (el navegador da por buena una posición de hace menos de un minuto: las demás se pasan directamente)
+    await p.evaluate(() =>
+      alLocalizarEnProvincia({ coords: { latitude: 40.9651, longitude: -5.6641, accuracy: 20 } })
+    );
+    await p.waitForFunction(() => !document.querySelector('#pgm').hidden);
+    cierto((await texto(p, '#pgm')).includes('Estás en la capital'), 'en la capital avisa');
+    await p.click('#pgm button');
+    await p.waitForSelector('#sh.o');
+    igual(await p.evaluate(() => pestana), 'map', 'y lleva al mapa de la capital');
+    // Fuera de la provincia
+    await p.click('#vprov');
+    await p.evaluate(() =>
+      alLocalizarEnProvincia({ coords: { latitude: 40.4168, longitude: -3.7038, accuracy: 20 } })
+    );
+    await p.waitForFunction(() =>
+      document.querySelector('#pgm').textContent.includes('fuera de la provincia')
+    );
+    igual(await p.$$eval('#pm .pmp circle', a => a.length), 0, 'sin punto fuera de la provincia');
+  },
+  { geolocation: { latitude: 40.4889, longitude: -6.1103 }, permissions: ['geolocation'] }
+);
+
 // Progreso de prueba para «Mi Salamanca»: ids sacados de los datos para no depender de ninguno en concreto
 const progresoDePrueba = () => {
   const alfoz = zonas.find(z => z.g == 5),
@@ -2067,6 +2212,70 @@ prueba('Mi Salamanca: progreso vacío', async p => {
   cierto(!(await texto(p, '#info')).includes('Mes a mes'), 'ni gráfico');
   const e = await p.evaluate(() => estadisticas());
   igual([e.capital.barrios.v, e.provincia.municipios.v, e.capital.monumentos.v], [0, 0, 0], 'todo a cero');
+});
+
+prueba('Mi Salamanca: porcentajes, categorías, por dónde seguir y objetivos', async (p, url) => {
+  const prueba = await p.evaluate(`(${progresoDePrueba.toString()})()`);
+  await p.evaluate(pr => localStorage.setItem('charro2', JSON.stringify(pr)), prueba.progreso);
+  await p.goto(url + '#mi-salamanca');
+  await p.reload();
+  await p.waitForSelector('#sh.o .ms-resumen');
+  const antes = await p.evaluate(() => localStorage.charro2);
+  // Porcentajes con su total dicho
+  const resumen = await texto(p, '.ms-resumen');
+  const barrios = await p.evaluate(() => zonas.filter(z => z.g < 5).length);
+  cierto(
+    resumen.includes(
+      Math.round((2 / barrios) * 100) + ' % de los barrios de la capital (2 de ' + barrios + ' barrios)'
+    ),
+    'barrios en porcentaje, con su total'
+  );
+  cierto(resumen.includes('municipios, sin la capital'), 'municipios con su denominador explicado');
+  cierto(resumen.includes('de las pedanías (1 de '), 'pedanías');
+  // Categorías: cada una con su total, sin mezclar; lo más explorado y lo que falta
+  const cats = await p.evaluate(() => estadisticas().categorias);
+  const casco = cats.find(c => c.tipo == 'barrios' && c.v == 2);
+  cierto(casco && casco.total >= 2, 'la parte de la ciudad con los dos barrios pisados');
+  cierto(
+    cats.filter(c => c.tipo == 'municipios').reduce((s, c) => s + c.total, 0) ==
+      (await p.evaluate(() => pueblos.length)),
+    'las comarcas suman todos los municipios, cada uno una vez'
+  );
+  cierto(
+    (await texto(p, '.ms-apartado')).length > 0 && (await texto(p, '#info')).includes('Sin empezar:'),
+    'lo que está sin empezar'
+  );
+  // Por dónde seguir: lo guardado («Quiero ir», «La quiero hacer») y las rutas hechas, aparte de lo visitado
+  const seguir = await p.evaluate(
+    () =>
+      [...document.querySelectorAll('.ms-apartado')].find(s =>
+        s.textContent.includes('Para seguir explorando')
+      ).textContent
+  );
+  cierto(
+    seguir.includes('Vega') && seguir.includes('«Quiero ir»'),
+    'el barrio en «Quiero ir», como pendiente'
+  );
+  cierto(seguir.includes('«La quiero hacer»'), 'la ruta que quiere hacer');
+  cierto(seguir.includes('Rutas hechas'), 'y las rutas hechas');
+  // Logros: el último conseguido, con fecha, y los próximos objetivos
+  cierto((await texto(p, '.ms-recientes')).includes('Primer vítor'), 'último logro con su fecha');
+  cierto((await texto(p, '#info')).includes('Tus próximos objetivos'), 'próximos objetivos');
+  // Mirar y filtrar las cifras no cambia nada de lo guardado
+  await p.evaluate(() => {
+    ambitoEstadisticas = 'provincia';
+    pintarEstadisticas(true);
+    ambitoEstadisticas = 'todo';
+    pintarEstadisticas(true);
+  });
+  igual(await p.evaluate(() => localStorage.charro2), antes, 'mirar las cifras no cambia el progreso');
+  // Un acceso directo lleva a la ficha pendiente
+  await p.evaluate(() =>
+    [...document.querySelectorAll('.ms-apartado .fila-explora')]
+      .find(b => b.textContent.includes('Vega'))
+      .click()
+  );
+  igual(await p.evaluate(() => location.hash), '#vega', 'el acceso abre la zona pendiente');
 });
 
 prueba('Mi Salamanca: cálculos con datos controlados y capital y provincia por separado', async (p, url) => {
@@ -2227,6 +2436,44 @@ prueba('Cultura y tradiciones: lista, búsqueda y filtros', async p => {
   await p.fill('#q', 'farinato');
   await p.waitForSelector('#sr button');
   cierto((await texto(p, '#sr')).includes('Cultura · Gastronomía tradicional'), 'en el buscador general');
+});
+
+prueba('Cultura y tradiciones: grabaciones para escuchar', async (p, url) => {
+  await p.goto(url + '#cultura/pandero-cuadrado-penaparda');
+  await p.waitForSelector('#sh.o .cul-audio audio');
+  const audio = () =>
+    p.$eval('#sh .cul-audio audio', a => ({
+      src: a.getAttribute('src'),
+      preload: a.preload,
+      parado: a.paused,
+      controles: a.controls
+    }));
+  igual(
+    await audio(),
+    { src: 'audio/cultura-pandero-cuadrado-penaparda.mp3', preload: 'none', parado: true, controles: true },
+    'reproductor con controles, que no suena ni descarga nada solo'
+  );
+  cierto((await texto(p, '#info .cul-audio')).includes('García Matos en 1955'), 'dice quién, dónde y cuándo');
+  cierto(
+    await p.$('#ap a[href*="Ajechao_y_sorteado"]'),
+    'la grabación lleva su autor, licencia y enlace en las fuentes'
+  );
+  // El archivo existe y se sirve como audio
+  const respuesta = await p.evaluate(() =>
+    fetch('audio/cultura-pandero-cuadrado-penaparda.mp3').then(r => [r.status, r.headers.get('content-type')])
+  );
+  igual(respuesta[0], 200, 'el archivo está');
+  // Si suena y se cambia de ficha, se para
+  await p.evaluate(() => {
+    const a = document.querySelector('#sh .cul-audio audio');
+    window.__pausado = false;
+    a.pause = () => (window.__pausado = true);
+    abrirFicha('centro');
+  });
+  cierto(await p.evaluate(() => window.__pausado), 'al cambiar de ficha la grabación se para');
+  // En la lista, las que tienen grabación lo dicen
+  await p.evaluate(() => abrirCultura());
+  cierto((await texto(p, '#info')).includes('🎵 con grabación'), 'la lista avisa de las grabaciones');
 });
 
 prueba('Cultura y tradiciones: ficha, mapa sin puntos inventados y enlaces con el resto', async (p, url) => {
@@ -2548,7 +2795,10 @@ prueba('Guardado: con la app abierta en dos pestañas no se pisan', async (p, ur
     [390, 844, 'móvil'],
     [1280, 860, 'escritorio']
   ].filter(([, , n]) => !soloTamano || n.normalize('NFD').replace(/[\u0300-\u036f]/g, '') == soloTamano)) {
-    for (const { nombre: n, fn, opciones } of pruebas) {
+    // PRUEBAS_SOLO=texto pasa solo las pruebas cuyo nombre lo contiene (para ir más rápido mientras se trabaja)
+    for (const { nombre: n, fn, opciones } of pruebas.filter(
+      x => !process.env.PRUEBAS_SOLO || x.nombre.includes(process.env.PRUEBAS_SOLO)
+    )) {
       const ctx = await navegador.newContext({
         viewport: { width: ancho, height: alto },
         serviceWorkers: opciones.conServiceWorker ? 'allow' : 'block',

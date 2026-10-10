@@ -33,7 +33,7 @@ const datos = [
 const codigo =
   datos.map(d => leer('js/datos/' + d + '.js')).join('\n;\n') +
   '\n;({ NOMBRES_GRUPOS, ZONAS_GRANDES, ZONAS, OTROS_NOMBRES, SEMILLAS_REPARTO, MONUMENTOS, RUTAS, TRAMOS_RUTAS, PUEBLOS, CURIOSIDADES, LEYENDAS, FOTOS, DONDE_COMER,' +
-  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA, PALABRAS_CHARRAS, FUENTES_PALABRAS, RUTAS_PROVINCIA, SALIDA_PROVINCIA, TRAMOS_PROVINCIA, CARRETERAS_PROVINCIA, HABITANTES, PARQUES, CULTURA, CATEGORIAS_CULTURA, TIPOS_TEXTO_CULTURA })';
+  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA, RELACIONES_ETAPA, RANGOS_ETAPA, PALABRAS_CHARRAS, FUENTES_PALABRAS, RUTAS_PROVINCIA, SALIDA_PROVINCIA, TRAMOS_PROVINCIA, CARRETERAS_PROVINCIA, HABITANTES, PARQUES, CULTURA, CATEGORIAS_CULTURA, TIPOS_TEXTO_CULTURA })';
 const D = vm.runInNewContext(codigo, {});
 
 const WEB_PUBLICA = 'https://alvarorzhz.github.io/mapa-charro/';
@@ -185,6 +185,11 @@ D.RUTAS.forEach(r => {
       Array.isArray(p.fuente) && p.fuente[0] && /^https?:\/\//.test(p.fuente[1]),
       `Ruta ${r.id}: la parada «${p.n}» sin fuente con enlace`
     );
+    if (p.cultura)
+      comprobar(
+        D.CULTURA.some(c => c.id == p.cultura),
+        `Ruta ${r.id}: la parada «${p.n}» enlaza a «${p.cultura}», que no está en CULTURA`
+      );
   });
   comprobar(new Set(r.paradas.map(idParada)).size == r.paradas.length, `Ruta ${r.id}: hay paradas repetidas`);
   const T = D.TRAMOS_RUTAS[r.id] || [];
@@ -611,6 +616,23 @@ for (const f of fs.readdirSync(path.join(RAIZ, 'js/datos')).filter(f => f.endsWi
         `${que}: la foto necesita el enlace a su página en Commons`
       );
     }
+    // Grabación: archivo en audio/, título, detalle, autor, licencia libre y página en Wikimedia Commons
+    if (c.audio) {
+      const a = c.audio;
+      comprobar(
+        /^audio\/[a-z0-9-]+\.mp3$/.test(a.src || '') && fs.existsSync(path.join(RAIZ, a.src)),
+        `${que}: no existe la grabación ${a.src}`
+      );
+      comprobar(a.titulo && a.detalle && a.autor, `${que}: la grabación necesita título, detalle y autor`);
+      comprobar(
+        LICENCIAS.test(a.licencia || ''),
+        `${que}: licencia de la grabación desconocida («${a.licencia}»)`
+      );
+      comprobar(
+        /^https:\/\/commons\.wikimedia\.org\/wiki\/File:/.test(a.url || ''),
+        `${que}: la grabación necesita el enlace a su página en Commons`
+      );
+    }
   });
   // Categorías: solo las que tienen contenido
   D.CATEGORIAS_CULTURA.forEach(([k, n]) =>
@@ -620,6 +642,29 @@ for (const f of fs.readdirSync(path.join(RAIZ, 'js/datos')).filter(f => f.endsWi
     )
   );
 }
+
+// --- Salamanca en el tiempo: lo relacionado con cada etapa ----------------------------------------
+comprobar(
+  D.RELACIONES_ETAPA.length == D.ETAPAS.length && D.RANGOS_ETAPA.length == D.ETAPAS.length,
+  'RELACIONES_ETAPA y RANGOS_ETAPA tienen que tener una entrada por etapa'
+);
+D.RANGOS_ETAPA.forEach(([a, b], i) =>
+  comprobar(
+    a <= b && (i == 0 || a == D.RANGOS_ETAPA[i - 1][1] + 1),
+    `RANGOS_ETAPA: la etapa ${i + 1} no sigue a la anterior sin huecos`
+  )
+);
+D.RELACIONES_ETAPA.forEach((r, i) => {
+  r.monumentos.forEach(id =>
+    comprobar(idsMonumento.has(id), `RELACIONES_ETAPA ${i + 1}: el monumento «${id}» no existe`)
+  );
+  r.cultura.forEach(id =>
+    comprobar(
+      D.CULTURA.some(c => c.id == id),
+      `RELACIONES_ETAPA ${i + 1}: «${id}» no está en CULTURA`
+    )
+  );
+});
 
 // --- sitemap.xml y tipografías propias ---------------------------------------------
 {

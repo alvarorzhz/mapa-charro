@@ -151,7 +151,18 @@ function construirMinimapa(contenedor) {
   const zb = crear('div', 'zb');
   zb.innerHTML =
     '<button aria-label="Acercar">+</button><button aria-label="Alejar">−</button><button aria-label="Ver toda la provincia" title="Ver toda la provincia">⌂</button>';
+  // «Estoy aquí», con el mismo icono que el del mapa de la capital (ubicacion.js)
+  const localizar = crear('button', 'pzl');
+  localizar.setAttribute('aria-label', 'Estoy aquí: buscar mi pueblo');
+  localizar.title = 'Estoy aquí';
+  localizar.innerHTML = $('#zl').innerHTML;
+  localizar.onclick = () => pedirUbicacion(localizar, alLocalizarEnProvincia, mensajeUbicacionProvincia);
+  zb.appendChild(localizar);
   caja.appendChild(zb);
+  const mensaje = crear('p', 'gm');
+  mensaje.id = 'pgm';
+  mensaje.hidden = true;
+  contenedor.appendChild(mensaje);
   // Leyenda de las carreteras, debajo del mapa
   contenedor.appendChild(
     crear(
@@ -179,6 +190,7 @@ function construirMinimapa(contenedor) {
     sv.setAttribute('viewBox', vista.x + ' ' + vista.y + ' ' + vista.w + ' ' + vista.h);
     escalarEscudos((0.36 * vista.w) / W);
     escalarSeleccion((0.36 * vista.w) / W);
+    escalarPunto((0.36 * vista.w) / W);
   };
   const zoom = (factor, cx = vista.x + vista.w / 2, cy = vista.y + vista.h / 2) => {
     const w = Math.min(W, Math.max(W / 8, vista.w / factor)),
@@ -255,6 +267,41 @@ function construirMinimapa(contenedor) {
     };
     escalarSeleccion((0.36 * vista.w) / W);
   };
+  // Punto azul de «Estoy aquí»: el círculo de precisión a escala y el punto del mismo tamaño en pantalla
+  const capaPosicion = crearSvg('g', { class: 'pmp', 'aria-hidden': 'true' }, sv);
+  let marcaPunto = null;
+  const escalarPunto = f =>
+    marcaPunto &&
+    marcaPunto.g.setAttribute(
+      'transform',
+      `translate(${marcaPunto.x.toFixed(2)} ${marcaPunto.y.toFixed(2)}) scale(${f.toFixed(4)})`
+    );
+  const posicion = (la, lo, precision) => {
+    capaPosicion.textContent = '';
+    marcaPunto = null;
+    if (la == null) return;
+    const [x, y] = aLienzo([la, lo]);
+    crearSvg(
+      'circle',
+      {
+        cx: x,
+        cy: y,
+        r: Math.max(0.3, (precision / 1000) * 0.9), // 1 km ≈ 0,9 en este lienzo
+        fill: 'var(--auv)',
+        'fill-opacity': 0.15,
+        stroke: 'var(--auv)',
+        'stroke-opacity': 0.5,
+        'stroke-width': '1px',
+        'vector-effect': 'non-scaling-stroke'
+      },
+      capaPosicion
+    );
+    const g = crearSvg('g', {}, capaPosicion);
+    crearSvg('circle', { r: 7, fill: 'var(--auv)', class: 'mepulse' }, g);
+    crearSvg('circle', { r: 5, fill: 'var(--auv)', stroke: '#fff', 'stroke-width': 2 }, g);
+    marcaPunto = { g, x, y };
+    escalarPunto((0.36 * vista.w) / W);
+  };
   const escalarEscudos = pintarCarreterasProvincia(
     crearSvg('g', { class: 'pmv', 'aria-hidden': 'true' }, sv),
     aLienzo
@@ -296,7 +343,7 @@ function construirMinimapa(contenedor) {
     vista.y = cy - vista.h / 2;
     ajustar();
   };
-  return { caminos, encuadrar, resaltar };
+  return { caminos, encuadrar, resaltar, posicion };
 }
 
 // Lista desplegable por comarcas, con cada municipio y sus pedanías

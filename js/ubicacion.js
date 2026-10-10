@@ -70,9 +70,9 @@ function dibujarPosicion(la, lo, precision) {
   ajustarVista();
 }
 
-// Mensaje bajo el mapa; con conPestana añade un botón para abrir la app fuera de Claude
-function mensajeUbicacion(texto, conPestana) {
-  const e = $('#gm');
+// Mensaje bajo el mapa; con conPestana añade un botón para abrir la app fuera de Claude.
+// e: dónde se escribe (#gm, bajo el mapa de la capital; #pgm, bajo el de la provincia)
+function mensajeUbicacion(texto, conPestana, e = $('#gm')) {
   e.hidden = !texto;
   e.textContent = texto || '';
   if (texto && conPestana && /^https?:/.test(location.protocol)) {
@@ -146,14 +146,14 @@ function alLocalizar(pos) {
   }
 }
 
-function alFallarUbicacion(e) {
+function alFallarUbicacion(e, mensaje = mensajeUbicacion) {
   ubicacion = null;
   aviso('No te he podido localizar', { tipo: 'error' });
   if (e.code == 1 && EN_MARCO) {
-    mensajeUbicacion(MENSAJE_EN_MARCO, true);
+    mensaje(MENSAJE_EN_MARCO, true);
     return;
   }
-  mensajeUbicacion(
+  mensaje(
     e.code == 1
       ? 'No hay permiso para usar tu ubicación. Actívalo en los ajustes de ubicación del navegador y vuelve a pulsar la brújula.'
       : e.code == 3
@@ -162,16 +162,17 @@ function alFallarUbicacion(e) {
   );
 }
 
-$('#zl').onclick = () => {
-  const boton = $('#zl');
-  mensajeUbicacion('');
+// Pide la ubicación una sola vez, al pulsar un botón de «Estoy aquí», y la pasa a alOk. No se guarda ni
+// se envía: solo vive en «ubicacion» mientras la app está abierta. mensaje: dónde explicar lo que falle.
+function pedirUbicacion(boton, alOk, mensaje) {
+  mensaje('');
   if (ubicacionBloqueada()) {
     aviso('Aquí no puedo usar tu ubicación', { tipo: 'error' });
-    mensajeUbicacion(MENSAJE_EN_MARCO, true);
+    mensaje(MENSAJE_EN_MARCO, true);
     return;
   }
   if (!navigator.geolocation || !window.isSecureContext) {
-    mensajeUbicacion('Este navegador no permite saber dónde estás.');
+    mensaje('Este navegador no permite saber dónde estás.');
     return;
   }
   const ocupado = si => {
@@ -182,12 +183,62 @@ $('#zl').onclick = () => {
   navigator.geolocation.getCurrentPosition(
     pos => {
       ocupado(false);
-      alLocalizar(pos);
+      alOk(pos);
     },
     e => {
       ocupado(false);
-      alFallarUbicacion(e);
+      alFallarUbicacion(e, mensaje);
     },
     { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
   );
-};
+}
+
+$('#zl').onclick = () => pedirUbicacion($('#zl'), alLocalizar, mensajeUbicacion);
+
+// --- En el mapa de la provincia ---------------------------------------------------------------------
+const mensajeUbicacionProvincia = (texto, conPestana) => mensajeUbicacion(texto, conPestana, $('#pgm'));
+
+// Busca el término municipal del punto, lo marca en el minimapa con el punto azul y elige ese pueblo.
+// En la capital o en un pueblo de alrededor (que se marcan en el mapa de la capital) ofrece ir allí.
+function alLocalizarEnProvincia(pos) {
+  const la = pos.coords.latitude,
+    lo = pos.coords.longitude,
+    precision = pos.coords.accuracy || 0,
+    municipio = PROVINCIA.m.find(m => m.R.some(r => dentroDePoligono(r, la, lo))) || null;
+  if (!municipio) {
+    ubicacion = null;
+    vistaProvincia.posicion(null);
+    mensajeUbicacionProvincia('Estás fuera de la provincia de Salamanca. ¡Aquí te esperamos!');
+    return;
+  }
+  ubicacion = {
+    id: zonaEnCoordenadas(la, lo),
+    la,
+    lo,
+    t: Date.now(),
+    acc: precision,
+    pid: !municipio.z && !municipio.cap ? municipio.k : null
+  };
+  dibujarPosicion(la, lo, precision); // también en el mapa de la capital, por si se cambia a él
+  vistaProvincia.posicion(la, lo, precision);
+  seleccionarPueblo(municipio, true);
+  aviso('Estás en ' + (municipio.cap ? 'Salamanca capital' : municipio.n));
+  if (municipio.cap || municipio.z) {
+    mensajeUbicacionProvincia(
+      (municipio.cap ? 'Estás en la capital' : municipio.n + ' está en el mapa de la capital') +
+        ': allí se marca por barrios y pueblos de alrededor.'
+    );
+    const ir = crear('button', 'gbtn', 'Verlo en el mapa de la capital');
+    ir.onclick = () => {
+      mensajeUbicacionProvincia('');
+      cambiarPestana('map');
+      alLocalizar(pos);
+    };
+    $('#pgm').append(crear('br'), ir);
+  } else if (precision > 1500)
+    mensajeUbicacionProvincia(
+      'Ojo: la ubicación es poco precisa (±' +
+        Math.round(precision / 100) / 10 +
+        ' km); puede que estés en un término vecino.'
+    );
+}

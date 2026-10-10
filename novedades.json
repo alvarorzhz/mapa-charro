@@ -1,5 +1,29 @@
 [
   {
+    "version": "2.5.0",
+    "fecha": "2026-10-10",
+    "titulo": "Más historia, más música y más para explorar",
+    "usuario": [
+      "Las fichas de barrios, monumentos y pueblos traen «Para seguir explorando»: rutas que pasan por allí, parques, qué ver con su tiempo de visita, lo que hay cerca y su época en la historia.",
+      "Los pueblos con ficha enseñan sus pedanías y, muchos, una foto.",
+      "Cultura y tradiciones crece hasta 31: ocho personajes nuevos (de Fray Luis de León a Carmen Martín Gaite) y mucha más música charra.",
+      "Cinco fichas tienen grabaciones reales para escuchar: el tamboril de La Alberca, el pandero de Peñaparda, una charrada, La Loa y Juan del Encina.",
+      "Nueva ruta a pie «Personajes en bronce»: nueve estatuas del centro, cada una con su historia.",
+      "«Salamanca en el tiempo» enlaza cada época con sus monumentos, personajes y pueblos.",
+      "«Mi Salamanca» suma porcentajes, lo que más y menos has explorado, por dónde seguir y tus últimos logros.",
+      "El mapa de la provincia tiene su botón «Estoy aquí»: te dice en qué pueblo estás (sin guardar tu ubicación)."
+    ],
+    "tecnico": [
+      "ficha.js: #rel y pintarRelacionados (rutasDeZona, parquesDeZona, zonaDePunto); monumentos.js: relacionadosDeMonumento; pueblos.js: paradasDeMunicipio, fotoDePueblo, relacionadosDePueblo.",
+      "cultura: 16 elementos nuevos, campo audio (audio/*.mp3 de la Fundación Joaquín Díaz y Commons) con reproductorCultura; sw.js deja audio/ fuera de la caché.",
+      "rutas.js: ruta 'personajes' (OSM) con paradas que enlazan a CULTURA (campo cultura); tramos recalculados.",
+      "tiempo: RELACIONES_ETAPA y RANGOS_ETAPA; pueblosDeEtapa por los años de sus curiosidades; enlaces de vuelta desde monumentos, pueblos y cultura.",
+      "mi-salamanca.js: resumenPorcentajes, categoriasExploradas, apartadoSeguir, logros recientes desde j.hi.",
+      "ubicacion.js: pedirUbicacion común y alLocalizarEnProvincia; minimapa con punto azul (vistaProvincia.posicion).",
+      "pruebas.js: PRUEBAS_SOLO y pruebas nuevas de fichas, grabaciones, ruta, tiempo, Mi Salamanca y ubicación en la provincia; comprobar-datos valida audio, cultura de las paradas y relaciones de etapa."
+    ]
+  },
+  {
     "version": "2.4.1",
     "fecha": "2026-10-10",
     "titulo": "Tu progreso, más a salvo",

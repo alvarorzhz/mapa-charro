@@ -155,6 +155,7 @@ function abrirElementoCultura(id) {
   caja.appendChild(volver);
   caja.appendChild(crear('p', 'hab', c.resumen));
   if (c.cuando) caja.appendChild(crear('p', 'cul-cuando', crear('b', '', '📅 Cuándo: '), c.cuando));
+  if (c.audio) caja.appendChild(reproductorCultura(c.audio));
 
   // Dónde: botones a cada municipio, pedanía y comarca, y el mapa con sus términos
   const lugares = lugaresCultura(c),
@@ -224,6 +225,17 @@ function abrirElementoCultura(id) {
     b.onclick = () => abrirElementoCultura(id);
     relacion.appendChild(b);
   });
+  // Su etapa de «Salamanca en el tiempo» y las rutas que pasan por su monumento (tiempo.js, rutas.js)
+  etapasDe('cultura', c.id).forEach(i => relacion.appendChild(botonEtapa(i)));
+  RUTAS.forEach((r, k) =>
+    r.paradas.forEach((p, i) => {
+      if (typeof p != 'string' && p.cultura == c.id) {
+        const b = crear('button', '', r.icono + ' ' + r.nombre + ', parada ' + (i + 1));
+        b.onclick = () => abrirParada(i, k);
+        relacion.appendChild(b);
+      }
+    })
+  );
   if (relacion.children.length) caja.appendChild(relacion);
 
   // Fuentes, foto y fecha de revisión
@@ -243,9 +255,38 @@ function abrirElementoCultura(id) {
     a.rel = 'noopener';
     ap.append('. Foto: ', a);
   }
+  if (c.audio) {
+    const a = crear('a', '', c.audio.autor + ', ' + c.audio.licencia);
+    a.href = c.audio.url;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    ap.append('. Grabación: ', a);
+  }
   ap.append('. Revisado el ' + textoFechaRevision(c.revisado) + '.');
   mostrarFicha();
   enlaceFicha('cultura/' + c.id, c.n);
+}
+
+// Grabación para escuchar en la ficha: nunca suena sola (preload="none" y sin autoplay); se para al
+// cambiar de ficha o cerrarla (olvidarMonumento, monumentos.js)
+function reproductorCultura(audio) {
+  const reproductor = crear('audio');
+  reproductor.controls = true;
+  reproductor.preload = 'none';
+  reproductor.src = audio.src;
+  reproductor.setAttribute('aria-label', 'Escuchar: ' + audio.titulo);
+  return crear(
+    'figure',
+    'cul-audio',
+    crear(
+      'figcaption',
+      '',
+      crear('b', '', '🎵 Escucha: '),
+      audio.titulo,
+      crear('small', '', audio.detalle + '.')
+    ),
+    reproductor
+  );
 }
 
 // --- La lista: búsqueda y filtros por categoría y territorio ------------------------------------------
@@ -303,7 +344,13 @@ function pintarListaCultura(caja) {
           'span',
           'texto',
           crear('b', '', c.n),
-          crear('small', '', [donde, c.cuando ? c.cuando.split(/[;.]/)[0] : ''].filter(Boolean).join(' · '))
+          crear(
+            'small',
+            '',
+            [donde, c.cuando ? c.cuando.split(/[;.]/)[0] : '', c.audio ? '🎵 con grabación' : '']
+              .filter(Boolean)
+              .join(' · ')
+          )
         )
       );
       b.onclick = () => abrirElementoCultura(c.id);
@@ -317,7 +364,7 @@ function pintarListaCultura(caja) {
 function abrirCultura() {
   activarRuta(false);
   const caja = fichaLimpia(
-    CULTURA.length + ' fiestas, tradiciones, sabores y personajes',
+    CULTURA.length + ' fiestas, tradiciones, sabores, músicas y personajes',
     'Cultura y tradiciones'
   );
   caja.appendChild(

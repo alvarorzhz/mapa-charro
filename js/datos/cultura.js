@@ -14,6 +14,8 @@
 //               o una interpretación, que no está probado) o 'divulgativo' (descripción general)
 //   relacionados { zonas, monumentos, cultura } (ids de la app)
 //   foto        { src, pie, autor, licencia, url (página del archivo en Wikimedia Commons) }
+//   audio       grabación para escuchar en la ficha (opcional): { src (en audio/), titulo, detalle (dónde,
+//               cuándo y quién), autor (archivo o intérpretes), licencia, url (página en Wikimedia Commons) }
 //   fuentes     [[medio, url]]
 //   revisado    fecha de la última revisión del contenido (AAAA-MM-DD)
 
@@ -198,6 +200,14 @@ const CULTURA = [
         'La Alberca fue el primer pueblo de España declarado Conjunto Histórico-Artístico, en 1940.'
       ]
     ],
+    audio: {
+      src: 'audio/cultura-diagosto-y-la-loa.mp3',
+      titulo: 'Recitados de la Loa de la Asunción',
+      detalle: 'Un vecino mayor de La Alberca recita versos de La Loa; grabado en el pueblo en 1984',
+      autor: 'Fundación Joaquín Díaz',
+      licencia: 'CC BY-SA 3.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Fundaci%C3%B3n_Joaqu%C3%ADn_D%C3%ADaz_-_ATO_00434_12_-_Recitados_de_la_Loa_de_la_Asunci%C3%B3n.ogg'
+    },
     fuentes: [
       [
         'Turismo de Castilla y León',
@@ -506,6 +516,15 @@ const CULTURA = [
       licencia: 'Dominio público',
       url: 'https://commons.wikimedia.org/wiki/File:Aldeano_charro_de_los_caser%C3%ADos_de_Salamanca,_Juan_de_la_Cruz.jpg'
     },
+    audio: {
+      src: 'audio/cultura-la-charrada.mp3',
+      titulo: 'Charrada «Vengo de moler, morena»',
+      detalle:
+        'La toca el folclorista mirobrigense José Ramón Cid; grabada en un certamen de instrumentos en Valladolid en 1984',
+      autor: 'Fundación Joaquín Díaz',
+      licencia: 'CC BY-SA 3.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Fundaci%C3%B3n_Joaqu%C3%ADn_D%C3%ADaz_-_ATO_00141_23_-_Charrada_%22vengo_de_moler,_morena%22.ogg'
+    },
     relacionados: { cultura: ['filigrana-charra'] },
     fuentes: [
       ['Turismo de Castilla y León', 'https://www.turismocastillayleon.com/es/patrimonio-cultura/charrada']
@@ -545,6 +564,551 @@ const CULTURA = [
       ['Wikipedia (en inglés)', 'https://en.wikipedia.org/wiki/Juli%C3%A1n_S%C3%A1nchez_Garc%C3%ADa'],
       ['Real Academia de la Historia (DB~e)', 'https://dbe.rah.es/biografias/6265/julian-sanchez-garcia'],
       ['Wikipedia (Tamames)', 'https://es.wikipedia.org/wiki/Tamames']
+    ],
+    revisado: '2026-10-10'
+  },
+  // --- Música ---------------------------------------------------------------------------------------
+  {
+    id: 'gaita-y-tamboril',
+    n: 'La gaita y el tamboril',
+    cat: 'folklore',
+    resumen:
+      'La pareja de instrumentos del tamborilero charro: una flauta de tres agujeros en una mano y el tamboril en la otra.',
+    municipios: ['Salamanca', 'Ciudad Rodrigo', 'La Alberca'],
+    cuando: 'El Día del Tamborilero, dentro de las Ferias de septiembre de Salamanca.',
+    textos: [
+      [
+        'hecho',
+        'El mismo músico toca a la vez la flauta charra, de tres agujeros y con una sola mano, y el tamboril, que percute con la otra.'
+      ],
+      [
+        'hecho',
+        'El Día del Tamborilero es un pasacalles de folclore charro de las Ferias y Fiestas de Salamanca: sale de la Puerta de Zamora y acaba en la Plaza Mayor. Lo organizan la Peña Folklórica El Tamboril y el Ayuntamiento, y en 2026 fue su 37.ª edición.'
+      ],
+      [
+        'hecho',
+        'Ciudad Rodrigo tiene desde la Semana Santa de 2024 un Museo del Tamborilero, en el antiguo Seminario de San Cayetano, con los fondos del folclorista mirobrigense José Ramón Cid.'
+      ],
+      [
+        'divulgativo',
+        'El tamborilero ha sido la música de las fiestas, los bailes, las bodas y las procesiones de los pueblos de la provincia.'
+      ]
+    ],
+    foto: {
+      src: 'img/cultura-gaita-y-tamboril.jpg',
+      pie: 'Un tamborilero en Salamanca',
+      autor: 'Pedro Soler Bueno',
+      licencia: 'CC BY 3.0',
+      url: 'https://commons.wikimedia.org/wiki/File:El_Tamborilero_(89780703).jpeg'
+    },
+    audio: {
+      src: 'audio/cultura-gaita-y-tamboril.mp3',
+      titulo: 'Picao serrano de gaita y tamboril «Ay mujer, mujer» (La borracha)',
+      detalle: 'Grabado en La Alberca en 1984; el tamborilero puede ser «El Guinda», de La Alberca',
+      autor: 'Fundación Joaquín Díaz',
+      licencia: 'CC BY-SA 3.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Fundaci%C3%B3n_Joaqu%C3%ADn_D%C3%ADaz_-_ATO_00434_19_-_Picao_serrano_de_gaita_y_tamboril_%22Ay_mujer_mujer%22_(La_borracha).ogg'
+    },
+    relacionados: {
+      monumentos: ['plazamayor'],
+      cultura: ['mariquelo', 'la-charrada', 'pandero-cuadrado-penaparda']
+    },
+    fuentes: [
+      [
+        'Festivales de España (Día del Tamborilero)',
+        'https://www.festivalesdeespana.com/festival/dia-del-tamborilero-pasacalles-de-folclore-charro-salamanca'
+      ],
+      [
+        'Los Pueblos Más Bonitos de España (Museo del Tamborilero)',
+        'https://lospueblosmasbonitosdeespana.org/en/recursos/museo-del-tamborilero-ciudad-rodrigo'
+      ]
+    ],
+    revisado: '2026-10-10'
+  },
+  {
+    id: 'pandero-cuadrado-penaparda',
+    n: 'El pandero cuadrado de Peñaparda',
+    cat: 'folklore',
+    resumen:
+      'Un pandero de dos parches, cuadrado, que en Peñaparda tocaban las mujeres para cantar y bailar.',
+    municipios: ['Peñaparda'],
+    textos: [
+      [
+        'hecho',
+        'Es un bastidor de madera, el «aru», con dos parches de cuero, uno a cada lado. Por dentro lleva unas cuerdas cruzadas que hacen de bordón, de las que cuelgan cascabeles. En Peñaparda tiene además el «rabeu», para meter el pulgar.'
+      ],
+      [
+        'hecho',
+        'Se toca apoyado en la rodilla izquierda, en posición de rombo, con una porra. Era un instrumento solo de mujeres, que lo juntaban con la gaita y el tamboril de los hombres en los seranos, las reuniones de la noche.'
+      ],
+      [
+        'hecho',
+        'El folclorista Manuel García Matos grabó en Peñaparda en 1955 los cantos de baile de las vecinas: el ajechao, el sorteado, el corrido y el brincao.'
+      ],
+      [
+        'divulgativo',
+        'Músicos como Eliseo Parra y la familia Mayalde aprendieron de las últimas mujeres que lo tocaban, como la tía Máxima o la tía Eugenia.'
+      ]
+    ],
+    audio: {
+      src: 'audio/cultura-pandero-cuadrado-penaparda.mp3',
+      titulo: 'Ajechao y sorteado',
+      detalle: 'Canta una vecina de Peñaparda; grabado allí por Manuel García Matos en 1955',
+      autor: 'Fundación Joaquín Díaz',
+      licencia: 'CC BY-SA 3.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Fundaci%C3%B3n_Joaqu%C3%ADn_D%C3%ADaz_-_ATO_00417_15_-_Ajechao_y_sorteado.ogg'
+    },
+    relacionados: { cultura: ['gaita-y-tamboril', 'mayalde'] },
+    fuentes: [
+      [
+        'Universidad Autónoma de Madrid, pieza del mes (marzo de 2024)',
+        'https://www.uam.es/uam/media/doc/1606952397244/pieza-del-mes.-marzo2024.pdf'
+      ],
+      [
+        'El Salto, jun. 2025',
+        'https://www.elsaltodiario.com/patrimonio-cultural/sonia-luchena-mujeres-penaparda-supieron-tejer-redes-apoyo-mutuo-condiciones-muy-duras'
+      ],
+      [
+        'Fundación Joaquín Díaz en Wikimedia Commons (la grabación de 1955)',
+        'https://commons.wikimedia.org/wiki/File:Fundaci%C3%B3n_Joaqu%C3%ADn_D%C3%ADaz_-_ATO_00417_15_-_Ajechao_y_sorteado.ogg'
+      ]
+    ],
+    revisado: '2026-10-10'
+  },
+  {
+    id: 'cancioneros-salmantinos',
+    n: 'Los cancioneros salmantinos',
+    cat: 'folklore',
+    resumen:
+      'Dos organistas de la Catedral recorrieron la provincia para apuntar sus canciones antes de que se perdieran.',
+    municipios: ['Ciudad Rodrigo', 'Robliza de Cojos', 'Salamanca'],
+    textos: [
+      [
+        'hecho',
+        'Dámaso Ledesma, nacido en Ciudad Rodrigo en 1866 y organista de la Catedral de Salamanca desde 1896, recogió en cuatro meses más de 900 canciones de la provincia. Su Cancionero salmantino, premiado en 1905 por la Real Academia de San Fernando, lo publicó la Diputación en 1907 con 404 documentos.'
+      ],
+      [
+        'hecho',
+        'Aníbal Sánchez Fraile, nacido en Robliza de Cojos en 1903, le sucedió como organista de la Catedral en 1928 y publicó en 1943 el Nuevo cancionero salmantino.'
+      ],
+      [
+        'divulgativo',
+        'Gracias a ellos se conservan, con letra y música, charradas, canciones de ronda, de boda o de trabajo que hoy siguen tocando los grupos de folclore.'
+      ]
+    ],
+    relacionados: { monumentos: ['catedrales'], cultura: ['gaita-y-tamboril', 'la-charrada'] },
+    fuentes: [
+      ['Wikipedia (Dámaso Ledesma)', 'https://es.wikipedia.org/wiki/D%C3%A1maso_Ledesma'],
+      ['Wikipedia (Aníbal Sánchez Fraile)', 'https://es.wikipedia.org/wiki/An%C3%ADbal_S%C3%A1nchez_Fraile']
+    ],
+    revisado: '2026-10-10'
+  },
+  {
+    id: 'mayalde',
+    n: 'Mayalde',
+    cat: 'folklore',
+    resumen:
+      'Una familia salmantina que hace música tradicional con cucharas, sartenes, escobas y almireces.',
+    municipios: ['Salamanca'],
+    textos: [
+      [
+        'hecho',
+        'Es un grupo familiar de Salamanca: Eusebio Martín Cifuentes, Pilar Pérez y sus hijos Arturo y Laura Martín. Llevan casi cuarenta años recuperando canciones y ritmos tradicionales castellanos.'
+      ],
+      [
+        'hecho',
+        'Convierten objetos de la casa en instrumentos: cucharas, cazuelas, escobas o almireces. Su primer disco, La herencia, es de 1986.'
+      ]
+    ],
+    relacionados: { cultura: ['pandero-cuadrado-penaparda', 'cancioneros-salmantinos'] },
+    fuentes: [['World Music Central', 'https://worldmusiccentral.org/?p=108018']],
+    revisado: '2026-10-10'
+  },
+  {
+    id: 'juan-del-encina',
+    n: 'Juan del Encina',
+    cat: 'folklore',
+    resumen:
+      'Músico, poeta y autor de églogas del Renacimiento, formado en la Catedral y la Universidad de Salamanca.',
+    municipios: ['Salamanca'],
+    textos: [
+      [
+        'hecho',
+        'Nació en 1468, no se sabe dónde: se ha propuesto Fermoselle, la ciudad de Salamanca y algún pueblo con «encina» en el nombre, como Encina de San Silvestre o La Encina.'
+      ],
+      [
+        'hecho',
+        'Entró de mozo de coro en la Catedral de Salamanca en 1484 y estudió Leyes en la Universidad, donde tuvo de maestro a Nebrija. Su Cancionero se imprimió en Salamanca en 1496, con ocho églogas para representar.'
+      ],
+      [
+        'hecho',
+        'Sirvió al duque de Alba desde 1492, cantó en la capilla del papa León X en Roma y acabó de prior de la Catedral de León, donde murió en 1529. En 1534 sus restos se trasladaron a la Catedral de Salamanca.'
+      ]
+    ],
+    foto: {
+      src: 'img/cultura-juan-del-encina.jpg',
+      pie: 'Portada del Cancionero de todas las obras de Juan del Encina, edición de 1516',
+      autor: 'Biblioteca Nacional de España',
+      licencia: 'CC BY-SA 4.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Cancionero_de_todas_las_obras_de_Juan_del_Enzina_1516.jpg'
+    },
+    audio: {
+      src: 'audio/cultura-juan-del-encina.mp3',
+      titulo: 'Fata la parte',
+      detalle: 'Canción de Juan del Encina, interpretada por el Collegium Vocale',
+      autor: 'Collegium Vocale',
+      licencia: 'CC BY 3.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Juan_del_Encina_--_Fata_la_parte.ogg'
+    },
+    relacionados: { monumentos: ['catedrales', 'universidad'], cultura: ['nebrija', 'francisco-salinas'] },
+    fuentes: [['Wikipedia', 'https://es.wikipedia.org/wiki/Juan_del_Encina']],
+    revisado: '2026-10-10'
+  },
+  {
+    id: 'francisco-salinas',
+    n: 'Francisco Salinas',
+    cat: 'folklore',
+    resumen:
+      'El organista ciego que enseñó música en la Universidad y al que Fray Luis de León dedicó una oda.',
+    municipios: ['Salamanca'],
+    textos: [
+      ['hecho', 'Nació en Burgos en 1513 y perdió la vista a los 11 años.'],
+      [
+        'hecho',
+        'Ganó una cátedra en la Universidad de Salamanca y publicó aquí, en 1577, su tratado De musica libri septem. Ese mismo año Fray Luis de León le escribió la Oda a Salinas.'
+      ],
+      ['hecho', 'Murió en Salamanca el 13 de enero de 1590.']
+    ],
+    relacionados: { monumentos: ['universidad'], cultura: ['fray-luis-de-leon', 'juan-del-encina'] },
+    fuentes: [['Wikipedia', 'https://es.wikipedia.org/wiki/Francisco_de_Salinas']],
+    revisado: '2026-10-10'
+  },
+  {
+    id: 'tomas-breton',
+    n: 'Tomás Bretón',
+    cat: 'folklore',
+    resumen: 'El salmantino que compuso La verbena de la Paloma.',
+    municipios: ['Salamanca'],
+    textos: [
+      [
+        'hecho',
+        'Nació en Salamanca el 29 de diciembre de 1850 y empezó a estudiar música en la Escuela de Nobles y Bellas Artes de San Eloy, en su ciudad.'
+      ],
+      [
+        'hecho',
+        'Su obra más popular es el sainete lírico La verbena de la Paloma, estrenado el 17 de febrero de 1894. Compuso también óperas como Los amantes de Teruel (1889) y La Dolores (1895), y en 1914 un poema sinfónico titulado Salamanca.'
+      ],
+      [
+        'hecho',
+        'Dirigió el Conservatorio de Madrid de 1901 a 1921 y murió en Madrid el 2 de diciembre de 1923.'
+      ]
+    ],
+    foto: {
+      src: 'img/cultura-tomas-breton.jpg',
+      pie: 'Monumento a Tomás Bretón en Salamanca',
+      autor: 'Javiermes',
+      licencia: 'CC BY-SA 3.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Monumento_a_Tom%C3%A1s_Bret%C3%B3n_en_Salamanca.JPG'
+    },
+    fuentes: [['Wikipedia', 'https://es.wikipedia.org/wiki/Tom%C3%A1s_Bret%C3%B3n']],
+    revisado: '2026-10-10'
+  },
+  {
+    id: 'rafael-farina',
+    n: 'Rafael Farina',
+    cat: 'folklore',
+    resumen: 'El cantaor nacido en Martinamor que empezó de niño en los bares del barrio chino de Salamanca.',
+    municipios: ['Martinamor', 'Salamanca'],
+    textos: [
+      [
+        'hecho',
+        'Rafael Antonio Salazar Motos nació en Martinamor el 2 de junio de 1923. Con seis años ya cantaba en los bares del barrio chino de Salamanca; su hermano mayor, también cantaor, era Calderas de Salamanca.'
+      ],
+      [
+        'hecho',
+        'Entre sus canciones están Mi Salamanca y Vino amargo. Hizo cine, desde Café cantante (1951) hasta Canciones de nuestra vida (1975).'
+      ],
+      ['hecho', 'Murió en Madrid el 21 de noviembre de 1995.']
+    ],
+    foto: {
+      src: 'img/cultura-rafael-farina.jpg',
+      pie: 'Estatua de Rafael Farina en Salamanca',
+      autor: 'Emilio J. Rodríguez Posada',
+      licencia: 'CC BY-SA 2.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Rafael_Farina_(31746238602).jpg'
+    },
+    relacionados: { zonas: ['sanvicente'] },
+    fuentes: [['Wikipedia', 'https://es.wikipedia.org/wiki/Rafael_Farina']],
+    revisado: '2026-10-10'
+  },
+  // --- Personajes -----------------------------------------------------------------------------------
+  {
+    id: 'fray-luis-de-leon',
+    n: 'Fray Luis de León',
+    cat: 'personaje',
+    resumen:
+      'Poeta y catedrático de la Universidad, preso cinco años por la Inquisición; su estatua preside el Patio de Escuelas.',
+    municipios: ['Salamanca'],
+    textos: [
+      [
+        'hecho',
+        'Nació en Belmonte (Cuenca) en 1527 o 1528. La Inquisición lo tuvo preso en Valladolid del 27 de marzo de 1572 al 7 de diciembre de 1576, y salió absuelto.'
+      ],
+      [
+        'hecho',
+        'En 1579 ganó la cátedra de Biblia de la Universidad de Salamanca, que tuvo hasta su muerte, en Madrigal de las Altas Torres, en agosto de 1591.'
+      ],
+      [
+        'tradicion',
+        'Se cuenta que al volver a clase tras la cárcel empezó con un «Decíamos ayer…». Es probablemente una invención posterior.'
+      ],
+      [
+        'hecho',
+        'Su estatua del Patio de Escuelas, de Nicasio Sevilla, se inauguró el 25 de abril de 1869. Sus restos están desde 1858 en la capilla de San Jerónimo de la Universidad.'
+      ]
+    ],
+    foto: {
+      src: 'img/cultura-fray-luis-de-leon.jpg',
+      pie: 'Estatua de Fray Luis de León en el Patio de Escuelas',
+      autor: 'Payanes8',
+      licencia: 'CC BY-SA 3.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Estatua_de_Fray_Luis_de_Le%C3%B3n,_Universidad_de_Salamanca.jpg'
+    },
+    relacionados: { zonas: ['univ'], monumentos: ['universidad'], cultura: ['francisco-salinas'] },
+    fuentes: [['Wikipedia', 'https://es.wikipedia.org/wiki/Luis_de_Le%C3%B3n']],
+    revisado: '2026-10-10'
+  },
+  {
+    id: 'nebrija',
+    n: 'Antonio de Nebrija',
+    cat: 'personaje',
+    resumen: 'El humanista que enseñó en Salamanca y escribió la primera gramática del castellano.',
+    municipios: ['Salamanca'],
+    textos: [
+      [
+        'hecho',
+        'Nació en Lebrija (Sevilla) en 1444. Pasó veintitrés años en Salamanca: cinco de estudiante y dieciocho de profesor, desde que en 1473 obtuvo la enseñanza de Gramática y Retórica.'
+      ],
+      [
+        'hecho',
+        'Su primer libro impreso, las Introductiones latinae, salió en Salamanca en 1481. Su Gramática castellana se publicó el 18 de agosto de 1492.'
+      ],
+      ['hecho', 'Murió en Alcalá de Henares el 2 de julio de 1522.']
+    ],
+    foto: {
+      src: 'img/cultura-nebrija.jpg',
+      pie: 'Monumento a Nebrija de Pablo Serrano (1981), en Salamanca',
+      autor: 'Sanjo',
+      licencia: 'CC BY-SA 3.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Salamanca._Monumento_a_Nebrija._Pablo_Serrano.JPG'
+    },
+    relacionados: { monumentos: ['universidad'], cultura: ['juan-del-encina'] },
+    fuentes: [['Wikipedia', 'https://es.wikipedia.org/wiki/Antonio_de_Nebrija']],
+    revisado: '2026-10-10'
+  },
+  {
+    id: 'beatriz-galindo',
+    n: 'Beatriz Galindo «La Latina»',
+    cat: 'personaje',
+    resumen:
+      'Salmantina de la corte de Isabel la Católica, famosa por su latín, que dio nombre al barrio madrileño de La Latina.',
+    municipios: ['Salamanca'],
+    textos: [
+      [
+        'hecho',
+        'Nació en Salamanca hacia 1465. El cronista Lucio Marineo Sículo escribió que la llamaban La Latina por lo bien que hablaba latín.'
+      ],
+      [
+        'hecho',
+        'Cumpliendo la voluntad de su marido fundó en Madrid un hospital, el de la Latina, que dio nombre al barrio. Murió en él el 23 de noviembre de 1535.'
+      ],
+      [
+        'tradicion',
+        'Se dice que enseñó latín a la reina y a sus hijas, y que estudió o enseñó en la Universidad de Salamanca; ninguna de las dos cosas tiene apoyo en documentos de la época.'
+      ]
+    ],
+    foto: {
+      src: 'img/cultura-beatriz-galindo.jpg',
+      pie: 'Retrato de Beatriz Galindo',
+      autor: 'Anónimo',
+      licencia: 'Dominio público',
+      url: 'https://commons.wikimedia.org/wiki/File:Beatriz_Galindo.jpg'
+    },
+    fuentes: [['Wikipedia', 'https://es.wikipedia.org/wiki/Beatriz_Galindo']],
+    revisado: '2026-10-10'
+  },
+  {
+    id: 'francisco-maldonado',
+    n: 'Francisco Maldonado',
+    cat: 'personaje',
+    resumen: 'El capitán de los comuneros de Salamanca, decapitado en Villalar con Padilla y Bravo.',
+    municipios: ['Salamanca'],
+    textos: [
+      [
+        'hecho',
+        'Nació en Salamanca hacia 1480 y fue uno de los cabecillas de la rebelión de las Comunidades de Castilla contra Carlos I, al frente de los comuneros salmantinos.'
+      ],
+      [
+        'hecho',
+        'Tras la derrota de Villalar, el 23 de abril de 1521, fue decapitado a la mañana siguiente en la plaza del pueblo, junto a Juan de Padilla y Juan Bravo.'
+      ]
+    ],
+    foto: {
+      src: 'img/cultura-francisco-maldonado.jpg',
+      pie: 'Monumento al comunero Francisco Maldonado',
+      autor: 'Mentxuwiki',
+      licencia: 'CC BY-SA 4.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Monumento_al_Comunero_Francisco_Maldonado.jpg'
+    },
+    fuentes: [
+      ['Biografías y Vidas', 'https://www.biografiasyvidas.com/biografia/m/maldonado.htm'],
+      ['Wikipedia (batalla de Villalar, en inglés)', 'https://en.wikipedia.org/wiki/Battle_of_Villalar']
+    ],
+    revisado: '2026-10-10'
+  },
+  {
+    id: 'torres-villarroel',
+    n: 'Diego de Torres Villarroel',
+    cat: 'personaje',
+    resumen: 'Catedrático de Matemáticas, escritor de almanaques y «Gran Piscator de Salamanca».',
+    municipios: ['Salamanca'],
+    textos: [
+      [
+        'hecho',
+        'Nació en Salamanca en 1694 y fue catedrático de prima de Matemáticas de la Universidad durante veinticuatro años, hasta que pidió la jubilación en 1750.'
+      ],
+      [
+        'hecho',
+        'De 1718 a 1766 publicó almanaques y pronósticos firmados como «el Gran Piscator de Salamanca». Contó su propia vida por entregas entre 1743 y 1751.'
+      ],
+      [
+        'tradicion',
+        'Su almanaque de 1724 anunciaba una muerte para «el rigor del verano», y se leyó como la del rey Luis I, que murió el 31 de agosto. La fama de adivino se la dieron después.'
+      ],
+      ['hecho', 'Murió el 19 de junio de 1770 en el Palacio de Monterrey.']
+    ],
+    foto: {
+      src: 'img/cultura-torres-villarroel.jpg',
+      pie: 'Retrato de Diego de Torres Villarroel, grabado',
+      autor: 'Biblioteca Nacional de España',
+      licencia: 'Dominio público',
+      url: 'https://commons.wikimedia.org/wiki/File:Diego_de_Torres_Villarroel.jpg'
+    },
+    relacionados: { monumentos: ['monterrey', 'universidad'] },
+    fuentes: [['Wikipedia', 'https://es.wikipedia.org/wiki/Diego_de_Torres_Villarroel']],
+    revisado: '2026-10-10'
+  },
+  {
+    id: 'gabriel-y-galan',
+    n: 'José María Gabriel y Galán',
+    cat: 'personaje',
+    resumen: 'El poeta del campo charro, nacido en Frades de la Sierra.',
+    municipios: ['Frades de la Sierra', 'Salamanca'],
+    textos: [
+      [
+        'hecho',
+        'Nació en Frades de la Sierra el 28 de junio de 1870 y con unos quince años se fue a Salamanca a estudiar Magisterio en la Escuela Normal.'
+      ],
+      [
+        'hecho',
+        'En 1901 su poema El ama, escrito tras la muerte de su madre, ganó la flor natural de los Juegos Florales del Teatro Bretón de Salamanca, con Unamuno de presidente del jurado.'
+      ],
+      [
+        'hecho',
+        'Publicó Castellanas y Extremeñas (1902) y Campesinas (1904). Murió en Guijo de Granadilla (Cáceres) el 6 de enero de 1905. Salamanca le dedica una plaza con su monumento y una biblioteca.'
+      ]
+    ],
+    foto: {
+      src: 'img/cultura-gabriel-y-galan.jpg',
+      pie: 'Retrato de José María Gabriel y Galán, anterior a 1905',
+      autor: 'Anónimo',
+      licencia: 'Dominio público',
+      url: 'https://commons.wikimedia.org/wiki/File:Jos%C3%A9-Mar%C3%ADa-Gabriel-y-Gal%C3%A1n.jpg'
+    },
+    relacionados: { cultura: ['unamuno', 'tomas-breton'] },
+    fuentes: [['Wikipedia', 'https://es.wikipedia.org/wiki/Jos%C3%A9_Mar%C3%ADa_Gabriel_y_Gal%C3%A1n']],
+    revisado: '2026-10-10'
+  },
+  {
+    id: 'unamuno',
+    n: 'Miguel de Unamuno',
+    cat: 'personaje',
+    resumen:
+      'El escritor bilbaíno que fue catedrático y rector de la Universidad de Salamanca, donde vivió y murió.',
+    municipios: ['Salamanca'],
+    textos: [
+      [
+        'hecho',
+        'Nació en Bilbao el 29 de septiembre de 1864. En 1891 ganó la cátedra de Griego de Salamanca y se instaló en la ciudad.'
+      ],
+      [
+        'hecho',
+        'Fue rector desde 1900; lo destituyeron en 1914 y volvió al cargo con la República en 1931. En 1924 Primo de Rivera lo desterró a Fuerteventura.'
+      ],
+      [
+        'hecho',
+        'El 12 de octubre de 1936, en el Paraninfo de la Universidad, se enfrentó en público al general Millán-Astray.'
+      ],
+      [
+        'tradicion',
+        'La frase «Venceréis, pero no convenceréis» se le atribuyó después; no está claro que la dijera así ese día. En una carta de diciembre de 1936 escribió «Vencerán, pero no convencerán».'
+      ],
+      [
+        'hecho',
+        'Murió en su casa de la calle Bordadores el 31 de diciembre de 1936. Su estatua, de 1968, está en esa calle, frente al convento de Santa Úrsula.'
+      ]
+    ],
+    foto: {
+      src: 'img/cultura-unamuno.jpg',
+      pie: 'Estatua de Miguel de Unamuno en la calle Bordadores',
+      autor: 'Pravdaverita',
+      licencia: 'CC BY 3.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Estatua_Miguel_de_Unamuno_Salamanca.JPG'
+    },
+    relacionados: { monumentos: ['universidad'], cultura: ['gabriel-y-galan'] },
+    fuentes: [
+      ['Wikipedia', 'https://es.wikipedia.org/wiki/Miguel_de_Unamuno'],
+      [
+        'Wikimedia Commons (la estatua)',
+        'https://commons.wikimedia.org/wiki/File:Estatua_Miguel_de_Unamuno_Salamanca.JPG'
+      ]
+    ],
+    revisado: '2026-10-10'
+  },
+  {
+    id: 'martin-gaite',
+    n: 'Carmen Martín Gaite',
+    cat: 'personaje',
+    resumen:
+      'La escritora nacida en la plaza de los Bandos que llevó la Salamanca de posguerra a Entre visillos.',
+    municipios: ['Salamanca'],
+    textos: [
+      [
+        'hecho',
+        'Nació el 8 de diciembre de 1925 en el número 3 de la plaza de los Bandos y empezó Filosofía y Letras en la Universidad de Salamanca en 1943.'
+      ],
+      [
+        'hecho',
+        'Ganó el Premio Nadal en 1957 con Entre visillos, que refleja el ambiente del instituto de chicas de su ciudad. Fue la primera mujer con el Premio Nacional de Narrativa (1978, por El cuarto de atrás) y en 1988 recibió el Príncipe de Asturias de las Letras.'
+      ],
+      [
+        'hecho',
+        'Murió en Madrid el 23 de julio de 2000. Ese 8 de diciembre se inauguró su estatua en la plaza de los Bandos, obra de Narcisa Vicente.'
+      ]
+    ],
+    foto: {
+      src: 'img/cultura-martin-gaite.jpg',
+      pie: 'Monumento a Carmen Martín Gaite en la plaza de los Bandos',
+      autor: 'Zarateman',
+      licencia: 'CC0',
+      url: 'https://commons.wikimedia.org/wiki/File:Salamanca_-_Monumento_a_Carmen_Martin_Gaite_(plaza_de_los_Bandos).jpg'
+    },
+    fuentes: [
+      ['Wikipedia', 'https://es.wikipedia.org/wiki/Carmen_Mart%C3%ADn_Gaite'],
+      [
+        'Wikimedia Commons (el monumento)',
+        'https://commons.wikimedia.org/wiki/File:Salamanca_-_Monumento_a_Carmen_Martin_Gaite_(plaza_de_los_Bandos).jpg'
+      ]
     ],
     revisado: '2026-10-10'
   }

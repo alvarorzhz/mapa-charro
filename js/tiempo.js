@@ -126,6 +126,7 @@ function pintarPanelTiempo(i) {
     ...hitos.map(h => crear('p', 'curio mas', h))
   );
   if (nacen.length) caja.appendChild(listaNacen(nacen));
+  caja.appendChild(enEstaEtapa(i));
   caja.appendChild(
     crear(
       'div',
@@ -196,6 +197,84 @@ function listaNacen(nacen) {
     crear('div', 'tzonas', ...botones),
     motivo
   );
+}
+
+// --- Lo de cada etapa con ficha propia: monumentos, personajes y tradiciones, pueblos ---------------
+const etapaDeAnio = a => RANGOS_ETAPA.findIndex(([desde, hasta]) => a >= desde && a <= hasta);
+// Años que citan las curiosidades de un pueblo con ficha (todos son fechas: «en 1812», «desde 1417»…)
+const aniosDePueblo = n =>
+  ((PUEBLOS[n] || {}).cur || []).flatMap(t => (t.match(/\b1\d{3}\b/g) || []).map(Number));
+function pueblosDeEtapa(i) {
+  return Object.keys(PUEBLOS)
+    .map(n => ({
+      m: municipioPorNombre(n),
+      anio: aniosDePueblo(n)
+        .filter(a => etapaDeAnio(a) == i)
+        .sort()[0]
+    }))
+    .filter(x => x.m && x.anio)
+    .sort((a, b) => a.anio - b.anio);
+}
+const etapasDe = (campo, id) =>
+  RELACIONES_ETAPA.map((r, i) => (r[campo].includes(id) ? i : -1)).filter(i => i >= 0);
+const etapasDePueblo = m => [...new Set(aniosDePueblo(m.n).map(etapaDeAnio))].filter(i => i >= 0).sort();
+// Botón que abre una etapa («1812–1899 · Guerra, muralla abajo y tren»)
+function botonEtapa(i) {
+  const b = crear('button', '', '📜 ' + ETAPAS[i][0] + ' · ' + ETAPAS[i][1]);
+  b.onclick = () => abrirTiempo(i);
+  return b;
+}
+
+function enEstaEtapa(i) {
+  const rel = RELACIONES_ETAPA[i],
+    pueblosEtapa = pueblosDeEtapa(i),
+    caja = crear('div', 'tetapa-rel');
+  if (!rel.monumentos.length && !rel.cultura.length && !pueblosEtapa.length) return caja;
+  caja.appendChild(crear('h4', '', 'De esta época, con su ficha'));
+  if (rel.monumentos.length) {
+    const nb = crear('div', 'nb', 'Monumentos: ');
+    rel.monumentos.forEach(id => {
+      const m = buscarMonumento(id),
+        b = crear('button', 'conico', iconoMonumento(m.tipo, 18), m.n);
+      b.onclick = () => abrirMonumento(id);
+      nb.appendChild(b);
+    });
+    caja.appendChild(nb);
+  }
+  if (rel.cultura.length) {
+    const nb = crear('div', 'nb', 'Personajes y tradiciones: ');
+    rel.cultura.forEach(id => {
+      const c = elementoCultura(id),
+        b = crear('button', '', categoriaCultura(c.cat)[2] + ' ' + c.n);
+      b.onclick = () => abrirElementoCultura(id);
+      nb.appendChild(b);
+    });
+    caja.appendChild(nb);
+  }
+  if (pueblosEtapa.length) {
+    const nb = crear('div', 'nb'),
+      boton = ({ m, anio }) => {
+        const b = crear('button', '', m.n, crear('small', '', ' · ' + anio));
+        b.onclick = () => abrirPueblo(m);
+        return b;
+      };
+    pueblosEtapa.forEach(x => nb.appendChild(boton(x)));
+    caja.appendChild(
+      pueblosEtapa.length > 6
+        ? crear(
+            'details',
+            'cul-muchos',
+            crear(
+              'summary',
+              '',
+              'Pueblos de la provincia con un hecho de esta época (' + pueblosEtapa.length + ')'
+            ),
+            nb
+          )
+        : (nb.prepend('Pueblos de la provincia: '), nb)
+    );
+  }
+  return caja;
 }
 
 function reproducirEtapas() {

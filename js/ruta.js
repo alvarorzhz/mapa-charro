@@ -362,6 +362,20 @@ function abrirSitio(d, i) {
     'https://www.openstreetmap.org/directions?engine=fossgis_osrm_foot&route=;' + s.la + ',' + s.lo;
   llegar.target = '_blank';
   llegar.rel = 'noopener';
+  // Su ficha en «Cultura y tradiciones», si la tiene
+  if (s.cultura && elementoCultura(s.cultura)) {
+    const c = elementoCultura(s.cultura),
+      cul = crear('button', '', categoriaCultura(c.cat)[2] + ' ' + c.n + ': su historia');
+    cul.onclick = () => abrirElementoCultura(c.id);
+    $('#nb').append(cul);
+  }
+  // El barrio donde está, si cae dentro de un límite del mapa
+  const idZona = zonaDePunto(s.la, s.lo);
+  if (idZona) {
+    const barrio = crear('button', '', 'Ver ' + buscarZona(idZona).n);
+    barrio.onclick = () => abrirFicha(idZona);
+    $('#nb').append(barrio);
+  }
   $('#nb').append(llegar);
   $('#ap').append('Fuente: ', enlaceFuente(s.fuente), '.');
   visitaAbierta = { tipo: 'ru', ruta: rutaActual().id, id: d.id, n: d.n }; // para los logros (logros.js)

@@ -71,7 +71,18 @@ function estadisticas() {
   });
 
   const logros = calcularLogros(),
-    colecciones = logros.filter(a => a.col);
+    colecciones = logros.filter(a => a.col),
+    // Logros con su fecha (el historial los apunta al conseguirlos), lo más reciente primero
+    porId = new Map(logros.map(a => [a.id, a])),
+    recientes = (j.hi || [])
+      .filter(
+        ([f, tipo, id]) => !TIPOS_DE_VISITA.includes(tipo) && porId.has(id) && conseguido(porId.get(id))
+      )
+      .map(([fecha, , id]) => ({
+        fecha: /^\d{4}-\d\d-\d\d$/.test(fecha || '') ? fecha : '',
+        logro: porId.get(id)
+      }))
+      .sort((a, b) => (b.fecha > a.fecha ? 1 : b.fecha < a.fecha ? -1 : 0));
 
   return {
     capital: {
@@ -109,14 +120,66 @@ function estadisticas() {
       v: logros.filter(conseguido).length,
       total: logros.length,
       colecciones: { v: colecciones.filter(conseguido).length, total: colecciones.length },
-      // Las colecciones a medias, las más cerca de completarse primero
-      proximas: colecciones
+      // Los próximos objetivos: los logros empezados, los más cerca de conseguirse primero
+      proximas: logros
         .filter(a => !conseguido(a) && a.c > 0)
-        .sort((a, b) => b.c / b.m - a.c / a.m)
-        .slice(0, 3)
+        .sort((a, b) => b.c / b.m - a.c / a.m || a.m - a.c - (b.m - b.c))
+        .slice(0, 3),
+      recientes: recientes.filter(r => r.fecha).slice(0, 3)
     },
+    categorias: categoriasExploradas(estadoDe, visitadosMo),
+    rutasHechas: todasLasRutas().filter(r => (j.rs || {})[r.id] == 'v'),
+    rutasQuiero: todasLasRutas().filter(r => (j.rs || {})[r.id] == 'w'),
     historial: { conFecha, sinFecha }
   };
+}
+
+// Tipos de entrada del historial que son visitas o rutas (el resto son logros: perfil.js)
+const TIPOS_DE_VISITA = ['z', 'p', 'mo', 'ru', 'rh'];
+
+// Categorías para ver qué se ha explorado más y qué está sin empezar, cada una con su propio total:
+// partes de la ciudad (barrios), comarcas (municipios sin la capital) y tipos de monumento.
+function categoriasExploradas(estadoDe, visitadosMo) {
+  const z = progreso.z || {},
+    lista = [];
+  GRUPOS_BARRIOS.forEach(g => {
+    const del = zonas.filter(b => b.g == g),
+      nombre = NOMBRES_GRUPOS[g].split(',')[0];
+    lista.push({
+      ambito: 'capital',
+      tipo: 'barrios',
+      nombre,
+      v: del.filter(b => z[b.id] == 'v').length,
+      total: del.length,
+      ver: () => verEnMapaFiltrado(['w', 'n'], [g], 'lo que te falta de ' + (g ? 'la ' : 'el ') + nombre)
+    });
+  });
+  CATEGORIAS_MONUMENTO.forEach(([clave, nombre]) => {
+    const del = MONUMENTOS.filter(m => categoriaMonumento(m) == clave);
+    lista.push({
+      ambito: 'capital',
+      tipo: 'monumentos',
+      nombre: nombre + ' (monumentos)',
+      v: del.filter(m => visitadosMo.has(m.id)).length,
+      total: del.length,
+      ver: () => {
+        filtroMonumentos = 'all';
+        abrirMonumentos();
+      }
+    });
+  });
+  PROVINCIA.com.forEach((nombre, c) => {
+    const del = pueblos.filter(m => m.c == c);
+    lista.push({
+      ambito: 'provincia',
+      tipo: 'municipios',
+      nombre,
+      v: del.filter(m => estadoDe(m) == 'v').length,
+      total: del.length,
+      ver: () => irAComarca(nombre)
+    });
+  });
+  return lista.filter(x => x.total);
 }
 
 // Visitas por mes ('AAAA-MM' → { capital, provincia }) dentro de un periodo
@@ -276,6 +339,129 @@ function graficoMeses(meses, ambito) {
   return caja;
 }
 
+// Una línea con los porcentajes principales, cada uno con su total dicho (sin mezclar capital y provincia)
+function resumenPorcentajes(capital, provincia) {
+  const linea = (que, v, total, nombre) =>
+    crear(
+      'li',
+      '',
+      crear('b', '', porcentaje(v, total) + ' %'),
+      ' ' + que + ' (' + v + ' de ' + total + ' ' + nombre + ')'
+    );
+  const lista = crear('ul', 'ms-resumen');
+  if (ambitoEstadisticas != 'provincia')
+    lista.appendChild(
+      linea('de los barrios de la capital', capital.barrios.v, capital.barrios.total, 'barrios')
+    );
+  if (ambitoEstadisticas != 'capital') {
+    lista.appendChild(
+      linea(
+        'de los municipios de la provincia',
+        provincia.municipios.v,
+        provincia.municipios.total,
+        'municipios, sin la capital'
+      )
+    );
+    lista.appendChild(linea('de las pedanías', provincia.pedanias.v, provincia.pedanias.total, 'pedanías'));
+  }
+  return lista;
+}
+
+// Lo más explorado (en proporción, cada categoría con su total) y lo que está sin empezar
+function apartadoCategorias(categorias) {
+  const delAmbito = categorias.filter(c => ambitoEstadisticas == 'todo' || c.ambito == ambitoEstadisticas),
+    empezadas = delAmbito
+      .filter(c => c.v > 0)
+      .sort((a, b) => b.v / b.total - a.v / a.total || b.v - a.v)
+      .slice(0, 4),
+    sinEmpezar = delAmbito.filter(c => c.v == 0),
+    fila = c => {
+      const b = crear(
+        'button',
+        'ms-grupo',
+        crear('span', '', c.nombre),
+        crear('small', '', c.v + ' de ' + c.total + ' ' + c.tipo),
+        barra(c.v / c.total)
+      );
+      b.setAttribute('aria-label', c.nombre + ': ' + c.v + ' de ' + c.total + ' ' + c.tipo + '. Verlo');
+      b.onclick = c.ver;
+      return b;
+    };
+  const caja = crear('section', 'ms-apartado', crear('h3', '', '🧭 Lo más y lo menos explorado'));
+  if (!empezadas.length) {
+    caja.appendChild(crear('p', 'mu', 'Cuando pises algo, aquí verás qué parte llevas mejor.'));
+    return caja;
+  }
+  caja.append(
+    crear('p', 'mu', 'Partes de la ciudad, tipos de monumento y comarcas, cada una con su propio total:'),
+    crear('div', 'ms-grupos', ...empezadas.map(fila))
+  );
+  if (sinEmpezar.length) {
+    const nb = crear('div', 'nb', 'Sin empezar: ');
+    sinEmpezar.forEach(c => {
+      const b = crear('button', '', c.nombre);
+      b.setAttribute('aria-label', c.nombre + ': sin empezar, 0 de ' + c.total + ' ' + c.tipo + '. Verlo');
+      b.onclick = c.ver;
+      nb.appendChild(b);
+    });
+    caja.appendChild(nb);
+  }
+  return caja;
+}
+
+// Por dónde seguir: rutas a medias, lo guardado en «Quiero ir» y «La quiero hacer» (hoy.js: cosasAMedias) y
+// las rutas hechas. Si no hay nada guardado, la recomendación del día. «Quiero ir» no es «He estado».
+function apartadoSeguir(datos) {
+  const caja = crear('section', 'ms-apartado', crear('h3', '', '📌 Para seguir explorando')),
+    pendientes = cosasAMedias(),
+    lista = crear('div', 'lista-explora');
+  pendientes.slice(0, 6).forEach(c => {
+    const b = crear(
+      'button',
+      'fila-explora',
+      crear('span', 'texto', crear('b', '', c.icono + ' ' + c.titulo), crear('small', '', c.texto))
+    );
+    b.onclick = c.abrir;
+    lista.appendChild(b);
+  });
+  if (pendientes.length) {
+    caja.append(crear('p', 'mu', 'Lo que tienes guardado para hacer o a medias:'), lista);
+    if (pendientes.length > 6)
+      caja.appendChild(
+        crear('p', 'mu', 'Y ' + (pendientes.length - 6) + ' más en «¿Qué puedo descubrir hoy?».')
+      );
+  } else {
+    const dia = recomendacionDelDia(),
+      rec = dia && !dia.hechoHoy ? dia.lugar : null;
+    caja.appendChild(
+      crear('p', 'mu', 'No tienes nada en «Quiero ir» ni rutas a medias. Una idea para empezar:')
+    );
+    if (rec) {
+      const b = crear(
+        'button',
+        'fila-explora',
+        crear('span', 'texto', crear('b', '', rec.n), crear('small', '', rec.sub))
+      );
+      b.onclick = rec.abrir;
+      lista.appendChild(b);
+      caja.appendChild(lista);
+    }
+  }
+  if (datos.rutasHechas.length) {
+    const nb = crear('div', 'nb', '✔ Rutas hechas: ');
+    datos.rutasHechas.forEach(r => {
+      const b = crear('button', '', r.icono + ' ' + r.nombre.split(':')[0]);
+      b.onclick = () => abrirRutaPorId(r.id);
+      nb.appendChild(b);
+    });
+    caja.appendChild(nb);
+  }
+  const hoy = crear('button', 'boton-hoy', '🌅 ¿Qué puedo descubrir hoy?');
+  hoy.onclick = () => abrirHoy();
+  caja.appendChild(hoy);
+  return caja;
+}
+
 // --- El panel -----------------------------------------------------------------------------------------
 let ambitoEstadisticas = 'todo'; // 'todo' | 'capital' | 'provincia'
 let periodoEstadisticas = 'todo';
@@ -361,10 +547,12 @@ function pintarEstadisticas(refrescar = false) {
         crear('div', 'botones-aviso', mapa, hoy)
       )
     );
-  } else
+  } else {
     caja.appendChild(
       crear('p', 'hab', 'Lo que llevas recorrido. Sin prisa: cada cifra lleva a su sitio del mapa.')
     );
+    caja.appendChild(resumenPorcentajes(capital, provincia));
+  }
 
   caja.appendChild(
     filaFiltros(
@@ -545,6 +733,10 @@ function pintarEstadisticas(refrescar = false) {
       )
     );
 
+  // Qué se ha explorado más y qué está sin empezar; y por dónde seguir
+  if (!nada) caja.appendChild(apartadoCategorias(datos.categorias));
+  caja.appendChild(apartadoSeguir(datos));
+
   // Evolución mensual (solo con fechas fiables)
   const sinFecha =
     ambitoEstadisticas == 'todo'
@@ -613,8 +805,18 @@ function pintarEstadisticas(refrescar = false) {
           accion: ['Ver los logros', verLogros]
         })
       ),
-      logros.proximas.length ? crear('p', 'mu', 'Las colecciones que tienes más cerca:') : '',
-      proximas
+      logros.proximas.length ? crear('p', 'mu', 'Tus próximos objetivos, los que tienes más cerca:') : '',
+      proximas,
+      logros.recientes.length
+        ? crear(
+            'div',
+            'ms-recientes',
+            crear('p', 'mu', 'Lo último que has conseguido:'),
+            ...logros.recientes.map(r =>
+              crear('p', 'ms-reciente', '🏆 ' + r.logro.n, crear('small', '', ' · ' + fechaLarga(r.fecha)))
+            )
+          )
+        : ''
     )
   );
 

@@ -85,6 +85,87 @@ function pintarCercanas(z) {
     });
 }
 
+// --- Para seguir explorando: lo relacionado con la ficha, sacado de los datos que ya hay -------------
+// filas: [[título, [{ texto, detalle, icono, hecho, abrir }]]]. Las filas vacías no salen; sin «abrir», el
+// elemento es solo texto. «hecho»: ya visitado o hecho (✓, también para el lector de pantalla).
+function pintarRelacionados(filas) {
+  const caja = $('#rel');
+  caja.textContent = '';
+  const conAlgo = filas.filter(([, items]) => items.length);
+  caja.hidden = !conAlgo.length;
+  conAlgo.forEach(([titulo, items]) => {
+    const fila = crear('div', 'nb rel-fila', crear('span', 'rel-t', titulo + ':'));
+    items.forEach(it => {
+      const e = crear(
+        it.abrir ? 'button' : 'span',
+        it.abrir ? (it.icono ? 'conico' : '') : 'rel-etq',
+        it.icono || '',
+        it.texto,
+        it.detalle ? crear('small', '', ' · ' + it.detalle) : null,
+        it.hecho ? crear('span', 'rel-hecho', ' ✓') : null
+      );
+      if (it.hecho) e.title = 'Ya has estado';
+      if (it.abrir) {
+        e.onclick = it.abrir;
+        e.setAttribute(
+          'aria-label',
+          [it.texto, it.detalle, it.hecho ? 'ya has estado' : ''].filter(Boolean).join(', ')
+        );
+      }
+      fila.appendChild(e);
+    });
+    caja.appendChild(fila);
+  });
+}
+
+// Zona del mapa que contiene un punto, solo si cae dentro de un límite dibujado (sin aproximar por cercanía)
+const zonaDePunto = (la, lo) =>
+  Object.keys(LIMITES_BARRIOS).find(id => dentroDePoligono(LIMITES_BARRIOS[id], la, lo)) || null;
+
+// Rutas a pie con alguna parada en la zona (monumentos de la zona o sitios propios dentro de su límite)
+function rutasDeZona(z) {
+  return RUTAS.map((r, k) => {
+    const aqui = r.paradas.filter(p =>
+      typeof p == 'string' ? buscarMonumento(p).zona == z.id : zonaDePunto(p.la, p.lo) == z.id
+    ).length;
+    return { r, k, aqui };
+  }).filter(x => x.aqui);
+}
+
+// Centro aproximado de un anillo de coordenadas [la, lo] (media de sus puntos)
+const centroDe = P => [
+  P.reduce((s, q) => s + q[0], 0) / P.length,
+  P.reduce((s, q) => s + q[1], 0) / P.length
+];
+
+// Parques con nombre (parques.js) cuyo centro cae dentro del límite de la zona, de mayor a menor
+function parquesDeZona(z) {
+  if (!LIMITES_BARRIOS[z.id]) return [];
+  return PARQUES.filter(pq => {
+    const R = pq.R[0],
+      P = [];
+    for (let i = 0; i < R.length; i += 2) P.push([R[i], R[i + 1]]);
+    const [la, lo] = centroDe(P);
+    return dentroDePoligono(LIMITES_BARRIOS[z.id], la, lo);
+  }).sort((a, b) => b.ha - a.ha);
+}
+
+function relacionadosDeZona(z) {
+  return [
+    [
+      'Rutas a pie que pasan por aquí',
+      rutasDeZona(z).map(({ r, k, aqui }) => ({
+        icono: r.icono + ' ',
+        texto: r.nombre,
+        detalle: aqui == 1 ? '1 parada aquí' : aqui + ' paradas aquí',
+        hecho: estadoRuta(r.id) == 'v',
+        abrir: () => abrirRuta(k)
+      }))
+    ],
+    ['Parques', parquesDeZona(z).map(pq => ({ texto: '🌳 ' + pq.n, detalle: conMiles(pq.ha) + ' ha' }))]
+  ];
+}
+
 // Botones de abajo: en una zona, He estado / Quiero ir / Compartir; en un monumento o una parada de una
 // ruta ('visita'), He estado aquí / Compartir (para los logros); en una ruta, La he hecho / La quiero hacer
 // (rutaSeguida, ruta.js); en lo demás, solo Compartir
@@ -185,6 +266,7 @@ function abrirFicha(id) {
   $('#hc').hidden = false;
   pintarMonumentosDeZona(z);
   pintarCulturaEnFicha(culturaDeZona(z));
+  pintarRelacionados(relacionadosDeZona(z));
   pintarCuriosidades(z);
   pintarLeyendas(z);
   pintarPalabraDeZona(z); // palabras.js

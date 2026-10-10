@@ -203,6 +203,7 @@ function abrirMonumento(id, parada) {
   pintarFoto(m.foto);
   pintarInfografia(m);
   pintarCulturaEnFicha(culturaDeMonumento(id));
+  pintarRelacionados(relacionadosDeMonumento(m));
   const comoParada = typeof parada == 'number';
   if (comoParada) pintarNavegacionRuta(parada);
   else if (typeof paradaActual != 'undefined') paradaActual = -1;
@@ -214,8 +215,52 @@ function abrirMonumento(id, parada) {
   enlaceFicha(comoParada ? hashParada(parada) : 'monumento/' + id, m.n);
 }
 
+// «Para seguir explorando» en la ficha de un monumento: las rutas a pie que pasan por él (con su número
+// de parada) y los monumentos más cercanos, con la distancia en línea recta calculada de sus coordenadas
+const DISTANCIA_CERCA_MONUMENTO = 700; // metros
+function relacionadosDeMonumento(m) {
+  const rutas = RUTAS.map((r, k) => ({ r, k, i: r.paradas.indexOf(m.id) })).filter(x => x.i >= 0),
+    cerca = MONUMENTOS.filter(o => o != m)
+      .map(o => [Math.round(distanciaKm(m.la, m.lo, o.la, o.lo) * 1000), o])
+      .filter(([d]) => d <= DISTANCIA_CERCA_MONUMENTO)
+      .sort((a, b) => a[0] - b[0])
+      .slice(0, 3);
+  return [
+    [
+      'En la ruta',
+      rutas.map(({ r, k, i }) => ({
+        icono: r.icono + ' ',
+        texto: r.nombre,
+        detalle: 'parada ' + (i + 1) + ' de ' + r.paradas.length,
+        hecho: estadoRuta(r.id) == 'v',
+        abrir: () => abrirParada(i, k)
+      }))
+    ],
+    [
+      'En «Salamanca en el tiempo»',
+      etapasDe('monumentos', m.id).map(i => ({
+        texto: '📜 ' + ETAPAS[i][0] + ' · ' + ETAPAS[i][1],
+        abrir: () => abrirTiempo(i)
+      }))
+    ],
+    [
+      'Cerca, en línea recta',
+      cerca.map(([d, o]) => ({
+        icono: iconoMonumento(o.tipo, 18),
+        texto: o.n,
+        detalle: 'a ' + textoDistancia(redondearMetros(d)),
+        hecho: monumentosVisitados().includes(o.id),
+        abrir: () => abrirMonumento(o.id)
+      }))
+    ]
+  ];
+}
+// Distancias cortas redondeadas a 10 m (de las coordenadas no sale más precisión útil)
+const redondearMetros = d => Math.max(10, Math.round(d / 10) * 10);
+
 // Quita la selección de monumento (al abrir otra ficha o cerrar)
 function olvidarMonumento() {
+  document.querySelectorAll('#sh audio').forEach(a => a.pause()); // una grabación no sigue sonando al cambiar de ficha
   monumentoAbierto = null;
   if (typeof visitaAbierta != 'undefined') visitaAbierta = null;
   if (typeof rutaSeguida != 'undefined') rutaSeguida = null;
@@ -223,6 +268,7 @@ function olvidarMonumento() {
   if (typeof puebloAbierto != 'undefined') puebloAbierto = null;
   if (typeof paradaActual != 'undefined') paradaActual = -1;
   $('#info').hidden = true;
+  $('#rel').hidden = true; // «Para seguir explorando»: lo pinta cada ficha que lo lleva
   $('#nac').hidden = true; // «Nació en…» solo va en las fichas de zona (tiempo.js)
   $('#otros').hidden = true; // los otros nombres, también solo en las de zona
   MONUMENTOS.forEach(o => o.g.classList.remove('sel'));
@@ -237,7 +283,15 @@ function pintarMonumentosDeZona(z) {
   if (!lista.length) return;
   caja.append('Monumentos: ');
   lista.forEach(m => {
-    const b = crear('button', 'conico', iconoMonumento(m.tipo, 18), m.n);
+    const visto = monumentosVisitados().includes(m.id),
+      b = crear(
+        'button',
+        'conico',
+        iconoMonumento(m.tipo, 18),
+        m.n,
+        visto ? crear('span', 'rel-hecho', ' ✓') : null
+      );
+    if (visto) b.setAttribute('aria-label', m.n + ', ya has estado');
     b.onclick = () => abrirMonumento(m.id);
     caja.appendChild(b);
   });
