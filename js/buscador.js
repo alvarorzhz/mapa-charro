@@ -240,11 +240,16 @@ function botonResultado(c, palabras, sub = c.sub) {
   return b;
 }
 
+// Lo que oye un lector de pantalla al escribir en el buscador (#srn, role=status)
+const anunciarBusqueda = texto => ($('#srn').textContent = texto);
 function buscar() {
   const frase = normalizar($('#q').value.trim()),
     caja = $('#sr');
   caja.textContent = '';
-  if (!frase) return mostrarRecientes();
+  if (!frase) {
+    anunciarBusqueda('');
+    return mostrarRecientes();
+  }
   const palabras = frase.split(/\s+/).filter(Boolean),
     encontrados = candidatos()
       .map(c => [encaje(c, palabras, frase), c])
@@ -269,8 +274,14 @@ function buscar() {
       )
     );
   dentro.forEach(c => poner(c));
-  if (caja.children.length) return;
+  if (caja.children.length)
+    return anunciarBusqueda(
+      mostrados.length + (mostrados.length == 1 ? ' resultado' : ' resultados') + '. Baja con las flechas.'
+    );
   const sugerencia = parecido(frase);
+  anunciarBusqueda(
+    sugerencia ? 'Sin resultados. ¿Querías decir ' + sugerencia.texto + '?' : 'Sin resultados.'
+  );
   if (!sugerencia) {
     caja.appendChild(
       crear('p', 'sinres', 'Sin resultados. Prueba con un barrio, un pueblo, un monumento o una calle.')

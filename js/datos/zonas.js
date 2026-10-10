@@ -21,7 +21,6 @@ const ZONAS_GRANDES = new Set([
 const OTROS_NOMBRES = {
   carmelitas: ['Carmelitas-Oeste (nombre oficial)', 'Eras de Carmelitas'],
   sancristobal: ['Las Claras'],
-  ursulas: ['San Marcos'],
   rollo: ['Alto del Rollo', 'Las Pajas'],
   tejares: ['Lasalle', 'Tejares antiguo', 'La Fuente'],
   prosperidad: ['La Prospe'],
@@ -38,8 +37,8 @@ const SEMILLAS_REPARTO = {
 // El id se usa en el progreso guardado y en los enlaces (#id): no cambiarlo.
 // prettier-ignore
 const ZONAS = [
-  ['centro', 'Centro', 'Centro', 0, 40.9652, -5.6645, 'Plaza Mayor barroca, catedrales y Clerecía: el corazón monumental de la ciudad.'],
-  ['univ', 'Universidad', 'Universidad', 0, 40.96132, -5.66692, 'Aquí están la Universidad, con su rana, la Casa de las Conchas y la Cueva de Salamanca.'],
+  ['centro', 'Centro', 'Centro', 0, 40.9652, -5.6645, 'Plaza Mayor barroca, Mercado Central y Torre del Clavero: el corazón de la ciudad.'],
+  ['univ', 'Universidad', 'Universidad', 0, 40.96132, -5.66692, 'Aquí están la Universidad, con su rana, la Casa de las Conchas, la Clerecía y las catedrales.'],
   ['sanvicente', 'San Vicente', 'San|Vicente', 0, 40.9631, -5.67168, 'Cuna de la ciudad: la aldea original nació en este cerro sobre el Tormes.'],
   ['sancti', 'Sancti-Spíritus', 'Sancti-Spíritus', 0, 40.96539, -5.65922, 'Toma el nombre de la iglesia de Sancti-Spíritus, en el lado este del casco histórico.'],
   ['sanjuan', 'San Juan', 'San|Juan', 0, 40.96783, -5.66614, 'Su nombre viene de la iglesia de San Juan de Barbalos, en el norte del casco.'],
@@ -94,7 +93,7 @@ const ZONAS = [
   ['cabrerizos', 'Cabrerizos', 'Cabrerizos', 5, 40.97866, -5.609, 'Unos 4.200 vecinos; fue el primero del alfoz en explotar el boom de los chalets.'],
   ['santamarta', 'Santa Marta de Tormes', 'Santa Marta', 5, 40.94921, -5.63062, 'Segundo municipio de la provincia, con unos 15.000 vecinos, pegado a la capital.'],
   ['carbajosa', 'Carbajosa de la Sagrada', 'Carbajosa', 5, 40.93293, -5.65083, 'Pasó de unos 1.700 vecinos en el año 2000 a casi 7.800: el que más ha crecido.'],
-  ['doninos', 'Doñinos de Salamanca', 'Doñinos', 5, 40.95923, -5.74614, 'Unos 1.900 vecinos, a unos 7 km de la capital, hacia el oeste.'],
+  ['doninos', 'Doñinos de Salamanca', 'Doñinos', 5, 40.95923, -5.74614, 'Más de 2.200 vecinos, a unos 7 km de la capital, hacia el oeste.'],
   ['carrascal', 'Carrascal de Barregas', 'Carrascal|de Barregas', 5, 40.97855, -5.76156, 'Unos 1.100 vecinos y un término de 77 km², al oeste de la capital.'],
   ['pelabravo', 'Pelabravo', 'Pelabravo', 5, 40.93668, -5.5791, 'Pueblo al sureste de la capital, con unos 1.400 vecinos.'],
   ['moriscos', 'Moriscos', 'Moriscos', 5, 41.0081, -5.5831, 'Pueblo de La Armuña a unos 9 km de la capital; su origen se remonta al siglo XIV.'],

@@ -162,10 +162,13 @@ function encuadrarCiudad() {
 // --- Panel -----------------------------------------------------------------
 const panelJuego = crear('aside', 'sh jg');
 panelJuego.id = 'jp';
-panelJuego.setAttribute('aria-live', 'polite');
 panelJuego.setAttribute('role', 'region');
 panelJuego.setAttribute('aria-label', 'Juego ¿Dónde está?');
 document.body.appendChild(panelJuego);
+// Lo que oye el lector en cada ronda: solo la pista o el resultado, no el panel entero
+const avisoJuego = crear('p', 'solo-lector');
+avisoJuego.setAttribute('role', 'status');
+document.body.appendChild(avisoJuego);
 
 function pintarPanelJuego() {
   const p = panelJuego,
@@ -197,6 +200,9 @@ function pintarPanelJuego() {
     img.alt = 'Foto de la pista';
     cuerpo.appendChild(img);
   } else cuerpo.appendChild(crear('p', 'jpista', q.texto));
+  avisoJuego.textContent = juego.respondida
+    ? ''
+    : 'Pista ' + (juego.ronda + 1) + '. ' + q.tipo + ' ' + (q.foto ? 'Es una foto.' : q.texto);
   if (!juego.respondida)
     cuerpo.appendChild(
       crear(
@@ -206,16 +212,12 @@ function pintarPanelJuego() {
       )
     );
   else {
-    const r = juego.ultima;
-    cuerpo.appendChild(
-      crear(
-        'p',
-        'jres ' + (r.acierto ? 'ok' : 'mal'),
-        r.acierto
-          ? '¡Vítor! Era ' + q.zona.n + '. +' + r.puntos
-          : 'Era ' + q.zona.n + '; has tocado ' + r.tocada.n + ', a ' + formatoKm(r.km) + '. +' + r.puntos
-      )
-    );
+    const r = juego.ultima,
+      resultado = r.acierto
+        ? '¡Vítor! Era ' + q.zona.n + '. +' + r.puntos
+        : 'Era ' + q.zona.n + '; has tocado ' + r.tocada.n + ', a ' + formatoKm(r.km) + '. +' + r.puntos;
+    cuerpo.appendChild(crear('p', 'jres ' + (r.acierto ? 'ok' : 'mal'), resultado));
+    avisoJuego.textContent = resultado;
     const ultima = juego.ronda == RONDAS_JUEGO - 1,
       seguir = crear('button', 'on', ultima ? 'Ver resultado' : 'Siguiente');
     seguir.onclick = ultima ? terminarJuego : siguientePregunta;

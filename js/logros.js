@@ -368,6 +368,12 @@ const MEDALLAS = {
   palabras: '🗣️'
 };
 const conseguido = a => a.c >= a.m;
+// El emoji de la medalla es adorno: el lector no lo lee («trofeo», «chincheta»…)
+const medallaDecorativa = (clase, emoji) => {
+  const e = crear('span', clase, emoji);
+  e.setAttribute('aria-hidden', 'true');
+  return e;
+};
 // El siguiente: el empezado al que menos le falta (en proporción); si no hay, el primero sin empezar
 function siguienteLogro(logros) {
   const pendientes = logros.filter(a => !conseguido(a));
@@ -401,9 +407,10 @@ function pintarLogros() {
     linea = $('#sig');
   linea.textContent = '';
   linea.hidden = !sig;
+  linea.removeAttribute('tabindex'); // en el HTML no se alcanza con el tabulador hasta tener contenido
   if (sig) {
     linea.append(
-      crear('span', 'medalla', MEDALLAS[sig.cat] || '🏆'),
+      medallaDecorativa('medalla', MEDALLAS[sig.cat] || '🏆'),
       crear(
         'span',
         'texto',
@@ -437,7 +444,7 @@ function pintarLogros() {
         crear(
           'summary',
           '',
-          crear('span', 'medalla' + (hechosCat ? ' con' : ''), medalla),
+          medallaDecorativa('medalla' + (hechosCat ? ' con' : ''), medalla),
           crear(
             'span',
             'texto',

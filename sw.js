@@ -1,58 +1,58 @@
 // Service worker: deja la app guardada en el móvil para que funcione sin conexión.
 // No edites VERSION ni ARCHIVOS a mano: los actualiza `node herramientas/version.js`.
-const VERSION = 115;
+const VERSION = 122;
 const CACHE = 'mapa-charro-v' + VERSION;
 // <archivos>
 const ARCHIVOS = [
   './',
   'index.html',
   'manifest.webmanifest',
-  'novedades.json?v=115',
+  'novedades.json?v=122',
   'icons/icon-180.png',
   'icons/icon-192.png',
-  'css/estilos.css?v=115',
-  'js/util.js?v=115',
-  'js/datos/zonas.js?v=115',
-  'js/datos/monumentos.js?v=115',
-  'js/datos/rutas-provincia.js?v=115',
-  'js/datos/tramos-provincia.js?v=115',
-  'js/datos/rutas.js?v=115',
-  'js/datos/tramos.js?v=115',
-  'js/datos/habitantes.js?v=115',
-  'js/datos/pueblos.js?v=115',
-  'js/datos/contenido.js?v=115',
-  'js/datos/geometria.js?v=115',
-  'js/datos/alfoz.js?v=115',
-  'js/datos/tiempo.js?v=115',
-  'js/datos/carreteras.js?v=115',
-  'js/datos/carreteras-provincia.js?v=115',
-  'js/datos/provincia.js?v=115',
-  'js/datos/firebase.js?v=115',
-  'js/datos/palabras.js?v=115',
-  'js/estado.js?v=115',
-  'js/guardado.js?v=115',
-  'js/mapa.js?v=115',
-  'js/ficha.js?v=115',
-  'js/monumentos.js?v=115',
-  'js/ruta.js?v=115',
-  'js/ruta-provincia.js?v=115',
-  'js/logros.js?v=115',
-  'js/palabras.js?v=115',
-  'js/vistas.js?v=115',
-  'js/ubicacion.js?v=115',
-  'js/provincia.js?v=115',
-  'js/pueblos.js?v=115',
-  'js/perfil.js?v=115',
-  'js/imagen.js?v=115',
-  'js/juego.js?v=115',
-  'js/mapa-teclado.js?v=115',
-  'js/escritorio.js?v=115',
-  'js/bienvenida.js?v=115',
-  'js/tiempo.js?v=115',
-  'js/buscador.js?v=115',
-  'js/enlaces.js?v=115',
-  'js/cuenta.js?v=115',
-  'js/inicio.js?v=115',
+  'css/estilos.css?v=122',
+  'js/util.js?v=122',
+  'js/datos/zonas.js?v=122',
+  'js/datos/monumentos.js?v=122',
+  'js/datos/rutas-provincia.js?v=122',
+  'js/datos/tramos-provincia.js?v=122',
+  'js/datos/rutas.js?v=122',
+  'js/datos/tramos.js?v=122',
+  'js/datos/habitantes.js?v=122',
+  'js/datos/pueblos.js?v=122',
+  'js/datos/contenido.js?v=122',
+  'js/datos/geometria.js?v=122',
+  'js/datos/alfoz.js?v=122',
+  'js/datos/tiempo.js?v=122',
+  'js/datos/carreteras.js?v=122',
+  'js/datos/carreteras-provincia.js?v=122',
+  'js/datos/provincia.js?v=122',
+  'js/datos/firebase.js?v=122',
+  'js/datos/palabras.js?v=122',
+  'js/estado.js?v=122',
+  'js/guardado.js?v=122',
+  'js/mapa.js?v=122',
+  'js/ficha.js?v=122',
+  'js/monumentos.js?v=122',
+  'js/ruta.js?v=122',
+  'js/ruta-provincia.js?v=122',
+  'js/logros.js?v=122',
+  'js/palabras.js?v=122',
+  'js/vistas.js?v=122',
+  'js/ubicacion.js?v=122',
+  'js/provincia.js?v=122',
+  'js/pueblos.js?v=122',
+  'js/perfil.js?v=122',
+  'js/imagen.js?v=122',
+  'js/juego.js?v=122',
+  'js/mapa-teclado.js?v=122',
+  'js/escritorio.js?v=122',
+  'js/bienvenida.js?v=122',
+  'js/tiempo.js?v=122',
+  'js/buscador.js?v=122',
+  'js/enlaces.js?v=122',
+  'js/cuenta.js?v=122',
+  'js/inicio.js?v=122',
   'icons/icon-512.png',
   'img/alambres.jpg',
   'img/alamedilla.jpg',
@@ -183,12 +183,18 @@ self.addEventListener('fetch', e => {
   if (req.method != 'GET') return;
   const url = new URL(req.url);
 
-  // La página: primero la red (para ver siempre la última versión) y, si no hay, la copia
+  // Las páginas: primero la red (para ver siempre la última versión) y, si no hay, la copia. La app (la
+  // raíz o index.html) se guarda como index.html; las demás páginas (privacidad, tarjetas de zona) con su
+  // propia dirección, para no servir nunca una en lugar de otra
   if (req.mode == 'navigate') {
+    const esLaApp =
+      url.origin == location.origin &&
+      new URL('./', self.registration.scope).pathname == url.pathname.replace(/index\.html$/, '');
+    const copia = esLaApp ? new Request('index.html') : new Request(url.origin + url.pathname);
     e.respondWith(
       conLimite(fetch(req), ESPERA_RED)
-        .then(res => guardar(new Request('index.html'), res))
-        .catch(() => caches.match('index.html'))
+        .then(res => guardar(copia, res))
+        .catch(() => caches.match(copia).then(guardada => guardada || caches.match('index.html')))
     );
     return;
   }

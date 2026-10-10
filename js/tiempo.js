@@ -114,6 +114,7 @@ function pintarPanelTiempo(i) {
       'tmarcas',
       ...ETAPAS.map((e, k) => {
         const b = crear('button', k == i ? 'on' : '', e[0]);
+        b.setAttribute('aria-pressed', k == i);
         b.onclick = () => {
           pararReproduccion();
           pintarEtapa(k);

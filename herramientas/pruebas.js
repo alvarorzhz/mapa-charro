@@ -179,11 +179,11 @@ prueba(
   'Bienvenida la primera vez',
   async (p, url) => {
     await p.waitForSelector('.modal .bienvenida');
-    igual(await texto(p, '.modal h3'), '¡Bienvenido al Mapa charro!', 'sale al entrar la primera vez');
+    igual(await texto(p, '.modal h2'), '¡Bienvenido al Mapa charro!', 'sale al entrar la primera vez');
     for (let i = 0; i < 3; i++) await p.click('.modal .botones button.on');
     igual(await texto(p, '.modal .botones button.on'), '¡A pisar Salamanca!', 'cuatro pasos');
     await p.click('.modal .botones button:first-child');
-    igual(await texto(p, '.modal h3'), 'Mucho por descubrir', '«Anterior» vuelve un paso');
+    igual(await texto(p, '.modal h2'), 'Mucho por descubrir', '«Anterior» vuelve un paso');
     await p.keyboard.press('Escape');
     cierto(!(await p.$('.modal')), 'Esc la cierra');
     await p.reload();
@@ -396,7 +396,14 @@ prueba('Contraste de los textos', async (p, url) => {
       ['#vidal', null],
       ['#tiempo/3', null],
       ['', '#jug'],
-      ['#lista', null]
+      ['#lista', null],
+      ['#provincia', null],
+      ['#pueblo/la-alberca', null],
+      ['#monumento/catedrales', null],
+      ['#rutas', null],
+      ['#ruta-arribes-norte', null],
+      ['#ruta-arribes-norte/5', null],
+      ['#perfil', null]
     ]) {
       await p.emulateMedia({ colorScheme: tema });
       await p.goto(url + 'index.html?' + tema + hash);
@@ -405,10 +412,10 @@ prueba('Contraste de los textos', async (p, url) => {
       // Con una ficha abierta (fija en escritorio) y la página de detrás con scroll, axe confunde el fondo de
       // la ficha con el de la página: se cierra Logros (que en escritorio sale abierto) y se esconde la tarjeta
       // de la palabra charra (su contraste se mira sin ficha, en «inicio») para que no haya scroll
-      if (hash && hash != '#lista')
+      if (hash && hash != '#lista' && hash != '#provincia')
         await p.evaluate(() => {
           $('#lgr').open = false;
-          $('#palabra').hidden = true;
+          $('#palabra').style.display = 'none';
         });
       await p.waitForTimeout(450); // que acaben las transiciones de los paneles
       await p.addScriptTag({ content: AXE });
@@ -1250,6 +1257,51 @@ prueba('Las fichas no se desplazan de lado', async p => {
   }
 });
 
+prueba('Accesibilidad: estados, nombres y avisos', async p => {
+  // La ficha cerrada no se alcanza con el tabulador (en el móvil estaba fuera de la pantalla pero enfocable)
+  cierto(await p.$eval('#sh', e => getComputedStyle(e).visibility == 'hidden'), 'ficha cerrada, oculta');
+  await p.evaluate(() => abrirFicha('centro'));
+  await p.waitForTimeout(400);
+  cierto(await p.$eval('#sh', e => getComputedStyle(e).visibility == 'visible'), 'abierta, visible');
+  // Los botones dicen su estado y, en la lista, de qué zona son
+  await p.click('.bt button[data-s=v]');
+  igual(
+    await p.$eval('.bt button[data-s=v]', b => b.getAttribute('aria-pressed')),
+    'true',
+    'He estado pulsado'
+  );
+  igual(await p.$eval('#vmap', b => b.getAttribute('aria-pressed')), 'true', 'pestaña elegida');
+  await p.evaluate(() => cambiarPestana('list'));
+  igual(
+    await p.$eval('#ls .lr .q', b => b.getAttribute('aria-label')),
+    await p.evaluate(() => 'He estado: ' + document.querySelector('#ls .lr .nm').textContent),
+    'el botón de la lista nombra su zona'
+  );
+  igual(await p.$eval('#ls .fl', e => e.getAttribute('aria-label')), 'Mostrar', 'filtros con nombre');
+  // «Deshacer» dura 10 s
+  await p.evaluate(() => cambiarPestana('map'));
+  await p.evaluate(() => marcarZona('centro', 'v'));
+  await p.waitForTimeout(6000);
+  cierto(await p.$eval('#ts', e => e.classList.contains('con-accion')), '«Deshacer» sigue a los 6 s');
+  // El buscador anuncia cuántos resultados hay
+  await p.fill('#q', 'garrido');
+  await p.waitForTimeout(200);
+  cierto(/^\d+ resultados?\./.test(await texto(p, '#srn')), 'el buscador anuncia los resultados');
+  await p.fill('#q', 'zzzzqqq');
+  await p.waitForTimeout(200);
+  cierto((await texto(p, '#srn')).startsWith('Sin resultados'), 'y cuando no hay');
+  // Las medallas no se leen
+  cierto(await p.$$eval('.medalla', a => a.every(e => e.getAttribute('aria-hidden') == 'true')), 'medallas');
+});
+
+prueba('Un enlace mal formado no rompe el arranque', async (p, url) => {
+  await p.goto(url + '#%E0%A4%A');
+  await p.waitForTimeout(300);
+  cierto(await p.isVisible('#m'), 'carga el mapa');
+  await p.evaluate(() => abrirFicha('centro'));
+  igual(await texto(p, '#nm'), 'Centro', 'y la app funciona');
+});
+
 prueba('Ficha de «Resto de la provincia»', async p => {
   await p.evaluate(() => abrirFicha('resto'));
   cierto(await fichaAbierta(p), 'se abre');
@@ -1418,9 +1470,14 @@ prueba('Salir del reto a medias pregunta', async p => {
   await p.waitForTimeout(300);
   await p.evaluate(() => responderJuego(juego.preguntas[0].zona));
   await p.click('#jp .jx');
-  igual(await texto(p, '.modal h3'), '¿Dejar el reto del día?', 'a medias, pregunta');
+  igual(await texto(p, '.modal h2'), '¿Dejar el reto del día?', 'a medias, pregunta');
   await p.click('.modal .botones button:text-is("Seguir jugando")');
   cierto(await p.evaluate(() => juego.activo), 'Seguir jugando no lo deja');
+  // Esc también pregunta, y otra Esc cierra la pregunta sin volver a abrirla
+  await p.keyboard.press('Escape');
+  igual(await texto(p, '.modal h2'), '¿Dejar el reto del día?', 'Esc pregunta');
+  await p.keyboard.press('Escape');
+  cierto(!(await p.$('.modal')) && (await p.evaluate(() => juego.activo)), 'otra Esc cierra la pregunta');
   await p.evaluate(() => cambiarPestana('list')); // en escritorio, el panel del juego tapa las pestañas
   cierto(!!(await p.$('.modal')), 'cambiar de pestaña también pregunta');
   await p.click('.modal .botones button:text-is("Salir")');
@@ -1588,6 +1645,20 @@ prueba(
     await p.goto(url + '#sanesteban');
     igual(await texto(p, '#nm'), 'San Esteban', 'abre una ficha sin red');
     cierto(await p.$eval('#ph', e => e.complete && e.naturalWidth > 0), 'carga la foto sin red');
+    // Abrir otra página de la web no cambia la copia de la app (la guardada como index.html)
+    await ctx.setOffline(false);
+    await p.goto(url + 'privacidad.html');
+    await p.waitForTimeout(500);
+    const copias = await p.evaluate(async () => {
+      const r = await caches.match('index.html');
+      const q = await caches.match(new URL('privacidad.html', location.href).href);
+      return [r ? await r.text() : '', q ? await q.text() : ''];
+    });
+    cierto(
+      copias[0].includes('id="m"'),
+      'la copia de la app sigue siendo el mapa, no la última página vista'
+    );
+    cierto(copias[1].includes('<h1>Privacidad</h1>'), 'y la privacidad tiene su propia copia');
     await ctx.setOffline(false);
   },
   { conServiceWorker: true }

@@ -5,7 +5,7 @@
 // Las zonas sin palabra propia muestran una de la lista (palabras.js).
 const FUENTES_PALABRAS = {
   elespanol: [
-    'El Español (2024)',
+    'El Español (2023)',
     'https://www.elespanol.com/castilla-y-leon/region/salamanca/20231030/curiosas-expresiones-usan-salamanca-solo-entiendenlossalmantinos/804669777_0.html'
   ],
   rtv2023: [

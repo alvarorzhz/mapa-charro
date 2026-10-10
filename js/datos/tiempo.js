@@ -139,7 +139,14 @@ const EPOCA_ZONA = {
   chinchibarra: [5, 'Crece alrededor del depósito de agua de 1945'],
   carmen: [5, 'Primeras casas entregadas en 1950'],
   vega: [5, 'Inaugurado en 1954'],
-  garridosur: [5, 'Iglesia de la Virgen de Fátima, empezada en 1955'],
+  garridosur: [
+    5,
+    'En 1916 ya existía la barriada de Garrido y Bermejo',
+    [
+      'SALAMANCArtv AL DÍA',
+      'https://salamancartvaldia.es/noticia/2023-12-10-garrido-y-bermejo-el-nacimiento-del-barrio-garrido-335932'
+    ]
+  ],
   vistahermosa: [6, 'Pasa a Salamanca con Tejares en 1963'],
   buenosaires: [6, 'Nace en 1983'],
   zurguen: [6, 'Nace en 1997'],
@@ -209,10 +216,10 @@ const EPOCA_ZONA = {
   ],
   ciudadjardin: [
     5,
-    'Sus primeras viviendas son de finales de los años cuarenta',
+    'Nace a principios de los años cincuenta',
     [
-      'SALAMANCArtv AL DÍA',
-      'https://salamancartvaldia.es/noticia/2025-01-27-ciudad-jardin-el-barrio-que-surgio-de-una-utopia-fotos-362169'
+      'Salamancahoy',
+      'https://www.salamancahoy.es/salamanca/ciudad/ciudad-jardin-barrio-lleva-anos-sonando-calles-20230501135134-nt.html'
     ]
   ],
   huertaotea: [

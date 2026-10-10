@@ -111,9 +111,10 @@ const crearSvg = (etiqueta, atributos, padre) => {
 //   tipo: 'info' (por defecto), 'exito', 'logro' o 'error' (cada uno con su color; el de error dura más
 //         y lo anuncian antes los lectores de pantalla)
 //   discreto: abajo, más pequeño y un poco más rato (avisos que no vienen de algo que acabas de hacer)
-//   accion: [texto, alPulsar] para un botón dentro del aviso, como «Deshacer» (dura 5 s)
+//   accion: [texto, alPulsar] para un botón dentro del aviso, como «Deshacer» (dura 10 s y no se va
+//           mientras el ratón o el foco están encima)
 // Se acepta aviso(texto, true) como discreto, como antes.
-let temporizadorAviso;
+let temporizadorAviso, ocultarAviso;
 const aviso = (texto, opciones = {}) => {
   if (opciones === true) opciones = { discreto: true };
   const { tipo = 'info', discreto = false, accion = null } = opciones,
@@ -138,8 +139,22 @@ const aviso = (texto, opciones = {}) => {
   t.setAttribute('role', tipo == 'error' ? 'alert' : 'status');
   t.className = 'on ' + clase + (accion ? ' con-accion' : '');
   clearTimeout(temporizadorAviso);
-  temporizadorAviso = setTimeout(ocultar, accion ? 5000 : tipo == 'error' ? 4000 : discreto ? 3500 : 2000);
+  ocultarAviso = ocultar;
+  temporizadorAviso = setTimeout(ocultar, accion ? 10000 : tipo == 'error' ? 4000 : discreto ? 3500 : 2000);
 };
+// Un aviso con botón no se va mientras el ratón o el foco están en él; al salir, quedan 4 s
+{
+  const parar = () => $('#ts').classList.contains('con-accion') && clearTimeout(temporizadorAviso),
+    seguir = () => {
+      if (!$('#ts').classList.contains('con-accion') || $('#ts').contains(document.activeElement)) return;
+      clearTimeout(temporizadorAviso);
+      temporizadorAviso = setTimeout(ocultarAviso, 4000);
+    };
+  $('#ts').addEventListener('pointerenter', parar);
+  $('#ts').addEventListener('focusin', parar);
+  $('#ts').addEventListener('pointerleave', seguir);
+  $('#ts').addEventListener('focusout', () => setTimeout(seguir));
+}
 
 // Botón que se enciende y se apaga (capas del mapa)
 const marcarInterruptor = (boton, encendido) => {
@@ -158,8 +173,12 @@ const FILTROS = [
 const cumpleFiltro = (filtro, marca) => filtro == 'all' || (filtro == 'n' ? !marca : marca == filtro);
 function crearBotonesFiltro(actual, alElegir) {
   const fila = crear('div', 'fl');
+  // Para el lector: «Mostrar» y el filtro elegido pulsado (los botones de cada fila se llaman igual)
+  fila.setAttribute('role', 'group');
+  fila.setAttribute('aria-label', 'Mostrar');
   FILTROS.forEach(([clave, texto]) => {
     const b = crear('button', clave == actual ? 'on' : '', texto);
+    b.setAttribute('aria-pressed', clave == actual);
     b.dataset.f = clave;
     b.onclick = () => alElegir(clave);
     fila.appendChild(b);

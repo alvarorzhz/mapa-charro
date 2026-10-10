@@ -67,11 +67,12 @@ function marcarMunicipio(m, marca) {
 }
 
 // Pareja de botones He estado / Quiero ir. leer() da la marca actual; marcar(marca) la cambia.
-function crearBotonesMarcar(leer, marcar) {
+function crearBotonesMarcar(leer, marcar, nombre) {
   const caja = crear('span', 'qb');
   ESTADOS_MARCA.forEach(([marca, texto]) => {
     const b = crear('button', 'q', texto);
     b.dataset.s = marca;
+    if (nombre) b.setAttribute('aria-label', texto + ': ' + nombre); // si no, el lector oye «He estado» 400 veces
     b.onclick = e => {
       e.stopPropagation();
       marcar(marca);
@@ -83,19 +84,22 @@ function crearBotonesMarcar(leer, marcar) {
 }
 function pintarBotonesMarcar(caja) {
   const marca = caja._leer();
-  caja
-    .querySelectorAll('.q')
-    .forEach(b => (b.className = 'q' + (marca == b.dataset.s ? ' on ' + marca : '')));
+  caja.querySelectorAll('.q').forEach(b => {
+    b.className = 'q' + (marca == b.dataset.s ? ' on ' + marca : '');
+    b.setAttribute('aria-pressed', marca == b.dataset.s);
+  });
 }
 const botonesMunicipio = m =>
   crearBotonesMarcar(
     () => estadoMunicipio(m),
-    marca => marcarMunicipio(m, marca)
+    marca => marcarMunicipio(m, marca),
+    m.n
   );
 const botonesPedania = p =>
   crearBotonesMarcar(
     () => estadoClave(p.k),
-    marca => marcarEnProvincia(p.k, marca, p.n)
+    marca => marcarEnProvincia(p.k, marca, p.n),
+    p.n
   );
 
 // --- Construcción de la pestaña ---------------------------------------------
@@ -146,7 +150,7 @@ function construirMinimapa(contenedor) {
   );
   const zb = crear('div', 'zb');
   zb.innerHTML =
-    '<button aria-label="Acercar">+</button><button aria-label="Alejar">−</button><button aria-label="Ver toda la provincia">⌂</button>';
+    '<button aria-label="Acercar">+</button><button aria-label="Alejar">−</button><button aria-label="Ver toda la provincia" title="Ver toda la provincia">⌂</button>';
   caja.appendChild(zb);
   // Leyenda de las carreteras, debajo del mapa
   contenedor.appendChild(
@@ -398,7 +402,7 @@ function aplicarFiltroProvincia() {
   if (!vistaProvincia) return;
   vistaProvincia.filtros
     .querySelectorAll('button')
-    .forEach(b => b.classList.toggle('on', b.dataset.f == filtroProvincia));
+    .forEach(b => marcarInterruptor(b, b.dataset.f == filtroProvincia));
   const gruposVisibles = new Set();
   vistaProvincia.filas.forEach(f => {
     const ok = cumpleFiltro(filtroProvincia, f.botones._leer());

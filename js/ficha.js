@@ -136,7 +136,8 @@ function mostrarFicha() {
   if (!$('#sh').classList.contains('o')) focoAntesDeFicha = document.activeElement;
   if (typeof juego != 'undefined' && juego.activo) salirJuego(); // abrir una ficha (p. ej. desde el buscador) deja el juego
   document.querySelector('.sb').scrollTop = 0;
-  $('#sh').classList.remove('grande');
+  // Con la pantalla baja (móvil en horizontal, zoom al 200 %) la ficha se abre grande: si no, se leen dos líneas
+  $('#sh').classList.toggle('grande', !esEscritorio() && innerHeight < 520);
   // La palabra charra y el índice solo van en las fichas de zona (los pinta abrirFicha justo antes)
   $('#pch').hidden = !fichaConPalabra;
   $('#idx').hidden = !fichaConIndice;
@@ -293,9 +294,7 @@ function pintarBotonesFicha() {
         : fichaDePueblo()
           ? estadoMunicipio(puebloAbierto)
           : progreso.z[zonaAbierta];
-  document
-    .querySelectorAll('.bt button[data-s]')
-    .forEach(b => b.classList.toggle('on', marca == b.dataset.s));
+  document.querySelectorAll('.bt button[data-s]').forEach(b => marcarInterruptor(b, marca == b.dataset.s));
 }
 
 function cerrarFicha() {

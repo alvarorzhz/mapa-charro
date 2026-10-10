@@ -42,8 +42,8 @@ function cambiarPestana(nueva) {
   $('#gm').hidden = mapaVisible ? !$('#gm').textContent : true;
   $('#ls').style.display = nueva == 'list' ? '' : 'none';
   $('#pv').style.display = nueva == 'prov' ? '' : 'none';
-  $('#vmap').classList.toggle('on', nueva != 'prov'); // la lista es parte de la capital
-  $('#vprov').classList.toggle('on', nueva == 'prov');
+  marcarInterruptor($('#vmap'), nueva != 'prov'); // la lista es parte de la capital
+  marcarInterruptor($('#vprov'), nueva == 'prov');
   if (nueva == 'list') pintarLista();
   else if (nueva == 'prov') {
     if (!vistaProvincia) construirProvincia();
@@ -89,6 +89,8 @@ function pintarLista() {
       nombre.onclick = () => abrirFicha(z.id);
       ESTADOS_MARCA.forEach(([marca, texto]) => {
         const b = crear('button', 'q' + (progreso.z[z.id] == marca ? ' on ' + marca : ''), texto);
+        b.setAttribute('aria-pressed', progreso.z[z.id] == marca);
+        b.setAttribute('aria-label', texto + ': ' + z.n);
         b.onclick = () => marcarZona(z.id, marca);
         fila.appendChild(b);
       });
@@ -152,7 +154,12 @@ matchMedia('(min-width:900px)').addEventListener('change', () => {
 // Esc cierra la ficha; + y - acercan y alejan el mapa
 addEventListener('keydown', e => {
   if (e.key == 'Escape' && !$('#capas').hidden) abrirCapas(false);
-  else if (e.key == 'Escape' && $('#sh').classList.contains('o')) $('#x').click();
+  else if (e.key == 'Escape' && $('.modal'))
+    return; // la cierra imagen.js (cerrarVentana)
+  else if (e.key == 'Escape' && typeof juego != 'undefined' && juego.activo) {
+    e.preventDefault(); // que imagen.js no cierre en el acto la pregunta que se abre ahora
+    pedirSalirJuego(); // pregunta si la partida va a medias
+  } else if (e.key == 'Escape' && $('#sh').classList.contains('o')) $('#x').click();
   else if (
     e.target.tagName != 'INPUT' &&
     e.target.tagName != 'TEXTAREA' &&

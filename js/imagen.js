@@ -298,6 +298,11 @@ function cerrarVentana() {
     v.remove();
     // El foco vuelve al botón que la abrió
     if (v._volverA && v._volverA.isConnected) v._volverA.focus({ preventScroll: true });
+    else {
+      // La bienvenida: el foco va al mapa (la zona con tabulador), no se pierde
+      const destino = document.querySelector('#m [tabindex="0"]') || $('#q');
+      if (!$('.modal') && destino) destino.focus({ preventScroll: true });
+    }
   }
 }
 
@@ -317,7 +322,7 @@ function abrirVentana(titulo, contenido, botones, volverA = document.activeEleme
       return b;
     })
   );
-  const h = crear('h3', '', titulo),
+  const h = crear('h2', '', titulo),
     caja = crear('div', 'caja', cerrar, h, contenido, fila),
     v = crear('div', 'modal', caja);
   h.id = 'tv';
@@ -374,4 +379,7 @@ async function abrirMiSalamanca() {
 }
 
 $('#foto').onclick = abrirMiSalamanca;
-addEventListener('keydown', e => e.key == 'Escape' && cerrarVentana());
+addEventListener('keydown', e => {
+  if (e.key != 'Escape' || e.defaultPrevented || !$('.modal')) return;
+  cerrarVentana();
+});

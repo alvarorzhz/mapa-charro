@@ -17,7 +17,14 @@ const HASH_PESTANA = { map: '', list: 'lista', prov: 'provincia' };
 let aplicandoEnlace = false; // true mientras se aplica la dirección, para no reescribirla
 let nombreFicha = '';
 
-const hashActual = () => decodeURIComponent(location.hash.slice(1));
+// Lo que va tras «#», decodificado; un enlace mal formado (%E0%A4%A…) cuenta como vacío y no rompe el arranque
+const hashActual = () => {
+  try {
+    return decodeURIComponent(location.hash.slice(1));
+  } catch (e) {
+    return '';
+  }
+};
 const esHashDeFicha = h =>
   h.startsWith('via/') ||
   h.startsWith('monumento/') ||

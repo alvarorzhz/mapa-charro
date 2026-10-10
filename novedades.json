@@ -1,5 +1,21 @@
 [
   {
+    "version": "2.1.1",
+    "fecha": "2026-10-10",
+    "titulo": "Más fácil de usar y datos corregidos",
+    "usuario": [
+      "Sin conexión, la app abre siempre el mapa, aunque antes hayas visitado otra página de la web.",
+      "Un enlace mal escrito ya no rompe la app.",
+      "La página ya no salta mientras carga.",
+      "Mejor con lector de pantalla y teclado: los botones dicen si están pulsados y de qué zona son, el buscador anuncia los resultados, Esc sale del juego y «Deshacer» dura 10 segundos.",
+      "En el móvil, la ficha se abre grande si la pantalla es baja, su asa se coge mejor y los botones son más grandes.",
+      "Mejor contraste en los datos de pueblos, rutas, monumentos y perfil, y en los enlaces de las fuentes.",
+      "Datos corregidos: Víctor Gutiérrez (calle Empedrada, con estrella Michelin), Ciudad Jardín, Garrido Sur, la Casa de las Conchas, la Torre del Clavero (en Centro), la riada de 1626, los partidos de la selección en el Helmántico y varios restaurantes.",
+      "Dónde comer en Prosperidad: Bar la Cantina."
+    ],
+    "tecnico": "sw.js: en la navegación solo la raíz o index.html se guarda como index.html; las demás páginas con su propia dirección. enlaces.js: hashActual con try/catch. CLS: hueco reservado de #sig, .progreso, .guardado, .modos y #palabra; #rt y #tm ocultos en .acc en escritorio; #ph con altura fija. Accesibilidad: .sh con visibility en el móvil, aria-pressed (marcarInterruptor) en pestañas, filtros, botones de marcar y etapas, aria-label con el nombre en las listas, #srn role=status en el buscador, aviso con acción 10 s y pausa con foco o ratón, avisoJuego (solo pista y resultado), Esc en el juego (vistas.js) sin chocar con cerrarVentana (imagen.js, defaultPrevented), ventanas con h2, foco al mapa tras la bienvenida, ficha grande con innerHeight < 520, asa de 28 px, objetivos táctiles de 32/44 px, índice que salta de línea, medallas con aria-hidden, contraste de .dato small, #ap y .fte. Prueba de contraste con 7 pantallas más; pruebas «Accesibilidad: estados, nombres y avisos» y «Un enlace mal formado no rompe el arranque»; la de sin conexión mira la copia guardada. Datos de la auditoría corregidos en contenido.js, zonas.js, monumentos.js, tiempo.js y palabras.js; tarjetas de centro, univ y doninos regeneradas."
+  },
+  {
     "version": "2.1.0",
     "fecha": "2026-10-10",
     "titulo": "Habitantes de cada pueblo",

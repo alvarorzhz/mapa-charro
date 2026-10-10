@@ -5,7 +5,8 @@
 const CURIOSIDADES = {
   centro: [
     'La Plaza Mayor es barroca, obra de los Churriguera: se levantó entre 1729 y 1756. No es un cuadrado perfecto, porque sus cuatro lados miden distinto.',
-    'Cada 25 de julio se coloca en lo alto la Mariseca, un toro de lata que anuncia las corridas de las ferias.'
+    'Cada 25 de julio se coloca en lo alto la Mariseca, un toro de lata que anuncia las corridas de las ferias.',
+    'La Torre del Clavero, del siglo XV, mide unos 28 metros. El clavero era quien guardaba las llaves y los archivos de la Orden de Alcántara.'
   ],
   univ: [
     'La Universidad la fundó Alfonso IX de León en 1218. Su fachada esconde una rana sobre una calavera: dicen que da suerte a quien la encuentra.',
@@ -30,7 +31,7 @@ const CURIOSIDADES = {
   tenerias: [
     'Su nombre viene de las tenerías, los talleres donde se curtían las pieles junto al río. Antes se le llamó barrio de Santiago.',
     'La iglesia de Santiago, junto al Puente Romano, la fundaron los mozárabes a mediados del siglo XII; era la puerta de entrada de los peregrinos de la Vía de la Plata.',
-    'El 26 de enero de 1626 la riada de San Policarpo arrasó la ribera: hubo unos 140 muertos, se perdieron más de mil casas y se hundieron cuatro arcos del Puente Romano.'
+    'El 26 de enero de 1626 la riada de San Policarpo arrasó la ribera: murieron 142 personas, más de 1.500 viviendas sufrieron daños y se hundieron cuatro arcos del Puente Romano.'
   ],
   ursulas: [
     'Con el Convento de la Anunciación, las Úrsulas, fundado por el arzobispo Fonseca en 1512. Enfrente, en la calle Bordadores, está la Casa de las Muertes.'
@@ -41,8 +42,7 @@ const CURIOSIDADES = {
     'En el convento de Santa Clara, en febrero de 1973, unos obreros que arreglaban el tejado encontraron un artesonado mudéjar de los siglos XIV y XV, oculto unos 250 años sobre la bóveda barroca. Hoy se visita por pasarelas.'
   ],
   sanesteban: [
-    'En 1527 encarcelaron aquí a Ignacio de Loyola, y Colón se alojó con los dominicos mientras buscaba apoyo para su viaje. La fachada del convento es plateresca.',
-    'La Torre del Clavero, del siglo XV, mide unos 28 metros. El clavero era quien guardaba las llaves y los archivos de la Orden de Alcántara.'
+    'En 1527 encarcelaron aquí a Ignacio de Loyola, y Colón se alojó con los dominicos mientras buscaba apoyo para su viaje. La fachada del convento es plateresca.'
   ],
   labradores: [
     'Su nombre viene de las tierras de labranza que había aquí. Desde 1900 fue el primer ensanche de la ciudad; ya en 1858 un plano mostraba un camino llamado Ronda de Labradores.',
@@ -55,7 +55,7 @@ const CURIOSIDADES = {
     'Los niños jugaban a indios y vaqueros en los solares y fábricas abandonadas que había hasta la plaza de Madrid.'
   ],
   garridosur: [
-    'Lo levantaron en fila Manuel Garrido, albañil, y Santiago Bermejo, confitero; desde 2009 una calle recuerda que el barrio debería llamarse Garrido y Bermejo.',
+    'Nació con las «casas baratas» en hilera que promovieron Manuel Garrido, concejal, y Santiago Bermejo, confitero. En 1916 la prensa ya hablaba de la barriada de Garrido y Bermejo.',
     'La primera piedra de la iglesia de la Virgen de Fátima se puso en 1955 y se inauguró en 1960. En la esquina de Federico Anaya con María Auxiliadora estaba el cine Taramona.',
     // Fuente: https://salamancartvaldia.es/noticia/2023-12-10-garrido-y-bermejo-el-nacimiento-del-barrio-garrido-335932
     'Manuel Garrido, que da nombre al barrio, fue elegido concejal en 1917 por el mismo distrito que Miguel de Unamuno, y con más votos: 318 frente a 205.'
@@ -272,7 +272,7 @@ const CURIOSIDADES = {
     'Por su término pasa la Cañada Real de la Vizana.'
   ],
   doninos: [
-    'A comienzos del siglo XVII tenía menos de seis vecinos; en 1842, 140. Hoy supera los 2.200.',
+    'A comienzos del siglo XVII tenía menos de seis vecinos; en 1842, 140. Hoy supera los 2.200 (2.273 en el padrón de 2025).',
     'Tiene el museo del escultor Ángel Mateos, que trabajó con hormigón.'
   ],
   carrascal: [
@@ -382,7 +382,8 @@ const CURIOSIDADES = {
     'La avenida de Portugal ocupa el trazado de la antigua vía del tren a Portugal, desviada por Tejares en 1954. En 1967 el terraplén seguía en pie en la plaza del barrio Vidal.'
   ],
   ciudadjardin: [
-    'Se proyectó tras la Guerra Civil como una «ciudad jardín»: un círculo de 400 hectáreas para 31.000 vecinos. A finales de los cuarenta solo se hicieron 126 viviendas, para militares y guardias civiles.',
+    // Fuentes: https://www.salamancahoy.es/salamanca/ciudad/ciudad-jardin-barrio-lleva-anos-sonando-calles-20230501135134-nt.html y https://www.ub.edu/geocrit/sn/sn-146(139).htm
+    'Se proyectó en los años cuarenta para familias obreras. En 1950 se preparaban 126 viviendas, y a principios de los cincuenta nació con nueve bloques; muchos pisos los ocuparon militares del cuartel de ingenieros.',
     // Fuente: https://salamancartvaldia.es/noticia/2025-01-27-ciudad-jardin-el-barrio-que-surgio-de-una-utopia-fotos-362169
     'Sus vecinos lo llaman el barrio «de las dos mentiras»: ni ciudad ni jardín.',
     // Fuente: https://www.salamancahoy.es/salamanca/ciudad/ciudad-jardin-barrio-lleva-anos-sonando-calles-20230501135134-nt.html
@@ -431,7 +432,8 @@ const CURIOSIDADES = {
 // Leyendas: { idZona: [párrafo, ...] }
 const LEYENDAS = {
   centro: [
-    'Se cuenta que, para acabar con las luchas entre nobles, se mandaron recortar las torres de los palacios salmantinos; por eso la Casa de las Conchas no tiene torre. Se salvaron la del Clavero y la del Aire.',
+    // Fuentes: https://es.wikipedia.org/wiki/Torre_del_Clavero y https://www.terranostrum.es/turismo/torre-del-clavero-salamanca
+    'Se cuenta que, para acabar con las luchas de los bandos, los Reyes Católicos mandaron desmochar las torres de los nobles. La del Clavero se libró; la de la Casa de las Conchas quedó mucho más baja.',
     'San Martín partió su capa para compartirla con un mendigo y esa noche soñó con Cristo vestido con esa mitad. La media capa se guardó como reliquia y de ella vendría la palabra «capilla». La escena está sobre la puerta del Obispo de la Plaza Mayor, junto a su iglesia del Corrillo.',
     'El milagro del Pozo Amarillo: en esta calle, san Juan de Sahagún salvó a un niño que se había caído a un pozo. Una lápida lo recuerda.',
     'Cuenta la tradición que en 1706, en la Guerra de Sucesión, los salmantinos se encomendaron a la Virgen de la Vega y rechazaron a las tropas portuguesas; como premio, Felipe V habría concedido a la ciudad su Plaza Mayor.'
@@ -691,9 +693,9 @@ const DONDE_COMER = {
     {
       n: 'Víctor Gutiérrez',
       t: 'Alta cocina',
-      a: 'Calle Vaguada de la Palma',
-      p: 'Con dos Soles, uno de los tres mejores de la ciudad para la guía.',
-      s: 'Guía Repsol 2026 (2 Soles)'
+      a: 'Calle Empedrada, 4',
+      p: 'Una estrella Michelin y dos Soles Repsol: uno de los mejores de la ciudad.',
+      s: 'Guía Michelin 2026 (1 estrella) y Guía Repsol (2 Soles)'
     }
   ],
   ursulas: [
@@ -701,7 +703,7 @@ const DONDE_COMER = {
       n: 'Pascua',
       t: 'Restaurante',
       a: 'Plaza de Monterrey 2 (hotel Eunice)',
-      p: 'Nuevo Sol en 2026.',
+      p: 'Un Sol Repsol desde la guía de 2026.',
       s: 'Guía Repsol 2026 (1 Sol)'
     }
   ],
@@ -770,7 +772,7 @@ const DONDE_COMER = {
       n: 'Café Bar Leyma',
       t: 'Bar de barrio',
       a: 'Avenida de los Cedros, 30',
-      p: 'Montaditos, tostas, hamburguesas y torreznos; 9,2 sobre 10 en Google con unas 1.150 opiniones.',
+      p: 'Montaditos, tostas, hamburguesas y torreznos; 4,6 sobre 5 en Google con unas 1.150 opiniones.',
       s: 'web del bar y Gastroranking, oct. 2026'
     }
   ],
@@ -824,7 +826,7 @@ const DONDE_COMER = {
       n: 'Izurpi',
       t: 'Cocina tradicional',
       a: 'Calle Constitución 17',
-      p: 'Muy valorado por su menú degustación: 9,2 en Google con unas 890 opiniones.',
+      p: 'Muy valorado por su menú degustación: 4,6 sobre 5 en Google con unas 890 opiniones.',
       s: 'Gastroranking, oct. 2026'
     }
   ],
@@ -846,9 +848,9 @@ const DONDE_COMER = {
   ],
   montalvos: [
     {
-      n: 'Arroceria restaurante Eider',
+      n: 'Arrocería Eider',
       t: 'Restaurante',
-      a: 'Calle Laguna Negra, 1',
+      a: 'Calle Laguna Negra, 84',
       p: 'El mejor valorado de la zona en Gastroranking: 8,6 sobre 10 con unas 1.200 opiniones.',
       s: 'Gastroranking, oct. 2026'
     }
@@ -941,7 +943,7 @@ const DONDE_COMER = {
   ],
   vidal: [
     {
-      n: 'Creperia Volare',
+      n: 'Crepería Volare',
       t: 'Restaurante',
       a: 'Paseo Doctor Torres Villarroel 37',
       p: 'El mejor valorado de la zona en Gastroranking: 8,0 sobre 10 con unas 460 opiniones.',
@@ -959,7 +961,7 @@ const DONDE_COMER = {
   ],
   delicias: [
     {
-      n: 'Café Bar Jintena´s',
+      n: 'Café Bar Jintena’s',
       t: 'Bar',
       a: 'Calle Bolivia, 21',
       p: 'El mejor valorado de la zona en Gastroranking: 7,9 sobre 10 con unas 220 opiniones.',
@@ -968,10 +970,11 @@ const DONDE_COMER = {
   ],
   prosperidad: [
     {
-      n: 'MOMO',
-      t: 'Restaurante',
-      a: 'La Aldehuela, s/n',
-      p: 'El mejor valorado de la zona en Gastroranking: 7,8 sobre 10 con unas 870 opiniones. Precio medio: menos de 20 €.',
+      // Calle Núñez de Zamora, 1: en Prosperidad (OpenStreetMap)
+      n: 'Bar la Cantina',
+      t: 'Bar de tapas',
+      a: 'Calle Núñez de Zamora, 1',
+      p: 'Tapas y pinchos con terraza: 4,3 sobre 5 en Google con unas 240 opiniones, según Gastroranking.',
       s: 'Gastroranking, oct. 2026'
     }
   ],

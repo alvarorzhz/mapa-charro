@@ -118,9 +118,12 @@ const MONUMENTOS = [
       ['Hoy', 'biblioteca pública (desde 1993)']
     ],
     curiosidades: [
-      'Carlos I mandó recortar dos tercios de su torre para castigar a los Maldonado, entre los que hubo capitanes comuneros.'
+      'Conserva una de sus dos torres, rebajada: según Wikipedia, por orden de Carlos I para castigar a los Maldonado, comuneros; según Terra Nostrum, en 1772, por sus grietas.'
     ],
-    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Casa_de_las_Conchas']]
+    fuente: [
+      ['Wikipedia', 'https://es.wikipedia.org/wiki/Casa_de_las_Conchas'],
+      ['Terra Nostrum', 'https://www.terranostrum.es/turismo/casa-de-las-conchas-salamanca']
+    ]
   },
   {
     id: 'puenteromano',
@@ -177,7 +180,7 @@ const MONUMENTOS = [
     datos: [
       ['Inauguración', '8 de abril de 1970'],
       ['Aforo', '17.341'],
-      ['Selección española', '5 partidos']
+      ['Selección española', '4 partidos']
     ],
     curiosidades: [
       'En las pistas de al lado, Javier Sotomayor batió en 1993 el récord mundial de salto de altura: 2,45 m.',
