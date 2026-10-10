@@ -1,0 +1,17 @@
+# Avisos semanales de dependencias nuevas (abre un pull request que pasa las pruebas).
+# Playwright va fijado a la versión de los navegadores del entorno de Claude: no se actualiza solo.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    ignore:
+      - dependency-name: playwright
+    groups:
+      herramientas:
+        patterns: ['*']
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

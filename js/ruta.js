@@ -137,44 +137,147 @@ const enlaceFuente = ([medio, url]) => {
   return a;
 };
 
-// --- Lista de rutas (el botón «Rutas a pie») -----------------------------------------
+// --- Seguimiento: «La he hecho» / «La quiero hacer» (progreso.j.rs) -------------------------------
+let rutaSeguida = null; // id de la ruta cuya ficha está abierta (sus botones de abajo la marcan)
+const todasLasRutas = () => [...RUTAS, ...RUTAS_PROVINCIA];
+const buscarRuta = id => todasLasRutas().find(r => r.id == id);
+const estadoRuta = id => ((progreso.j || {}).rs || {})[id] || '';
+function ponerEstadoRuta(id, s) {
+  const j = (progreso.j = progreso.j || {});
+  j.rs = { ...(j.rs || {}) };
+  if (s) j.rs[id] = s;
+  else delete j.rs[id];
+  guardar();
+  pintarBotonesFicha();
+}
+// Pulsar el botón marcado lo quita (con «Deshacer»); pulsar el otro cambia la marca
+function marcarRuta(id, s) {
+  const antes = estadoRuta(id),
+    n = buscarRuta(id).nombre;
+  if (antes == s) {
+    ponerEstadoRuta(id, '');
+    aviso(n + ': quitada de «' + (s == 'v' ? 'La he hecho' : 'La quiero hacer') + '»', {
+      accion: ['Deshacer', () => ponerEstadoRuta(id, s)]
+    });
+  } else {
+    ponerEstadoRuta(id, s);
+    aviso(s == 'v' ? '¡Vítor! Ruta hecha: ' + n : 'Apuntada para hacerla: ' + n, {
+      tipo: s == 'v' ? 'exito' : 'info'
+    });
+  }
+}
+// La etiqueta de las tarjetas de la lista
+const ETIQUETAS_RUTA = { v: '✔ La has hecho', w: '★ La quieres hacer' };
+const etiquetaRuta = id =>
+  estadoRuta(id) ? crear('span', 'marca-ruta m' + estadoRuta(id), ETIQUETAS_RUTA[estadoRuta(id)]) : null;
+function abrirRutaPorId(id) {
+  const k = RUTAS.findIndex(r => r.id == id);
+  if (k >= 0) abrirRuta(k);
+  else abrirRutaProvincia(RUTAS_PROVINCIA.findIndex(r => r.id == id));
+}
+function seguirRuta(id) {
+  modoBotonesFicha('ruta');
+  rutaSeguida = id;
+  pintarBotonesFicha();
+}
+
+// --- Lista única de rutas (el botón «Rutas»): a pie por la ciudad y en coche por la provincia ---------
+let filtroRutas = 'todas'; // 'todas' | 'pie' | 'coche'
+const FILTROS_RUTAS = [
+  ['todas', 'Todas'],
+  ['pie', 'A pie'],
+  ['coche', 'Por la provincia']
+];
+const tarjetaRuta = (id, icono, nombre, detalle, resumen, abrir) => {
+  const b = crear(
+    'button',
+    'tarjeta-ruta',
+    crear('span', 'icono', icono),
+    crear(
+      'span',
+      'texto',
+      etiquetaRuta(id),
+      crear('b', '', nombre),
+      crear('small', '', detalle),
+      crear('span', 'resumen', resumen)
+    )
+  );
+  b.onclick = abrir;
+  return b;
+};
 function abrirRutas() {
   activarRuta(false);
-  const caja = fichaLimpia('Rutas a pie', 'Rutas a pie');
+  const caja = fichaLimpia('Rutas', 'Rutas');
   caja.appendChild(
     crear(
       'p',
       'hab',
-      'Elige una ruta: se dibuja en el mapa y te lleva parada a parada, por calles y sin atrochar.'
+      'A pie por la ciudad, parada a parada por calles y sin atrochar, o en coche por la provincia.'
     )
   );
-  const lista = crear('div', 'rutas');
-  RUTAS.forEach((r, k) => {
-    const m = metrosRuta(r),
-      b = crear(
-        'button',
-        'tarjeta-ruta',
-        crear('span', 'icono', r.icono),
-        crear(
-          'span',
-          'texto',
-          crear('b', '', r.nombre),
-          crear(
-            'small',
-            '',
-            r.paradas.length + ' paradas · ' + textoDistancia(m) + ' · ' + textoTiempo(minutosA(m))
-          ),
-          crear('span', 'resumen', r.resumen)
+  const filtros = crear('div', 'fl');
+  FILTROS_RUTAS.forEach(([clave, texto]) => {
+    const b = crear('button', clave == filtroRutas ? 'on' : '', texto);
+    b.setAttribute('aria-pressed', clave == filtroRutas);
+    b.onclick = () => {
+      filtroRutas = clave;
+      abrirRutas();
+    };
+    filtros.appendChild(b);
+  });
+  caja.appendChild(filtros);
+  if (filtroRutas != 'coche') {
+    caja.appendChild(crear('h3', '', 'A pie, por la ciudad'));
+    const lista = crear('div', 'rutas');
+    RUTAS.forEach((r, k) => {
+      const m = metrosRuta(r);
+      lista.appendChild(
+        tarjetaRuta(
+          r.id,
+          r.icono,
+          r.nombre,
+          'Medio día · ' +
+            r.paradas.length +
+            ' paradas · ' +
+            textoDistancia(m) +
+            ' · ' +
+            textoTiempo(minutosA(m)) +
+            ' andando',
+          r.resumen,
+          () => abrirRuta(k)
         )
       );
-    b.onclick = () => abrirRuta(k);
-    lista.appendChild(b);
-  });
-  caja.appendChild(lista);
+    });
+    caja.appendChild(lista);
+  }
+  if (filtroRutas != 'pie') {
+    caja.appendChild(crear('h3', '', 'Por la provincia, en coche'));
+    const lista = crear('div', 'rutas');
+    RUTAS_PROVINCIA.forEach((r, k) =>
+      lista.appendChild(
+        tarjetaRuta(
+          r.id,
+          r.icono,
+          r.nombre,
+          DURACIONES[r.duracion] +
+            ' · ' +
+            r.tema +
+            ' · ' +
+            r.paradas.length +
+            ' paradas · ' +
+            kmProvincia(r) +
+            ' km',
+          r.resumen,
+          () => abrirRutaProvincia(k)
+        )
+      )
+    );
+    caja.appendChild(lista);
+  }
   $('#ap').textContent =
-    'Caminos por calles reales de OpenStreetMap. El tiempo es andando sin prisa, sin contar las paradas.';
+    'Caminos por calles y carreteras reales de OpenStreetMap. Los tiempos son orientativos y no cuentan las paradas.';
   mostrarFicha();
-  enlaceFicha('rutas', 'Rutas a pie');
+  enlaceFicha('rutas', 'Rutas');
 }
 
 // --- Resumen de una ruta --------------------------------------------------------------
@@ -229,6 +332,7 @@ function abrirRuta(k = rutaElegida) {
   };
   $('#nb').append(empezar, cerca, otras, quitar);
   encuadrarRuta(r);
+  seguirRuta(r.id);
   mostrarFicha();
   enlaceFicha(hashRuta(r), r.nombre);
 }

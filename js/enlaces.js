@@ -25,6 +25,7 @@ const esHashDeFicha = h =>
   h == 'tiempo' ||
   h.startsWith('tiempo/') ||
   h.startsWith('pueblo/') ||
+  h == 'perfil' ||
   todasLasZonas.some(z => z.id == h);
 
 function hashDeVista() {
@@ -75,8 +76,16 @@ function aplicarEnlace() {
     if (a == 'pueblo' && b) {
       const m = PROVINCIA.m.find(m => slug(m.n) == b);
       if (m && PUEBLOS[m.n] && (puebloAbierto != m || !fichaAbierta)) abrirPueblo(m);
+    } else if (a == 'perfil') {
+      if (!fichaAbierta || nombreFicha != 'Tu perfil') abrirPerfil();
     } else if (a == 'rutas') {
       if (!fichaAbierta || rutaActiva) abrirRutas();
+    } else if (RUTAS_PROVINCIA.some(r => hashRutaProvincia(r) == a)) {
+      // Ruta por la provincia: #ruta-arribes o #ruta-arribes/2
+      const kp = RUTAS_PROVINCIA.findIndex(r => hashRutaProvincia(r) == a),
+        ip = parseInt(b) - 1;
+      if (ip >= 0 && ip < RUTAS_PROVINCIA[kp].paradas.length) abrirParadaProvincia(ip, kp);
+      else abrirRutaProvincia(kp);
     } else if (a == 'ruta' || a.startsWith('ruta-')) {
       // Una ruta que no existe (enlace viejo o mal copiado) abre la lista de rutas
       const k = RUTAS.findIndex(r => hashRuta(r) == a),

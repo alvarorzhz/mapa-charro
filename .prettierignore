@@ -3,3 +3,5 @@ js/datos/carreteras.js
 js/datos/provincia.js
 js/datos/alfoz.js
 js/datos/tramos.js
+js/datos/tramos-provincia.js
+js/datos/carreteras-provincia.js

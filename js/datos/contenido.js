@@ -712,6 +712,14 @@ const DONDE_COMER = {
       a: 'Plaza de Santa Eulalia 11',
       p: 'A un paso de la iglesia de Sancti-Spíritus.',
       s: 'Guía Repsol 2026, recomendado'
+    },
+    {
+      // Calle Pozo Hilera, 8: está en Sancti-Spíritus, no en Garrido Norte (OpenStreetMap)
+      n: 'Café Bar Japonés Aí',
+      t: 'Bar',
+      a: 'Calle Pozo Hilera, 8',
+      p: 'Bar japonés con 7,5 sobre 10 en Gastroranking y unas 2.300 opiniones.',
+      s: 'Gastroranking, oct. 2026'
     }
   ],
   sanesteban: [
@@ -980,15 +988,6 @@ const DONDE_COMER = {
       t: 'Restaurante',
       a: 'Calle Federico de Onís, 42',
       p: 'El mejor valorado de la zona en Gastroranking: 7,6 sobre 10 con unas 130 opiniones.',
-      s: 'Gastroranking, oct. 2026'
-    }
-  ],
-  garridonorte: [
-    {
-      n: 'Café Bar Japonés Aí',
-      t: 'Bar',
-      a: 'Calle Pozo Hilera, 8',
-      p: 'El mejor valorado de la zona en Gastroranking: 7,5 sobre 10 con unas 2.300 opiniones.',
       s: 'Gastroranking, oct. 2026'
     }
   ],

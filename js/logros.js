@@ -184,7 +184,7 @@ function calcularLogros() {
         m => monumentosVisitados().includes(m.id)
       )
     ),
-    ...RUTAS.map(r => ({
+    ...[...RUTAS, ...RUTAS_PROVINCIA].map(r => ({
       id: 'ru-' + r.id,
       cat: 'ruta',
       n: r.nombre,

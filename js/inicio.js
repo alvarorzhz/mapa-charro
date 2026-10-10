@@ -2,7 +2,7 @@
 const formatoFecha = f =>
   new Date(f + 'T12:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
 async function mostrarNovedades() {
-  let lista = [];
+  let lista;
   try {
     // Con el ?v= de la versión, como el resto de archivos: si no, el navegador o el modo sin conexión
     // podían seguir enseñando las novedades de una versión anterior
@@ -77,6 +77,11 @@ if (!EN_MARCO) {
   const enlace = crear('a', '', 'Privacidad');
   enlace.href = 'privacidad.html';
   $('#ver').append(' · ', enlace);
+}
+// Historial del perfil: lo que ya estaba marcado antes de que existiera queda apuntado sin fecha
+if (!Array.isArray(progreso.j.hi)) {
+  anotarHistorial();
+  guardarLocal();
 }
 ajustarVista();
 actualizar();

@@ -34,8 +34,8 @@ function candidatos() {
     poner(m.n, 'Monumento · ' + buscarZona(m.zona).n, 'monumento', m.id, 1, () => abrirMonumento(m.id))
   );
   poner(
-    'Rutas a pie',
-    'Rutas · ' + RUTAS.length + ' rutas',
+    'Rutas',
+    'Rutas · ' + (RUTAS.length + RUTAS_PROVINCIA.length) + ' rutas, a pie y por la provincia',
     'rutas',
     '',
     2,
@@ -65,6 +65,29 @@ function candidatos() {
         p.detalle || ''
       );
     });
+  });
+  // Rutas por la provincia y sus paradas
+  RUTAS_PROVINCIA.forEach((r, k) => {
+    poner(
+      r.nombre,
+      'Ruta en coche · ' + r.tema + ' · ' + r.paradas.length + ' paradas',
+      'ruta',
+      r.id,
+      2,
+      () => abrirRutaProvincia(k),
+      'ruta coche provincia ' + r.tema
+    );
+    r.paradas.forEach((p, i) =>
+      poner(
+        p.n,
+        r.nombre + ' · ' + p.municipio,
+        'parada',
+        r.id + '|' + p.id,
+        2,
+        () => abrirParadaProvincia(i, k),
+        p.municipio
+      )
+    );
   });
   ETAPAS.forEach(([anio, nombre], i) =>
     poner(

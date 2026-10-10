@@ -217,6 +217,7 @@ function abrirMonumento(id, parada) {
 function olvidarMonumento() {
   monumentoAbierto = null;
   if (typeof visitaAbierta != 'undefined') visitaAbierta = null;
+  if (typeof rutaSeguida != 'undefined') rutaSeguida = null;
   if (typeof salirTiempo == 'function') salirTiempo(); // tiempo.js: el mapa vuelve a ser el de hoy
   if (typeof puebloAbierto != 'undefined') puebloAbierto = null;
   if (typeof paradaActual != 'undefined') paradaActual = -1;

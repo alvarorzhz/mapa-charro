@@ -46,7 +46,8 @@ function buscar(nombre, umbral = UMBRAL) {
     try {
       r = JSON.parse(texto);
     } catch (e) {
-      if (intento == 5) throw new Error('Nominatim no responde para ' + nombre + ': ' + texto.slice(0, 200));
+      if (intento == 5)
+        throw new Error('Nominatim no responde para ' + nombre + ': ' + texto.slice(0, 200), { cause: e });
       console.log('  (Nominatim pide esperar; reintento ' + intento + ')');
       esperar(intento * 10000);
     }

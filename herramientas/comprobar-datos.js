@@ -14,6 +14,8 @@ const datos = [
   'monumentos',
   'rutas',
   'tramos',
+  'rutas-provincia',
+  'tramos-provincia',
   'pueblos',
   'contenido',
   'geometria',
@@ -21,13 +23,14 @@ const datos = [
   'tiempo',
   'carreteras',
   'provincia',
+  'carreteras-provincia',
   'firebase',
   'palabras'
 ];
 const codigo =
   datos.map(d => leer('js/datos/' + d + '.js')).join('\n;\n') +
   '\n;({ NOMBRES_GRUPOS, ZONAS_GRANDES, ZONAS, OTROS_NOMBRES, SEMILLAS_REPARTO, MONUMENTOS, RUTAS, TRAMOS_RUTAS, PUEBLOS, CURIOSIDADES, LEYENDAS, FOTOS, DONDE_COMER,' +
-  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA, PALABRAS_CHARRAS, FUENTES_PALABRAS })';
+  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA, PALABRAS_CHARRAS, FUENTES_PALABRAS, RUTAS_PROVINCIA, SALIDA_PROVINCIA, TRAMOS_PROVINCIA, CARRETERAS_PROVINCIA })';
 const D = vm.runInNewContext(codigo, {});
 
 const errores = [],
@@ -110,7 +113,7 @@ for (const id in D.SEMILLAS_REPARTO)
 for (const f of datos) {
   const texto = leer('js/datos/' + f + '.js');
   for (const [, nombre, cuerpo] of texto.matchAll(/^const (\w+) = \{\n([\s\S]*?)\n\};/gm)) {
-    const claves = [...cuerpo.matchAll(/^  '?([\w-]+)'?: /gm)].map(m => m[1]);
+    const claves = [...cuerpo.matchAll(/^ {2}'?([\w-]+)'?: /gm)].map(m => m[1]);
     claves
       .filter((k, i) => claves.indexOf(k) != i)
       .forEach(k => comprobar(false, `${f}.js: «${k}» aparece dos veces en ${nombre}`));
@@ -189,6 +192,77 @@ D.RUTAS.forEach(r => {
   T.forEach((t, i) => comprobar(t.m > 0 && t.p.length >= 2, `Ruta ${r.id}: el tramo ${i + 1} está vacío`));
 });
 for (const id in D.TRAMOS_RUTAS) comprobar(idsRuta.has(id), `TRAMOS_RUTAS: «${id}» no es una ruta`);
+
+// --- Rutas por la provincia (en coche) -----------------------------------------------
+const enlaceValido = f => Array.isArray(f) && f[0] && /^https:\/\//.test(f[1] || '');
+// --- Carreteras del mapa de la provincia (las genera herramientas/carreteras-provincia.js) ---------------
+D.CARRETERAS_PROVINCIA.forEach(c => {
+  comprobar(
+    /^(A|N|CL)-\d+$/.test(c.ref) && 'anc'.includes(c.t) && c.t.length == 1,
+    `Carretera ${c.ref}: ref o tipo raros`
+  );
+  comprobar(c.n && Array.isArray(c.l) && c.l.length, `Carretera ${c.ref}: sin nombre o sin líneas`);
+  (c.l || []).forEach(l => {
+    let la = 0,
+      lo = 0,
+      dentro = l.length >= 4 && l.length % 2 == 0;
+    for (let i = 0; i < l.length; i += 2) {
+      la += l[i];
+      lo += l[i + 1];
+      dentro = dentro && la > 40200 && la < 41400 && lo > -7100 && lo < -4800;
+    }
+    comprobar(dentro, `Carretera ${c.ref}: una línea se sale de la provincia`);
+  });
+});
+
+D.RUTAS_PROVINCIA.forEach(r => {
+  comprobar(/^[a-z0-9-]+$/.test(r.id), `Ruta de la provincia «${r.id}»: id no válido`);
+  comprobar(!idsRuta.has(r.id), `Ruta de la provincia «${r.id}»: ese id ya es de una ruta a pie`);
+  comprobar(
+    r.nombre && r.icono && r.tema && r.resumen,
+    `Ruta ${r.id}: le falta nombre, icono, tema o resumen`
+  );
+  comprobar(['medio', 'dia'].includes(r.duracion), `Ruta ${r.id}: duración «${r.duracion}» (medio o dia)`);
+  comprobar(enlaceValido(r.fuente), `Ruta ${r.id}: sin fuente con enlace`);
+  comprobar(
+    r.paradas.length >= 2 && r.paradas.length <= 9,
+    `Ruta ${r.id}: entre 2 y 9 paradas (Google Maps)`
+  );
+  const ids = r.paradas.map(p => p.id);
+  comprobar(ids.length == new Set(ids).size, `Ruta ${r.id}: paradas repetidas`);
+  r.paradas.forEach(p => {
+    comprobar(
+      p.n && p.municipio && p.ver && p.min > 0,
+      `Ruta ${r.id}, ${p.id}: falta nombre, municipio, qué ver o minutos`
+    );
+    comprobar(
+      p.la > 40.2 && p.la < 41.35 && p.lo > -7.0 && p.lo < -5.0,
+      `Ruta ${r.id}, ${p.id}: fuera de la provincia`
+    );
+    comprobar(enlaceValido(p.fuente), `Ruta ${r.id}, ${p.id}: sin fuente con enlace`);
+    (p.masFuentes || []).forEach(f =>
+      comprobar(enlaceValido(f), `Ruta ${r.id}, ${p.id}: otra fuente sin enlace`)
+    );
+    if (p.foto) {
+      comprobar(existe(p.foto[0]), `Ruta ${r.id}, ${p.id}: no existe la foto ${p.foto[0]}`);
+      comprobar(
+        /Foto: .+ · .+ · /.test(p.foto[1]),
+        `Ruta ${r.id}, ${p.id}: pie de foto sin autor y licencia`
+      );
+    }
+  });
+  // Los tramos tienen que ser de estas paradas, en este orden y en este sitio
+  const firma = [
+    { id: 'salida', ...D.SALIDA_PROVINCIA },
+    ...r.paradas,
+    { id: 'salida', ...D.SALIDA_PROVINCIA }
+  ].map(p => p.id + '@' + p.la + ',' + p.lo);
+  const T = D.TRAMOS_PROVINCIA[r.id];
+  comprobar(
+    T && T.firma.join() == firma.join() && T.tramos.length == r.paradas.length + 1,
+    `Ruta ${r.id}: los tramos en coche no son de estas paradas: node herramientas/rutas-provincia.js ${r.id}`
+  );
+});
 
 // --- Pueblos de la provincia --------------------------------------------------
 const municipios = new Set(D.PROVINCIA.m.map(m => m.n));
@@ -289,7 +363,7 @@ enlazados
 // Y al revés: lo que guarda sw.js tiene que existir (si falta uno solo, el service worker no se
 // instala y la web se queda sin modo sin conexión, sin ningún error a la vista), y tiene que guardar
 // todo lo de img/ e icons/, las fotos de las fichas y los iconos del manifest
-const listaSw = (sw.match(/\/\/ <archivos>([\s\S]*?)\/\/ <\/archivos>/) || [, ''])[1],
+const listaSw = (sw.match(/\/\/ <archivos>([\s\S]*?)\/\/ <\/archivos>/) || [null, ''])[1],
   enSw = new Set([...listaSw.matchAll(/'([^']+)'/g)].map(m => m[1]));
 comprobar(enSw.size > 0, 'sw.js no tiene lista de archivos: ejecuta node herramientas/version.js');
 enSw.forEach(a => {
@@ -430,6 +504,6 @@ if (errores.length) {
   process.exit(1);
 }
 console.log(
-  `✓ Datos correctos: ${ids.length} zonas, ${D.MONUMENTOS.length} monumentos, ${D.RUTAS.length} rutas a pie, ${D.PALABRAS_CHARRAS.length} palabras charras, ` +
+  `✓ Datos correctos: ${ids.length} zonas, ${D.MONUMENTOS.length} monumentos, ${D.RUTAS.length} rutas a pie, ${D.PALABRAS_CHARRAS.length} palabras charras, ${D.RUTAS_PROVINCIA.length} ${D.RUTAS_PROVINCIA.length == 1 ? 'ruta' : 'rutas'} por la provincia, ` +
     `${Object.keys(D.PUEBLOS).length} pueblos con ficha, ${Object.keys(D.DONDE_COMER).length} zonas con dónde comer.`
 );

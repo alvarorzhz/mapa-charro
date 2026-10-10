@@ -1,5 +1,7 @@
-# Pruebas automáticas: en cada push y en cada pull request comprueba los datos, el formato del código
-# y pasa las pruebas en un navegador de verdad (Chromium, en móvil y escritorio), contraste incluido.
+# Pruebas y publicación. En cada push y pull request: datos, formato (Prettier), errores de código (ESLint)
+# y las pruebas en un navegador de verdad, contraste incluido; móvil y escritorio van a la vez.
+# En main, si todo pasa, publica la web en GitHub Pages: así nunca se publica una versión que falla.
+# (Para eso, en Settings → Pages, «Source» tiene que ser «GitHub Actions».)
 # Es lo mismo que «npm run antes-del-commit», salvo herramientas/version.js, que cambia archivos.
 name: Pruebas
 
@@ -13,27 +15,74 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  pruebas:
+  revisar:
+    name: Datos, formato y código
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5
-
       - uses: actions/setup-node@v5
         with:
           node-version: 22
-
-      - name: Instalar dependencias (Playwright, Prettier y axe)
-        run: npm ci --no-audit --no-fund
-
-      - name: Instalar Chromium
-        run: npx playwright install --with-deps chromium
-
+          cache: npm
+      - run: npm ci --no-audit --no-fund
       - name: Comprobar los datos
         run: node herramientas/comprobar-datos.js
-
       - name: Comprobar el formato
         run: npx prettier --check "js/**/*.js" sw.js "herramientas/*.js"
+      - name: Buscar errores en el código (ESLint)
+        run: npx eslint .
 
+  pruebas:
+    name: Pruebas (${{ matrix.tamano }})
+    needs: revisar
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        tamano: [movil, escritorio]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: Instalar Chromium
+        run: npx playwright install --with-deps chromium
       - name: Pruebas en el navegador
         run: node herramientas/pruebas.js
+        env:
+          PRUEBAS_TAMANO: ${{ matrix.tamano }}
+
+  publicar:
+    name: Publicar en GitHub Pages
+    needs: pruebas
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.despliegue.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: Preparar la web (solo los archivos del repositorio, sin herramientas ni configuración)
+        run: |
+          mkdir _site
+          git archive HEAD | tar -x -C _site
+          cd _site
+          rm -rf .github herramientas package.json package-lock.json eslint.config.js lighthouserc.json \
+            .prettierrc.json .prettierignore CLAUDE.md
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+      - id: despliegue
+        uses: actions/deploy-pages@v4

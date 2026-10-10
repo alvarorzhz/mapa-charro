@@ -18,7 +18,10 @@ function pintarLeyendas(z) {
 }
 
 function pintarFoto(id) {
-  const foto = FOTOS[id]; // [ruta, pie de foto con autor y licencia]
+  pintarFotoDe(FOTOS[id]);
+}
+// foto: [ruta, pie de foto con autor y licencia] (o nada)
+function pintarFotoDe(foto) {
   $('#ph').hidden = $('#pc').hidden = !foto;
   if (!foto) return;
   $('#ph').src = foto[0];
@@ -83,12 +86,21 @@ function pintarCercanas(z) {
 }
 
 // Botones de abajo: en una zona, He estado / Quiero ir / Compartir; en un monumento o una parada de una
-// ruta ('visita'), He estado aquí / Compartir (para los logros); en lo demás, solo Compartir
+// ruta ('visita'), He estado aquí / Compartir (para los logros); en una ruta, La he hecho / La quiero hacer
+// (rutaSeguida, ruta.js); en lo demás, solo Compartir
+const TEXTOS_BOTONES = {
+  zona: ['He estado', 'Quiero ir'],
+  visita: ['He estado aquí', ''],
+  ruta: ['La he hecho', 'La quiero hacer']
+};
 function modoBotonesFicha(modo) {
+  if (modo != 'ruta' && typeof rutaSeguida != 'undefined') rutaSeguida = null;
   document.querySelector('.bt').style.display = '';
+  const textos = TEXTOS_BOTONES[modo] || ['', ''];
   document.querySelectorAll('.bt button[data-s]').forEach(b => {
-    b.hidden = !(modo == 'zona' || (modo == 'visita' && b.dataset.s == 'v'));
-    if (b.dataset.s == 'v') b.textContent = modo == 'visita' ? 'He estado aquí' : 'He estado';
+    const texto = textos[b.dataset.s == 'v' ? 0 : 1];
+    b.hidden = !texto;
+    if (texto) b.textContent = texto;
   });
   pintarBotonesFicha();
 }
@@ -269,13 +281,16 @@ const fichaDePueblo = () => typeof puebloAbierto != 'undefined' && puebloAbierto
 const fichaDeVisita = () => typeof visitaAbierta != 'undefined' && visitaAbierta;
 
 function pintarBotonesFicha() {
-  const marca = fichaDeVisita()
-    ? estaVisitada(visitaAbierta)
-      ? 'v'
-      : ''
-    : fichaDePueblo()
-      ? estadoMunicipio(puebloAbierto)
-      : progreso.z[zonaAbierta];
+  const marca =
+    typeof rutaSeguida != 'undefined' && rutaSeguida
+      ? estadoRuta(rutaSeguida)
+      : fichaDeVisita()
+        ? estaVisitada(visitaAbierta)
+          ? 'v'
+          : ''
+        : fichaDePueblo()
+          ? estadoMunicipio(puebloAbierto)
+          : progreso.z[zonaAbierta];
   document
     .querySelectorAll('.bt button[data-s]')
     .forEach(b => b.classList.toggle('on', marca == b.dataset.s));
@@ -300,7 +315,8 @@ function cerrarFicha() {
 document.querySelectorAll('.bt button[data-s]').forEach(
   b =>
     (b.onclick = () => {
-      if (fichaDeVisita()) marcarVisita();
+      if (typeof rutaSeguida != 'undefined' && rutaSeguida) marcarRuta(rutaSeguida, b.dataset.s);
+      else if (fichaDeVisita()) marcarVisita();
       else if (fichaDePueblo()) {
         marcarMunicipio(puebloAbierto, b.dataset.s);
         pintarBotonesFicha();

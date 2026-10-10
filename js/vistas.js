@@ -42,8 +42,7 @@ function cambiarPestana(nueva) {
   $('#gm').hidden = mapaVisible ? !$('#gm').textContent : true;
   $('#ls').style.display = nueva == 'list' ? '' : 'none';
   $('#pv').style.display = nueva == 'prov' ? '' : 'none';
-  $('#vmap').classList.toggle('on', enMapa);
-  $('#vlist').classList.toggle('on', nueva == 'list');
+  $('#vmap').classList.toggle('on', nueva != 'prov'); // la lista es parte de la capital
   $('#vprov').classList.toggle('on', nueva == 'prov');
   if (nueva == 'list') pintarLista();
   else if (nueva == 'prov') {
@@ -61,10 +60,13 @@ const LISTA_VACIA = {
   n: 'No queda ninguna sin marcar: o la has pisado o está en «Quiero ir».'
 };
 
-// Pestaña Lista: zonas por grupo con sus botones
+// La lista de zonas de la capital (se abre con el botón del mapa, #vlist): zonas por grupo con sus botones
 function pintarLista() {
-  const caja = $('#ls');
+  const caja = $('#ls'),
+    volver = crear('button', 'volver-mapa', esEscritorio() ? '× Cerrar la lista' : '← Volver al mapa');
   caja.textContent = '';
+  volver.onclick = () => cambiarPestana('map');
+  caja.append(volver, crear('h2', 'lista-titulo', 'Las zonas de la capital'));
   caja.appendChild(
     crearBotonesFiltro(filtroLista, clave => {
       filtroLista = clave;

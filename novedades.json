@@ -1,5 +1,22 @@
 [
   {
+    "version": "2.0.0",
+    "fecha": "2026-10-10",
+    "titulo": "Capital y provincia",
+    "usuario": [
+      "La app pasa a tener dos pestañas, Capital y Provincia. La lista de zonas de la capital se abre con el botón «Lista de zonas» del mapa.",
+      "Rutas en coche por la provincia, saliendo y volviendo a Salamanca: Arribes del norte y del sur, Sierra de Francia, patrimonio, gastronomía, Alba de Tormes y Ledesma. Cada una lleva su mapa, sus km y tiempos, sus paradas con foto y fuentes, y navegación en Google Maps y OpenStreetMap.",
+      "La ruta de las Arribes del norte pasa por la Cabeza de Framontanos, el mercadillo de Trabanca, los miradores de Villarino, la presa de Almendra (la más alta de España) y el vino de la Ribera en Corporario.",
+      "Un solo botón «Rutas» reúne las rutas a pie y las de la provincia.",
+      "En cada ruta puedes marcar «La he hecho» o «La quiero hacer» para llevar la cuenta.",
+      "Tu perfil: te saluda por tu nombre si has entrado con tu cuenta, y muestra tu nivel, lo que te falta para el siguiente, tus estadísticas y rutas, tus últimos logros, tu actividad y tu historial.",
+      "El mapa de la provincia muestra las autovías (A-62, A-66, A-50), las nacionales (N-620, N-630, N-501) y la CL-517 de las Arribes.",
+      "Avenidas de la capital que se cortaban sin motivo ya van seguidas.",
+      "Corrección: el Café Bar Japonés Aí está en Sancti-Spíritus, no en Garrido Norte."
+    ],
+    "tecnico": "Rutas de la provincia: js/datos/rutas-provincia.js, tramos-provincia.js (herramientas/rutas-provincia.js, OSRM) y js/ruta-provincia.js; abrirRutas único en ruta.js. Seguimiento en j.rs ({id: 'v'|'w'}), limpiarSeguimiento (estado.js), juntar en juntarProgresos, tipo 'rh' en el historial. Perfil js/perfil.js (#perfil, j.hi con anotarHistorial al guardar; siguienteNivel; nombre de Google displayName o de Claude user.me().name con scope profile, sin guardarlo). Carreteras de la provincia: js/datos/carreteras-provincia.js de Overpass con herramientas/carreteras-provincia.js, pintarCarreterasProvincia en provincia.js. Pestañas Capital/Provincia; #vlist pasa al mapa y la lista lleva «Volver al mapa». carreteras.js: 28 huecos de AVENIDAS rellenados con OSRM a pie. CI: pruebas.yml (datos, Prettier, ESLint, pruebas móvil/escritorio) y despliegue en GitHub Pages con Actions; revision-semanal.yml (enlaces y Lighthouse); Dependabot; eslint.config.js."
+  },
+  {
     "version": "1.5.5",
     "fecha": "2026-10-09",
     "titulo": "Rutas que se ven y un mapa más limpio",

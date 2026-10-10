@@ -101,6 +101,41 @@ const botonesPedania = p =>
 // --- Construcción de la pestaña ---------------------------------------------
 
 // Minimapa de municipios con zoom y arrastre. Devuelve { caminos, encuadrar(m) }.
+// Autovías, nacionales y la CL-517 (datos/carreteras-provincia.js) en una capa «capa» de un mapa de la
+// provincia con la proyección aLienzo. Devuelve una función que pone los escudos (A-62…) a la escala «f»,
+// para que no crezcan al acercar el mapa.
+function pintarCarreterasProvincia(capa, aLienzo) {
+  const linea = l =>
+    'M' +
+    decodificarLinde(l)
+      .map(q =>
+        aLienzo(q)
+          .map(v => v.toFixed(2))
+          .join(' ')
+      )
+      .join('L');
+  const orden = [...CARRETERAS_PROVINCIA].sort((a, b) => 'cna'.indexOf(a.t) - 'cna'.indexOf(b.t)),
+    caminos = orden.map(c => c.l.map(linea).join(''));
+  // Primero todos los bordes y luego los trazos, para que los cruces queden limpios
+  orden.forEach((c, i) => crearSvg('path', { d: caminos[i], class: 'pmv-b ' + c.t }, capa));
+  orden.forEach((c, i) => crearSvg('path', { d: caminos[i], class: 'pmv-t ' + c.t }, capa));
+  // Un escudo por carretera, a mitad de su tramo más largo
+  const escudos = orden.map(c => {
+    const P = c.l.map(decodificarLinde).sort((a, b) => b.length - a.length)[0],
+      [x, y] = aLienzo(P[Math.floor(P.length / 2)]),
+      g = crearSvg('g', { class: 'pmv-e ' + c.t }, capa),
+      w = c.ref.length * 5.4 + 8;
+    crearSvg('rect', { x: -w / 2, y: -7, width: w, height: 14, rx: 3 }, g);
+    crearSvg('text', { y: 3.3, 'text-anchor': 'middle' }, g).textContent = c.ref;
+    crearSvg('title', {}, g).textContent = c.ref + ': ' + c.n;
+    return { g, x, y };
+  });
+  return f =>
+    escudos.forEach(({ g, x, y }) =>
+      g.setAttribute('transform', `translate(${x.toFixed(2)} ${y.toFixed(2)}) scale(${f.toFixed(4)})`)
+    );
+}
+
 function construirMinimapa(contenedor) {
   const caja = crear('div', 'pmw');
   contenedor.appendChild(caja);
@@ -128,6 +163,7 @@ function construirMinimapa(contenedor) {
     vista.x = Math.max(0, Math.min(W - vista.w, vista.x));
     vista.y = Math.max(0, Math.min(H - vista.h, vista.y));
     sv.setAttribute('viewBox', vista.x + ' ' + vista.y + ' ' + vista.w + ' ' + vista.h);
+    escalarEscudos((0.36 * vista.w) / W);
   };
   const zoom = (factor, cx = vista.x + vista.w / 2, cy = vista.y + vista.h / 2) => {
     const w = Math.min(W, Math.max(W / 8, vista.w / factor)),
@@ -174,6 +210,10 @@ function construirMinimapa(contenedor) {
   });
   PROVINCIA.co.forEach(rs =>
     crearSvg('path', { d: trazo(rs.map(decodificarLinde)), class: 'pmc' }, capaComarcas)
+  );
+  const escalarEscudos = pintarCarreterasProvincia(
+    crearSvg('g', { class: 'pmv', 'aria-hidden': 'true' }, sv),
+    aLienzo
   );
 
   const [acercar, alejar, todo] = zb.querySelectorAll('button');

@@ -76,6 +76,7 @@ async function subirANube() {
 // navegador no parece más nueva que la de la cuenta y no la pisa.
 const guardar = ({ uso = false } = {}) => {
   if (!uso || nube.ref) progreso.t = Math.max(Date.now(), (progreso.t || 0) + 1);
+  anotarHistorial(); // perfil.js: fecha de lo nuevo que se ha marcado
   guardarLocal();
   if (nube.ref) {
     clearTimeout(nube.temporizador);
@@ -102,7 +103,8 @@ const tieneProgreso = p => {
     j.ms ||
     j.cp ||
     ['h', 'mo', 'fl', 'et', 'pv'].some(k => (j[k] || []).length) ||
-    Object.keys(j.r || {}).length
+    Object.keys(j.r || {}).length ||
+    Object.keys(j.rs || {}).length
   );
 };
 
@@ -130,15 +132,33 @@ function juntarProgresos(a, b) {
       fl: [...(ja.fl || []), ...(jb.fl || [])],
       et: [...(ja.et || []), ...(jb.et || [])],
       pv: [...(ja.pv || []), ...(jb.pv || [])],
+      hi: juntarHistoriales(ja.hi, jb.hi),
+      rs: juntar(ja.rs, jb.rs), // «la he hecho» gana a «la quiero hacer»
       n: Math.max(ja.n || 0, jb.n || 0),
       ms: Math.max(ja.ms || 0, jb.ms || 0),
       cp: Math.max(ja.cp || 0, jb.cp || 0),
       r: Object.fromEntries(
-        RUTAS.map(ruta => [ruta.id, [...((ja.r || {})[ruta.id] || []), ...((jb.r || {})[ruta.id] || [])]])
+        [...RUTAS, ...RUTAS_PROVINCIA].map(ruta => [
+          ruta.id,
+          [...((ja.r || {})[ruta.id] || []), ...((jb.r || {})[ruta.id] || [])]
+        ])
       )
     },
     t: Date.now()
   });
+}
+
+// Junta dos historiales: cada cosa una vez, con la fecha más antigua que se conozca
+function juntarHistoriales(a, b) {
+  if (!Array.isArray(a) && !Array.isArray(b)) return undefined;
+  const por = new Map();
+  [...(a || []), ...(b || [])].forEach(e => {
+    if (!Array.isArray(e)) return;
+    const k = e[1] + '|' + e[2],
+      antes = por.get(k);
+    if (!antes || (e[0] && (!antes[0] || e[0] < antes[0]))) por.set(k, e);
+  });
+  return [...por.values()];
 }
 
 // Conecta el progreso con su documento en la cuenta. Normalmente gana la copia (navegador o cuenta)
@@ -204,6 +224,7 @@ function desconectarNube() {
   mostrarEstadoGuardado('local');
 }
 
+let nombreClaude = ''; // el nombre de la cuenta de Claude (perfil.js), si Claude lo da
 const CLAVE_NUBE_CLAUDE = 'charro-cuenta-claude'; // la cuenta de Claude ya conectada en este dispositivo
 const leerClave = k => {
   try {
@@ -226,6 +247,14 @@ async function iniciarNube() {
       const [db, user] = await Promise.all([window.claude.use('db'), window.claude.use('user')]);
       const id = db && user && (await user.id());
       if (id) {
+        // El nombre, solo para saludar en el perfil (no se guarda; hace falta el permiso «profile»)
+        Promise.resolve()
+          .then(() => user.me())
+          .then(yo => {
+            nombreClaude = (yo && yo.name) || '';
+            if (nombreClaude && location.hash == '#perfil') abrirPerfil();
+          })
+          .catch(() => {});
         // La primera vez que esta cuenta de Claude se conecta en este dispositivo, se juntan las copias
         const juntar = leerClave(CLAVE_NUBE_CLAUDE) != id,
           conectada = await conectarNube(

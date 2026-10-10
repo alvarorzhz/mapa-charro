@@ -62,7 +62,7 @@ const pedanias = PROVINCIA.m.flatMap(m => m.P);
 //                                  y, para los logros, monumentos visitados (mo: [id]) y paradas propias de cada
 //                                  ruta visitadas (r: { idRuta: [idParada] }), fichas de zona abiertas (fl),
 //                                  etapas de «Salamanca en el tiempo» vistas (et), partidas terminadas (n) y
-//                                  veces que se ha creado «Mi Salamanca» (ms) o compartido (cp) y palabras charras vistas (pv). Van dentro de j para no añadir
+//                                  veces que se ha creado «Mi Salamanca» (ms) o compartido (cp) palabras charras vistas (pv) e historial con fechas (hi, ver perfil.js). Van dentro de j para no añadir
 //                                  campos nuevos a lo guardado (las reglas de la cuenta de Google solo aceptan estos)
 const CLAVE_LOCAL = 'charro2';
 const ESTADOS_MARCA = [
@@ -104,6 +104,7 @@ function limpiarProgreso(o) {
       pf: j.pf ? 1 : 0,
       mo: Array.isArray(j.mo) ? [...new Set(j.mo.filter(id => idsMonumentos.has(id)))] : [],
       r: limpiarParadas(j.r),
+      rs: limpiarSeguimiento(j.rs),
       fl: Array.isArray(j.fl) ? [...new Set(j.fl.filter(id => idsValidos.has(id)))] : [],
       et: Array.isArray(j.et)
         ? [...new Set(j.et.filter(i => Number.isInteger(i) && i >= 0 && i < ETAPAS.length))]
@@ -111,9 +112,34 @@ function limpiarProgreso(o) {
       n: contador(j.n),
       ms: contador(j.ms),
       cp: contador(j.cp),
-      pv: Array.isArray(j.pv) ? [...new Set(j.pv.filter(id => idsPalabras.has(id)))] : []
+      pv: Array.isArray(j.pv) ? [...new Set(j.pv.filter(id => idsPalabras.has(id)))] : [],
+      hi: limpiarHistorial(j.hi)
     }
   };
+}
+// Historial del perfil (perfil.js): [fecha o '' si es de antes, tipo, id]; sin historial, undefined
+const limpiarHistorial = hi =>
+  Array.isArray(hi)
+    ? hi
+        .filter(
+          e =>
+            Array.isArray(e) &&
+            (e[0] === '' || esFecha(e[0])) &&
+            TIPOS_HISTORIAL.includes(e[1]) &&
+            typeof e[2] == 'string' &&
+            e[2].length < 80
+        )
+        .slice(-3000)
+    : undefined;
+// Seguimiento de las rutas: { idRuta: 'v' (la he hecho) | 'w' (la quiero hacer) }
+const TIPOS_HISTORIAL = ['z', 'p', 'mo', 'ru', 'rh', 'lo'];
+function limpiarSeguimiento(rs) {
+  const limpio = {};
+  if (!rs || typeof rs != 'object') return limpio;
+  [...RUTAS, ...RUTAS_PROVINCIA].forEach(r => {
+    if (rs[r.id] == 'v' || rs[r.id] == 'w') limpio[r.id] = rs[r.id];
+  });
+  return limpio;
 }
 const contador = x => Math.max(0, Math.min(1e6, Math.round(+x) || 0));
 const esFecha = x => typeof x == 'string' && /^\d{4}-\d\d-\d\d$/.test(x);
@@ -123,7 +149,7 @@ const idsPalabras = new Set(PALABRAS_CHARRAS.map(w => w.id));
 function limpiarParadas(r) {
   const limpio = {};
   if (!r || typeof r != 'object') return limpio;
-  RUTAS.forEach(ruta => {
+  [...RUTAS, ...RUTAS_PROVINCIA].forEach(ruta => {
     const ids = new Set(ruta.paradas.filter(p => typeof p != 'string').map(p => p.id)),
       vistas = Array.isArray(r[ruta.id]) ? [...new Set(r[ruta.id].filter(id => ids.has(id)))] : [];
     if (vistas.length) limpio[ruta.id] = vistas;
@@ -136,7 +162,22 @@ const datosParaGuardar = o => ({
   t: o.t || 0,
   gv: o.gv || [],
   p: o.p || {},
-  j: o.j || { m: 0, d: '', s: 0, h: [], pf: 0, mo: [], r: {}, fl: [], et: [], n: 0, ms: 0, cp: 0, pv: [] },
+  j: o.j || {
+    m: 0,
+    d: '',
+    s: 0,
+    h: [],
+    pf: 0,
+    mo: [],
+    r: {},
+    rs: {},
+    fl: [],
+    et: [],
+    n: 0,
+    ms: 0,
+    cp: 0,
+    pv: []
+  },
   v: 1
 });
 

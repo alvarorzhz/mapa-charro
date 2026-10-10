@@ -1,0 +1,35 @@
+# Revisión semanal de la web publicada (lunes a primera hora), o a mano desde la pestaña Actions:
+# - enlaces de las fuentes que se han roto y restaurantes con la valoración de hace más de un año;
+# - Lighthouse: rendimiento, accesibilidad, buenas prácticas y SEO con unos mínimos (lighthouserc.json).
+# El resumen sale en la propia ejecución; si algo falla, GitHub avisa por correo.
+name: Revisión semanal
+
+on:
+  schedule:
+    - cron: '17 6 * * 1'
+  workflow_dispatch:
+
+jobs:
+  enlaces:
+    name: Enlaces y restaurantes
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Revisar enlaces de las fuentes
+        run: node herramientas/revisar-enlaces.js
+
+  lighthouse:
+    name: Lighthouse
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Lighthouse sobre la web publicada
+        run: npx --yes @lhci/cli@0.15.1 autorun

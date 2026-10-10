@@ -87,7 +87,7 @@ const DIRECCIONES = { ArrowRight: [1, 0], ArrowLeft: [-1, 0], ArrowUp: [0, -1], 
 $('#zg').addEventListener('keydown', e => {
   const z = zonaDeElemento.get(e.target);
   if (!z || e.ctrlKey || e.metaKey || e.altKey) return;
-  let destino = null;
+  let destino;
   if (DIRECCIONES[e.key]) destino = zonaEnDireccion(z, ...DIRECCIONES[e.key]);
   else if (e.key == 'Home') destino = zonas.find(q => q.id == 'centro');
   else if (e.key == 'Enter' || e.key == ' ') {

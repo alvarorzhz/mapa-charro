@@ -630,14 +630,25 @@ prueba('Enlaces y botón atrás', async (p, url) => {
 });
 
 prueba('Lista y provincia', async p => {
+  // Dos pestañas, Capital y Provincia; la lista de zonas se abre con un botón del mapa
+  igual(await p.$$eval('.seg button', a => a.map(b => b.textContent)), ['Capital', 'Provincia'], 'pestañas');
   await p.click('#vlist');
+  igual(await p.evaluate(() => location.hash), '#lista', 'enlace a la lista');
+  cierto(await p.$eval('#vmap', b => b.classList.contains('on')), 'la lista es parte de la capital');
   igual(
     await p.$$eval('#ls .lr', a => a.length),
     await p.evaluate(() => todasLasZonas.length),
     'filas de la lista'
   );
+  await p.click('#ls .volver-mapa');
+  cierto(await p.$eval('#ls', e => e.style.display == 'none'), 'se cierra la lista');
   await p.click('#vprov');
   igual(await p.$$eval('#pm path.pmm', a => a.length), 362, 'municipios en el minimapa');
+  igual(
+    (await p.$$eval('#pm .pmv-e text', a => a.map(t => t.textContent))).sort(),
+    ['A-50', 'A-62', 'A-66', 'CL-517', 'N-501', 'N-620', 'N-630'],
+    'autovías y nacionales en el minimapa'
+  );
   await p.fill('#pq', 'ledesma');
   await p.click('#prs .nm');
   await p.click('#psb .q[data-s=v]');
@@ -738,11 +749,197 @@ prueba('Sellos «V» y rutas sobre zonas pisadas', async p => {
   cierto((await p.$$('.ruta-monumental .rt-borde')).length > 0, 'borde blanco de la ruta');
 });
 
+prueba(
+  'Tu perfil: estadísticas e historial',
+  async (p, url) => {
+    // Lo que ya estaba marcado se apunta sin fecha; lo nuevo, con la de hoy
+    igual(
+      await p.evaluate(() => progreso.j.hi),
+      [
+        ['', 'z', 'centro'],
+        ['', 'lo', 'p']
+      ],
+      'lo de antes (la zona y su logro), sin fecha'
+    );
+    await p.evaluate(() => marcarZona('vidal', 'v'));
+    igual(
+      await p.evaluate(() => progreso.j.hi.find(e => e[2] == 'vidal')[0]),
+      await p.evaluate(() => fechaHoy()),
+      'lo nuevo, con fecha'
+    );
+    await p.click('#perfil');
+    igual(await p.evaluate(() => location.hash), '#perfil', 'abre el perfil');
+    cierto((await texto(p, '#info')).includes('2 de 63 zonas pisadas'), 'zonas pisadas');
+    cierto((await texto(p, '.historial')).includes('Pisaste Vidal'), 'historial');
+    cierto(await p.isVisible('.actividad'), 'actividad de las últimas semanas');
+    cierto((await texto(p, '#info')).includes('Te faltan 8 zonas para ser «Paseante»'), 'el siguiente nivel');
+    cierto((await texto(p, '#info')).includes('Sin cuenta'), 'sin cuenta');
+    // Con la cuenta de Claude (o de Google) saluda por el nombre, que no se guarda en el progreso
+    await p.evaluate(() => {
+      nombreClaude = 'Álvaro Rodríguez';
+      abrirPerfil();
+    });
+    igual(await texto(p, '#nm'), 'Hola, Álvaro', 'saluda por el nombre');
+    cierto((await texto(p, '.perfil-nombre')) == 'Álvaro Rodríguez', 'y lo pone entero');
+    cierto(!JSON.stringify(await p.evaluate(() => progreso)).includes('Álvaro'), 'sin guardarlo');
+    await p.evaluate(() => (nombreClaude = ''));
+    // Quitar la marca la quita del historial
+    await p.evaluate(() => marcarZona('vidal', 'v'));
+    cierto(!(await p.evaluate(() => progreso.j.hi.some(e => e[2] == 'vidal'))), 'sin la marca quitada');
+    // El historial se limpia y se junta sin repetir, con la fecha más antigua
+    igual(
+      await p.evaluate(
+        () =>
+          juntarHistoriales(
+            [
+              ['2026-10-05', 'z', 'vega'],
+              ['', 'z', 'teso']
+            ],
+            [
+              ['2026-10-01', 'z', 'vega'],
+              ['2026-10-02', 'z', 'teso'],
+              ['mal', 'z', 'x']
+            ]
+          ).length
+      ),
+      3,
+      'junta sin repetir'
+    );
+    igual(
+      await p.evaluate(
+        () =>
+          limpiarProgreso({
+            z: {},
+            j: {
+              hi: [
+                ['mal', 'z', 'x'],
+                ['2026-10-01', 'z', 'vega']
+              ]
+            }
+          }).j.hi
+      ),
+      [['2026-10-01', 'z', 'vega']],
+      'se guarda limpio'
+    );
+    // Enlace directo
+    await p.goto(url + '#perfil');
+    await p.waitForTimeout(300);
+    cierto((await texto(p, '#k')) == 'Tu perfil', 'enlace al perfil');
+  },
+  {
+    antes: () => {
+      if (!sessionStorage.getItem('cargado')) {
+        sessionStorage.setItem('cargado', '1');
+        localStorage.setItem('charro2', JSON.stringify({ z: { centro: 'v' }, t: 5 }));
+      }
+    }
+  }
+);
+
+prueba('Rutas por la provincia', async (p, url) => {
+  // La lista única tiene las rutas a pie y las de la provincia, con filtros
+  await p.click('#rt');
+  cierto((await texto(p, '#info')).includes('Por la provincia, en coche'), 'apartado de la provincia');
+  await p.click('#info .fl button:text-is("A pie")');
+  cierto(!(await texto(p, '#info')).includes('Arribes del norte'), 'el filtro A pie la esconde');
+  await p.click('#info .fl button:text-is("Por la provincia")');
+  igual(
+    await p.$$eval('.tarjeta-ruta', a => a.length),
+    await p.evaluate(() => RUTAS_PROVINCIA.length),
+    'solo las de la provincia'
+  );
+  await p.click('.tarjeta-ruta:has-text("Arribes del norte")');
+  igual(await p.evaluate(() => location.hash), '#ruta-arribes-norte', 'abre la ruta');
+  cierto(await p.isVisible('.mapa-ruta-prov'), 'con su mapa');
+  igual(await p.$$eval('.mapa-ruta-prov .rpn', a => a.length), 8, 'nueve paradas en ocho marcadores');
+  igual(await texto(p, '.mapa-ruta-prov .rpn.varias text'), '8–9', 'los dos miradores de la presa, juntos');
+  const datos = await texto(p, '#info .datos');
+  cierto(
+    /Día completo/.test(datos) && /\d+ km/.test(datos) && /Al volante/.test(datos),
+    'duración, km y tiempo'
+  );
+  const google = await p.$eval('#nb a.principal', a => a.href);
+  cierto(
+    google.startsWith('https://www.google.com/maps/dir/?api=1') && google.includes('waypoints='),
+    'Google Maps'
+  );
+  cierto(await p.isVisible('.mapa-ruta-prov .pmv-t.a'), 'con las autovías de referencia');
+  // Seguimiento: «La quiero hacer», luego «La he hecho» (va al historial) y en la lista lleva su etiqueta
+  igual(
+    await p.$$eval('.bt button[data-s]:not([hidden])', a => a.map(b => b.textContent)),
+    ['La he hecho', 'La quiero hacer'],
+    'botones de seguimiento'
+  );
+  await p.click('.bt button[data-s=w]');
+  igual(await p.evaluate(() => progreso.j.rs), { 'arribes-norte': 'w' }, 'la quiere hacer');
+  await p.click('.bt button[data-s=v]');
+  igual(await p.evaluate(() => progreso.j.rs), { 'arribes-norte': 'v' }, 'la ha hecho');
+  cierto(
+    await p.evaluate(() => progreso.j.hi.some(e => e[1] == 'rh' && e[2] == 'arribes-norte')),
+    'historial'
+  );
+  cierto(await p.$eval('.bt button[data-s=v]', b => b.classList.contains('on')), 'botón marcado');
+  igual(
+    await p.evaluate(
+      () => juntarProgresos({ z: {}, j: { rs: { 'arribes-norte': 'w', sierra: 'w' } } }, progreso).j.rs
+    ),
+    { 'arribes-norte': 'v' },
+    'al juntar, gana «la he hecho» y se quitan las rutas que no existen'
+  );
+  await p.evaluate(() => abrirRutas());
+  cierto(
+    (await texto(p, '.tarjeta-ruta:has-text("Arribes del norte") .marca-ruta')).includes('La has hecho'),
+    'etiqueta en la lista'
+  );
+  await p.click('.tarjeta-ruta:has-text("Arribes del norte")');
+  await p.click('.bt button[data-s=v]');
+  igual(await p.evaluate(() => progreso.j.rs), {}, 'pulsar otra vez la quita');
+  // Las paradas: desde el mapa y con «Siguiente»; foto, cómo llegar, más fuentes y «He estado aquí»
+  await p.$eval('.mapa-ruta-prov .rpn >> nth=4', g =>
+    g.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+  );
+  igual(await p.evaluate(() => location.hash), '#ruta-arribes-norte/5', 'abre la parada del mapa');
+  igual(await texto(p, '#nm'), 'Cabeza de Framontanos', 'su ficha');
+  cierto(
+    await p.waitForSelector('#ph', { state: 'visible', timeout: 3000 }).then(
+      () => true,
+      () => false
+    ),
+    'con foto'
+  );
+  igual(await p.$$eval('#nb a.llegar', a => a.length), 2, 'cómo llegar en Google Maps y OpenStreetMap');
+  cierto((await p.$$('#ap a')).length > 1, 'y todas sus fuentes');
+  await p.click('.bt button[data-s=v]');
+  igual(await p.evaluate(() => progreso.j.r['arribes-norte']), ['cabeza-framontanos'], 'parada visitada');
+  cierto(
+    await p.evaluate(() => calcularLogros().some(a => a.id == 'ru-arribes-norte' && a.c == 1 && a.m == 9)),
+    'cuenta para su logro'
+  );
+  await p.click('#nb .navruta button.principal');
+  igual(await p.evaluate(() => location.hash), '#ruta-arribes-norte/6', 'la siguiente');
+  // Todas las rutas de la provincia se abren sin errores
+  for (const id of await p.evaluate(() => RUTAS_PROVINCIA.map(r => r.id))) {
+    await p.evaluate(h => (location.hash = h), '#ruta-' + id + '/1');
+    await p.waitForTimeout(150);
+    cierto(await fichaAbierta(p), 'abre ' + id);
+  }
+  // Enlace directo a una parada y búsqueda
+  await p.goto(url + '#ruta-arribes-norte/2');
+  await p.waitForTimeout(300);
+  igual(await texto(p, '#nm'), 'Trabanca y su mercadillo portugués', 'enlace a la parada');
+  await p.fill('#q', 'cabeza de framontanos');
+  cierto((await texto(p, '#sr')).includes('Arribes del norte'), 'el buscador la encuentra');
+});
+
 prueba('Rutas a pie', async p => {
   // El botón abre la lista de rutas
   await p.click('#rt');
   igual(await p.evaluate(() => location.hash), '#rutas', 'abre la lista');
-  igual(await p.$$eval('.tarjeta-ruta', a => a.length), 3, 'tres rutas');
+  igual(
+    await p.$$eval('.tarjeta-ruta', a => a.length),
+    await p.evaluate(() => RUTAS.length + RUTAS_PROVINCIA.length),
+    'las de a pie y las de la provincia'
+  );
   // La monumental: sus paradas son monumentos
   await p.click('.tarjeta-ruta >> nth=0');
   igual(await p.evaluate(() => location.hash), '#ruta', 'abre la ruta monumental');
@@ -1330,10 +1527,12 @@ prueba(
   const url = 'http://localhost:' + srv.address().port + '/';
   const navegador = await chromium.launch();
   let fallos = 0;
+  // PRUEBAS_TAMANO=movil o =escritorio pasa solo esas (en GitHub Actions van las dos a la vez)
+  const soloTamano = process.env.PRUEBAS_TAMANO;
   for (const [ancho, alto, nombre] of [
     [390, 844, 'móvil'],
     [1280, 860, 'escritorio']
-  ]) {
+  ].filter(([, , n]) => !soloTamano || n.normalize('NFD').replace(/[\u0300-\u036f]/g, '') == soloTamano)) {
     for (const { nombre: n, fn, opciones } of pruebas) {
       const ctx = await navegador.newContext({
         viewport: { width: ancho, height: alto },
