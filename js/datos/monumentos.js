@@ -189,6 +189,30 @@ const MONUMENTOS = [
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Estadio_Helmántico']]
   },
   {
+    id: 'aldehuela',
+    n: 'Parque y Ciudad Deportiva de La Aldehuela',
+    tipo: 'estadio',
+    la: 40.9594,
+    lo: -5.6368,
+    zona: 'prosperidad',
+    top: 1,
+    epoca: 'Inaugurado en 1988',
+    datos: [
+      ['Superficie', 'unas 40 hectáreas'],
+      ['Proyecto', 'equipo de Alejandro de la Sota (concurso de 1985)'],
+      ['Domingos', 'el Rastro, en su recinto ferial']
+    ],
+    curiosidades: [
+      'Toma el nombre de una aldea junto al Tormes que fue feudo de Diego de Guzmán, procurador de Salamanca en la Santa Junta de Ávila durante la guerra de las Comunidades. A mediados del siglo XIX tenía cuatro habitantes.',
+      'La finca Aldehuela de los Guzmanes era de Cabrerizos: un decreto de la Junta de 2001 la separó de ese municipio y la sumó al término de Salamanca.',
+      'Es el mayor complejo deportivo de la ciudad: velódromo, pista cubierta de atletismo, campos de fútbol y de rugby, rocódromo y piscina.'
+    ],
+    fuente: [
+      ['Ayuntamiento de Salamanca', 'https://www.salamanca.es/que-ver/naturaleza/parque-de-la-aldehuela'],
+      ['BOE (29/11/2002)', 'https://www.boe.es/boe/dias/2002/11/29/pdfs/A41978-41978.pdf']
+    ]
+  },
+  {
     id: 'sanesteban',
     n: 'Convento de San Esteban',
     tipo: 'iglesia',

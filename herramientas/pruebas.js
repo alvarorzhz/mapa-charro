@@ -675,6 +675,12 @@ prueba('Lista y provincia', async p => {
   cierto(/^[\d.]+ hab\.$/.test(await texto(p, '#pcl .pr .habm')), 'habitantes junto a cada pueblo');
   await p.fill('#pq', 'ledesma');
   await p.click('#prs .nm');
+  igual(
+    await texto(p, '#pm .pms-e text'),
+    'Ledesma',
+    'el pueblo elegido se resalta en el mapa con su nombre'
+  );
+  igual(await p.$$eval('#pm .pms-t', a => a.length), 1, 'y solo él');
   cierto(
     /^👥 [\d.]+ habitantes \(INE, 2025\), contando sus pedanías$/.test(await texto(p, '#psb .habitantes')),
     'habitantes con las pedanías'
@@ -742,7 +748,16 @@ prueba('Panel de capas y leyenda', async p => {
   await p.click('#zc');
   cierto(!(await p.$eval('#capas', e => e.hidden)), 'el botón lo abre');
   igual(await p.$eval('#zc', e => e.getAttribute('aria-expanded')), 'true', 'y lo anuncia');
-  igual((await p.$$('#capas .lg span')).length, 10, 'con la leyenda dentro');
+  igual((await p.$$('#capas .lg span')).length, 11, 'con la leyenda dentro');
+  // Los parques, manchas verdes con su interruptor
+  igual(
+    await p.$$eval('#pk path', a => a.length),
+    await p.evaluate(() => PARQUES.length),
+    'parques en el mapa'
+  );
+  await p.click('#pkb');
+  igual(await p.$eval('#pk', e => e.style.display), 'none', 'Parques se apaga');
+  await p.click('#pkb');
   await p.click('#rb');
   igual(await p.$eval('#rd', e => e.style.display), 'none', 'Carreteras se apaga');
   igual(await p.$eval('#rb', e => e.getAttribute('aria-pressed')), 'false', 'y el interruptor lo dice');

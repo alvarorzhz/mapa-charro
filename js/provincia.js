@@ -178,6 +178,7 @@ function construirMinimapa(contenedor) {
     vista.y = Math.max(0, Math.min(H - vista.h, vista.y));
     sv.setAttribute('viewBox', vista.x + ' ' + vista.y + ' ' + vista.w + ' ' + vista.h);
     escalarEscudos((0.36 * vista.w) / W);
+    escalarSeleccion((0.36 * vista.w) / W);
   };
   const zoom = (factor, cx = vista.x + vista.w / 2, cy = vista.y + vista.h / 2) => {
     const w = Math.min(W, Math.max(W / 8, vista.w / factor)),
@@ -225,6 +226,35 @@ function construirMinimapa(contenedor) {
   PROVINCIA.co.forEach(rs =>
     crearSvg('path', { d: trazo(rs.map(decodificarLinde)), class: 'pmc' }, capaComarcas)
   );
+  // El municipio elegido, por encima de todo: relleno, borde con halo y su nombre (que no crece al acercar)
+  const capaSeleccion = crearSvg('g', { class: 'pms', 'aria-hidden': 'true' }, sv);
+  let etiquetaSeleccion = null;
+  const escalarSeleccion = f =>
+    etiquetaSeleccion &&
+    etiquetaSeleccion.g.setAttribute(
+      'transform',
+      `translate(${etiquetaSeleccion.x.toFixed(2)} ${etiquetaSeleccion.y.toFixed(2)}) scale(${f.toFixed(4)})`
+    );
+  const resaltar = m => {
+    capaSeleccion.textContent = '';
+    etiquetaSeleccion = null;
+    if (!m) return;
+    const d = trazo(m.R);
+    crearSvg('path', { d, class: 'pms-b' }, capaSeleccion);
+    crearSvg('path', { d, class: 'pms-t' }, capaSeleccion);
+    // El nombre, en el centro del trozo más grande del término
+    const anillo = [...m.R].sort((a, b) => b.length - a.length)[0].map(aLienzo),
+      xs = anillo.map(q => q[0]),
+      ys = anillo.map(q => q[1]),
+      g = crearSvg('g', { class: 'pms-e' }, capaSeleccion);
+    crearSvg('text', { 'text-anchor': 'middle', y: 4 }, g).textContent = m.n;
+    etiquetaSeleccion = {
+      g,
+      x: (Math.min(...xs) + Math.max(...xs)) / 2,
+      y: (Math.min(...ys) + Math.max(...ys)) / 2
+    };
+    escalarSeleccion((0.36 * vista.w) / W);
+  };
   const escalarEscudos = pintarCarreterasProvincia(
     crearSvg('g', { class: 'pmv', 'aria-hidden': 'true' }, sv),
     aLienzo
@@ -266,7 +296,7 @@ function construirMinimapa(contenedor) {
     vista.y = cy - vista.h / 2;
     ajustar();
   };
-  return { caminos, encuadrar };
+  return { caminos, encuadrar, resaltar };
 }
 
 // Lista desplegable por comarcas, con cada municipio y sus pedanías
@@ -389,6 +419,7 @@ function seleccionarPueblo(m, encuadrar) {
   const ficha = botonFichaPueblo(m);
   if (ficha) barra.appendChild(ficha);
   vistaProvincia.caminos.forEach((p, mm) => p.classList.toggle('sel', mm == m));
+  vistaProvincia.resaltar(m);
   enlaceVista();
   if (encuadrar) {
     vistaProvincia.encuadrar(m);

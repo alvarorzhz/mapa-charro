@@ -36,19 +36,6 @@ if (!['todas', 'general', 'zonas'].includes(que)) {
   console.error('Uso: node herramientas/tarjetas.js [general|zonas]');
   process.exit(1);
 }
-const PISADAS_EJEMPLO = [
-    'centro',
-    'univ',
-    'sanvicente',
-    'sanjuan',
-    'sancti',
-    'labradores',
-    'tejares',
-    'vidal',
-    'arrabal'
-  ],
-  QUIERO_IR_EJEMPLO = ['chamberi', 'capuchinos'];
-
 // Escapa texto para meterlo en HTML
 const html = s =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -113,45 +100,86 @@ function paginaZona(z, web, titulo) {
 
   // --- General -------------------------------------------------------------------
   if (que != 'zonas') {
-    const base64 = await pagina.evaluate(
-      ([pisadas, quieroIr]) => {
-        // Progreso de ejemplo, solo en memoria (no se guarda)
-        progreso = { z: {}, p: {}, f: 0, t: 0, gv: [] };
-        pisadas.forEach(id => idsValidos.has(id) && (progreso.z[id] = 'v'));
-        quieroIr.forEach(id => idsValidos.has(id) && (progreso.z[id] = 'w'));
-        const C = COLORES_IMAGEN,
-          lienzo = document.createElement('canvas');
-        lienzo.width = 1200;
-        lienzo.height = 630;
-        const ctx = lienzo.getContext('2d');
-        ctx.fillStyle = C.fondo;
-        ctx.fillRect(0, 0, 1200, 630);
-        ctx.save();
-        ctx.translate(64, 176);
-        ctx.rotate((-1.5 * Math.PI) / 180);
+    // Capital y provincia: el título, tres cifras sacadas de los datos y la provincia entera con la capital en
+    // rojo y, en un recuadro, el mapa de la capital (sin nada marcado)
+    const base64 = await pagina.evaluate(() => {
+      progreso = { z: {}, p: {}, f: 0, t: 0, gv: [] }; // sin zonas marcadas (solo en memoria)
+      const C = COLORES_IMAGEN,
+        lienzo = document.createElement('canvas');
+      lienzo.width = 1200;
+      lienzo.height = 630;
+      const ctx = lienzo.getContext('2d');
+      ctx.fillStyle = C.fondo;
+      ctx.fillRect(0, 0, 1200, 630);
+      ctx.save();
+      ctx.translate(64, 150);
+      ctx.rotate((-1.5 * Math.PI) / 180);
+      ctx.fillStyle = C.rojo;
+      ctx.font = '80px "Alfa Slab One", Georgia, serif';
+      ctx.fillText('Mapa', 0, 0);
+      ctx.fillText('charro', 0, 83);
+      ctx.restore();
+      ctx.fillStyle = C.tinta;
+      ctx.font = '600 36px Lora, Georgia, serif';
+      ctx.fillText('Capital y provincia', 68, 290);
+      [
+        [zonas.filter(z => z.g < 5).length, 'barrios de la capital'],
+        [pueblos.length, 'pueblos con sus pedanías'],
+        [RUTAS.length + RUTAS_PROVINCIA.length, 'rutas a pie y en coche']
+      ].forEach(([n, texto], i) => {
         ctx.fillStyle = C.rojo;
-        ctx.font = '92px "Alfa Slab One", Georgia, serif';
-        ctx.fillText('Mapa', 0, 0);
-        ctx.fillText('charro', 0, 96);
-        ctx.restore();
+        ctx.font = '44px "Alfa Slab One", Georgia, serif';
+        ctx.fillText(String(n), 68, 370 + i * 62);
         ctx.fillStyle = C.tinta;
-        ctx.font = '600 38px Lora, Georgia, serif';
-        ctx.fillText('de Salamanca', 68, 330);
-        ctx.font = '400 27px Lora, Georgia, serif';
-        [
-          'Marca los barrios que has pisado,',
-          'descubre curiosidades, leyendas',
-          'y dónde comer en cada uno.'
-        ].forEach((linea, i) => ctx.fillText(linea, 68, 392 + i * 38));
-        ctx.globalAlpha = 0.8;
-        ctx.font = '400 23px Lora, Georgia, serif';
-        ctx.fillText(WEB.replace('https://', ''), 68, 570);
-        ctx.globalAlpha = 1;
-        dibujarMapaImagen(ctx, 590, 40, 570, 550);
-        return lienzo.toDataURL('image/png').split(',')[1];
-      },
-      [PISADAS_EJEMPLO, QUIERO_IR_EJEMPLO]
-    );
+        ctx.font = '400 26px Lora, Georgia, serif';
+        ctx.fillText(texto, 198, 368 + i * 62);
+      });
+      ctx.globalAlpha = 0.8;
+      ctx.font = '400 23px Lora, Georgia, serif';
+      ctx.fillText(WEB.replace('https://', ''), 68, 575);
+      ctx.globalAlpha = 1;
+      // La provincia, con la proyección plana de su latitud
+      const todos = PROVINCIA.m.flatMap(m => m.R).flat(),
+        las = todos.map(q => q[0]),
+        los = todos.map(q => q[1]),
+        [x0, x1, y0, y1] = [Math.min(...los), Math.max(...los), Math.min(...las), Math.max(...las)],
+        k = Math.cos((41 * Math.PI) / 180),
+        escala = Math.min(600 / ((x1 - x0) * k), 550 / (y1 - y0)),
+        dx = 560 + (600 - (x1 - x0) * k * escala) / 2,
+        dy = 40 + (550 - (y1 - y0) * escala) / 2,
+        punto = q => [dx + (q[1] - x0) * k * escala, dy + (y1 - q[0]) * escala],
+        trazar = anillos => {
+          ctx.beginPath();
+          anillos.forEach(r => {
+            r.forEach((q, i) => (i ? ctx.lineTo(...punto(q)) : ctx.moveTo(...punto(q))));
+            ctx.closePath();
+          });
+        };
+      ctx.strokeStyle = C.linea;
+      ctx.lineWidth = 0.6;
+      PROVINCIA.m.forEach(m => {
+        trazar(m.R);
+        ctx.fillStyle = m.cap ? C.rojo : PUEBLOS[m.n] ? C.claro : C.tarjeta;
+        ctx.fill();
+        ctx.stroke();
+      });
+      ctx.lineWidth = 2;
+      ctx.globalAlpha = 0.6;
+      PROVINCIA.co.forEach(rs => {
+        trazar(rs.map(decodificarLinde));
+        ctx.stroke();
+      });
+      ctx.globalAlpha = 1;
+      // La capital, en un recuadro
+      ctx.fillStyle = C.tarjeta;
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.roundRect(900, 360, 260, 230, 18);
+      ctx.fill();
+      ctx.stroke();
+      dibujarMapaImagen(ctx, 908, 368, 244, 214, null, false);
+      return lienzo.toDataURL('image/png').split(',')[1];
+    });
     fs.writeFileSync(path.join(RAIZ, 'og.png'), Buffer.from(base64, 'base64'));
     console.log('og.png (general, 1200×630)');
   }

@@ -632,6 +632,51 @@ const FOTOS = {
   fontana: [
     'img/fontana.jpg',
     'Arcos del monasterio de Santa María de la Vega en 1891. Foto: J. Laurent · dominio público · Wikimedia Commons'
+  ],
+  garridosur: [
+    'img/garridosur.jpg',
+    'Mural de un ojo en la glorieta del Coronel Antonio Heredero Gil. Foto: Emilio J. Rodríguez Posada · CC BY-SA 4.0 · Wikimedia Commons'
+  ],
+  garridonorte: [
+    'img/garridonorte.jpg',
+    'Pabellón Multiusos Sánchez Paraíso. Foto: inventoprod · CC BY-SA 3.0 · Wikimedia Commons'
+  ],
+  ciudadjardin: [
+    'img/ciudadjardin.jpg',
+    'Facultad de Bellas Artes. Foto: Andrea Ferrero7 · CC BY-SA 4.0 · Wikimedia Commons'
+  ],
+  sanisidro: [
+    'img/sanisidro.jpg',
+    'Centro Municipal Integrado de la plaza de Trujillo. Foto: FLAVIVSAETIVS · CC BY-SA 4.0 · Wikimedia Commons'
+  ],
+  puenteladrillo: [
+    'img/puenteladrillo.jpg',
+    'Busto de Tomás Bretón. Foto: Mapper59 · CC BY-SA 4.0 · Wikimedia Commons'
+  ],
+  tormes: [
+    'img/tormes.jpg',
+    'Paseo a orillas del Tormes, frente a la catedral. Foto: Gabriel Fdez. · CC BY 2.0 · Wikimedia Commons'
+  ],
+  chamberi: [
+    'img/chamberi.jpg',
+    'Antiguo silo de cereales. Foto: Rodelar · CC BY-SA 4.0 · Wikimedia Commons'
+  ],
+  salasbajas: [
+    'img/salasbajas.jpg',
+    'Restos de una antigua noria junto al arroyo del Zurguén. Foto: FLAVIVSAETIVS · CC BY-SA 4.0 · Wikimedia Commons'
+  ],
+  zurguen: ['img/zurguen.jpg', 'Iglesia de la Sagrada Familia. Foto: roquic · CC BY 3.0 · Wikimedia Commons'],
+  teso: [
+    'img/teso.jpg',
+    'Parador de Salamanca. Foto: Michael Stallbaum · dominio público · Wikimedia Commons'
+  ],
+  sanjose: [
+    'img/sanjose.jpg',
+    'Parque y campos de deporte junto a la Vía Helmántica. Foto: pictures Jettcom · CC BY 3.0 · Wikimedia Commons'
+  ],
+  pizarrales: [
+    'img/pizarrales.jpg',
+    'Monumento a San Marcelino Champagnat. Foto: Hovallef · CC BY-SA 4.0 · Wikimedia Commons'
   ]
 };
 // Dónde comer: { idZona: [{ n: nombre, t: tipo de cocina, a: dirección, p: descripción, s: fuente y fecha }] }

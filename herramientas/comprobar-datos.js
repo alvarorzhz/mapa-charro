@@ -25,13 +25,14 @@ const datos = [
   'provincia',
   'carreteras-provincia',
   'habitantes',
+  'parques',
   'firebase',
   'palabras'
 ];
 const codigo =
   datos.map(d => leer('js/datos/' + d + '.js')).join('\n;\n') +
   '\n;({ NOMBRES_GRUPOS, ZONAS_GRANDES, ZONAS, OTROS_NOMBRES, SEMILLAS_REPARTO, MONUMENTOS, RUTAS, TRAMOS_RUTAS, PUEBLOS, CURIOSIDADES, LEYENDAS, FOTOS, DONDE_COMER,' +
-  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA, PALABRAS_CHARRAS, FUENTES_PALABRAS, RUTAS_PROVINCIA, SALIDA_PROVINCIA, TRAMOS_PROVINCIA, CARRETERAS_PROVINCIA, HABITANTES })';
+  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA, PALABRAS_CHARRAS, FUENTES_PALABRAS, RUTAS_PROVINCIA, SALIDA_PROVINCIA, TRAMOS_PROVINCIA, CARRETERAS_PROVINCIA, HABITANTES, PARQUES })';
 const D = vm.runInNewContext(codigo, {});
 
 const errores = [],
@@ -196,6 +197,22 @@ for (const id in D.TRAMOS_RUTAS) comprobar(idsRuta.has(id), `TRAMOS_RUTAS: «${i
 
 // --- Rutas por la provincia (en coche) -----------------------------------------------
 const enlaceValido = f => Array.isArray(f) && f[0] && /^https:\/\//.test(f[1] || '');
+// --- Parques (los genera herramientas/parques.js) ------------------------------------------------------
+D.PARQUES.forEach(p =>
+  comprobar(
+    p.n &&
+      p.ha > 0 &&
+      p.R.length &&
+      p.R.every(
+        r =>
+          r.length >= 6 &&
+          r.length % 2 == 0 &&
+          r.every((v, i) => (i % 2 ? v > -5.75 && v < -5.58 : v > 40.9 && v < 41.02))
+      ),
+    `Parque «${p.n}»: datos raros`
+  )
+);
+
 // --- Habitantes de cada municipio (los genera herramientas/habitantes.js) ---------------------------------
 D.PROVINCIA.m.forEach(m =>
   comprobar(

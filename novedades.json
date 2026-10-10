@@ -1,5 +1,20 @@
 [
   {
+    "version": "2.2.0",
+    "fecha": "2026-10-10",
+    "titulo": "Más pueblos, fotos y parques",
+    "usuario": [
+      "12 fichas de pueblo nuevas: Villarino de los Aires, Lumbrales, Pereña de la Ribera, Masueco, Fuentes de Oñoro, La Fuente de San Esteban, Arapiles, Tamames, Villoria, Babilafuente, Cantalapiedra y Terradillos.",
+      "Fotos nuevas en 12 barrios: Garrido Sur, Garrido Norte, Ciudad Jardín, San Isidro, Puente Ladrillo, Tormes, Chamberí, Salas Bajas, El Zurguén, Teso de la Feria, San José y Pizarrales.",
+      "Los parques principales salen en el mapa de la capital, con su capa en el panel de capas.",
+      "La Aldehuela, en el mapa: su parque y Ciudad Deportiva, con su ficha.",
+      "En el mapa de la provincia se ve claramente el pueblo elegido, con su nombre, y las fronteras de los pueblos son más nítidas.",
+      "Icono nuevo: la V de vítor.",
+      "Al compartir la web sale una imagen nueva, con la capital y la provincia y sin zonas marcadas."
+    ],
+    "tecnico": "pueblos.js: 12 fichas nuevas (36). contenido.js: FOTOS de 12 zonas (Wikimedia Commons, comprobadas dentro de LIMITES_BARRIOS). js/datos/parques.js (herramientas/parques.js, OSM leisure=park con nombre y ≥ 1 ha) en #pk sobre #zg, interruptor #pkb y leyenda .pa. MONUMENTOS: aldehuela (estadio, zona prosperidad). provincia.js: capa .pms con el municipio elegido (borde con halo, relleno y nombre escalado) y lindes de municipio más marcadas. icons/icono.svg y herramientas/iconos.js. tarjetas.js general: «capital y provincia» sin progreso de ejemplo. README reescrito."
+  },
+  {
     "version": "2.1.1",
     "fecha": "2026-10-10",
     "titulo": "Más fácil de usar y datos corregidos",

@@ -567,5 +567,298 @@ const PUEBLOS = {
       ]
     },
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Mieza_(Salamanca)']]
+  },
+  'Villarino de los Aires': {
+    cur: [
+      'La filoxera arrasó sus viñas hacia 1890 y muchos vecinos emigraron a Cuba; en 1919 fundaron en La Habana el Club Villarino, que todavía existe.',
+      'La canción del «burro de Villarino» (para ellos, el burro del tío Silguero) se compuso en habla riberana; el burro tiene una escultura de granito frente a las escuelas.',
+      'Cuentan que, contra una plaga de pulgones, metieron 60 nombres de santos en un sombrero y salió tres veces San Juan de Sahagún. Su hoguera se enciende el 11 de junio.'
+    ],
+    mon: {
+      n: 'Iglesia de Santa María la Mayor',
+      tipo: 'iglesia',
+      datos: [
+        ['Dentro', 'un corazón de 2 m cubierto de armas'],
+        ['Las armas', 'las entregaron los mozos hacia 1896']
+      ]
+    },
+    fuente: [
+      ['Wikipedia', 'https://es.wikipedia.org/wiki/Villarino_de_los_Aires'],
+      [
+        'Turismo de Castilla y León',
+        'https://www.turismocastillayleon.com/es/patrimonio-cultura/ruta-duero/villarino-aires'
+      ]
+    ]
+  },
+  Lumbrales: {
+    cur: [
+      'Aparece por primera vez en 1175, como Santa María de Liminares, en el documento con el que Fernando II de León restauró la diócesis de Ciudad Rodrigo.',
+      'En 1647, durante la guerra de independencia de Portugal, lo incendió el gobernador portugués de la Beira.',
+      'El tren llegó el 25 de julio de 1887 con la línea de La Fuente de San Esteban a Barca de Alba, cerrada en 1985 y Bien de Interés Cultural desde 2000.'
+    ],
+    mon: {
+      n: 'Castro de Las Merchanas',
+      tipo: 'roca',
+      epoca: 'Siglo II a. C. – siglo V',
+      estilo: 'Castro vetón',
+      datos: [
+        ['Extensión', '8,5 hectáreas, en un meandro del Camaces'],
+        ['Monumento', 'desde el 3 de junio de 1931'],
+        ['Acceso', 'al aire libre, en una finca particular']
+      ]
+    },
+    fuente: [
+      ['Wikipedia', 'https://es.wikipedia.org/wiki/Lumbrales'],
+      ['Wikipedia (Castro de Las Merchanas)', 'https://es.wikipedia.org/wiki/Castro_de_Las_Merchanas'],
+      [
+        'Wikipedia (línea La Fuente de San Esteban-Barca de Alba)',
+        'https://es.wikipedia.org/wiki/L%C3%ADnea_La_Fuente_de_San_Esteban-Barca_de_Alba'
+      ],
+      [
+        'Turismo de Castilla y León (Las Merchanas)',
+        'https://www.turismocastillayleon.com/es/patrimonio-cultura/despoblado-castro-merchanas'
+      ]
+    ],
+    comer: [
+      {
+        n: 'Restaurante El Rincón Charro',
+        a: 'Plaza San Sebastián, 6',
+        p: 'El mejor valorado del pueblo en Gastroranking: 7,9 sobre 10 con unas 1.000 opiniones.',
+        s: 'Gastroranking, oct. 2026'
+      }
+    ]
+  },
+  'Pereña de la Ribera': {
+    cur: [
+      'El 14 de mayo de 1721 se rompió una piedra hallada junto a la Virgen del Castillo, usada a veces de peana, y apareció una tablilla con su figura: la Virgen Chica.',
+      'En el Pozo Airón, en el arroyo de los Cuernos, una cueva deja pasar por detrás de la cascada. El camino sale del arco de la plaza.',
+      'La fábrica de quesos se trasladó a Vitigudino, pero el queso sigue llevando el nombre de Pereña.'
+    ],
+    mon: {
+      n: 'Iglesia de Santa María',
+      tipo: 'iglesia',
+      epoca: 'Siglo XVI',
+      datos: [
+        ['Obra central', 'Pedro de Lanestosa «el Viejo»'],
+        ['Torre', 'un castillo medieval reaprovechado'],
+        ['Rayo', '24 de mayo de 2009']
+      ]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Pere%C3%B1a_de_la_Ribera']]
+  },
+  Masueco: {
+    cur: [
+      'Unamuno escribió en 1898 sobre el negrillo (un olmo) que crecía junto a la iglesia, «el primero de España» en corpulencia según el tío Mateo de su relato.',
+      'Su seminario, fundado en 1692 por Martín Cubilano, catedrático de Humanidades en Salamanca, fue el centro de estudios más importante de la comarca. Queda la fachada.',
+      'La grieta entre la torre y la nave de la iglesia se achacó durante años al terremoto de Lisboa de 1755, pero su origen es incierto.'
+    ],
+    mon: {
+      n: 'Iglesia de San Nicolás de Bari',
+      tipo: 'iglesia',
+      estilo: 'Gótico isabelino',
+      datos: [
+        ['Obra de', 'la familia de canteros Lanestosa'],
+        ['Torre', 'quizá de un antiguo castillo']
+      ]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Masueco']]
+  },
+  'Fuentes de Oñoro': {
+    cur: [
+      'Del 3 al 5 de mayo de 1811, Wellington frenó aquí al mariscal Masséna, que intentaba socorrer a la guarnición francesa cercada en Almeida.',
+      'El 3 de mayo de 1811, con la iglesia en llamas, el párroco Luis Silva cruzó entre los disparos para salvar el copón; lo recuerda el escudo del pueblo.',
+      'La estación abrió el 25 de mayo de 1886 y a su lado nació la Colonia de la Estación. En 2018 el pueblo viejo tenía 215 vecinos; la Colonia, 385, y Nuevo Poblado, 588.'
+    ],
+    fuente: [
+      ['Wikipedia', 'https://es.wikipedia.org/wiki/Fuentes_de_O%C3%B1oro'],
+      ['Wikipedia (batalla)', 'https://es.wikipedia.org/wiki/Batalla_de_Fuentes_de_O%C3%B1oro'],
+      ['Wikipedia (estación)', 'https://es.wikipedia.org/wiki/Estaci%C3%B3n_de_Fuentes_de_O%C3%B1oro'],
+      ['Ayuntamiento de Fuentes de Oñoro', 'https://fuentesdeonoro.es/batalla-de-fuentes-de-onoro/']
+    ],
+    comer: [
+      {
+        n: 'Cafetería Javi Grupo Gildo',
+        a: 'Avenida Europa, 49',
+        p: 'El mejor valorado del pueblo en Gastroranking: 8,3 sobre 10 con unas 760 opiniones.',
+        s: 'Gastroranking, oct. 2026'
+      },
+      {
+        n: 'La Pedresina',
+        a: 'Carretera N-620',
+        p: 'Área de servicio junto a la frontera: 7,7 sobre 10 en Gastroranking con unas 5.500 opiniones.',
+        s: 'Gastroranking, oct. 2026'
+      }
+    ]
+  },
+  'La Fuente de San Esteban': {
+    cur: [
+      'Su estación abrió en 1886 y desde 1887 fue nudo ferroviario: de aquí salía la línea a Barca de Alba, camino de Oporto, cerrada en 1985.',
+      'El Surexpreso, el tren París–Lisboa, paraba aquí: hacía el viaje por Salamanca, sin pasar por Madrid.',
+      'El actor Santiago Ramos, Goya al mejor actor por Como un relámpago (1996), nació en 1949 en Boadilla, una de sus pedanías.'
+    ],
+    mon: {
+      n: 'Iglesia parroquial de San Esteban',
+      tipo: 'iglesia',
+      datos: [
+        ['Dentro', 'un Cristo del siglo XVIII'],
+        ['Febrero de 2026', 'las lluvias hundieron una bóveda lateral']
+      ]
+    },
+    fuente: [
+      ['Wikipedia', 'https://es.wikipedia.org/wiki/La_Fuente_de_San_Esteban'],
+      [
+        'Wikipedia (estación)',
+        'https://es.wikipedia.org/wiki/Estaci%C3%B3n_de_La_Fuente_de_San_Esteban-Boadilla'
+      ],
+      ['Wikipedia (Santiago Ramos)', 'https://es.wikipedia.org/wiki/Santiago_Ramos'],
+      [
+        'SALAMANCArtv AL DÍA (4/2/2026)',
+        'https://salamancartvaldia.es/noticia/2026-02-04-las-intensas-lluvias-provocan-el-derrumbe-de-una-boveda-en-la-iglesia-de-la-fuente-de-san-esteban-385037'
+      ],
+      [
+        'La Gaceta de Salamanca (4/2/2026)',
+        'https://www.lagacetadesalamanca.es/provincia/derrumbe-iglesia-fuente-san-esteban-causa-lluvias-20260204140522-nt.html'
+      ]
+    ],
+    comer: [
+      {
+        n: 'Vegallana',
+        a: 'Carretera N-620, km 289',
+        p: 'El mejor valorado del pueblo en Gastroranking: 7,0 sobre 10 con unas 720 opiniones.',
+        s: 'Gastroranking, oct. 2026'
+      }
+    ]
+  },
+  Arapiles: {
+    cur: [
+      'El 22 de julio de 1812, en sus cerros, Wellington venció a Marmont: unas 12.500 bajas francesas, prisioneros incluidos, frente a 5.220 aliadas.',
+      'Los británicos y portugueses la llaman batalla de Salamanca. Tras ella Wellington entró en Madrid el 12 de agosto de 1812.',
+      'Galdós cerró con «La batalla de los Arapiles» (1875) la primera serie de los Episodios Nacionales.'
+    ],
+    mon: {
+      n: 'Aula de Interpretación de la Batalla de Arapiles',
+      tipo: 'museo',
+      datos: [
+        ['Maqueta', 'más de 5 m, con 5.200 figuras'],
+        ['Dirección', 'calle Salas Pombo, 20']
+      ]
+    },
+    fuente: [
+      ['Wikipedia', 'https://es.wikipedia.org/wiki/Arapiles'],
+      ['Wikipedia (batalla)', 'https://es.wikipedia.org/wiki/Batalla_de_los_Arapiles'],
+      ['Wikipedia (novela)', 'https://es.wikipedia.org/wiki/La_batalla_de_los_Arapiles'],
+      [
+        'Turismo de Castilla y León',
+        'https://www.turismocastillayleon.com/es/patrimonio-cultura/aula-interpretacion-batalla-arapiles'
+      ]
+    ]
+  },
+  Tamames: {
+    cur: [
+      'En octubre de 1809 el duque del Parque derrotó aquí al general francés Marchand: unas 1.500 bajas francesas frente a 700 españolas, y les tomaron un águila.',
+      'En 1811 los lanceros de Julián Sánchez «El Charro» asaltaron un convoy francés en el término; en represalia, los franceses saquearon e incendiaron el pueblo.',
+      'En la fiesta de los cencerros, a finales de enero, los niños recorren el pueblo de madrugada tocando cencerros para despertar a los vecinos.'
+    ],
+    mon: {
+      n: 'Iglesia de Nuestra Señora de la Asunción',
+      tipo: 'iglesia',
+      epoca: 'Siglos XV–XVI',
+      datos: [
+        ['Capilla mayor', 'Gil de Hontañón'],
+        ['Torre', 'siglo XV, lo más antiguo'],
+        ['1710', 'destruida en buena parte en la Guerra de Sucesión']
+      ]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Tamames']],
+    comer: [
+      {
+        n: 'Bar Restaurante El Casino',
+        a: 'Plaza de la Iglesia, 7',
+        p: 'El mejor valorado del pueblo en Gastroranking: 8,4 sobre 10 con unas 400 opiniones.',
+        s: 'Gastroranking, oct. 2026'
+      },
+      {
+        n: 'Restaurante la Bombilla',
+        a: 'Avenida Abusejo, 7',
+        p: 'El segundo del pueblo en Gastroranking: 7,1 sobre 10 con unas 575 opiniones.',
+        s: 'Gastroranking, oct. 2026'
+      }
+    ]
+  },
+  Villoria: {
+    cur: [
+      'Fue cabeza del cuarto de Villoria, una de las divisiones de la tierra de Salamanca en el Reino de León.',
+      'Al oeste del pueblo hay una villa romana, Bien de Interés Cultural desde el 23 de diciembre de 1992.',
+      'El Club de Pelota Las Villas nació en 1993 junto con el Centro de Tecnificación de pelota de Castilla y León.'
+    ],
+    mon: {
+      n: 'Iglesia de San Pedro',
+      tipo: 'iglesia',
+      epoca: 'Primera mitad del siglo XIII; naves laterales del XVI',
+      estilo: 'Románico-mudéjar',
+      datos: [
+        ['Ábside', 'semicircular, con ocho arcos ciegos'],
+        ['Cristo', 'del siglo XIV']
+      ]
+    },
+    fuente: [
+      ['Wikipedia', 'https://es.wikipedia.org/wiki/Villoria_(Salamanca)'],
+      [
+        'Turismo de Castilla y León',
+        'https://www.turismocastillayleon.com/es/patrimonio-cultura/iglesias-ermitas/iglesia-parroquial-san-pedro-villoria'
+      ]
+    ]
+  },
+  Babilafuente: {
+    cur: [
+      'Aparece por primera vez el 3 de mayo de 1215, cuando Sancha Gómez vendió la heredad de «Vaguilafointe» al deán de Salamanca.',
+      'En 1752 Torres Villarroel escribió sobre las virtudes del agua de su fuente, rica en litina; en 1955 se declaró de utilidad pública.',
+      'El 21 de junio de 1812, en la retirada de Marmont, los franceses incendiaron el pueblo y dañaron la iglesia.'
+    ],
+    fuente: [
+      ['Wikipedia', 'https://es.wikipedia.org/wiki/Babilafuente'],
+      ['Flags of the World', 'https://crwflags.com/FOTW/flags/es-sa-bb.html']
+    ]
+  },
+  Cantalapiedra: {
+    cur: [
+      'En 1136 el rey la donó al obispo de Salamanca. Los documentos la llaman Campum de Petra (1136) y Candelapiedra (1251) antes de Cantalapiedra (1265).',
+      'De su muralla, levantada en la frontera entre León y Castilla, solo queda el Torreón del Deán, que debe el nombre a los deanes de la catedral de Salamanca.',
+      'En 1877 abrió su estación, en la línea de tren de Salamanca a Medina del Campo.'
+    ],
+    mon: {
+      n: 'Iglesia de Santa María del Castillo',
+      tipo: 'iglesia',
+      epoca: 'Finales del siglo XIV o principios del XV, sobre una románica',
+      estilo: 'Gótico y mudéjar',
+      datos: [
+        ['Naves', 'tres, con arcos apuntados de ladrillo'],
+        ['Espadaña', 'siglo XVIII'],
+        ['Monumento nacional', '1931']
+      ]
+    },
+    fuente: [
+      ['Wikipedia', 'https://es.wikipedia.org/wiki/Cantalapiedra'],
+      [
+        'Turismo de Castilla y León',
+        'https://www.turismocastillayleon.com/es/patrimonio-cultura/iglesias-ermitas/iglesia-santa-maria-castillo-cantalapiedra'
+      ]
+    ]
+  },
+  Terradillos: {
+    cur: [
+      'En la urbanización El Encinar vive cerca del 85 % del municipio: pasó de unos 750 habitantes en 1986 a unos 3.500 en 2006.',
+      'En los años noventa llamaban a El Encinar «la cuna de Salamanca» por los muchos niños que nacían allí.',
+      'En la batalla de los Arapiles hubo tropas francesas en lo que hoy es El Encinar y Los Cisnes; cerca queda un paraje llamado «Cementerio de los franceses».'
+    ],
+    mon: {
+      n: 'Dolmen de Piedras Hitas',
+      tipo: 'roca',
+      datos: [
+        ['Dónde', 'a unos 900 m al suroeste del pueblo'],
+        ['Paraje', 'La Torrecilla']
+      ]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Terradillos']]
   }
 };
