@@ -80,7 +80,7 @@ jobs:
           cd _site
           rm -rf .github herramientas package.json package-lock.json eslint.config.js lighthouserc.json \
             .prettierrc.json .prettierignore CLAUDE.md
-      - uses: actions/configure-pages@v5
+      - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v4
         with:
           path: _site
