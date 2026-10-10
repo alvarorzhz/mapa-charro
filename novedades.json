@@ -1,5 +1,19 @@
 [
   {
+    "version": "2.1.0",
+    "fecha": "2026-10-10",
+    "titulo": "Habitantes de cada pueblo",
+    "usuario": [
+      "Al tocar cualquier pueblo de la provincia salen sus habitantes según el INE (padrón de 2025), contando todas sus pedanías. También en las fichas de pueblo y en los pueblos de alrededor del mapa de la capital.",
+      "En la lista de comarcas, cada pueblo lleva sus habitantes y cada comarca, su total.",
+      "Leyenda de carreteras bajo el mapa de la provincia: autovías, nacionales y la CL-517.",
+      "Logros nuevos por las rutas que marcas como hechas: «Primera ruta», «Rutero», «De ruta por la provincia» y «Trotamundos charro».",
+      "Dónde comer en Garrido Sur: Restaurante Orquídea.",
+      "Arreglo: la lista de pueblos y pedanías de la pestaña Provincia se veía descolocada desde la 2.0.0."
+    ],
+    "tecnico": "js/datos/habitantes.js (INE, tabla 2891, generado con herramientas/habitantes.js; comprobado en comprobar-datos) sustituye a hab de pueblos.js; textoHabitantes y habitantesDe en pueblos.js, conMiles en util.js; en #psb, en la ficha del pueblo (con la fuente del INE), en #k de las zonas del alfoz y en la lista de comarcas (.habm, .habc). Leyenda .pml bajo #pm. Logros rh1, rh3, rht (escalones) y rhp (colección), categoría «Rutas»; marcarRuta va con conAvisoDeLogros. contenido.js: garridosur con Restaurante Orquídea (Gastroranking, oct. 2026). estilos.css: la rejilla .pg del perfil queda dentro de .perfil-grupos (rompía las filas .pg de la lista de la provincia); prueba de regresión."
+  },
+  {
     "version": "2.0.1",
     "fecha": "2026-10-10",
     "titulo": "Fichas que no se mueven de lado",

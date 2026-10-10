@@ -161,7 +161,9 @@ function abrirFicha(id) {
   olvidarMonumento();
   modoBotonesFicha('zona');
   mostrarAvisoAqui(id);
-  $('#k').textContent = NOMBRES_GRUPOS[z.g];
+  // Los pueblos del alfoz que salen en el mapa llevan sus habitantes (INE, con las pedanías; pueblos.js)
+  const municipio = PROVINCIA.m.find(m => m.z == id && !m.cap);
+  $('#k').textContent = NOMBRES_GRUPOS[z.g] + (municipio ? ' · ' + textoHabitantes(municipio) : '');
   $('#nm').textContent = z.n;
   if (id != 'resto' && typeof apuntarUso == 'function') apuntarUso('fl', id); // para los logros de lectura
   $('#otros').hidden = !z.otros.length;

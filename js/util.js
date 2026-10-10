@@ -18,6 +18,9 @@ const decodificarLinde = r => {
   return puntos;
 };
 
+// 1045 → «1.045», como se escriben las cifras (toLocaleString no pone el punto con cuatro cifras)
+const conMiles = n => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
 const puntoTexto = q => q[0].toFixed(1) + ' ' + q[1].toFixed(1);
 const puntoMedio = (a, b) => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
 

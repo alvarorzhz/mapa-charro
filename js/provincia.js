@@ -148,6 +148,16 @@ function construirMinimapa(contenedor) {
   zb.innerHTML =
     '<button aria-label="Acercar">+</button><button aria-label="Alejar">−</button><button aria-label="Ver toda la provincia">⌂</button>';
   caja.appendChild(zb);
+  // Leyenda de las carreteras, debajo del mapa
+  contenedor.appendChild(
+    crear(
+      'div',
+      'pml',
+      crear('span', 'a', 'Autovía'),
+      crear('span', 'n', 'Nacional'),
+      crear('span', 'c', 'CL-517 (a las Arribes)')
+    )
+  );
 
   // Proyección propia: toda la provincia en un lienzo de W x H
   const LON0 = -6.94,
@@ -267,6 +277,8 @@ function construirComarcas(contenedor) {
         nombreBoton = crear('button', 'nm', m.n),
         fila = crear('div', 'pr', nombreBoton);
       nombreBoton.onclick = () => seleccionarPueblo(m, true);
+      // Habitantes según el INE, con sus pedanías (datos/habitantes.js)
+      nombreBoton.appendChild(crear('small', 'habm', conMiles(HABITANTES.m[m.ine]) + ' hab.'));
       if (m.cap) fila.appendChild(crear('small', 'mu', 'la capital: se marca por barrios en el mapa'));
       else {
         if (m.z) nombreBoton.appendChild(crear('small', 'tagm', 'en el mapa'));
@@ -285,7 +297,8 @@ function construirComarcas(contenedor) {
       cuerpo.appendChild(grupo);
     });
     contenedor.appendChild(det);
-    vistaProvincia.comarcas.push({ det, titulo, municipios, nombre });
+    const habitantes = municipios.reduce((s, m) => s + HABITANTES.m[m.ine], 0);
+    vistaProvincia.comarcas.push({ det, titulo, municipios, nombre, habitantes });
   });
 }
 
@@ -342,6 +355,16 @@ function seleccionarPueblo(m, encuadrar) {
     PROVINCIA.com[m.c] +
     (m.P.length ? ' · ' + m.P.length + (m.P.length == 1 ? ' pedanía' : ' pedanías') : '');
   barra.appendChild(crear('div', 'pst', crear('b', '', m.n), crear('small', '', detalle)));
+  // Habitantes según el INE, con las pedanías (pueblos.js carga después, pero esto solo se llama al usarla)
+  barra.appendChild(
+    crear(
+      'p',
+      'habitantes',
+      '👥 ' +
+        textoHabitantes(m) +
+        (m.P.length ? ', contando ' + (m.P.length == 1 ? 'su pedanía' : 'sus pedanías') : '')
+    )
+  );
   if (ubicacionReciente() && ubicacion.pid == m.k) {
     const aqui = crear('p', 'here', 'Estás en el término de ' + m.n + '.');
     aqui.style.margin = '6px 0';
@@ -429,6 +452,7 @@ function actualizarProvincia() {
     const marcables = c.municipios.filter(m => !m.cap),
       pisados = marcables.filter(m => estadoMunicipio(m) == 'v').length;
     c.titulo.textContent = c.nombre + ' · ' + pisados + '/' + marcables.length;
+    c.titulo.appendChild(crear('small', 'habc', conMiles(c.habitantes) + ' habitantes'));
   });
   aplicarFiltroProvincia();
   if ($('#pq').value) buscarEnProvincia();

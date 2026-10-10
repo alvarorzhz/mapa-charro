@@ -4,6 +4,13 @@ let puebloAbierto = null; // municipio (de PROVINCIA.m) cuya ficha está abierta
 const fichaPueblo = m => PUEBLOS[m.n];
 const municipioPorNombre = n => PROVINCIA.m.find(m => m.n == n);
 
+// «1.045 habitantes (INE, 2025)»: los del municipio, con todas sus pedanías (datos/habitantes.js)
+const habitantesDe = m => HABITANTES.m[m.ine];
+const textoHabitantes = m => {
+  const n = habitantesDe(m);
+  return conMiles(n) + (n == 1 ? ' habitante' : ' habitantes') + ' (INE, ' + HABITANTES.fecha.slice(-4) + ')';
+};
+
 function abrirPueblo(m) {
   const f = fichaPueblo(m);
   zonaAbierta = null;
@@ -26,9 +33,7 @@ function abrirPueblo(m) {
     crear(
       'p',
       'hab',
-      'Unos ' +
-        f.hab +
-        ' habitantes (INE)' +
+      textoHabitantes(m) +
         (m.P.length ? ' · ' + m.P.length + (m.P.length == 1 ? ' pedanía' : ' pedanías') : '')
     )
   );
@@ -60,7 +65,7 @@ function abrirPueblo(m) {
   // Fuente
   const ap = $('#ap');
   ap.textContent = 'Fuente: ';
-  f.fuente.forEach(([nombre, url], i) => {
+  [...f.fuente, HABITANTES.fuente].forEach(([nombre, url], i) => {
     const a = crear('a', '', nombre);
     a.href = url;
     a.target = '_blank';

@@ -24,13 +24,14 @@ const datos = [
   'carreteras',
   'provincia',
   'carreteras-provincia',
+  'habitantes',
   'firebase',
   'palabras'
 ];
 const codigo =
   datos.map(d => leer('js/datos/' + d + '.js')).join('\n;\n') +
   '\n;({ NOMBRES_GRUPOS, ZONAS_GRANDES, ZONAS, OTROS_NOMBRES, SEMILLAS_REPARTO, MONUMENTOS, RUTAS, TRAMOS_RUTAS, PUEBLOS, CURIOSIDADES, LEYENDAS, FOTOS, DONDE_COMER,' +
-  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA, PALABRAS_CHARRAS, FUENTES_PALABRAS, RUTAS_PROVINCIA, SALIDA_PROVINCIA, TRAMOS_PROVINCIA, CARRETERAS_PROVINCIA })';
+  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA, PALABRAS_CHARRAS, FUENTES_PALABRAS, RUTAS_PROVINCIA, SALIDA_PROVINCIA, TRAMOS_PROVINCIA, CARRETERAS_PROVINCIA, HABITANTES })';
 const D = vm.runInNewContext(codigo, {});
 
 const errores = [],
@@ -195,6 +196,15 @@ for (const id in D.TRAMOS_RUTAS) comprobar(idsRuta.has(id), `TRAMOS_RUTAS: «${i
 
 // --- Rutas por la provincia (en coche) -----------------------------------------------
 const enlaceValido = f => Array.isArray(f) && f[0] && /^https:\/\//.test(f[1] || '');
+// --- Habitantes de cada municipio (los genera herramientas/habitantes.js) ---------------------------------
+D.PROVINCIA.m.forEach(m =>
+  comprobar(
+    Number.isInteger(D.HABITANTES.m[m.ine]) && D.HABITANTES.m[m.ine] > 0,
+    `Habitantes: falta ${m.n} (${m.ine}); ejecuta node herramientas/habitantes.js`
+  )
+);
+comprobar(/^\d+ de \w+ de \d{4}$/.test(D.HABITANTES.fecha), 'Habitantes: fecha rara');
+
 // --- Carreteras del mapa de la provincia (las genera herramientas/carreteras-provincia.js) ---------------
 D.CARRETERAS_PROVINCIA.forEach(c => {
   comprobar(
@@ -269,7 +279,7 @@ const municipios = new Set(D.PROVINCIA.m.map(m => m.n));
 for (const n in D.PUEBLOS) {
   const p = D.PUEBLOS[n];
   comprobar(municipios.has(n), `Pueblo «${n}»: no está en PROVINCIA (el nombre tiene que coincidir)`);
-  comprobar(p.hab && p.cur && p.cur.length, `Pueblo «${n}»: le faltan habitantes o curiosidades`);
+  comprobar(p.cur && p.cur.length, `Pueblo «${n}»: le faltan curiosidades`);
   comprobar(p.fuente && p.fuente.length, `Pueblo «${n}»: sin fuente`);
   if (p.mon) comprobar(pictogramas.has(p.mon.tipo), `Pueblo «${n}»: no hay pictograma «${p.mon.tipo}»`);
   if (p.comer) revisarSitios(p.comer, n);

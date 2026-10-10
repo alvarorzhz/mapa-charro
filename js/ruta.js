@@ -142,16 +142,21 @@ let rutaSeguida = null; // id de la ruta cuya ficha está abierta (sus botones d
 const todasLasRutas = () => [...RUTAS, ...RUTAS_PROVINCIA];
 const buscarRuta = id => todasLasRutas().find(r => r.id == id);
 const estadoRuta = id => ((progreso.j || {}).rs || {})[id] || '';
+const rutasHechas = () => todasLasRutas().filter(r => estadoRuta(r.id) == 'v');
 function ponerEstadoRuta(id, s) {
   const j = (progreso.j = progreso.j || {});
   j.rs = { ...(j.rs || {}) };
   if (s) j.rs[id] = s;
   else delete j.rs[id];
   guardar();
+  actualizar(); // el siguiente logro y su barra
   pintarBotonesFicha();
 }
 // Pulsar el botón marcado lo quita (con «Deshacer»); pulsar el otro cambia la marca
 function marcarRuta(id, s) {
+  conAvisoDeLogros(() => marcarRutaSinLogros(id, s)); // y anuncia los logros de rutas hechas
+}
+function marcarRutaSinLogros(id, s) {
   const antes = estadoRuta(id),
     n = buscarRuta(id).nombre;
   if (antes == s) {

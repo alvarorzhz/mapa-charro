@@ -649,17 +649,54 @@ prueba('Lista y provincia', async p => {
     ['A-50', 'A-62', 'A-66', 'CL-517', 'N-501', 'N-620', 'N-630'],
     'autovías y nacionales en el minimapa'
   );
+  // Leyenda de carreteras y habitantes en la lista de comarcas (cada pueblo y el total de la comarca)
+  igual(await p.$$eval('.pml span', a => a.length), 3, 'leyenda de carreteras');
+  cierto(
+    await p.$eval('#pcl .pg', e => getComputedStyle(e).display != 'grid'),
+    'la lista de pueblos no coge el estilo de las barras del perfil'
+  );
+  igual(
+    await p.evaluate(() =>
+      vistaProvincia.comarcas.reduce(
+        (s, c) => s + +c.titulo.querySelector('.habc').textContent.replace(/\D/g, ''),
+        0
+      )
+    ),
+    328779,
+    'las comarcas suman la provincia'
+  );
+  cierto(/^[\d.]+ hab\.$/.test(await texto(p, '#pcl .pr .habm')), 'habitantes junto a cada pueblo');
   await p.fill('#pq', 'ledesma');
   await p.click('#prs .nm');
+  cierto(
+    /^👥 [\d.]+ habitantes \(INE, 2025\), contando sus pedanías$/.test(await texto(p, '#psb .habitantes')),
+    'habitantes con las pedanías'
+  );
   await p.click('#psb .q[data-s=v]');
   cierto((await texto(p, '#pcn')).startsWith('1 de 361 pueblos'), 'pueblo marcado');
+  // Los pueblos del mapa de la capital también los llevan
+  await p.evaluate(() => abrirFicha('santamarta'));
+  cierto(
+    /^Alrededores · [\d.]+ habitantes \(INE, 2025\)$/.test(await texto(p, '#k')),
+    'en los pueblos del alfoz'
+  );
+  igual(
+    await p.evaluate(() => [conMiles(148), conMiles(1045), conMiles(328779)]),
+    ['148', '1.045', '328.779'],
+    'cifras con punto'
+  );
   cierto(await p.$('#psb .verficha'), 'botón de ficha del pueblo');
 });
 
 prueba('Ficha de pueblo', async (p, url) => {
   await p.goto(url + '#pueblo/la-alberca');
   igual(await texto(p, '#nm'), 'La Alberca', 'abre la ficha');
-  cierto((await texto(p, '#info')).includes('habitantes'), 'habitantes');
+  igual(
+    (await texto(p, '#info .hab')).split(' ·')[0],
+    (await p.evaluate(() => conMiles(HABITANTES.m[37010]))) + ' habitantes (INE, 2025)',
+    'habitantes del INE'
+  );
+  cierto((await texto(p, '#ap')).includes('INE'), 'con su fuente');
   cierto((await p.$$('#cu p')).length >= 2, 'curiosidades');
   await p.click('.bt button[data-s=w]');
   igual(await p.evaluate(() => JSON.parse(localStorage.charro2).p), { m37010: 'w' }, 'marca el pueblo');
@@ -874,6 +911,18 @@ prueba('Rutas por la provincia', async (p, url) => {
   igual(await p.evaluate(() => progreso.j.rs), { 'arribes-norte': 'w' }, 'la quiere hacer');
   await p.click('.bt button[data-s=v]');
   igual(await p.evaluate(() => progreso.j.rs), { 'arribes-norte': 'v' }, 'la ha hecho');
+  cierto(
+    await p.evaluate(() => calcularLogros().some(a => a.id == 'rh1' && a.c >= a.m)),
+    'logro de la primera ruta hecha'
+  );
+  igual(
+    await p.evaluate(() => {
+      const a = calcularLogros().find(a => a.id == 'rhp');
+      return [a.c, a.m];
+    }),
+    [1, await p.evaluate(() => RUTAS_PROVINCIA.length)],
+    'y cuenta para hacer todas las de la provincia'
+  );
   cierto(
     await p.evaluate(() => progreso.j.hi.some(e => e[1] == 'rh' && e[2] == 'arribes-norte')),
     'historial'

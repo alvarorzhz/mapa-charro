@@ -754,6 +754,16 @@ const DONDE_COMER = {
       s: 'Tripadvisor, oct. 2026'
     }
   ],
+  garridosur: [
+    {
+      // Calle Ayala, 3: en Garrido Sur (OpenStreetMap); restaurante de un tenedor (Turismo de Castilla y León)
+      n: 'Restaurante Orquídea',
+      t: 'Restaurante',
+      a: 'Calle Ayala, 3',
+      p: '8,4 sobre 10 en Gastroranking con unas 2.100 opiniones de Google y Tripadvisor.',
+      s: 'Gastroranking, oct. 2026'
+    }
+  ],
   garridonorte: [
     {
       // Avenida de los Cedros, 30: en Garrido Norte, no en Garrido Sur (OpenStreetMap, web del bar)

@@ -193,6 +193,20 @@ function calcularLogros() {
       m: r.paradas.length
     })),
     ...coleccion('ru-todas', 'ruta', 'Andarín', 'Completa todas las rutas a pie', RUTAS, rutaCompleta),
+    // Rutas marcadas con «La he hecho» (j.rs, ruta.js)
+    ...escalones('ruta', rutasHechas().length, RUTAS.length + RUTAS_PROVINCIA.length, [
+      ['rh1', 1, 'Primera ruta', 'Marca una ruta como «La he hecho»'],
+      ['rh3', 3, 'Rutero', 'Haz {m} rutas'],
+      ['rht', 'todo', 'Trotamundos charro', 'Haz todas las rutas, a pie y en coche ({m})']
+    ]),
+    ...coleccion(
+      'rhp',
+      'ruta',
+      'De ruta por la provincia',
+      'Haz todas las rutas en coche por la provincia',
+      RUTAS_PROVINCIA,
+      r => estadoRuta(r.id) == 'v'
+    ),
     // --- Reto del día ---
     ...escalones('reto', datoJ('n', 0), Infinity, [
       ['jn1', 1, 'Primera partida', 'Termina una partida de «¿Dónde está?»'],
@@ -467,7 +481,7 @@ const CATEGORIAS_LOGRO = [
   ['Provincia', '🗺️', ['provincia']],
   ['Comarcas', '🌾', ['comarca']],
   ['Monumentos', '🏛️', ['monumento']],
-  ['Rutas a pie', '🚶', ['ruta']],
+  ['Rutas', '🚶', ['ruta']],
   ['Historia', '🏰', ['epoca']],
   ['Lectura', '📖', ['lectura']],
   ['Reto «¿Dónde está?»', '🎯', ['reto']],

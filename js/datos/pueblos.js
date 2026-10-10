@@ -1,9 +1,9 @@
 // Fichas de pueblos de la provincia: { 'Nombre del municipio' (igual que en PROVINCIA): {
-//   hab: habitantes (INE, 2024), cur: [curiosidades], mon: monumento o lugar principal { n, tipo (pictograma), epoca, estilo, datos },
+//   cur: [curiosidades], mon: monumento o lugar principal { n, tipo (pictograma), epoca, estilo, datos },
 //   comer: [{ n, a, p, s }], fuente: [[nombre, url]] } }. Todo con fuente verificable.
+// Los habitantes salen de habitantes.js (INE), para todos los municipios.
 const PUEBLOS = {
   'Ciudad Rodrigo': {
-    hab: '11.846',
     cur: [
       'Su Carnaval del Toro tiene documentos desde 1417: ya entonces se corrían toros.',
       'Las murallas, empezadas por Fernando II de León en el siglo XII, miden más de dos kilómetros y conservan seis puertas.',
@@ -36,7 +36,6 @@ const PUEBLOS = {
     ]
   },
   'La Alberca': {
-    hab: '1.045',
     cur: [
       'En 1940 fue el primer pueblo de España declarado Conjunto Histórico-Artístico.',
       'Cada 13 de junio se bendice el marrano de San Antón, un cerdo que andará suelto por las calles y que alimentan los vecinos hasta que se rifa el 17 de enero.',
@@ -65,7 +64,6 @@ const PUEBLOS = {
     ]
   },
   Béjar: {
-    hab: '11.957',
     cur: [
       'En 1691 los duques trajeron pañeros flamencos; la industria textil vivió su mejor momento en los años sesenta.',
       'En el Corpus salen los Hombres de Musgo, vecinos cubiertos de musgo que recrean la leyenda de la conquista de la villa.',
@@ -98,7 +96,6 @@ const PUEBLOS = {
     ]
   },
   Candelario: {
-    hab: '843',
     cur: [
       'Sus batipuertas permiten cerrar la casa aunque el portón esté abierto, y servían de burladero al matar las reses.',
       'Por las regaderas, canalillos en las calles, baja el agua de los neveros de la sierra; se usaban para limpiar tras la matanza.',
@@ -130,7 +127,6 @@ const PUEBLOS = {
     ]
   },
   Ledesma: {
-    hab: '1.517',
     cur: [
       'Su nombre viene del romano Bletisa; Plutarco ya menciona a sus habitantes, los bletonenses.',
       'Su puente viejo, de base románica del siglo XII, fue hasta el XIX el más alto sobre el Tormes. En 1812 las tropas de Napoleón volaron uno de sus arcos.',
@@ -163,7 +159,6 @@ const PUEBLOS = {
     ]
   },
   'Alba de Tormes': {
-    hab: '5.122',
     cur: [
       'Santa Teresa murió aquí el 4 de octubre de 1582, en el convento de la Anunciación, donde se conserva su cuerpo.',
       'El castillo de los duques de Alba se empezó hacia 1430 y fue destruido en la Guerra de la Independencia.',
@@ -196,7 +191,6 @@ const PUEBLOS = {
     ]
   },
   'Miranda del Castañar': {
-    hab: '381',
     cur: [
       'Su casco antiguo es conjunto histórico-artístico desde el 8 de marzo de 1973.',
       'La muralla se empezó a principios del siglo XIII y conserva sus cuatro puertas.',
@@ -228,7 +222,6 @@ const PUEBLOS = {
     ]
   },
   Mogarraz: {
-    hab: '252',
     cur: [
       'Una exposición en las fachadas ha «resucitado» los rostros de 388 vecinos que no emigraron en los años sesenta.',
       'Su conjunto histórico es Bien de Interés Cultural desde 1998.',
@@ -253,7 +246,6 @@ const PUEBLOS = {
     ]
   },
   'San Martín del Castañar': {
-    hab: '240',
     cur: [
       'Desde 1834 el cementerio está dentro de las murallas del castillo.',
       'El patio de armas, que se usaba para el ganado, acabó siendo una plaza de toros.',
@@ -280,7 +272,6 @@ const PUEBLOS = {
     ]
   },
   Sequeros: {
-    hab: '215',
     cur: [
       'Fue cabeza de partido judicial hasta 1968.',
       'Fernando VI le concedió el título de villa en 1756.',
@@ -294,7 +285,6 @@ const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Sequeros']]
   },
   Guijuelo: {
-    hab: '5.508',
     cur: [
       'El jamón y los embutidos dan trabajo a unas 2.500 personas en 173 empresas: el 65 % de la población activa.',
       'El tren llegó en 1896 y pasó por el pueblo hasta mediados de los ochenta.',
@@ -324,7 +314,6 @@ const PUEBLOS = {
     ]
   },
   'Peñaranda de Bracamonte': {
-    hab: '6.063',
     cur: [
       'El 9 de julio de 1939 estalló en la estación un tren con explosivos, «el Polvorín»: destruyó unos mil edificios y dejó más de cien muertos.',
       'Aquí nació la Fundación Germán Sánchez Ruipérez, que abrió en 1989 su Centro de Desarrollo Sociocultural.',
@@ -351,7 +340,6 @@ const PUEBLOS = {
     ]
   },
   Vitigudino: {
-    hab: '2.361',
     cur: [
       'Hacia 1752, según el Catastro de Ensenada, tenía 180 vecinos y 181 casas.',
       'En 1844 consiguió ayuntamiento propio como cabeza de partido judicial.',
@@ -374,7 +362,6 @@ const PUEBLOS = {
     ]
   },
   'Aldeadávila de la Ribera': {
-    hab: '1.120',
     cur: [
       'Su presa, con unos 2.400 GWh al año, es la de mayor producción eléctrica de España.',
       'El cañón del Duero en los Arribes supera los 100 km: uno de los mayores de la península.',
@@ -405,7 +392,6 @@ const PUEBLOS = {
     ]
   },
   'Montemayor del Río': {
-    hab: '262',
     cur: [
       'Su puente de piedra, de un solo ojo, se hizo hacia 1700 sobre el río Cuerpo de Hombre; era del marqués y se pagaba portazgo.',
       'Es conjunto histórico desde 1982.'
@@ -421,7 +407,6 @@ const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Montemayor_del_Río']]
   },
   'Linares de Riofrío': {
-    hab: '913',
     cur: [
       'En 1959 todavía funcionaban 15 hornos de cal.',
       'En 1248 desapareció el concejo de Monleón y Linares pasó al de Salamanca.',
@@ -438,7 +423,6 @@ const PUEBLOS = {
     ]
   },
   Macotera: {
-    hab: '1.001',
     cur: [
       'Isabel II le dio el título de villa el 10 de agosto de 1861.',
       'En 2001 recuperó el encierro a caballo, que no se celebraba desde 1951.',
@@ -454,7 +438,6 @@ const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Macotera']]
   },
   'El Cabaco': {
-    hab: '238',
     cur: [
       'En su término está la Peña de Francia, a 1.727 m.',
       'Las Cavenes son grandes zanjas de minas romanas a cielo abierto, zona arqueológica protegida desde 2006.',
@@ -485,7 +468,6 @@ const PUEBLOS = {
     ]
   },
   'Villar de la Yegua': {
-    hab: '155',
     cur: [
       'En su término está Siega Verde: más de 500 grabados del Paleolítico en 96 paneles a lo largo de un kilómetro del río Águeda. Los descubrió Manuel Santonja el 17 de octubre de 1988.',
       'En 1640, en la guerra con Portugal, se libró aquí la batalla de Villar de la Yegua.',
@@ -507,7 +489,6 @@ const PUEBLOS = {
     ]
   },
   'Hinojosa de Duero': {
-    hab: '600',
     cur: [
       'Forma parte del Parque Natural de Arribes del Duero, declarado en 2002.',
       'Hay restos vetones en los castros de Moncalvo y de la Escala.',
@@ -525,7 +506,6 @@ const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Hinojosa_de_Duero']]
   },
   'San Felices de los Gallegos': {
-    hab: '350',
     cur: [
       'Su castillo lo mandó levantar en 1296 el rey Dionisio I de Portugal.',
       'Con el Tratado de Alcañices (1297) pasó a Portugal, y en 1326 volvió a León.'
@@ -547,7 +527,6 @@ const PUEBLOS = {
     ]
   },
   Sotoserrano: {
-    hab: '525',
     cur: [
       'El río Alagón forma aquí el meandro del Melero, entre Salamanca y Cáceres.',
       'Un documento de 1289 muestra a judíos de Miranda prestando dinero a vecinos del pueblo.'
@@ -561,7 +540,6 @@ const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Sotoserrano']]
   },
   Saucelle: {
-    hab: '252',
     cur: [
       'Su presa sobre el Duero se hizo entre 1950 y 1956.',
       'El poblado que se levantó para los trabajadores quedó abandonado y hoy es un complejo turístico.',
@@ -576,7 +554,6 @@ const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Saucelle']]
   },
   Mieza: {
-    hab: '176',
     cur: [
       'En las Cortes de Burgos de 1315 aparece como aldea del concejo de Ledesma.',
       'Entre 2000 y 2018 perdió 146 vecinos, el 42 %.'
