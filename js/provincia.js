@@ -208,9 +208,9 @@ function construirMinimapa(contenedor) {
     crearSvg('defs', {}, sv)
   );
   crearSvg('rect', { width: 4, height: 4, style: 'fill:var(--b)' }, trama);
-  crearSvg('rect', { width: 1.6, height: 4, style: 'fill:var(--gold);opacity:.7' }, trama);
+  crearSvg('rect', { width: 1.3, height: 4, style: 'fill:var(--gold);opacity:.6' }, trama);
 
-  const capaMunicipios = crearSvg('g', {}, sv),
+  const capaMunicipios = crearSvg('g', { class: 'pmg' }, sv),
     capaComarcas = crearSvg('g', { style: 'pointer-events:none' }, sv);
   const trazo = anillos =>
     anillos
@@ -452,8 +452,8 @@ function seleccionarPueblo(m, encuadrar) {
   puebloSeleccionado = m;
   const barra = $('#psb');
   barra.textContent = '';
+  // El nombre va en su propia línea (estilos.css): los datos, debajo, sin el «·» delante
   const detalle =
-    ' · ' +
     PROVINCIA.com[m.c] +
     (m.P.length ? ' · ' + m.P.length + (m.P.length == 1 ? ' pedanía' : ' pedanías') : '');
   barra.appendChild(crear('div', 'pst', crear('b', '', m.n), crear('small', '', detalle)));

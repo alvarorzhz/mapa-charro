@@ -1,9 +1,9 @@
 /* Tipografías servidas desde la propia web (SIL Open Font License, ver fuentes/): sin pedir nada a Google */
 @font-face{font-family:'Alfa Slab One';font-style:normal;font-weight:400;font-display:swap;src:url(../fuentes/alfa-slab-one.woff2) format('woff2')}
 @font-face{font-family:'Lora';font-style:normal;font-weight:400 700;font-display:swap;src:url(../fuentes/lora.woff2) format('woff2')}
-:root{--vit-texto:#a8221c;--oro-texto:#5e3e08;--campo:#d3c48e;--otro:#c2a866;--bg:#d8b97a;--map:#c9a762;--ink:#35240f;--b:#ecdcae;--p:#b9bb7c;--vit:#a8221c;--gold:#7c5410;--line:#6e4f22;--riv:#7ea2ad;--card:#f1e4bd;--auv:#1d5fb4;--nac:#d9621a;--street:#fffaf0;--ronda:#f4b56a;--cl:#2f7d46;--parque:#9dbb6c;--parque-borde:#5f7d3a;--c0:#e8cf8c;--c1:#ecdcae;--c2:#e2cfa0;--c3:#efe0b8;--c4:#dcc795;--c5:#b9bb7c;--c6:#c4a15a;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--vit-texto:#ef7a6e;--oro-texto:#e0b050;--campo:#4a4230;--otro:#3a3224;--bg:#1d1810;--map:#2a2216;--ink:#ecdcae;--b:#6a5733;--p:#4f5333;--vit:#c23d33;--gold:#e0b050;--line:#b8985a;--riv:#3d5f6b;--card:#2f2719;--auv:#6aa6ff;--nac:#f08a3c;--street:#8d7c56;--ronda:#a8692b;--cl:#6cc48a;--parque:#4d6a35;--parque-borde:#86a65e;--c0:#7a6232;--c1:#6a5733;--c2:#5f4f2e;--c3:#735d36;--c4:#55472a;--c5:#4f5333;--c6:#3a3020;}}
-:root[data-theme="dark"]{--vit-texto:#ef7a6e;--oro-texto:#e0b050;--campo:#4a4230;--otro:#3a3224;--bg:#1d1810;--map:#2a2216;--ink:#ecdcae;--b:#6a5733;--p:#4f5333;--vit:#c23d33;--gold:#e0b050;--line:#b8985a;--riv:#3d5f6b;--card:#2f2719;--auv:#6aa6ff;--nac:#f08a3c;--street:#8d7c56;--ronda:#a8692b;--cl:#6cc48a;--parque:#4d6a35;--parque-borde:#86a65e;--c0:#7a6232;--c1:#6a5733;--c2:#5f4f2e;--c3:#735d36;--c4:#55472a;--c5:#4f5333;--c6:#3a3020;}
+:root{--vit-texto:#a8221c;--oro-texto:#5e3e08;--campo:#d9cc9f;--otro:#cab588;--bg:#d8b97a;--map:#bc9f6f;--ink:#35240f;--b:#ecdcae;--p:#b9bb7c;--vit:#a8221c;--gold:#7c5410;--line:#6e4f22;--riv:#6a9ab2;--card:#f1e4bd;--auv:#2a5ea6;--nac:#c9662a;--street:#fffaf0;--ronda:#f4b56a;--cl:#3a7a4d;--parque:#8fae68;--parque-borde:#5f7d3a;--c0:#e8cf8c;--c1:#ecdcae;--c2:#e2cfa0;--c3:#efe0b8;--c4:#dcc795;--c5:#b9bb7c;--c6:#c4a15a;--lim-fuerte:#33230d;--lim-medio:#5a3f1c;--lim-suave:#8a6b3a;--sombra-mapa:rgb(58 38 12 / .32);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--vit-texto:#ef7a6e;--oro-texto:#e0b050;--campo:#463f2e;--otro:#342d21;--bg:#1d1810;--map:#211a10;--ink:#ecdcae;--b:#6a5733;--p:#4f5333;--vit:#c23d33;--gold:#e0b050;--line:#b8985a;--riv:#4a7385;--card:#2f2719;--auv:#6aa6ff;--nac:#f08a3c;--street:#8d7c56;--ronda:#a8692b;--cl:#6cc48a;--parque:#4d6a35;--parque-borde:#86a65e;--c0:#7a6232;--c1:#6a5733;--c2:#5f4f2e;--c3:#735d36;--c4:#55472a;--c5:#4f5333;--c6:#3a3020;--lim-fuerte:#f0e2b8;--lim-medio:#c4a670;--lim-suave:#a3895b;--sombra-mapa:rgb(0 0 0 / .55);}}
+:root[data-theme="dark"]{--vit-texto:#ef7a6e;--oro-texto:#e0b050;--campo:#463f2e;--otro:#342d21;--bg:#1d1810;--map:#211a10;--ink:#ecdcae;--b:#6a5733;--p:#4f5333;--vit:#c23d33;--gold:#e0b050;--line:#b8985a;--riv:#4a7385;--card:#2f2719;--auv:#6aa6ff;--nac:#f08a3c;--street:#8d7c56;--ronda:#a8692b;--cl:#6cc48a;--parque:#4d6a35;--parque-borde:#86a65e;--c0:#7a6232;--c1:#6a5733;--c2:#5f4f2e;--c3:#735d36;--c4:#55472a;--c5:#4f5333;--c6:#3a3020;--lim-fuerte:#f0e2b8;--lim-medio:#c4a670;--lim-suave:#a3895b;--sombra-mapa:rgb(0 0 0 / .55);}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Lora,Georgia,serif}
 main{max-width:520px;margin:0 auto;padding:14px 14px 40px}main.o{padding-bottom:340px}
@@ -237,3 +237,64 @@ button,input,#q,.seg button,.sig{line-height:1.25}
 .ms-recientes{margin-top:8px}.ms-reciente{margin:2px 0;font-size:14px}.ms-reciente small{opacity:.8}
 /* «Salamanca en el tiempo»: lo de cada etapa con su ficha */
 .tetapa-rel{margin:10px 0 6px}.tetapa-rel h4{font:600 14px Lora,Georgia,serif;color:var(--oro-texto);margin:0 0 2px}.tetapa-rel .nb small{opacity:.8}
+/* Cartografía: solo presentación. Jerarquía de líneas de más a menos: ciudad, barrios, términos municipales y repartos; la provincia, con su sombra */
+.vecino{fill:var(--otro);stroke:var(--lim-suave);stroke-width:.7px;stroke-opacity:.5}.termino{fill:var(--campo);stroke:var(--lim-suave);stroke-width:1.1px;stroke-dasharray:5 3}.lbf{fill:var(--lim-medio);opacity:.9;letter-spacing:.2px}.lbt{opacity:.9}
+.lim.halo{stroke:var(--card);stroke-width:3.6px;opacity:.55}.lim.alfoz{stroke:var(--lim-suave);stroke-width:1.1px;opacity:.9}.lim.reparto{stroke:var(--lim-medio);stroke-width:.9px;stroke-dasharray:2.5 2.5;opacity:.6}.lim.linde{stroke:var(--lim-medio);stroke-width:1.15px;opacity:.85}.lim.ciudad{stroke:var(--lim-fuerte);stroke-width:2.2px;opacity:.9}.lim.sel{stroke:var(--vit);stroke-width:3.2px}
+.dt{fill:var(--lim-medio);opacity:.6}.z.w{stroke-width:1.6px}.pk{opacity:.5}.rv{fill:color-mix(in srgb,var(--riv) 45%,var(--ink));opacity:1;letter-spacing:.4px}
+.mon{filter:drop-shadow(0 1px 1.2px var(--sombra-mapa))}.mon rect{stroke-width:1.4}.mon.imp rect{stroke-width:1.8}#m.en-gesto .mon{filter:none}
+.pmm{fill:var(--c1);stroke:var(--lim-suave);stroke-width:.5px;stroke-opacity:.75}.pmm.sel{stroke:var(--lim-fuerte);stroke-width:2.2px}.pmc{stroke:var(--lim-fuerte);stroke-width:1.4px;opacity:.7}.pmg{filter:drop-shadow(0 1px 2.5px var(--sombra-mapa))}
+.pmv-b.a{stroke-width:3.8px}.pmv-b.n,.pmv-b.c{stroke-width:2.6px}.pmv-t.a{stroke-width:2px}.pmv-t.n,.pmv-t.c{stroke-width:1.2px}.pmv-e rect{stroke-width:.9px}.pmv-e{filter:drop-shadow(0 .5px .8px var(--sombra-mapa))}
+.pms-b{stroke-width:6px}.pms-t{fill-opacity:.25;stroke-width:3px}
+.rpc{fill-opacity:.6;stroke:var(--lim-suave);stroke-width:.8px;stroke-opacity:.8}.rpb{stroke-width:5.5px}.rpn,.rps,.rtn{filter:drop-shadow(0 1px 1px var(--sombra-mapa))}.cul-co{stroke:var(--lim-suave)}
+/* Fichas, tarjetas y paneles: una sola familia de bordes, radios, sombras y tipografía (solo presentación).
+   Los controles (botones, pestañas, buscador) siguen con su borde marcado; los contenedores llevan borde fino y sombra. */
+:root{--elevada:#f8efd6;--radio-tarjeta:14px;--radio-control:10px;--borde-suave:color-mix(in srgb,var(--line) 38%,transparent);--superficie-2:color-mix(in srgb,var(--b) 42%,var(--card));--texto-suave:color-mix(in srgb,var(--ink) 76%,var(--card));--sombra-tarjeta:0 1px 2px color-mix(in srgb,var(--sombra-mapa) 40%,transparent),0 6px 16px -10px var(--sombra-mapa);--sombra-flotante:0 2px 6px color-mix(in srgb,var(--sombra-mapa) 45%,transparent),0 18px 40px -18px var(--sombra-mapa)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--elevada:#382f20}}:root[data-theme="dark"]{--elevada:#382f20}
+/* La ficha */
+.sh{border-top-width:3px;border-radius:20px 20px 0 0;padding:12px 18px calc(14px + env(safe-area-inset-bottom,0px));box-shadow:var(--sombra-flotante)}
+@media(max-width:899px){.sh{max-height:42vh}}
+@media(min-width:900px){.sh{border-left-width:3px;border-radius:18px;padding:18px 22px 16px;box-shadow:var(--sombra-flotante)}.sh .bt{margin-left:-22px;margin-right:-22px;padding-left:22px;padding-right:22px}}
+#k{font:600 11.5px/1.35 Lora,Georgia,serif;text-transform:uppercase;letter-spacing:.7px;color:var(--oro-texto);margin-bottom:3px}
+.sh h2{font-size:24px;line-height:1.15;letter-spacing:.2px;margin-bottom:2px}.sh p{line-height:1.55}.otros{margin:4px 0 8px;color:var(--texto-suave);opacity:1}
+#x{width:36px;height:36px;border-radius:50%;border:1.5px solid color-mix(in srgb,var(--line) 70%,transparent);background:var(--superficie-2);font-size:19px;line-height:1}
+.idx{margin:6px 0 10px;padding:6px 0 8px;gap:6px;border-bottom:1px solid var(--borde-suave)}.idx button{min-height:30px;padding:3px 12px;font-size:12.5px;border:1px solid var(--borde-suave);background:var(--superficie-2)}
+#ph{border-radius:12px!important;margin-bottom:0!important}.sh .pcap{font-size:12px;line-height:1.4;color:var(--texto-suave);opacity:1;margin:5px 0 12px}
+.sb h3:not(:is(.hoy-apartado,.ms-apartado,.pch) h3){font:700 12px/1.3 Lora,Georgia,serif;text-transform:uppercase;letter-spacing:.9px;color:var(--oro-texto);margin:18px 0 6px;padding-top:12px;border-top:1px solid var(--borde-suave)}
+.sb #cu p,.sb div#ri p{margin:8px 0}.sh .info p.fte,#ap{font-size:12px;color:var(--texto-suave)}.sh .info p.hab{color:var(--texto-suave);opacity:1}
+/* Cifras y notas */
+.info .datos{gap:8px;margin:10px 0 12px}.info .dato{background:var(--superficie-2);border:1px solid var(--borde-suave);border-radius:var(--radio-control);padding:8px 11px}.info .dato small{font-size:10.5px;letter-spacing:.6px;color:var(--texto-suave);margin-bottom:3px}.info .dato b{font-size:15.5px;line-height:1.25}
+.sh .info p.curio,.nac,.consejo,.pch,.cul-t{border-left-width:3px;border-radius:0 var(--radio-control) var(--radio-control) 0;padding:9px 12px;line-height:1.5;background:var(--superficie-2)}.sh .info p.curio{margin:10px 0}.nac,.pch{margin:8px 0 12px}
+/* Botones pequeños de las fichas */
+.nb,.rel{margin-top:12px;color:var(--texto-suave)}.nb button,.nb .llegar,.rel-etq{margin:5px 6px 0 0;padding:4px 12px;font-size:13px;line-height:1.3;border-width:1.5px;color:var(--ink)}.nb .llegar{color:var(--vit-texto)}.nb button.principal,a.llegar.principal{color:#fff}.rel-fila{margin-top:8px}
+.bt{margin:12px -18px 0;padding:12px 18px 0;border-top:1px solid var(--borde-suave)}.bt button{border-radius:12px;min-height:46px}
+.sh .info ol.paradas button{padding:8px 12px 8px 36px;border-width:1.5px}.sh .info ol.paradas button:before{left:10px;width:18px;height:18px;font:700 10.5px/18px Lora,serif}
+/* Tarjetas dentro de la ficha */
+.hoy-apartado,.ms-tarjeta,.ms-resumen,.cul-audio,.tarjeta-ruta,.fila-explora{border:1px solid var(--borde-suave);border-radius:var(--radio-tarjeta);background:var(--elevada);box-shadow:var(--sombra-tarjeta)}
+.tarjeta-ruta:hover,.fila-explora:hover{border-color:color-mix(in srgb,var(--line) 75%,transparent)}
+.hoy-apartado{padding:14px 16px;margin:14px 0 6px}.ms-tarjeta{padding:12px 14px;gap:4px}.ms-cifra b{font-size:28px}.ms-que{margin-top:2px}.ms-resumen{padding:12px 14px}.ms-resumen li{margin:4px 0}
+.rutas,.lista-explora{gap:8px}.tarjeta-ruta{padding:12px 14px}.fila-explora{padding:10px 12px}.ms-vacio{border-width:1.5px;border-radius:var(--radio-tarjeta)}
+/* Paneles sobre la página y sobre el mapa */
+.psb,.sig,.palabra{border:1px solid var(--borde-suave);border-radius:var(--radio-tarjeta);background:var(--card);box-shadow:var(--sombra-tarjeta)}.palabra{border-left:3px solid var(--gold)}
+.psb{padding:14px 16px;margin:0 0 10px}
+.capas{border:1px solid var(--borde-suave);border-radius:var(--radio-tarjeta);box-shadow:var(--sombra-flotante);padding:12px 16px 14px}.capas h3{font:700 12px/1.3 Lora,Georgia,serif;text-transform:uppercase;letter-spacing:.9px;color:var(--oro-texto);margin:4px 0 10px}.capa{border-width:1.5px}.fmap-t{font-size:10.5px;letter-spacing:.6px;color:var(--texto-suave)}
+.globo{border:1px solid var(--borde-suave);border-radius:var(--radio-control);box-shadow:var(--sombra-flotante);padding:5px 11px 6px}
+.modal .caja{border:0;border-top:4px solid var(--vit);border-radius:18px;padding:18px 20px 20px;box-shadow:var(--sombra-flotante)}.modal h2{font-size:21px;line-height:1.2;margin:0 40px 12px 0}
+/* Listas dentro de los paneles: separadores finos */
+.pr,.lr,.ac,.cat-logros,.sr button,.sr .sinres{border-bottom-color:var(--borde-suave)}.pcd summary{border-bottom:1px solid var(--borde-suave)}.cat-logros .ac{border-top-color:var(--borde-suave)}
+#ph{margin-top:10px!important}.pst b{display:block;font:19px/1.2 'Alfa Slab One',Georgia,serif;color:var(--vit-texto);letter-spacing:.2px}.pst small{display:block;margin-top:3px;font-size:12.5px;color:var(--texto-suave);opacity:1}#psb .habitantes{margin:8px 0 4px;font-size:14px}.psb .qb.big{margin-top:10px}
+.info .dato b{overflow-wrap:break-word}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--superficie-2:color-mix(in srgb,var(--b) 22%,var(--card))}}:root[data-theme="dark"]{--superficie-2:color-mix(in srgb,var(--b) 22%,var(--card))}
+/* Evolución de la población en la ficha de cada municipio (pueblos.js: pintarDemografia) */
+.demo{margin:4px 0 6px}.demo-sub{font-size:13.5px!important;color:var(--texto-suave);margin:0 0 8px!important}
+.demo-graf{display:block;width:100%;height:auto;max-height:200px;margin:4px 0 6px;touch-action:pan-y;font-family:Lora,Georgia,serif}
+.demo-rej{stroke:var(--borde-suave);stroke-width:1}.demo-base{stroke:color-mix(in srgb,var(--line) 70%,transparent);stroke-width:1}
+.demo-eje{font-size:9.5px;fill:var(--texto-suave)}.demo-valor{font-size:10.5px;font-weight:700;fill:var(--ink);paint-order:stroke;stroke:var(--card);stroke-width:3px;stroke-linejoin:round}
+.demo-area{fill:var(--vit-texto);fill-opacity:.1}.demo-linea{fill:none;stroke:var(--vit-texto);stroke-width:2px;stroke-linejoin:round;stroke-linecap:round}.demo-linea.est{stroke-dasharray:4 3}
+.demo-punto{fill:var(--vit-texto);stroke:var(--card);stroke-width:2}.demo-punto.est{fill:var(--card);stroke:var(--vit-texto);stroke-width:1.6}
+.demo-guia line{stroke:var(--ink);stroke-opacity:.35;stroke-width:1}.demo-guia circle{fill:var(--vit-texto);stroke:var(--card);stroke-width:2}.demo-guia rect{fill:var(--ink)}.demo-guia text{font-size:10px;fill:var(--card)}.demo-guia-anio{font-weight:700}
+.demo-datos{margin:6px 0 8px!important}
+.demo-leyenda{display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;font-size:12.5px!important;margin:4px 0 6px!important;color:var(--texto-suave)}.demo-leyenda span:before{content:'';display:inline-block;width:16px;height:0;border-top:2px solid var(--vit-texto);margin-right:6px;vertical-align:middle}.demo-leyenda .demo-est:before{border-top-style:dashed}.demo-leyenda small{flex-basis:100%;font-size:12px}
+.demo-cifras{margin:6px 0 4px;font-size:13.5px}.demo-cifras summary{min-height:32px;display:flex;align-items:center;color:var(--vit-texto)}
+.demo-tabla{width:100%;border-collapse:collapse;margin:4px 0 6px;font-size:13.5px;font-variant-numeric:tabular-nums}.demo-tabla th{text-align:left;font:700 11px Lora,Georgia,serif;text-transform:uppercase;letter-spacing:.6px;color:var(--texto-suave);padding:4px 6px;border-bottom:1px solid var(--borde-suave)}.demo-tabla td{padding:3px 6px;border-bottom:1px solid var(--borde-suave)}.demo-tabla td:nth-child(2),.demo-tabla th:nth-child(2){text-align:right}.demo-tabla tr.no-oficial td{font-style:italic}
+.demo .datos{display:flex;flex-wrap:wrap;gap:8px}.demo .dato{flex:1 1 92px;min-width:0;background:var(--superficie-2);border:1px solid var(--borde-suave);border-radius:var(--radio-control);padding:8px 11px;line-height:1.25}.demo .dato small{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--texto-suave);margin-bottom:3px}.demo .dato b{display:block;font-size:15px;overflow-wrap:break-word}
+.sh p.demo-fte{font-size:12px;line-height:1.5;color:var(--texto-suave);margin:6px 0 2px}.demo-fte a{font-size:12px!important}

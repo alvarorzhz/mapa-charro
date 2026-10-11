@@ -234,6 +234,39 @@ D.PROVINCIA.m.forEach(m =>
   )
 );
 comprobar(/^\d+ de \w+ de \d{4}$/.test(D.HABITANTES.fecha), 'Habitantes: fecha rara');
+// La serie anual (evolución de la población en las fichas): años en orden, una cifra entera por año o null,
+// la última igual a la de «m», y los tipos no definitivos en posiciones que existen
+{
+  const { anios, serie, tipos } = D.HABITANTES;
+  comprobar(
+    Array.isArray(anios) &&
+      anios.length > 1 &&
+      anios.every((a, i) => Number.isInteger(a) && (!i || a > anios[i - 1])),
+    'Habitantes: años de la serie raros'
+  );
+  comprobar(
+    String(D.HABITANTES.fecha).endsWith(String(anios[anios.length - 1])),
+    'Habitantes: el último año de la serie no es el de la fecha'
+  );
+  D.PROVINCIA.m.forEach(m => {
+    const s = serie[m.ine];
+    comprobar(
+      Array.isArray(s) &&
+        s.length == anios.length &&
+        s.every(n => n === null || (Number.isInteger(n) && n >= 0)),
+      `Habitantes: serie rara de ${m.n}; ejecuta node herramientas/habitantes.js`
+    );
+    comprobar(
+      s && s[s.length - 1] === D.HABITANTES.m[m.ine],
+      `Habitantes: la serie de ${m.n} no acaba en su cifra`
+    );
+  });
+  Object.entries(tipos).forEach(([ine, t]) =>
+    Object.keys(t).forEach(i =>
+      comprobar(serie[ine] && serie[ine][i] != null, `Habitantes: tipo de dato sin cifra (${ine}, ${i})`)
+    )
+  );
+}
 
 // --- Carreteras del mapa de la provincia (las genera herramientas/carreteras-provincia.js) ---------------
 D.CARRETERAS_PROVINCIA.forEach(c => {

@@ -772,6 +772,69 @@ prueba('Ficha de pueblo', async (p, url) => {
   igual(await p.evaluate(() => JSON.parse(localStorage.charro2).p), { m37010: 'w' }, 'marca el pueblo');
 });
 
+prueba('Evolución de la población en la ficha del municipio', async (p, url) => {
+  await p.goto(url + '#pueblo/la-alberca');
+  cierto(await p.$eval('#demo', e => !e.hidden), 'sale en la ficha del pueblo');
+  const datos = await p.evaluate(() => {
+    const s = HABITANTES.serie['37010'],
+      a = HABITANTES.anios;
+    return {
+      n: s.filter(n => n != null).length,
+      primero: s[0],
+      ultimo: s[s.length - 1],
+      a0: a[0],
+      a1: a[a.length - 1]
+    };
+  });
+  igual(await p.$$eval('#demo .demo-tabla tbody tr', f => f.length), datos.n, 'una fila por año con cifra');
+  cierto((await p.$$('#demo svg.demo-graf')).length == 1, 'con su gráfico');
+  // La variación desde el primer año, calculada de las cifras
+  const dif = datos.ultimo - datos.primero,
+    esperado =
+      (dif < 0 ? '−' : '+') +
+      (await p.evaluate(n => conMiles(n), Math.abs(dif))) +
+      ' (' +
+      (dif < 0 ? '−' : '+') +
+      new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+        Math.abs((dif / datos.primero) * 100)
+      ) +
+      ' %)';
+  igual(await texto(p, '#demo .dato b'), esperado, 'variación desde ' + datos.a0);
+  cierto((await texto(p, '#demo .demo-fte')).includes('INE'), 'con su fuente');
+  cierto((await texto(p, '#demo .demo-leyenda')).includes('oficial'), 'dice que las cifras son oficiales');
+  // Sin cifras comparables no hay variación: una cifra no definitiva no se compara
+  igual(
+    await p.evaluate(() => {
+      const puntos = [
+        { anio: 2014, n: 10, oficial: true },
+        { anio: 2024, n: 8, oficial: false }
+      ];
+      return variacionHabitantes(puntos, 2014, 2024);
+    }),
+    null,
+    'no compara con una cifra no definitiva'
+  );
+  // Al tocar el gráfico sale el año y la cifra
+  const caja = await (await p.$('#demo .demo-graf')).boundingBox();
+  await p.evaluate(() => document.querySelector('#demo .demo-graf').scrollIntoView({ block: 'center' }));
+  await p.waitForTimeout(400);
+  const caja2 = await (await p.$('#demo .demo-graf')).boundingBox();
+  await p.mouse.move(caja2.x + caja2.width - 14, caja2.y + caja2.height / 2);
+  cierto(caja && (await p.$eval('#demo .demo-guia', g => g.style.display != 'none')), 'guía al pasar');
+  igual(
+    await p.$eval('#demo .demo-guia-anio', t => t.textContent),
+    String(datos.a1),
+    'el último año, al final'
+  );
+  // Pueblos de alrededor del mapa de la capital: también; barrios y otras fichas: no
+  await p.goto(url + '#villamayor');
+  cierto(await p.$eval('#demo', e => !e.hidden), 'en la ficha de un pueblo de alrededor');
+  await p.goto(url + '#centro');
+  cierto(await p.$eval('#demo', e => e.hidden), 'no en un barrio');
+  await p.goto(url + '#monumento/catedrales');
+  cierto(await p.$eval('#demo', e => e.hidden), 'no en un monumento');
+});
+
 prueba('La ficha del pueblo deja ver el mapa de la provincia', async p => {
   await p.click('#vprov');
   await p.evaluate(() => abrirPueblo(PROVINCIA.m.find(m => m.n == 'Ledesma')));

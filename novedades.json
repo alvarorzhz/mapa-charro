@@ -1,5 +1,23 @@
 [
   {
+    "version": "2.7.0",
+    "fecha": "2026-10-11",
+    "titulo": "Mapas más finos, fichas más cuidadas y la población de cada pueblo",
+    "usuario": [
+      "Los mapas se leen mejor: el contorno de la ciudad y los límites de las comarcas mandan, los de barrios y municipios van más finos y las carreteras molestan menos.",
+      "La provincia destaca sobre el fondo y los monumentos y paradas llevan una sombra suave para leerse sobre cualquier color.",
+      "Fichas, tarjetas y paneles con un diseño más cuidado: títulos más claros, cifras más visibles, apartados mejor separados y bordes y sombras iguales en todas.",
+      "En el móvil la ficha tapa algo menos el mapa al abrirse.",
+      "Nuevo en la ficha de cada pueblo: «Evolución de la población», con un gráfico de 1996 a 2025, cuánto ha cambiado, su máximo y todas las cifras año a año. Son cifras oficiales del Padrón (INE)."
+    ],
+    "tecnico": [
+      "Tokens de cartografía (--lim-fuerte/medio/suave, --sombra-mapa) y nueva paleta de fondo, río y carreteras en claro y oscuro; nacionales con trazo continuo; sombra en .pmg y .mon (sin ella durante los gestos).",
+      "Tokens de componentes (--elevada, --superficie-2, --borde-suave, --texto-suave, --sombra-tarjeta/-flotante, radios); .sh a 42vh en el móvil (ALTO_PANEL_MOVIL 0,42).",
+      "habitantes.js guarda la serie anual del INE (anios, serie, tipos) y acepta una respuesta guardada; comprobar-datos valida la serie.",
+      "pintarDemografia (pueblos.js) en #demo para pueblos con ficha y del alfoz: gráfico SVG con guía al pasar, variacionHabitantes solo entre cifras definitivas, tabla y fuente; botón «Población» en el índice. Prueba nueva."
+    ]
+  },
+  {
     "version": "2.6.1",
     "fecha": "2026-10-11",
     "titulo": "Arreglado el guardado en la cuenta de Google",

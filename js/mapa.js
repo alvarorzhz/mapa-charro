@@ -345,7 +345,7 @@ try {
     tramos.forEach(P => {
       const d = trazoSuave(P);
       els.push(
-        crearSvg('path', atributosTrazo(ronda ? 5.4 : 3.8, 'var(--line)', d, ronda ? 0.7 : 0.45), capaBorde)
+        crearSvg('path', atributosTrazo(ronda ? 5 : 3.6, 'var(--line)', d, ronda ? 0.6 : 0.38), capaBorde)
       );
       const relleno = crearSvg(
         'path',
@@ -376,7 +376,7 @@ try {
   // Carreteras: a = autovía, n = nacional, c = autonómica. Primero todos los bordes y luego los
   // colores, de menor a mayor categoría, para que las autovías queden encima.
   const COLOR = { a: 'var(--auv)', n: 'var(--nac)', c: 'var(--cl)' },
-    ANCHO = { a: [8, 4.2], n: [5.5, 2.8], c: [4.5, 2.2] }, // [borde, color]
+    ANCHO = { a: [6.8, 3.4], n: [4.8, 2.3], c: [4, 1.9] }, // [borde, color]
     ORDEN = ['c', 'n', 'a'];
   ORDEN.forEach(k =>
     CARRETERAS.filter(r => r[0] == k).forEach(([, nombre, P]) => {
@@ -385,18 +385,14 @@ try {
         nm: nombre,
         k,
         d,
-        els: [crearSvg('path', atributosTrazo(ANCHO[k][0], 'var(--card)', d, 0.9), $('#rd'))]
+        els: [crearSvg('path', atributosTrazo(ANCHO[k][0], 'var(--card)', d, 0.85), $('#rd'))]
       });
     })
   );
   ORDEN.forEach(k =>
     trazosVias
       .filter(r => r.k == k)
-      .forEach(r =>
-        r.els.push(
-          crearSvg('path', atributosTrazo(ANCHO[k][1], COLOR[k], r.d, 1, k == 'n' ? '7 4' : 0), $('#rd'))
-        )
-      )
+      .forEach(r => r.els.push(crearSvg('path', atributosTrazo(ANCHO[k][1], COLOR[k], r.d, 1), $('#rd'))))
   );
 } catch (e) {
   console.error(e);
@@ -409,7 +405,7 @@ NUDOS.forEach(([p, k, r]) => {
     g = crearSvg('g', {}, $('#sd'));
   crearSvg(
     'circle',
-    { r, fill: 'var(--card)', stroke: k == 'a' ? 'var(--auv)' : 'var(--nac)', 'stroke-width': 2.2 },
+    { r: r * 0.85, fill: 'var(--card)', stroke: k == 'a' ? 'var(--auv)' : 'var(--nac)', 'stroke-width': 1.8 },
     g
   );
   escudosEscalables.push({ g, x, y });
@@ -644,7 +640,7 @@ function recolocarSegunZoom(siempre) {
     visible.style.display = mostrar ? '' : 'none';
     if (oculta) oculta.style.display = 'none';
     z.dt.style.display = mostrar ? 'none' : '';
-    z.dt.setAttribute('r', 2.8 * u);
+    z.dt.setAttribute('r', 2.3 * u);
     visible.style.fontSize = tam * u + 'px';
     visible.style.strokeWidth = 2.5 * u + 'px';
     visible.style.fontWeight = z.t ? 800 : 600;
@@ -712,7 +708,7 @@ function centrarMapaEn(x, y, ancho) {
 }
 
 // Alto en píxeles del mapa que se ve con la ficha abierta (en el móvil el panel ocupa la parte de abajo)
-const ALTO_PANEL_MOVIL = 0.46; // fracción de la pantalla; igual que .sh{max-height:46vh} en estilos.css
+const ALTO_PANEL_MOVIL = 0.42; // fracción de la pantalla; igual que .sh{max-height:42vh} en estilos.css
 function mapaVisiblePx() {
   if (esEscritorio()) return tamMapa.h || 400;
   return Math.max(120, Math.min(tamMapa.h || 400, innerHeight * (1 - ALTO_PANEL_MOVIL) - 16));

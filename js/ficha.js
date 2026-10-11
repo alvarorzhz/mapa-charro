@@ -191,6 +191,7 @@ function modoBotonesFicha(modo) {
 // Índice de la ficha de zona: un botón por apartado que lleva a él (en el móvil, agrandando la ficha)
 let fichaConIndice = false;
 const APARTADOS_FICHA = [
+  ['#demo', 'Población'],
   ['#hc', 'Curiosidades'],
   ['#hl', 'Leyenda'],
   ['#he', 'Dónde comer'],
@@ -198,7 +199,9 @@ const APARTADOS_FICHA = [
 ];
 function pintarIndiceFicha() {
   const indice = $('#idx'),
-    apartados = APARTADOS_FICHA.filter(([sel]) => !$(sel).hidden || (sel == '#pch' && fichaConPalabra));
+    apartados = APARTADOS_FICHA.filter(([sel]) =>
+      sel == '#demo' ? fichaConDemografia : !$(sel).hidden || (sel == '#pch' && fichaConPalabra)
+    );
   indice.textContent = '';
   fichaConIndice = apartados.length > 1;
   apartados.forEach(([sel, texto]) => {
@@ -216,6 +219,8 @@ function irAApartado(sel) {
 
 // La ficha lleva «Cultura y tradiciones» (cultura.js: pintarCulturaEnFicha)
 let fichaConCultura = false;
+// La ficha lleva la evolución de la población de su municipio (pueblos.js: pintarDemografia)
+let fichaConDemografia = false;
 // La ficha se abre desde «¿Qué puedo descubrir hoy?» (hoy.js): lleva el botón para volver allí
 let fichaDesdeHoy = false;
 
@@ -235,6 +240,8 @@ function mostrarFicha() {
   $('#volverhoy').hidden = !fichaDesdeHoy;
   $('#culf').hidden = !fichaConCultura;
   fichaConCultura = false;
+  $('#demo').hidden = !fichaConDemografia;
+  fichaConDemografia = false;
   // En el móvil, sube la página hasta el mapa (el de la provincia en su pestaña) para que se vea por encima del panel
   const mapaVisible = { map: '.mw', prov: '#pm' }[pestana];
   if (!esEscritorio() && mapaVisible && document.querySelector(mapaVisible)) {
@@ -267,6 +274,8 @@ function abrirFicha(id) {
   pintarMonumentosDeZona(z);
   pintarCulturaEnFicha(culturaDeZona(z));
   pintarRelacionados(relacionadosDeZona(z));
+  // Pueblos de alrededor: evolución de la población de su municipio (pueblos.js)
+  if (municipio && typeof pintarDemografia == 'function') pintarDemografia(municipio);
   pintarCuriosidades(z);
   pintarLeyendas(z);
   pintarPalabraDeZona(z); // palabras.js
