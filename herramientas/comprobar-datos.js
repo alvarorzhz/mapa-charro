@@ -161,7 +161,13 @@ D.MONUMENTOS.forEach(m => {
     m.fuente && m.fuente.length && m.fuente.every(f => /^https:\/\//.test(f[1])),
     `Monumento ${m.id}: sin fuente con enlace`
   );
-  if (m.foto) comprobar(D.FOTOS[m.foto], `Monumento ${m.id}: la foto «${m.foto}» no está en FOTOS`);
+  if (Array.isArray(m.foto)) {
+    comprobar(existe(m.foto[0]), `Monumento ${m.id}: no existe ${m.foto[0]}`);
+    comprobar(
+      /Foto: .+·/.test(m.foto[1] || ''),
+      `Monumento ${m.id}: el pie debe llevar «Foto: autor · licencia»`
+    );
+  } else if (m.foto) comprobar(D.FOTOS[m.foto], `Monumento ${m.id}: la foto «${m.foto}» no está en FOTOS`);
 });
 
 // --- Rutas a pie --------------------------------------------------------------
@@ -307,6 +313,13 @@ for (const n in D.PUEBLOS) {
   comprobar(p.fuente && p.fuente.length, `Pueblo «${n}»: sin fuente`);
   if (p.mon) comprobar(pictogramas.has(p.mon.tipo), `Pueblo «${n}»: no hay pictograma «${p.mon.tipo}»`);
   if (p.comer) revisarSitios(p.comer, n);
+  if (p.foto) {
+    comprobar(existe(p.foto[0]), `Pueblo «${n}»: no existe ${p.foto[0]}`);
+    comprobar(
+      /Foto: .+·/.test(p.foto[1] || ''),
+      `Pueblo «${n}»: el pie debe llevar «Foto: autor · licencia»`
+    );
+  }
 }
 for (const n in D.ALFOZ)
   comprobar(municipios.has(n) && idsZona.has(D.ALFOZ[n]), `ALFOZ: «${n}» mal enlazado`);

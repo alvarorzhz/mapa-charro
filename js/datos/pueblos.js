@@ -1,5 +1,6 @@
 // Fichas de pueblos de la provincia: { 'Nombre del municipio' (igual que en PROVINCIA): {
 //   cur: [curiosidades], mon: monumento o lugar principal { n, tipo (pictograma), epoca, estilo, datos },
+//   foto (opcional): [ruta, pie con «Foto: autor · licencia»] de Wikimedia Commons,
 //   comer: [{ n, a, p, s }], fuente: [[nombre, url]] } }. Todo con fuente verificable.
 // Los habitantes salen de habitantes.js (INE), para todos los municipios.
 const PUEBLOS = {
@@ -272,6 +273,10 @@ const PUEBLOS = {
     ]
   },
   Sequeros: {
+    foto: [
+      'img/pueblo-sequeros.jpg',
+      'Calle de Sequeros. Foto: Luis Rogelio HM · CC BY-SA 2.0 · Wikimedia Commons'
+    ],
     cur: [
       'Fue cabeza de partido judicial hasta 1968.',
       'Fernando VI le concedió el título de villa en 1756.',
@@ -314,6 +319,7 @@ const PUEBLOS = {
     ]
   },
   'Peñaranda de Bracamonte': {
+    foto: ['img/pueblo-penaranda.jpg', 'Plaza Nueva de Peñaranda. Foto: Zarateman · CC0 · Wikimedia Commons'],
     cur: [
       'El 9 de julio de 1939 estalló en la estación un tren con explosivos, «el Polvorín»: destruyó unos mil edificios y dejó más de cien muertos.',
       'Aquí nació la Fundación Germán Sánchez Ruipérez, que abrió en 1989 su Centro de Desarrollo Sociocultural.',
@@ -340,6 +346,10 @@ const PUEBLOS = {
     ]
   },
   Vitigudino: {
+    foto: [
+      'img/pueblo-vitigudino.jpg',
+      'Torre de la iglesia de San Nicolás de Bari. Foto: Rastrojo · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Hacia 1752, según el Catastro de Ensenada, tenía 180 vecinos y 181 casas.',
       'En 1844 consiguió ayuntamiento propio como cabeza de partido judicial.',
@@ -392,6 +402,10 @@ const PUEBLOS = {
     ]
   },
   'Montemayor del Río': {
+    foto: [
+      'img/pueblo-montemayor.jpg',
+      'Calle de Montemayor del Río. Foto: Jesusccastillo · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Su puente de piedra, de un solo ojo, se hizo hacia 1700 sobre el río Cuerpo de Hombre; era del marqués y se pagaba portazgo.',
       'Es conjunto histórico desde 1982.'
@@ -407,6 +421,10 @@ const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Montemayor_del_Río']]
   },
   'Linares de Riofrío': {
+    foto: [
+      'img/pueblo-linares.jpg',
+      'Linares de Riofrío. Foto: Mikelzubi · CC BY-SA 3.0 · Wikimedia Commons'
+    ],
     cur: [
       'En 1959 todavía funcionaban 15 hornos de cal.',
       'En 1248 desapareció el concejo de Monleón y Linares pasó al de Salamanca.',
@@ -423,6 +441,10 @@ const PUEBLOS = {
     ]
   },
   Macotera: {
+    foto: [
+      'img/pueblo-macotera.jpg',
+      'Ayuntamiento y museo de las llanuras y campiñas. Foto: Macotera Nieto · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Isabel II le dio el título de villa el 10 de agosto de 1861.',
       'En 2001 recuperó el encierro a caballo, que no se celebraba desde 1951.',
@@ -468,6 +490,10 @@ const PUEBLOS = {
     ]
   },
   'Villar de la Yegua': {
+    foto: [
+      'img/pueblo-villaryegua.jpg',
+      'Grabados de Siega Verde. Foto: Vanbasten 23 · CC0 · Wikimedia Commons'
+    ],
     cur: [
       'En su término está Siega Verde: más de 500 grabados del Paleolítico en 96 paneles a lo largo de un kilómetro del río Águeda. Los descubrió Manuel Santonja el 17 de octubre de 1988.',
       'En 1640, en la guerra con Portugal, se libró aquí la batalla de Villar de la Yegua.',
@@ -527,6 +553,10 @@ const PUEBLOS = {
     ]
   },
   Sotoserrano: {
+    foto: [
+      'img/pueblo-sotoserrano.jpg',
+      'Sotoserrano entre sus huertas. Foto: Sotos · CC BY-SA 3.0 · Wikimedia Commons'
+    ],
     cur: [
       'El río Alagón forma aquí el meandro del Melero, entre Salamanca y Cáceres.',
       'Un documento de 1289 muestra a judíos de Miranda prestando dinero a vecinos del pueblo.'
@@ -591,6 +621,10 @@ const PUEBLOS = {
     ]
   },
   Lumbrales: {
+    foto: [
+      'img/pueblo-lumbrales.jpg',
+      'Plaza de Lumbrales. Foto: Emilio del Prado · CC BY 2.0 · Wikimedia Commons'
+    ],
     cur: [
       'Aparece por primera vez en 1175, como Santa María de Liminares, en el documento con el que Fernando II de León restauró la diócesis de Ciudad Rodrigo.',
       'En 1647, durante la guerra de independencia de Portugal, lo incendió el gobernador portugués de la Beira.',
@@ -629,6 +663,10 @@ const PUEBLOS = {
     ]
   },
   'Pereña de la Ribera': {
+    foto: [
+      'img/pueblo-perena.jpg',
+      'El Duero desde Pereña de la Ribera. Foto: MaGrc · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'El 14 de mayo de 1721 se rompió una piedra hallada junto a la Virgen del Castillo, usada a veces de peana, y apareció una tablilla con su figura: la Virgen Chica.',
       'En el Pozo Airón, en el arroyo de los Cuernos, una cueva deja pasar por detrás de la cascada. El camino sale del arco de la plaza.',
@@ -664,6 +702,10 @@ const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Masueco']]
   },
   'Fuentes de Oñoro': {
+    foto: [
+      'img/pueblo-fuentes.jpg',
+      'Estación de Fuentes de Oñoro. Foto: Antero Pires · CC BY-SA 2.0 · Wikimedia Commons'
+    ],
     cur: [
       'Del 3 al 5 de mayo de 1811, Wellington frenó aquí al mariscal Masséna, que intentaba socorrer a la guarnición francesa cercada en Almeida.',
       'El 3 de mayo de 1811, con la iglesia en llamas, el párroco Luis Silva cruzó entre los disparos para salvar el copón; lo recuerda el escudo del pueblo.',
@@ -786,6 +828,10 @@ const PUEBLOS = {
     ]
   },
   Villoria: {
+    foto: [
+      'img/pueblo-villoria.jpg',
+      'Ayuntamiento de Villoria. Foto: Villavillavilla123456 · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Fue cabeza del cuarto de Villoria, una de las divisiones de la tierra de Salamanca en el Reino de León.',
       'Al oeste del pueblo hay una villa romana, Bien de Interés Cultural desde el 23 de diciembre de 1992.',
@@ -810,6 +856,10 @@ const PUEBLOS = {
     ]
   },
   Babilafuente: {
+    foto: [
+      'img/pueblo-babilafuente.jpg',
+      'Plaza Mayor, ayuntamiento e iglesia. Foto: Malopez 21 · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Aparece por primera vez el 3 de mayo de 1215, cuando Sancha Gómez vendió la heredad de «Vaguilafointe» al deán de Salamanca.',
       'En 1752 Torres Villarroel escribió sobre las virtudes del agua de su fuente, rica en litina; en 1955 se declaró de utilidad pública.',
@@ -821,6 +871,10 @@ const PUEBLOS = {
     ]
   },
   Cantalapiedra: {
+    foto: [
+      'img/pueblo-cantalapiedra.jpg',
+      'Ayuntamiento de Cantalapiedra. Foto: Cruccone · CC BY 3.0 · Wikimedia Commons'
+    ],
     cur: [
       'En 1136 el rey la donó al obispo de Salamanca. Los documentos la llaman Campum de Petra (1136) y Candelapiedra (1251) antes de Cantalapiedra (1265).',
       'De su muralla, levantada en la frontera entre León y Castilla, solo queda el Torreón del Deán, que debe el nombre a los deanes de la catedral de Salamanca.',
@@ -846,6 +900,10 @@ const PUEBLOS = {
     ]
   },
   Terradillos: {
+    foto: [
+      'img/pueblo-terradillos.jpg',
+      'Vista de Terradillos. Foto: Malopez 21 · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'En la urbanización El Encinar vive cerca del 85 % del municipio: pasó de unos 750 habitantes en 1986 a unos 3.500 en 2006.',
       'En los años noventa llamaban a El Encinar «la cuna de Salamanca» por los muchos niños que nacían allí.',
@@ -860,5 +918,111 @@ const PUEBLOS = {
       ]
     },
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Terradillos']]
+  },
+  Almendra: {
+    cur: [
+      'En 1462 la Villa y Tierra de Ledesma, a la que pertenecía, se dio como condado a Beltrán de la Cueva y dejó de ser realengo.',
+      'Su iglesia de San Miguel Arcángel se levantó entre finales del siglo XVII y comienzos del XVIII.',
+      'Según la tradición, un terrateniente repartió su hacienda entre dos hijos; por eso el pueblo tiene dos pendones, que se guardan en la iglesia.'
+    ],
+    mon: {
+      n: 'Iglesia de San Miguel Arcángel',
+      tipo: 'iglesia',
+      epoca: 'Finales del siglo XVII – comienzos del XVIII',
+      datos: [['Guarda', 'los dos pendones del pueblo']]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Almendra_(Salamanca)']]
+  },
+  Trabanca: {
+    cur: [
+      'En 1941 los vecinos compraron las tierras del marqués del Castelar.',
+      'Es la sede de la Agrupación Europea de Cooperación Territorial Duero-Douro, que une a pueblos de los dos lados de la raya.',
+      'En el centro del pueblo se conserva una fragua de piedra y vigas de madera de más de doscientos años.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Trabanca']]
+  },
+  Vilvestre: {
+    cur: [
+      'En 1192 Alfonso IX de León donó Vilvestre y su término al arzobispado de Santiago.',
+      'Se fortificó entre la segunda mitad del siglo XII y comienzos del XIII para defender la frontera con Portugal. Su castillo quedó en ruinas en la guerra de Restauración portuguesa (1640–1668).',
+      'Celebra a la Virgen del Castillo el 17 de mayo y sus fiestas de toros el penúltimo fin de semana de agosto.'
+    ],
+    mon: {
+      n: 'Iglesia de Nuestra Señora de la Asunción',
+      tipo: 'iglesia',
+      epoca: 'Empezada en el siglo XVI',
+      estilo: 'Gótico y renacentista',
+      datos: [['Destaca', 'su retablo']]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Vilvestre']]
+  },
+  'La Fregeneda': {
+    cur: [
+      'El Tratado de Alcañices, de 1297, llevó la raya al Águeda y convirtió en frontera el paso entre La Fregeneda y Barca de Alba.',
+      'En 1811, en la Guerra de la Independencia, Wellington puso aquí su cuartel.',
+      'El tren de La Fuente de San Esteban a Barca de Alba abrió en 1887 y cerró en 1985. Para cruzar los arribes del Águeda hicieron falta 20 túneles y 12 puentes; desde 2019 se puede recorrer a pie: es el Camino de Hierro.'
+    ],
+    mon: {
+      n: 'Iglesia parroquial',
+      tipo: 'iglesia',
+      epoca: 'Siglos XVI–XVIII',
+      estilo: 'Gótico y barroco',
+      datos: [['Retablo mayor', 'del siglo XVII, dedicado a san Marcos']]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/La_Fregeneda']]
+  },
+  Ledrada: {
+    cur: [
+      'Desde 1209 forma parte de la Comunidad de Villa y Tierra de Béjar.',
+      'En 1234 su beneficiado fue uno de los fundadores del «Cabildo de Clérigos del quarto de arriba de la tierra de Bexar».',
+      'Estuvo ligada a los Stúñiga, duques de Béjar, hasta 1833, cuando pasó a la provincia de Salamanca.'
+    ],
+    mon: {
+      n: 'Iglesia de San Miguel Arcángel',
+      tipo: 'iglesia',
+      estilo: 'Románico',
+      datos: []
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Ledrada']]
+  },
+  Monleón: {
+    foto: [
+      'img/pueblo-monleon.jpg',
+      'Castillo de Monleón. Foto: Hovallef · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
+    cur: [
+      'En 1199 Alfonso IX lo hizo villa con concejo propio; en 1248 Fernando III se lo quitó y lo sumó al de Salamanca.',
+      'Estuvo amurallado desde su repoblación, a finales del siglo XII, y aún quedan restos de la muralla.',
+      'En 1330 sus vecinos se quejaron a Alfonso XI de que Salamanca no respetaba el fuero que les habían dado al repoblarlo.'
+    ],
+    mon: {
+      n: 'Castillo de Monleón',
+      tipo: 'torre',
+      epoca: 'Siglo XV, sobre una fortaleza del XII',
+      datos: [
+        ['Torre', '37 m, cinco plantas'],
+        ['Hoy', 'privado y restaurado']
+      ]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Monle%C3%B3n']]
+  },
+  'Puente del Congosto': {
+    foto: [
+      'img/pueblo-congosto.jpg',
+      'Castillo y puente viejo de Puente del Congosto. Foto: David Perez · CC BY 3.0 · Wikimedia Commons'
+    ],
+    cur: [
+      'Enrique III lo donó a Gil González Dávila el 2 de noviembre de 1393.',
+      'Isabel la Católica estaba en su castillo en 1497 cuando le llegó la noticia de la muerte de su hijo.',
+      'Su puente sobre el Tormes es probablemente de los siglos XII o XIII y guardaba el camino de Ávila a Ciudad Rodrigo. En 1809 las tropas francesas ocuparon el castillo durante dos años.'
+    ],
+    mon: {
+      n: 'Iglesia de Nuestra Señora de la Asunción',
+      tipo: 'iglesia',
+      epoca: 'Siglo XVI',
+      estilo: 'Gótico',
+      datos: [['Naves', 'tres']]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Puente_del_Congosto']]
   }
 };

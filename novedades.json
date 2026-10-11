@@ -1,5 +1,25 @@
 [
   {
+    "version": "2.6.0",
+    "fecha": "2026-10-11",
+    "titulo": "Más sitios, más fotos y más pueblos",
+    "usuario": [
+      "Diez sitios nuevos en el mapa: la estación de tren, la de autobuses, los cines Van Dyck, El Tormes, el cementerio, los palacios de Anaya y la Salina, la Casa de las Muertes, el Colegio de Calatrava y el puente de Enrique Estevan.",
+      "Casi todos los monumentos tienen ya su foto.",
+      "Siete pueblos con ficha nueva (Almendra, Trabanca, Vilvestre, La Fregeneda, Ledrada, Monleón y Puente del Congosto) y foto en quince que no la tenían.",
+      "Cultura estrena «Literatura», con La Celestina y El Lazarillo, y todas las fichas tienen foto.",
+      "Dos grabaciones más: la jota de La Dolores de Bretón, en un cilindro de cera de hacia 1910, y una charrada de gaita y tamboril.",
+      "La ruta «Personajes en bronce» suma la Celestina y el Lazarillo: once estatuas."
+    ],
+    "tecnico": [
+      "monumentos: foto propia [ruta, pie] (fotoDeMonumento), 10 sitios nuevos y categoría 'ciudad' con pictogramas cine, estacion, autobus, comercial y cementerio; la ficha dice «Sitio».",
+      "pueblos: campo foto, 7 fichas nuevas; hoy.js usa la foto del pueblo.",
+      "cultura: categoría literatura, 2 elementos nuevos, fotos en todos y audio en tomas-breton y cancioneros-salmantinos.",
+      "rutas: personajes con 11 paradas y tramos recalculados; RELACIONES_ETAPA con la Celestina y el Lazarillo.",
+      "comprobar-datos valida las fotos de monumentos y pueblos; pruebas nuevas de fotos, sitios, fichas nuevas y literatura."
+    ]
+  },
+  {
     "version": "2.5.0",
     "fecha": "2026-10-10",
     "titulo": "Más historia, más música y más para explorar",

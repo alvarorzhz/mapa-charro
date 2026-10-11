@@ -138,6 +138,8 @@ const RELACIONES_ETAPA = [
       'fray-luis-de-leon',
       'francisco-salinas',
       'santa-teresa-alba',
+      'la-celestina',
+      'lazarillo-de-tormes',
       'torres-villarroel',
       'mariquelo'
     ]

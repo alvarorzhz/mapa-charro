@@ -58,7 +58,7 @@ function todosLosLugares() {
       lo: m.lo,
       hecho: visitados.includes(m.id),
       cur: (m.curiosidades || [])[0],
-      foto: FOTOS[m.foto],
+      foto: fotoDeMonumento(m),
       abrir: () => abrirMonumento(m.id)
     })
   );
@@ -75,7 +75,7 @@ function todosLosLugares() {
         lo,
         hecho: estadoMunicipio(m) == 'v',
         cur: (PUEBLOS[m.n].cur || [])[0],
-        foto: null,
+        foto: PUEBLOS[m.n].foto || fotoDePueblo(paradasDeMunicipio(m), culturaDeMunicipio(m)),
         abrir: () => abrirPueblo(m)
       });
     });

@@ -21,7 +21,13 @@ const PICTOGRAMAS = {
   museo: 'M5 22V10a7 7 0 0 1 14 0v12zM12 3v19M5 14h14M8.5 9.5a3.5 3.5 0 0 1 7 0',
   presa: 'M2 6h20M5 6l2 14h10l2-14M8 10h8M8.5 14h7M3 21h18',
   roca: 'M2 20l3-9 5-4 5 2 4-2 3 13zM8 15l2-3 3 1 2-2M9.5 17.5h4',
-  mercado: 'M3 9l2-5h14l2 5zM3 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0M5 12v10h14V12M10 22v-5h4v5'
+  mercado: 'M3 9l2-5h14l2 5zM3 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0M5 12v10h14V12M10 22v-5h4v5',
+  cine: 'M3 11h12v9H3zM15 14l6-3v9l-6-3M3.5 7a3 3 0 1 0 6 0 3 3 0 1 0-6 0M10 7.5a2.5 2.5 0 1 0 5 0 2.5 2.5 0 1 0-5 0',
+  estacion:
+    'M7 3h10a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3zM4 11h16M8.5 15h.01M15.5 15h.01M8 19l-3 3M16 19l3 3',
+  autobus: 'M4 3h16v15H4zM4 11h16M7.5 14.5h.01M16.5 14.5h.01M7 18v3M17 18v3M8 6.5h8',
+  comercial: 'M5 8h14l-1.2 13H6.2zM9 8V6a3 3 0 0 1 6 0v2M9 12a3 3 0 0 0 6 0',
+  cementerio: 'M12 2v7M9 4.8h6M6 22v-7a6 4.5 0 0 1 12 0v7M3 22h18M9.5 16.5h5'
 };
 
 const ANCHO_MAX_IMPRESCINDIBLES = 260; // con el mapa más alejado que esto no se ve ningún monumento
@@ -29,6 +35,8 @@ const ANCHO_MAX_RESTO = 110; // los demás, solo al acercar
 const SEPARACION_PX = 24; // si dos pictogramas quedan más cerca, se dibuja solo el primero
 let monumentoAbierto = null;
 const buscarMonumento = id => MONUMENTOS.find(m => m.id == id);
+// La foto de un monumento: la suya ([ruta, pie]) o la de su zona (clave de FOTOS)
+const fotoDeMonumento = m => (Array.isArray(m.foto) ? m.foto : FOTOS[m.foto]);
 
 // Dibuja el pictograma de un tipo dentro de «padre» (una caja de 24 × 24 centrada en 0,0 y escalada)
 function dibujarPictograma(tipo, padre, escala = 1) {
@@ -194,13 +202,13 @@ function abrirMonumento(id, parada) {
   monumentoAbierto = id;
   MONUMENTOS.forEach(o => o.g.classList.toggle('sel', o == m));
   $('#here').hidden = $('#nac').hidden = $('#otros').hidden = true;
-  $('#k').textContent = 'Monumento · ' + zona.n;
+  $('#k').textContent = (categoriaMonumento(m) == 'ciudad' ? 'Sitio' : 'Monumento') + ' · ' + zona.n;
   $('#nm').textContent = m.n;
   $('#hc').hidden = $('#hl').hidden = $('#he').hidden = true;
   $('#cu').textContent = $('#ri').textContent = $('#eat').textContent = '';
   $('#mz').hidden = true;
   $('#ap').textContent = '';
-  pintarFoto(m.foto);
+  pintarFotoDe(fotoDeMonumento(m));
   pintarInfografia(m);
   pintarCulturaEnFicha(culturaDeMonumento(id));
   pintarRelacionados(relacionadosDeMonumento(m));

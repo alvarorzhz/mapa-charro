@@ -616,7 +616,7 @@ function pintarEstadisticas(refrescar = false) {
           tarjetaCifra({
             v: capital.monumentos.v,
             total: capital.monumentos.total,
-            que: 'Monumentos visitados',
+            que: 'Monumentos y sitios visitados',
             accion: [
               'Ver la lista',
               () => {

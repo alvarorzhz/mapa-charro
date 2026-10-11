@@ -1,7 +1,8 @@
 // Monumentos con mini infografía en el mapa.
 // { id (no cambiar: se usa en los enlaces #monumento/id), n: nombre, tipo: pictograma (ver PICTOGRAMAS en js/monumentos.js),
 //   la, lo: coordenadas (OpenStreetMap), zona: id de la zona del mapa, top: 1 si es imprescindible (se ve con el mapa de la ciudad),
-//   epoca, estilo, datos: [[etiqueta, valor]], curiosidades: [texto], foto: clave de FOTOS (opcional), fuente: [[nombre, url]] }
+//   epoca, estilo, datos: [[etiqueta, valor]], curiosidades: [texto], foto: clave de FOTOS o [ruta, pie con autor y
+//   licencia] de Wikimedia Commons (opcional), fuente: [[nombre, url]] }
 // El orden importa: si dos pictogramas se tapan, se dibuja el que va antes.
 const MONUMENTOS = [
   {
@@ -46,6 +47,7 @@ const MONUMENTOS = [
       'Están pegadas: el muro sur de la Nueva se apoya en el norte de la Vieja.',
       'Quien aspiraba a un grado pasaba la noche en la capilla de Santa Bárbara, en la Vieja; si suspendía, salía por la «puerta de los carros».'
     ],
+    foto: ['img/mon-catedrales.jpg', 'Catedral Nueva. Foto: Zarateman · CC0 · Wikimedia Commons'],
     fuente: [
       ['Wikipedia: Catedral Nueva', 'https://es.wikipedia.org/wiki/Catedral_Nueva_de_Salamanca'],
       ['Wikipedia: Catedral Vieja', 'https://es.wikipedia.org/wiki/Catedral_Vieja_de_Salamanca']
@@ -95,6 +97,10 @@ const MONUMENTOS = [
       'Se puede subir a sus torres por la Scala Coeli y ver toda la ciudad desde arriba.',
       'Fue colegio de los jesuitas; tras su expulsión, en 1767, el claustro de los estudiantes irlandeses pasó a llamarse «La Irlanda».'
     ],
+    foto: [
+      'img/mon-clerecia.jpg',
+      'Fachada de La Clerecía. Foto: PMRMaeyaert · CC BY-SA 3.0 · Wikimedia Commons'
+    ],
     fuente: [
       [
         'Turismo de Salamanca',
@@ -119,6 +125,10 @@ const MONUMENTOS = [
     ],
     curiosidades: [
       'Conserva una de sus dos torres, rebajada: según Wikipedia, por orden de Carlos I para castigar a los Maldonado, comuneros; según Terra Nostrum, en 1772, por sus grietas.'
+    ],
+    foto: [
+      'img/mon-conchas.jpg',
+      'Casa de las Conchas. Foto: Benjamín Núñez González · CC BY-SA 4.0 · Wikimedia Commons'
     ],
     fuente: [
       ['Wikipedia', 'https://es.wikipedia.org/wiki/Casa_de_las_Conchas'],
@@ -186,6 +196,7 @@ const MONUMENTOS = [
       'En las pistas de al lado, Javier Sotomayor batió en 1993 el récord mundial de salto de altura: 2,45 m.',
       'Está en Villares de la Reina, a unos 3 km de Salamanca. Lo construyó la UD Salamanca.'
     ],
+    foto: ['img/mon-helmantico.jpg', 'Estadio Helmántico. Foto: Charro · CC BY-SA 4.0 · Wikimedia Commons'],
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Estadio_Helmántico']]
   },
   {
@@ -251,6 +262,7 @@ const MONUMENTOS = [
       'Los capiteles del claustro están llenos de monstruos y grutescos, de un escultor desconocido.',
       'Se llama «de las Dueñas» porque se pensó como beaterio para señoras nobles.'
     ],
+    foto: ['img/mon-duenas.jpg', 'Convento de las Dueñas. Foto: Tamorlan · CC BY 3.0 · Wikimedia Commons'],
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Convento_de_las_Dueñas_(Salamanca)']]
   },
   {
@@ -271,6 +283,10 @@ const MONUMENTOS = [
       'Está levantada sobre la antigua muralla, y su fachada norte es la única muestra de modernismo de la ciudad.',
       'La flor de lis del patio homenajea al apellido de su dueño.'
     ],
+    foto: [
+      'img/mon-casalis.jpg',
+      'Fachada de la Casa Lis. Foto: Jl FilpoC · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Casa_Lis']]
   },
   {
@@ -286,6 +302,10 @@ const MONUMENTOS = [
       ['Inspiración', 'La Celestina (1499)']
     ],
     curiosidades: ['Al inaugurarlo, Salamanca se hermanó con Coímbra, según recuerda una placa del jardín.'],
+    foto: [
+      'img/mon-huerto.jpg',
+      'Huerto de Calixto y Melibea, con la Catedral al fondo. Foto: Ensalman · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Huerto_de_Calixto_y_Melibea']]
   },
   {
@@ -304,6 +324,10 @@ const MONUMENTOS = [
     curiosidades: [
       'Su nombre vendría del clavero de la Orden de Alcántara, el que guardaba las llaves y los archivos.',
       'En septiembre de 1885 se hundió su piso alto, pero la torre aguantó.'
+    ],
+    foto: [
+      'img/mon-clavero.jpg',
+      'Torre del Clavero. Foto: Raúl Hernández González · CC BY 2.0 · Wikimedia Commons'
     ],
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Torre_del_Clavero']]
   },
@@ -324,6 +348,7 @@ const MONUMENTOS = [
     curiosidades: [
       'Inspiró el estilo neoplateresco o «estilo Monterrey», copiado en edificios de Palencia, Sevilla y Valladolid.'
     ],
+    foto: ['img/mon-monterrey.jpg', 'Palacio de Monterrey. Foto: Zarateman · CC0 · Wikimedia Commons'],
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Palacio_de_Monterrey']]
   },
   {
@@ -342,6 +367,7 @@ const MONUMENTOS = [
       'Cervantes se burló de la leyenda del diablo maestro en su entremés «La cueva de Salamanca» (1615).',
       'Tras derribarse la iglesia fue trastero, panadería y carbonería.'
     ],
+    foto: ['img/mon-cueva.jpg', 'Cueva de Salamanca. Foto: Superchilum · CC BY-SA 4.0 · Wikimedia Commons'],
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Cueva_de_Salamanca']]
   },
   {
@@ -384,6 +410,10 @@ const MONUMENTOS = [
       ['Pinturas', 'siglo XIV']
     ],
     curiosidades: ['Sus pinturas murales, con san Cristóbal y la Anunciación, no aparecieron hasta 1967.'],
+    foto: [
+      'img/mon-sanmarcos.jpg',
+      'Iglesia de San Marcos. Foto: Zarateman · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     fuente: [
       [
         'Turismo de Castilla y León',
@@ -408,6 +438,246 @@ const MONUMENTOS = [
     curiosidades: [
       'Se tardó casi diez años en terminar: las fechas grabadas en columnas y puerta, 1905 y 1907, delatan los retrasos.'
     ],
+    foto: ['img/mon-mercado.jpg', 'Mercado Central. Foto: Xemenendura · CC BY-SA 4.0 · Wikimedia Commons'],
     fuente: [['Urbipedia', 'https://www.urbipedia.org/hoja/Mercado_Central_de_Salamanca']]
+  },
+  {
+    id: 'palacio-anaya',
+    n: 'Palacio de Anaya',
+    tipo: 'palacio',
+    la: 40.96167,
+    lo: -5.66515,
+    zona: 'univ',
+    epoca: 'Desde 1760',
+    estilo: 'Neoclásico',
+    datos: [
+      ['Arquitectos', 'José de Hermosilla y Juan de Sagarvinaga'],
+      ['Hoy', 'Facultad de Filología']
+    ],
+    curiosidades: [
+      'Sustituyó al Colegio Mayor de San Bartolomé, que fundó Diego de Anaya en 1401 y que dañó el terremoto de Lisboa de 1755. Por eso lo llaman palacio, aunque fue un colegio.',
+      'Es uno de los pocos edificios neoclásicos de Salamanca. Dentro guarda un busto de Unamuno de Victorio Macho, de 1930.'
+    ],
+    foto: ['img/mon-anaya.jpg', 'Palacio de Anaya. Foto: Zarateman · CC0 · Wikimedia Commons'],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Palacio_de_Anaya']]
+  },
+  {
+    id: 'casa-muertes',
+    n: 'Casa de las Muertes',
+    tipo: 'palacio',
+    la: 40.96574,
+    lo: -5.66644,
+    zona: 'ursulas',
+    epoca: 'Hacia 1500',
+    estilo: 'Plateresco',
+    datos: [
+      ['Encargo', 'Alonso de Fonseca'],
+      ['Arquitecto', 'Juan de Álava'],
+      ['Calle', 'Bordadores']
+    ],
+    curiosidades: [
+      'Su nombre mezcla historia y leyenda: viene de las cuatro calaveras de piedra que sostienen las ventanas de arriba y de los crímenes que se contaron de ella en el siglo XIX.',
+      'En el medallón del centro se lee «Severísimo Fonseca Patriarcha Alexandrino». Al lado está la casa en la que vivió Unamuno.'
+    ],
+    foto: ['img/mon-muertes.jpg', 'Casa de las Muertes. Foto: Zarateman · CC0 · Wikimedia Commons'],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Casa_de_las_Muertes']]
+  },
+  {
+    id: 'palacio-salina',
+    n: 'Palacio de la Salina',
+    tipo: 'palacio',
+    la: 40.96307,
+    lo: -5.6643,
+    zona: 'centro',
+    epoca: '1538',
+    estilo: 'Plateresco con elementos italianos',
+    datos: [
+      ['Encargo', 'Rodrigo de Messía'],
+      ['Arquitecto', 'Rodrigo Gil de Hontañón'],
+      ['Hoy', 'Diputación de Salamanca']
+    ],
+    curiosidades: [
+      'Debe su nombre a que fue sede del estanco de la sal hasta 1870.',
+      'La Diputación lo compró en 1881 y tiene aquí su sede desde 1884. Su patio, con arcos y ménsulas, es de lo mejor del edificio.'
+    ],
+    foto: ['img/mon-salina.jpg', 'Palacio de la Salina. Foto: Zarateman · CC0 · Wikimedia Commons'],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Palacio_de_la_Salina']]
+  },
+  {
+    id: 'calatrava',
+    n: 'Colegio de Calatrava',
+    tipo: 'palacio',
+    la: 40.95979,
+    lo: -5.66094,
+    zona: 'sanesteban',
+    epoca: '1717',
+    estilo: 'Barroco',
+    datos: [
+      ['Arquitecto', 'Joaquín Churriguera'],
+      ['Reforma', 'Jovellanos, 1790']
+    ],
+    curiosidades: [
+      'Perteneció a las órdenes militares. A finales del siglo XVIII le quitaron casi todo el adorno barroco de la fachada para ajustarla al gusto neoclásico.',
+      'Su escalera principal se atribuye a Jerónimo García de Quiñones.'
+    ],
+    foto: ['img/mon-calatrava.jpg', 'Colegio de Calatrava. Foto: Zarateman · CC0 · Wikimedia Commons'],
+    fuente: [
+      [
+        'Turismo de Castilla y León',
+        'https://www.turismocastillayleon.com/es/patrimonio-cultura/edificios/colegio-calatrava-salamanca'
+      ]
+    ]
+  },
+  {
+    id: 'puente-estevan',
+    n: 'Puente de Enrique Estevan',
+    tipo: 'puente',
+    la: 40.95583,
+    lo: -5.6663,
+    zona: 'tenerias',
+    epoca: 'Inaugurado en 1913',
+    datos: [
+      ['Arcos', '6, de unos 43 m'],
+      ['Proyecto', 'Saturnino Zufiarre'],
+      ['Constructora', 'Duro Felguera']
+    ],
+    curiosidades: [
+      'Lleva el nombre de Enrique Estevan, el concejal que pidió un puente nuevo para no tener que tocar el Puente Romano.',
+      'Bajo su primera piedra, puesta en 1902, se guardó un ejemplar de El Adelanto de ese día. Es Bien de Interés Cultural desde 2016.'
+    ],
+    foto: [
+      'img/mon-estevan.jpg',
+      'Puente de Enrique Estevan sobre el Tormes. Foto: Hovallef · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Puente_de_Enrique_Estevan']]
+  },
+  {
+    id: 'estacion-tren',
+    n: 'Estación de tren',
+    tipo: 'estacion',
+    la: 40.97138,
+    lo: -5.64863,
+    zona: 'estacion',
+    epoca: 'El tren llegó en 1877 · edificio de 2002',
+    datos: [
+      ['Arquitectos', 'Antonio Fernández Alba y Óscar Palazón'],
+      ['Andenes', '3, con 5 vías para viajeros'],
+      ['Dentro', 'el centro comercial Vialia']
+    ],
+    curiosidades: [
+      'El tren llegó a Salamanca el 26 de agosto de 1877; Alfonso XII lo inauguró el 1 de septiembre. En 1886 se abrió la segunda línea, hacia Portugal por Fuentes de Oñoro.',
+      'La estación de hoy, de 2002, sustituyó a otra de cristal inaugurada en 1973 y derribada en 1999.'
+    ],
+    foto: [
+      'img/mon-estaciontren.jpg',
+      'Estación de tren de Salamanca. Foto: Mentxuwiki · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Estaci%C3%B3n_de_Salamanca']]
+  },
+  {
+    id: 'estacion-autobuses',
+    n: 'Estación de autobuses',
+    tipo: 'autobus',
+    la: 40.97,
+    lo: -5.67555,
+    zona: 'sanbernardo',
+    epoca: 'Desde 1975',
+    datos: [
+      ['Dirección', 'Avenida de Filiberto Villalobos, 71'],
+      ['Paraje', 'El Calvario']
+    ],
+    curiosidades: [
+      'En diciembre de 1975 el Ministerio de Obras Públicas dio su explotación por 75 años al Sindicato Provincial de Transportes de Salamanca, en el paraje de El Calvario.',
+      'Se construyó sobre el antiguo estadio de La Unión.'
+    ],
+    foto: [
+      'img/mon-estacionbus.jpg',
+      'Estación de autobuses, en San Bernardo. Foto: Hovallef · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
+    fuente: [
+      ['BOE, 15 de diciembre de 1975', 'https://boe.es/boe/dias/1975/12/15/pdfs/A26028-26030.pdf'],
+      [
+        'Universidad de Salamanca (INICO): cincuenta años de la estación',
+        'https://sid-inico.usal.es/noticias/de-construirse-sobre-el-estadio-de-la-union-a-ser-objeto-de-una-importante-reforma-cincuenta-anos-de-la-estacion-de-autobuses-de-salamanca/'
+      ]
+    ]
+  },
+  {
+    id: 'cines-van-dyck',
+    n: 'Cines Van Dyck',
+    tipo: 'cine',
+    la: 40.97312,
+    lo: -5.66263,
+    zona: 'salesas',
+    epoca: 'Desde comienzos de los años ochenta',
+    datos: [
+      ['Dirección', 'Paseo de Torres Villarroel, 40 y 45'],
+      ['Programación', 'también en versión original']
+    ],
+    curiosidades: [
+      'Nacieron a comienzos de los ochenta, cuando iban cerrando los grandes cines del centro: el España hacia 1985 y el Gran Vía entre 1986 y 1988.',
+      'El más grande de aquellos, el Coliseum, abrió en 1933 con 1.500 butacas.'
+    ],
+    fuente: [
+      [
+        'Tribuna de Salamanca, 30/9/2026',
+        'https://www.tribunasalamanca.com/noticias/460676/de-los-grandes-cines-del-centro-a-los-multicines-medio-siglo-de-peliculas-en-salamanca'
+      ]
+    ]
+  },
+  {
+    id: 'el-tormes',
+    n: 'Centro Comercial El Tormes',
+    tipo: 'comercial',
+    la: 40.95029,
+    lo: -5.64934,
+    zona: 'santamarta',
+    epoca: 'Inaugurado en 2000',
+    datos: [
+      ['Superficie', 'unos 60.000 m²'],
+      ['Tiendas', 'unas 70'],
+      ['Municipio', 'Santa Marta de Tormes']
+    ],
+    curiosidades: [
+      'Sus cines abrieron también en 2000. Los gestionó Van Dyck durante 26 años y, desde el 1 de octubre de 2026, Ocine; siguen abiertos.',
+      'En 2019 lo compró el fondo estadounidense LaSalle por unos 65 millones de euros.'
+    ],
+    foto: [
+      'img/mon-eltormes.jpg',
+      'Centro Comercial El Tormes. Foto: Centro Comercial El Tormes · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
+    fuente: [
+      [
+        'Brainsre.news, 24/6/2026',
+        'https://brainsre.news/fondo-santander-adquisicion-centro-comercial-tormes/'
+      ],
+      [
+        'Tribuna de Salamanca, 30/9/2026',
+        'https://www.tribunasalamanca.com/noticias/460676/de-los-grandes-cines-del-centro-a-los-multicines-medio-siglo-de-peliculas-en-salamanca'
+      ]
+    ]
+  },
+  {
+    id: 'cementerio',
+    n: 'Cementerio de San Carlos Borromeo',
+    tipo: 'cementerio',
+    la: 40.97322,
+    lo: -5.68498,
+    zona: 'pizarrales',
+    epoca: 'Desde 1832',
+    datos: [
+      ['Trazado', 'Tomás Francisco Cafranga'],
+      ['Ampliaciones', 'José Secall (desde 1867) y José Yarnoz (años veinte)']
+    ],
+    curiosidades: [
+      'Se abrió en 1832 en la antigua huerta de Villasandín; los primeros entierros fueron en mayo.',
+      'Aquí están enterrados Miguel de Unamuno y Rafael Farina, entre otros salmantinos.',
+      'Uno de sus panteones es el de Teresa de Zúñiga, «la Corneja», famosa por su pleito con el Ayuntamiento por la casa que le derribaron para abrir la Rúa Mayor.'
+    ],
+    foto: [
+      'img/mon-cementerio.jpg',
+      'Cementerio de San Carlos Borromeo. Foto: Daniel Di Palma · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Cementerio_de_San_Carlos_Borromeo_(Salamanca)']]
   }
 ];

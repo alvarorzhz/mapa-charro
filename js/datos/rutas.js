@@ -238,7 +238,7 @@ const RUTAS = [
     nombre: 'Personajes en bronce',
     icono: '🗿',
     resumen:
-      'Nueve estatuas y bustos de personajes de la historia de Salamanca repartidos por el centro: escritores, músicos y sabios de la Universidad, cada uno con su ficha en «Cultura y tradiciones».',
+      'Once estatuas y bustos repartidos por el centro: escritores, músicos y sabios de la Universidad, y dos personajes de novela, cada uno con su ficha en «Cultura y tradiciones».',
     paradas: [
       {
         id: 'gabriel-y-galan',
@@ -310,6 +310,45 @@ const RUTAS = [
         cultura: 'nebrija'
       },
       {
+        id: 'lazarillo',
+        n: 'Monumento al Lazarillo',
+        la: 40.95922,
+        lo: -5.66866,
+        dir: 'Paseo de San Gregorio',
+        detalle: 'Agustín Casillas',
+        texto: 'Lázaro y el ciego, en bronce, cerca del río en el que el personaje dice que nació.',
+        fuente: [
+          'Wikimedia Commons',
+          'https://commons.wikimedia.org/wiki/File:Salamanca._Monumento_al_Lazarillo._Agust%C3%ADn_Casillas_01.JPG'
+        ],
+        cultura: 'lazarillo-de-tormes'
+      },
+      {
+        id: 'celestina',
+        n: 'Busto de la Celestina',
+        la: 40.95971,
+        lo: -5.6655,
+        dir: 'Calle del Arcediano, en el Huerto de Calixto y Melibea',
+        detalle: 'Agustín Casillas',
+        texto: 'La alcahueta de la tragicomedia, en el huerto que lleva el nombre de los dos amantes.',
+        fuente: [
+          'Wikimedia Commons',
+          'https://commons.wikimedia.org/wiki/File:Salamanca_-_Busto_de_la_Celestina.JPG'
+        ],
+        cultura: 'la-celestina'
+      },
+      {
+        id: 'torres-villarroel',
+        n: 'Monumento a Diego de Torres Villarroel',
+        la: 40.96,
+        lo: -5.66464,
+        dir: 'Plaza de Carvajal',
+        detalle: 'Agustín Casillas · 1993',
+        texto: 'Un busto con la inscripción «Salamanca a Diego de Torres Villarroel. Diciembre 1993».',
+        fuente: ['OpenStreetMap', 'https://www.openstreetmap.org/node/3805092690'],
+        cultura: 'torres-villarroel'
+      },
+      {
         id: 'fray-luis',
         n: 'Estatua de Fray Luis de León',
         la: 40.96159,
@@ -332,17 +371,6 @@ const RUTAS = [
           'El organista ciego que enseñó música en la Universidad, en bronce desde el 13 de septiembre de 1993.',
         fuente: ['OpenStreetMap', 'https://www.openstreetmap.org/node/3806415223'],
         cultura: 'francisco-salinas'
-      },
-      {
-        id: 'torres-villarroel',
-        n: 'Monumento a Diego de Torres Villarroel',
-        la: 40.96,
-        lo: -5.66464,
-        dir: 'Plaza de Carvajal',
-        detalle: 'Agustín Casillas · 1993',
-        texto: 'Un busto con la inscripción «Salamanca a Diego de Torres Villarroel. Diciembre 1993».',
-        fuente: ['OpenStreetMap', 'https://www.openstreetmap.org/node/3805092690'],
-        cultura: 'torres-villarroel'
       },
       {
         id: 'breton',

@@ -874,6 +874,28 @@ prueba('Fichas: para seguir explorando', async (p, url) => {
   cierto((await texto(p, '#nb')).includes('Ver Barrio del Oeste'), 'el mural lleva a su barrio');
 });
 
+prueba('Fotos de monumentos y pueblos, y sitios de la ciudad de hoy', async (p, url) => {
+  // Todos los monumentos tienen foto con autor y licencia, salvo los que no la tienen libre
+  const sinFoto = await p.evaluate(() => MONUMENTOS.filter(m => !fotoDeMonumento(m)).map(m => m.id));
+  cierto(sinFoto.length <= 2, 'casi todos los monumentos con foto (faltan: ' + sinFoto.join(', ') + ')');
+  await p.goto(url + '#monumento/catedrales');
+  await p.waitForSelector('#sh.o');
+  cierto(await p.isVisible('#ph'), 'las Catedrales, con su foto');
+  cierto((await texto(p, '#pc')).includes('Foto: Zarateman · CC0'), 'y su autoría');
+  // Un sitio de la ciudad de hoy: se presenta como sitio, no como monumento
+  await p.evaluate(() => abrirMonumento('estacion-tren'));
+  cierto((await texto(p, '#k')).startsWith('Sitio · '), 'la estación es un sitio');
+  cierto((await texto(p, '#info')).includes('1877'), 'con su historia');
+  // Pueblo con foto propia y pueblo nuevo con ficha
+  await p.goto(url + '#pueblo/penaranda-de-bracamonte');
+  await p.waitForSelector('#sh.o');
+  cierto(await p.isVisible('#ph'), 'Peñaranda, con foto');
+  await p.goto(url + '#pueblo/la-fregeneda');
+  await p.waitForSelector('#sh.o');
+  igual(await texto(p, '#nm'), 'La Fregeneda', 'ficha nueva de La Fregeneda');
+  cierto((await texto(p, '#rel')).includes('Qué ver'), 'con lo que se ve allí en las rutas');
+});
+
 prueba('Panel de capas y leyenda', async p => {
   cierto(await p.$eval('#capas', e => e.hidden), 'cerrado al empezar');
   await p.click('#zc');
@@ -2436,6 +2458,19 @@ prueba('Cultura y tradiciones: lista, búsqueda y filtros', async p => {
   await p.fill('#q', 'farinato');
   await p.waitForSelector('#sr button');
   cierto((await texto(p, '#sr')).includes('Cultura · Gastronomía tradicional'), 'en el buscador general');
+});
+
+prueba('Cultura y tradiciones: literatura y la jota de La Dolores', async (p, url) => {
+  await p.goto(url + '#cultura/lazarillo-de-tormes');
+  await p.waitForSelector('#sh.o');
+  cierto((await texto(p, '#k')).includes('Literatura'), 'categoría Literatura');
+  cierto((await texto(p, '#info')).includes('Personajes en bronce, parada 6'), 'y su estatua en la ruta');
+  await p.evaluate(() => abrirElementoCultura('tomas-breton'));
+  igual(
+    await p.$eval('#sh .cul-audio audio', a => a.getAttribute('src')),
+    'audio/cultura-tomas-breton.mp3',
+    'Bretón con su grabación'
+  );
 });
 
 prueba('Cultura y tradiciones: grabaciones para escuchar', async (p, url) => {

@@ -1,4 +1,4 @@
-// Cultura y tradiciones salmantinas: fiestas, tradiciones, gastronomía, artesanía, folklore y personajes.
+// Cultura y tradiciones salmantinas: fiestas, tradiciones, gastronomía, artesanía, folklore, personajes y literatura.
 // Solo hay categorías con contenido real y comprobado (no hay «patrimonio inmaterial»: ninguna de estas
 // tradiciones tiene, que hayamos podido comprobar, esa declaración oficial).
 //
@@ -25,7 +25,8 @@ const CATEGORIAS_CULTURA = [
   ['gastronomia', 'Gastronomía tradicional', '🥖'],
   ['artesania', 'Artesanía y oficios', '💍'],
   ['folklore', 'Música y folklore', '🪘'],
-  ['personaje', 'Personajes históricos', '🎖️']
+  ['personaje', 'Personajes históricos', '🎖️'],
+  ['literatura', 'Literatura', '📖']
 ];
 
 const TIPOS_TEXTO_CULTURA = {
@@ -59,6 +60,13 @@ const CULTURA = [
       ]
     ],
     relacionados: { cultura: ['hornazo'] },
+    foto: {
+      src: 'img/cultura-lunes-de-aguas.jpg',
+      pie: 'A orillas del Tormes, con las Catedrales al fondo',
+      autor: 'Pedro Soler Bueno',
+      licencia: 'CC BY 3.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Ma%C3%B1ana_Oto%C3%B1al_A_Orillas_Del_Tormes_(86781393).jpeg'
+    },
     fuentes: [
       [
         'Turismo de Castilla y León',
@@ -208,6 +216,13 @@ const CULTURA = [
       licencia: 'CC BY-SA 3.0',
       url: 'https://commons.wikimedia.org/wiki/File:Fundaci%C3%B3n_Joaqu%C3%ADn_D%C3%ADaz_-_ATO_00434_12_-_Recitados_de_la_Loa_de_la_Asunci%C3%B3n.ogg'
     },
+    foto: {
+      src: 'img/cultura-la-alberca.jpg',
+      pie: 'Plaza Mayor de La Alberca',
+      autor: 'Luis Daniel Carbia Cabeza',
+      licencia: 'CC BY 2.0',
+      url: 'https://commons.wikimedia.org/wiki/File:La_Alberca_-_Plaza_Mayor.jpg'
+    },
     fuentes: [
       [
         'Turismo de Castilla y León',
@@ -236,6 +251,13 @@ const CULTURA = [
       ],
       ['hecho', 'Es Fiesta de Interés Turístico de Castilla y León.']
     ],
+    foto: {
+      src: 'img/cultura-santa-teresa.jpg',
+      pie: 'Portada del convento de la Anunciación, en Alba de Tormes',
+      autor: 'José Luis Filpo Cabana',
+      licencia: 'CC BY 3.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Convento_de_la_Anunciaci%C3%B3n,_Alba_de_Tormes._Portada.jpg'
+    },
     fuentes: [
       [
         'Turismo de Castilla y León',
@@ -262,6 +284,13 @@ const CULTURA = [
       ]
     ],
     relacionados: { zonas: ['univ'], monumentos: ['catedrales'] },
+    foto: {
+      src: 'img/mon-catedrales.jpg',
+      pie: 'La Catedral Nueva, a cuya torre sube el Mariquelo',
+      autor: 'Zarateman',
+      licencia: 'CC0',
+      url: 'https://commons.wikimedia.org/wiki/File:Salamanca_-_Catedral_Nueva,_exterior_01.jpg'
+    },
     fuentes: [['Wikipedia', 'https://es.wikipedia.org/wiki/Mariquelo']],
     revisado: '2026-10-10'
   },
@@ -282,6 +311,13 @@ const CULTURA = [
         'Se cuenta que antes los vecinos lo cebaban para darlo a la familia más pobre, y que la costumbre viene de principios del siglo XVI.'
       ]
     ],
+    foto: {
+      src: 'img/cultura-la-alberca.jpg',
+      pie: 'Plaza Mayor de La Alberca, por cuyas calles anda suelto el marrano',
+      autor: 'Luis Daniel Carbia Cabeza',
+      licencia: 'CC BY 2.0',
+      url: 'https://commons.wikimedia.org/wiki/File:La_Alberca_-_Plaza_Mayor.jpg'
+    },
     fuentes: [
       ['Wikipedia', 'https://es.wikipedia.org/wiki/La_Alberca_(Salamanca)'],
       [
@@ -483,6 +519,13 @@ const CULTURA = [
         'Su origen es incierto: hay quien lo ve como heredero de una fíbula romana y quien le busca raíces celtas o mudéjares. También se le ha tenido por amuleto.'
       ]
     ],
+    foto: {
+      src: 'img/cultura-filigrana.jpg',
+      pie: 'Botón charro de plata',
+      autor: 'Hari Seldon',
+      licencia: 'Dominio público',
+      url: 'https://commons.wikimedia.org/wiki/File:Boton_charro_de_plata.jpg'
+    },
     fuentes: [
       [
         'La Gaceta de Salamanca, feb. 2023',
@@ -659,6 +702,13 @@ const CULTURA = [
       url: 'https://commons.wikimedia.org/wiki/File:Fundaci%C3%B3n_Joaqu%C3%ADn_D%C3%ADaz_-_ATO_00417_15_-_Ajechao_y_sorteado.ogg'
     },
     relacionados: { cultura: ['gaita-y-tamboril', 'mayalde'] },
+    foto: {
+      src: 'img/cultura-penaparda.jpg',
+      pie: 'Calle del Rollo, en Peñaparda',
+      autor: 'Rodelar',
+      licencia: 'CC BY-SA 4.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Pe%C3%B1aparda,_calle_Rollo.jpg'
+    },
     fuentes: [
       [
         'Universidad Autónoma de Madrid, pieza del mes (marzo de 2024)',
@@ -697,6 +747,22 @@ const CULTURA = [
       ]
     ],
     relacionados: { monumentos: ['catedrales'], cultura: ['gaita-y-tamboril', 'la-charrada'] },
+    foto: {
+      src: 'img/cultura-cancioneros-salmantinos.jpg',
+      pie: 'Dámaso Ledesma, en El Adelanto del 14 de junio de 1928',
+      autor: 'Anónimo',
+      licencia: 'Dominio público',
+      url: 'https://commons.wikimedia.org/wiki/File:1928-06-14,_El_Adelanto,_D%C3%A1maso_Ledesma_(cropped).jpg'
+    },
+    audio: {
+      src: 'audio/cultura-cancioneros-salmantinos.mp3',
+      titulo: 'Charrada de gaita y tamboril',
+      detalle:
+        'Del repertorio de cantos y bailes de boda de Salamanca; la toca el Centro de Cultura Tradicional de Salamanca en Peñaranda de Bracamonte, en 1984',
+      autor: 'Fundación Joaquín Díaz',
+      licencia: 'CC BY-SA 3.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Fundaci%C3%B3n_Joaqu%C3%ADn_D%C3%ADaz_-_ATO_00413_23_-_Charrada_de_gaita_y_tamboril.ogg'
+    },
     fuentes: [
       ['Wikipedia (Dámaso Ledesma)', 'https://es.wikipedia.org/wiki/D%C3%A1maso_Ledesma'],
       ['Wikipedia (Aníbal Sánchez Fraile)', 'https://es.wikipedia.org/wiki/An%C3%ADbal_S%C3%A1nchez_Fraile']
@@ -721,6 +787,13 @@ const CULTURA = [
       ]
     ],
     relacionados: { cultura: ['pandero-cuadrado-penaparda', 'cancioneros-salmantinos'] },
+    foto: {
+      src: 'img/cultura-mayalde.jpg',
+      pie: 'Mayalde en concierto, en Husillos (Palencia), en 2025',
+      autor: 'Montgomery',
+      licencia: 'CC BY-SA 4.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Mayalde_01.jpg'
+    },
     fuentes: [['World Music Central', 'https://worldmusiccentral.org/?p=108018']],
     revisado: '2026-10-10'
   },
@@ -780,6 +853,13 @@ const CULTURA = [
       ['hecho', 'Murió en Salamanca el 13 de enero de 1590.']
     ],
     relacionados: { monumentos: ['universidad'], cultura: ['fray-luis-de-leon', 'juan-del-encina'] },
+    foto: {
+      src: 'img/cultura-francisco-salinas.jpg',
+      pie: 'Monumento a Francisco Salinas, de Hipólito Pérez Calvo, en Salamanca',
+      autor: 'Fonsicas',
+      licencia: 'CC BY-SA 1.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Francisco_Salinas.jpg'
+    },
     fuentes: [['Wikipedia', 'https://es.wikipedia.org/wiki/Francisco_de_Salinas']],
     revisado: '2026-10-10'
   },
@@ -801,7 +881,8 @@ const CULTURA = [
       [
         'hecho',
         'Dirigió el Conservatorio de Madrid de 1901 a 1921 y murió en Madrid el 2 de diciembre de 1923.'
-      ]
+      ],
+      ['hecho', 'La pieza más famosa de La Dolores es la gran jota del final del primer acto.']
     ],
     foto: {
       src: 'img/cultura-tomas-breton.jpg',
@@ -810,7 +891,19 @@ const CULTURA = [
       licencia: 'CC BY-SA 3.0',
       url: 'https://commons.wikimedia.org/wiki/File:Monumento_a_Tom%C3%A1s_Bret%C3%B3n_en_Salamanca.JPG'
     },
-    fuentes: [['Wikipedia', 'https://es.wikipedia.org/wiki/Tom%C3%A1s_Bret%C3%B3n']],
+    audio: {
+      src: 'audio/cultura-tomas-breton.mp3',
+      titulo: 'Jota de La Dolores',
+      detalle:
+        'Cilindro de cera de hacia 1910 cantado por el barítono Emilio Cabello, restaurado por el Museo de Historia de la Telecomunicación de Valencia',
+      autor: 'Barítono Cabello',
+      licencia: 'CC BY-SA 4.0',
+      url: 'https://commons.wikimedia.org/wiki/File:2._Jota_de_la_Dolores_-_Restaurado.wav'
+    },
+    fuentes: [
+      ['Wikipedia', 'https://es.wikipedia.org/wiki/Tom%C3%A1s_Bret%C3%B3n'],
+      ['Wikipedia (La Dolores, en inglés)', 'https://en.wikipedia.org/wiki/La_Dolores']
+    ],
     revisado: '2026-10-10'
   },
   {
@@ -1110,6 +1203,68 @@ const CULTURA = [
         'https://commons.wikimedia.org/wiki/File:Salamanca_-_Monumento_a_Carmen_Martin_Gaite_(plaza_de_los_Bandos).jpg'
       ]
     ],
+    revisado: '2026-10-10'
+  },
+  // --- Literatura -----------------------------------------------------------------------------------
+  {
+    id: 'la-celestina',
+    n: 'La Celestina',
+    cat: 'literatura',
+    resumen:
+      'La tragicomedia de Calisto y Melibea, de hacia 1500, firmada por un bachiller que estudió en Salamanca.',
+    municipios: ['Salamanca'],
+    textos: [
+      [
+        'hecho',
+        'Se atribuye a Fernando de Rojas, que estudió en la Universidad de Salamanca. Los versos acrósticos del principio lo presentan como bachiller nacido en La Puebla de Montalbán, aunque hay dudas sobre si la escribió o solo la preparó para imprenta.'
+      ],
+      [
+        'hecho',
+        'Su edición más antigua conocida, la de Burgos, lleva la fecha de 1499, aunque se imprimió entre 1500 y 1502. Hacia 1502 se amplió a la Tragicomedia, en 21 actos.'
+      ],
+      [
+        'tradicion',
+        'Se ha propuesto que pasa en Salamanca, como también en Toledo o en Sevilla, pero la obra no lo aclara: se cree que imagina una ciudad tipo. En Salamanca, el Huerto de Calixto y Melibea recuerda el huerto donde se encuentran los amantes.'
+      ]
+    ],
+    foto: {
+      src: 'img/cultura-celestina.jpg',
+      pie: 'Busto de la Celestina, de Agustín Casillas, en el Huerto de Calixto y Melibea',
+      autor: 'Iniziar',
+      licencia: 'CC BY-SA 3.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Salamanca_-_Busto_de_la_Celestina.JPG'
+    },
+    relacionados: { monumentos: ['huerto'], cultura: ['lazarillo-de-tormes'] },
+    fuentes: [['Wikipedia', 'https://es.wikipedia.org/wiki/La_Celestina']],
+    revisado: '2026-10-10'
+  },
+  {
+    id: 'lazarillo-de-tormes',
+    n: 'El Lazarillo de Tormes',
+    cat: 'literatura',
+    resumen: 'La novela anónima de 1554 cuyo protagonista «nació en un río de Salamanca, el Tormes».',
+    municipios: ['Salamanca'],
+    textos: [
+      [
+        'hecho',
+        'Sus ediciones más antiguas conocidas son de 1554 y se imprimieron en Burgos, Amberes, Alcalá de Henares y Medina del Campo. Es anónima: se ha atribuido, entre otros, a los hermanos Valdés, sin que nada lo confirme.'
+      ],
+      ['hecho', 'Lázaro cuenta que, aunque sin honra, «nació en un río de Salamanca, el Tormes».'],
+      [
+        'tradicion',
+        'Al comienzo, el ciego le hace darse un golpe contra un toro de piedra; el episodio se relaciona con el verraco de piedra que hay junto al Puente Romano.'
+      ],
+      ['hecho', 'La Inquisición la incluyó en su Índice de libros prohibidos.']
+    ],
+    foto: {
+      src: 'img/cultura-lazarillo.jpg',
+      pie: 'Monumento al Lazarillo, de Agustín Casillas, en Salamanca',
+      autor: 'Iniziar',
+      licencia: 'CC BY-SA 3.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Salamanca._Monumento_al_Lazarillo._Agust%C3%ADn_Casillas_01.JPG'
+    },
+    relacionados: { monumentos: ['puenteromano'], cultura: ['la-celestina'] },
+    fuentes: [['Wikipedia', 'https://es.wikipedia.org/wiki/Lazarillo_de_Tormes']],
     revisado: '2026-10-10'
   }
 ];

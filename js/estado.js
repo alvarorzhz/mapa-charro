@@ -266,7 +266,8 @@ const CATEGORIAS_MONUMENTO = [
   ['religioso', 'Iglesias', ['catedral', 'iglesia', 'redonda']],
   ['civil', 'Plazas y palacios', ['plaza', 'universidad', 'palacio', 'torre', 'concha', 'mercado']],
   ['ocio', 'Ocio y deporte', ['toros', 'estadio', 'jardin']],
-  ['otros', 'Puentes y museos', ['puente', 'cueva', 'museo', 'presa', 'roca']]
+  ['otros', 'Puentes y museos', ['puente', 'cueva', 'museo', 'presa', 'roca']],
+  ['ciudad', 'Estaciones, cines y más', ['estacion', 'autobus', 'cine', 'comercial', 'cementerio']]
 ];
 const categoriaMonumento = m => (CATEGORIAS_MONUMENTO.find(c => c[2].includes(m.tipo)) || ['otros'])[0];
 const ESTADOS_FILTRO = [

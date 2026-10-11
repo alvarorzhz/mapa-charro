@@ -25,7 +25,7 @@ function abrirPueblo(m) {
   $('#mz').hidden = true;
   const paradas = paradasDeMunicipio(m),
     cultura = culturaDeMunicipio(m);
-  pintarFotoDe(fotoDePueblo(paradas, cultura));
+  pintarFotoDe(f.foto || fotoDePueblo(paradas, cultura));
   pintarCulturaEnFicha(cultura);
   pintarRelacionados(relacionadosDePueblo(m, paradas));
 
