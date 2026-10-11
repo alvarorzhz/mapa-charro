@@ -1,5 +1,19 @@
 [
   {
+    "version": "2.6.1",
+    "fecha": "2026-10-11",
+    "titulo": "Arreglado el guardado en la cuenta de Google",
+    "usuario": [
+      "Con la cuenta de Google, lo que marcabas ya no daba «No se pudo guardar en tu cuenta»: ahora se guarda bien.",
+      "La primera vez que abras la app en cada dispositivo, se junta lo que tenías en él con lo de tu cuenta, sin perder nada de ninguno."
+    ],
+    "tecnico": [
+      "Firestore no admite listas anidadas y j.hi lo es desde la 2.0.0: aLaNube envuelve las listas interiores en { _a } para la cuenta de Google y desdeLaNube las desenvuelve al leer.",
+      "conectarNube y onSnapshot juntan los dos lados si no hay base sincronizada para la cuenta.",
+      "El Firestore falso de las pruebas rechaza listas anidadas; prueba nueva de la subida y de la recuperación."
+    ]
+  },
+  {
     "version": "2.6.0",
     "fecha": "2026-10-11",
     "titulo": "Más sitios, más fotos y más pueblos",

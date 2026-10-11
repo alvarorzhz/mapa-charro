@@ -14,6 +14,27 @@ const nube = {
   reintentado: false,
   cuenta: '' // id de la cuenta conectada (Claude o Google), para saber hasta dónde se sincronizó
 };
+// Firestore (la cuenta de Google) no admite listas dentro de listas, y el historial (j.hi) es una lista de
+// [fecha, tipo, id]. Para esa cuenta, cada lista que va dentro de otra se sube envuelta en { _a: [...] } y
+// se desenvuelve al leer. Al leer se desenvuelve siempre (de cualquier cuenta), así que vale para las dos.
+const aLaNube = x =>
+  Array.isArray(x)
+    ? x.map(e => (Array.isArray(e) ? { _a: aLaNube(e) } : aLaNube(e)))
+    : x && typeof x == 'object'
+      ? Object.fromEntries(Object.entries(x).map(([k, v]) => [k, aLaNube(v)]))
+      : x;
+const desdeLaNube = x =>
+  Array.isArray(x)
+    ? x.map(e =>
+        e && typeof e == 'object' && !Array.isArray(e) && Object.keys(e).length == 1 && Array.isArray(e._a)
+          ? desdeLaNube(e._a)
+          : desdeLaNube(e)
+      )
+    : x && typeof x == 'object'
+      ? Object.fromEntries(Object.entries(x).map(([k, v]) => [k, desdeLaNube(v)]))
+      : x;
+const necesitaEnvolver = () => nube.cuenta.startsWith('google:');
+
 // Hasta dónde están sincronizados este navegador y la cuenta: { cuenta, t } con la hora (t) del progreso
 // que se subió o se trajo por última vez. Sirve para saber si, mientras tanto, han cambiado los dos lados
 // (entonces se juntan en vez de que uno pise al otro).
@@ -68,7 +89,7 @@ async function subirANube() {
   if (json === nube.ultimoSubido) return;
   nube.ocupada = true;
   try {
-    await nube.ref.set(datos);
+    await nube.ref.set(necesitaEnvolver() ? aLaNube(datos) : datos);
     nube.ultimoSubido = json;
     nube.reintentado = false;
     nube.fallo = false;
@@ -224,11 +245,13 @@ async function conectarNube(ref, textoOk, juntar = false, cuenta = '') {
     }
   }
   nube.ref = ref;
-  const crudo = instantanea.exists ? instantanea.data() : null;
+  const crudo = instantanea.exists ? desdeLaNube(instantanea.data()) : null;
   if (crudo) apartarDesconocidos(crudo); // lo que esta versión no conoce no se pierde al volver a subir
   const enCuenta = crudo ? limpiarProgreso(crudo) : null,
     base = baseSincronizada();
-  if (enCuenta && juntar) {
+  // Sin una sincronización anterior que haya salido bien en este navegador no se sabe qué lado es más
+  // reciente de verdad (p. ej. si la subida fallaba): se juntan los dos, sin perder nada de ninguno
+  if (enCuenta && (juntar || !base)) {
     aplicarDesdeNube(juntarProgresos(enCuenta, progreso));
     subirANube();
   } else if (enCuenta) {
@@ -254,12 +277,12 @@ async function conectarNube(ref, textoOk, juntar = false, cuenta = '') {
   nube.cancelar = ref.onSnapshot(
     sn => {
       if (!sn.exists || sn.metadata.hasPendingWrites) return;
-      const crudo = sn.data();
+      const crudo = desdeLaNube(sn.data());
       apartarDesconocidos(crudo);
       const nuevo = limpiarProgreso(crudo),
         base = baseSincronizada();
       if ((nuevo.t || 0) > (progreso.t || 0)) {
-        if (base && (progreso.t || 0) > base) {
+        if (!base || (progreso.t || 0) > base) {
           // Aquí hay cambios que aún no han subido: se juntan con los que llegan, no se pisan
           aplicarDesdeNube(juntarProgresos(nuevo, progreso));
           subirANube();

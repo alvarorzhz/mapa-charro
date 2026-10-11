@@ -1312,7 +1312,20 @@ prueba(
         },
         doc = {
           get: async () => ({ exists: !!nube.datos, data: () => nube.datos }),
-          set: async d => (nube.datos = d),
+          // Como Firestore de verdad: no admite listas dentro de listas
+          set: d => {
+            const anidadas = x =>
+              Array.isArray(x)
+                ? x.some(e => Array.isArray(e) || anidadas(e))
+                : !!x && typeof x == 'object' && Object.values(x).some(anidadas);
+            if (anidadas(d)) {
+              const e = new Error('Nested arrays are not supported');
+              e.code = 'invalid-argument';
+              throw e;
+            }
+            nube.datos = d;
+            return Promise.resolve();
+          },
           delete: async () => (nube.datos = null),
           onSnapshot: () => () => {}
         };
@@ -1364,6 +1377,83 @@ prueba(
 );
 
 prueba(
+  'Cuenta con Google: el historial se sube sin listas anidadas y lo que no llegó a subir se junta',
+  async p => {
+    // Ya se había entrado en este navegador, pero ninguna subida salió bien (no hay base sincronizada):
+    // la cuenta tiene lo de un móvil y aquí hay otra cosa más nueva. No se pierde ninguna de las dos
+    await p.waitForTimeout(1500);
+    igual(
+      await p.evaluate(() => Object.keys(progreso.z).sort()),
+      ['centro', 'vega'],
+      'junta lo del navegador y lo de la cuenta'
+    );
+    igual(await texto(p, '#sv'), 'Guardado en tu cuenta (prueba@ejemplo.es)', 'y se guarda en la cuenta');
+    const enCuenta = await p.evaluate(() => window.__nubeGoogle.datos);
+    cierto(enCuenta.z.centro == 'v' && enCuenta.z.vega == 'v', 'la cuenta tiene las dos');
+    cierto(
+      enCuenta.j.hi.length >= 2 && enCuenta.j.hi.every(e => Array.isArray(e._a) && e._a.length == 3),
+      'el historial va envuelto para Firestore'
+    );
+    cierto(
+      await p.evaluate(() => progreso.j.hi.every(e => Array.isArray(e))),
+      'y en la app sigue como siempre'
+    );
+    // Marcar algo nuevo también sube
+    await p.evaluate(() => marcarZona('tejares', 'v'));
+    await p.waitForTimeout(1200);
+    igual(await p.evaluate(() => window.__nubeGoogle.datos.z.tejares), 'v', 'lo nuevo llega a la cuenta');
+    igual(await texto(p, '#sv'), 'Guardado en tu cuenta (prueba@ejemplo.es)', 'sin error');
+  },
+  {
+    antes: () => {
+      if (!sessionStorage.getItem('ya')) {
+        sessionStorage.setItem('ya', '1');
+        localStorage.setItem('charro-cuenta', 'u1');
+        localStorage.setItem(
+          'charro2',
+          JSON.stringify({ z: { vega: 'v' }, t: 50, j: { hi: [['2026-10-11', 'z', 'vega']] } })
+        );
+      }
+      const nube = {
+        datos: { z: { centro: 'v' }, t: 20, v: 1, j: { hi: [{ _a: ['2026-10-01', 'z', 'centro'] }] } }
+      };
+      const usuario = { uid: 'u1', email: 'prueba@ejemplo.es' };
+      window.__nubeGoogle = nube;
+      const auth = {
+          onAuthStateChanged: f => {
+            setTimeout(() => f(usuario));
+            return () => {};
+          },
+          signInWithPopup: async () => {}
+        },
+        doc = {
+          get: async () => ({ exists: !!nube.datos, data: () => nube.datos }),
+          set: d => {
+            const anidadas = x =>
+              Array.isArray(x)
+                ? x.some(e => Array.isArray(e) || anidadas(e))
+                : !!x && typeof x == 'object' && Object.values(x).some(anidadas);
+            if (anidadas(d)) {
+              const e = new Error('Nested arrays are not supported');
+              e.code = 'invalid-argument';
+              throw e;
+            }
+            nube.datos = d;
+            return Promise.resolve();
+          },
+          onSnapshot: () => () => {}
+        };
+      window.firebase = {
+        prueba: true,
+        apps: [1],
+        auth: Object.assign(() => auth, { GoogleAuthProvider: function () {} }),
+        firestore: () => ({ collection: () => ({ doc: () => doc }) })
+      };
+    }
+  }
+);
+
+prueba(
   'Cuenta con Google tras abrir solo fichas',
   async p => {
     // En un navegador nuevo se lee una ficha (solo cuenta para los logros) y luego se entra
@@ -1395,7 +1485,20 @@ prueba(
         },
         doc = {
           get: async () => ({ exists: !!nube.datos, data: () => nube.datos }),
-          set: async d => (nube.datos = d),
+          // Como Firestore de verdad: no admite listas dentro de listas
+          set: d => {
+            const anidadas = x =>
+              Array.isArray(x)
+                ? x.some(e => Array.isArray(e) || anidadas(e))
+                : !!x && typeof x == 'object' && Object.values(x).some(anidadas);
+            if (anidadas(d)) {
+              const e = new Error('Nested arrays are not supported');
+              e.code = 'invalid-argument';
+              throw e;
+            }
+            nube.datos = d;
+            return Promise.resolve();
+          },
           onSnapshot: () => () => {}
         };
       window.firebase = {
