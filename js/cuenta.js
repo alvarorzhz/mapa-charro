@@ -12,19 +12,8 @@ const cuentaWeb = { auth: null, db: null, usuario: null, escuchando: false, esta
 const configFirebase = () =>
   CONFIG_FIREBASE || (window.firebase && window.firebase.prueba ? { prueba: true } : null);
 const puedeUsarCuenta = () => !!configFirebase() && !EN_MARCO;
-const leerCuentaGuardada = () => {
-  try {
-    return localStorage.getItem(CLAVE_CUENTA);
-  } catch (e) {
-    return null;
-  }
-};
-const recordarCuenta = uid => {
-  try {
-    if (uid) localStorage.setItem(CLAVE_CUENTA, uid);
-    else localStorage.removeItem(CLAVE_CUENTA);
-  } catch (e) {}
-};
+const leerCuentaGuardada = () => leerLocal(CLAVE_CUENTA);
+const recordarCuenta = uid => escribirLocal(CLAVE_CUENTA, uid || null);
 
 // --- Cargar Firebase (de su web, en orden: primero app) -------------------------------
 const cargarScript = src =>
@@ -120,7 +109,9 @@ async function salirDeCuenta() {
   recordarCuenta(null);
   try {
     await cuentaWeb.auth.signOut();
-  } catch (e) {}
+  } catch (e) {
+    // si Firebase falla al salir, la sesión ya está cerrada aquí: se sigue igual
+  }
   pintarCuenta('');
   aviso('Sesión candada. Tu progreso sigue en este navegador');
 }

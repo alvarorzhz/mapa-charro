@@ -500,7 +500,9 @@ const capaVitor = crearSvg(
 function animarVitor(z) {
   try {
     if (navigator.vibrate) navigator.vibrate([18, 40, 28]);
-  } catch (e) {}
+  } catch (e) {
+    // algunos navegadores bloquean la vibración (dentro de marcos, sin gesto…): no hace falta
+  }
   if (movimientoReducido() || !z.e) return;
   const u = ultimaEscala || vistaMapa.w / (tamMapa.w || 380),
     g = crearSvg('g', { transform: escalaFija(z.x, z.y, u), class: 'vitor' }, capaVitor);

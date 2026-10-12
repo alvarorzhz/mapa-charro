@@ -27,18 +27,8 @@ const PASOS_BIENVENIDA = [
   ]
 ];
 
-const bienvenidaVista = () => {
-  try {
-    return localStorage.getItem(CLAVE_BIENVENIDA) == '1';
-  } catch (e) {
-    return false;
-  }
-};
-const marcarBienvenidaVista = () => {
-  try {
-    localStorage.setItem(CLAVE_BIENVENIDA, '1');
-  } catch (e) {}
-};
+const bienvenidaVista = () => leerLocal(CLAVE_BIENVENIDA) == '1';
+const marcarBienvenidaVista = () => escribirLocal(CLAVE_BIENVENIDA, '1');
 
 function mostrarBienvenida(paso = 0, volverA = document.activeElement) {
   marcarBienvenidaVista();
