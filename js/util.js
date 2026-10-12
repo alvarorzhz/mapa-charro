@@ -69,6 +69,35 @@ const slug = s =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '');
 
+// --- Ajustes de este navegador (localStorage) ---------------------------------
+// En modo privado, sin espacio o dentro de algunos visores localStorage falla: entonces se lee null y
+// lo que se escribe se pierde sin más (son comodidades; el progreso tiene su propio aviso en estado.js)
+
+const leerLocal = k => {
+  try {
+    return localStorage.getItem(k);
+  } catch (e) {
+    return null;
+  }
+};
+// Con null (o undefined) borra la clave
+const escribirLocal = (k, v) => {
+  try {
+    if (v == null) localStorage.removeItem(k);
+    else localStorage.setItem(k, v);
+  } catch (e) {
+    // no se puede guardar: se sigue sin recordarlo
+  }
+};
+// Lo guardado como JSON; si falta o está roto, «vacio»
+const leerLocalJson = (k, vacio) => {
+  try {
+    return JSON.parse(leerLocal(k)) || vacio;
+  } catch (e) {
+    return vacio;
+  }
+};
+
 // --- DOM y SVG --------------------------------------------------------------
 
 const $ = s => document.querySelector(s);

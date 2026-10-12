@@ -1,5 +1,18 @@
 [
   {
+    "version": "2.7.1",
+    "fecha": "2026-10-12",
+    "titulo": "Limpieza por dentro",
+    "usuario": [
+      "Orden por dentro para que la app sea más fácil de mantener; no cambia nada de lo que ves ni de tu progreso."
+    ],
+    "tecnico": [
+      "util.js: leerLocal, escribirLocal (null borra la clave) y leerLocalJson sustituyen los try/catch repetidos de localStorage en bienvenida, buscador, cuenta, guardado, hoy e inicio. La carga del progreso en estado.js sigue aparte.",
+      "Quitado r.json (vacío y sin uso).",
+      "Los catch vacíos que quedan explican por qué se ignora el error."
+    ]
+  },
+  {
     "version": "2.7.0",
     "fecha": "2026-10-11",
     "titulo": "Mapas más finos, fichas más cuidadas y la población de cada pueblo",

@@ -6,18 +6,6 @@
 
 const CLAVE_HOY = 'charro-hoy'; // último día que se enseñó sola
 const CLAVE_HOY_AUTO = 'charro-hoy-auto'; // '0': no enseñarla sola cada día
-const leerLocal = k => {
-  try {
-    return localStorage.getItem(k);
-  } catch (e) {
-    return null;
-  }
-};
-const escribirLocal = (k, v) => {
-  try {
-    localStorage.setItem(k, v);
-  } catch (e) {}
-};
 const hoyAutomatica = () => leerLocal(CLAVE_HOY_AUTO) != '0';
 const tocaHoy = () => !location.hash && hoyAutomatica() && leerLocal(CLAVE_HOY) != fechaHoy();
 

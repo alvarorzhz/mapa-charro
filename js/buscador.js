@@ -196,21 +196,13 @@ function parecido(frase) {
 }
 
 // --- Búsquedas recientes (comodidad de este navegador) ---------------------------------
-const leerRecientes = () => {
-  try {
-    return JSON.parse(localStorage.getItem(CLAVE_RECIENTES)) || [];
-  } catch (e) {
-    return [];
-  }
-};
+const leerRecientes = () => leerLocalJson(CLAVE_RECIENTES, []);
 function recordarBusqueda(c) {
   const lista = [
     { tipo: c.tipo, clave: c.clave },
     ...leerRecientes().filter(r => r.tipo != c.tipo || r.clave != c.clave)
   ];
-  try {
-    localStorage.setItem(CLAVE_RECIENTES, JSON.stringify(lista.slice(0, MAX_RECIENTES)));
-  } catch (e) {}
+  escribirLocal(CLAVE_RECIENTES, JSON.stringify(lista.slice(0, MAX_RECIENTES)));
 }
 const candidatoGuardado = r => candidatos().find(c => c.tipo == r.tipo && c.clave == r.clave);
 

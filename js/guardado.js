@@ -40,18 +40,12 @@ const necesitaEnvolver = () => nube.cuenta.startsWith('google:');
 // (entonces se juntan en vez de que uno pise al otro).
 const CLAVE_SINCRONIZADO = 'charro-sincronizado';
 function baseSincronizada() {
-  try {
-    const s = JSON.parse(localStorage.getItem(CLAVE_SINCRONIZADO));
-    return s && s.cuenta == nube.cuenta && +s.t > 0 ? +s.t : 0;
-  } catch (e) {
-    return 0;
-  }
+  const s = leerLocalJson(CLAVE_SINCRONIZADO, null);
+  return s && s.cuenta == nube.cuenta && +s.t > 0 ? +s.t : 0;
 }
 function marcarSincronizado(t) {
   if (!nube.cuenta || !(t > 0)) return;
-  try {
-    localStorage.setItem(CLAVE_SINCRONIZADO, JSON.stringify({ cuenta: nube.cuenta, t }));
-  } catch (e) {}
+  escribirLocal(CLAVE_SINCRONIZADO, JSON.stringify({ cuenta: nube.cuenta, t }));
 }
 // Errores con los que no tiene sentido volver a intentarlo: se pasa a solo lectura
 const ERRORES_DEFINITIVOS = [
@@ -309,18 +303,6 @@ function desconectarNube() {
 
 let nombreClaude = ''; // el nombre de la cuenta de Claude (perfil.js), si Claude lo da
 const CLAVE_NUBE_CLAUDE = 'charro-cuenta-claude'; // la cuenta de Claude ya conectada en este dispositivo
-const leerClave = k => {
-  try {
-    return localStorage.getItem(k);
-  } catch (e) {
-    return null;
-  }
-};
-const escribirClave = (k, v) => {
-  try {
-    localStorage.setItem(k, v);
-  } catch (e) {}
-};
 
 // Al arrancar: dentro de Claude, su cuenta; si no, la de Google si se entró antes (cuenta.js)
 async function iniciarNube() {
@@ -339,14 +321,14 @@ async function iniciarNube() {
           })
           .catch(() => {});
         // La primera vez que esta cuenta de Claude se conecta en este dispositivo, se juntan las copias
-        const juntar = leerClave(CLAVE_NUBE_CLAUDE) != id,
+        const juntar = leerLocal(CLAVE_NUBE_CLAUDE) != id,
           conectada = await conectarNube(
             db.doc('data/users/' + id + '/progreso'),
             'Guardado en tu cuenta',
             juntar,
             'claude:' + id
           );
-        if (conectada) escribirClave(CLAVE_NUBE_CLAUDE, id);
+        if (conectada) escribirLocal(CLAVE_NUBE_CLAUDE, id);
         return conectada;
       }
     }

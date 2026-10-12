@@ -63,9 +63,7 @@ const temaActual = () =>
   boton.onclick = () => {
     const nuevo = temaActual() == 'dark' ? 'light' : 'dark';
     document.documentElement.dataset.theme = nuevo;
-    try {
-      localStorage.setItem(CLAVE_TEMA, nuevo);
-    } catch (e) {}
+    escribirLocal(CLAVE_TEMA, nuevo);
     pintar();
   };
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', pintar);

@@ -193,7 +193,9 @@ function apartarDesconocidos(o) {
       try {
         const texto = JSON.stringify(j[k]);
         if (texto !== undefined && texto.length < 20000) d.j[k] = JSON.parse(texto);
-      } catch (e) {}
+      } catch (e) {
+        // un campo que no se puede copiar (referencias circulares…) se deja fuera
+      }
 }
 // El progreso tal como se guarda: lo de la app más lo apartado, y sin valores «undefined» (la cuenta no los
 // acepta y JSON los quita)
@@ -233,9 +235,13 @@ try {
       progresoDanado = true;
       try {
         if (localStorage.getItem(CLAVE_DANADO) == null) localStorage.setItem(CLAVE_DANADO, crudo);
-      } catch (e2) {}
+      } catch (e2) {
+        // sin sitio para la copia: el original sigue en CLAVE_LOCAL hasta el primer guardado
+      }
     }
-} catch (e) {}
+} catch (e) {
+  // sin localStorage (modo privado, visores): se empieza de cero y guardarLocal lo avisará
+}
 apartarDesconocidos(progreso);
 progreso = limpiarProgreso(progreso);
 // Guarda en el navegador. Devuelve false si no se puede (modo privado, sin espacio…) y lo avisa una vez
