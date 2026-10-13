@@ -1,5 +1,18 @@
 [
   {
+    "version": "2.7.2",
+    "fecha": "2026-10-13",
+    "titulo": "Un mapa que se abre más ligero",
+    "usuario": [
+      "Al abrir la app, el móvil se queda menos rato ocupado dibujando el mapa de la capital, así que responde antes a los toques."
+    ],
+    "tecnico": [
+      "Tonos alternos del mapa: el cálculo de zonas vecinas descarta antes los vértices y lados lejanos (unos 180 ms menos al arrancar con la CPU de un móvil simulado; Lighthouse móvil, mediana de 5: TBT de 270 a 130 ms, nota de 87 a 90; LCP igual, 3,3 s). Vecinos y tonos idénticos.",
+      "mapa.js partido en mapa.js (zonas), mapa-fondo.js, mapa-vias.js y mapa-vista.js, en el mismo orden.",
+      "mi-salamanca.js partido en mi-salamanca-calculos.js, mi-salamanca-piezas.js y mi-salamanca.js; pintarEstadisticas, de 335 a ~80 líneas, con una función por apartado. El HTML del panel y el SVG del mapa salen idénticos a los de antes."
+    ]
+  },
+  {
     "version": "2.7.1",
     "fecha": "2026-10-12",
     "titulo": "Limpieza por dentro",

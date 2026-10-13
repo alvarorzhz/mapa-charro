@@ -29,7 +29,7 @@ for (const archivo of archivosApp('js')) {
       n.declarations.forEach(d => d.id.type == 'Identifier' && (globalesApp[d.id.name] = 'writable'));
     else if ((n.type == 'FunctionDeclaration' || n.type == 'ClassDeclaration') && n.id)
       globalesApp[n.id.name] = 'writable';
-    // Un var dentro de un bloque { … } de arriba del todo también es global (mapa.js: limiteFoco)
+    // Un var dentro de un bloque { … } de arriba del todo también es global (mapa-fondo.js: limiteFoco)
     else if (n.type == 'BlockStatement')
       n.body
         .filter(m => m.type == 'VariableDeclaration' && m.kind == 'var')
