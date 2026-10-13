@@ -55,6 +55,11 @@ function ponerViewBox() {
   const v = vistaMapa;
   mapaSvg.setAttribute('viewBox', v.x + ' ' + v.y + ' ' + v.w + ' ' + v.h);
   mapaSvg.style.transform = '';
+  // mapa-real.js carga después: en las primeras llamadas puede no existir aún
+  if (typeof sincronizarFondoReal == 'function') {
+    moverFondoReal('');
+    sincronizarFondoReal();
+  }
   vistaPintada = { x: v.x, y: v.y, w: v.w };
 }
 
@@ -74,6 +79,7 @@ function moverSinRedibujar() {
   if (Math.abs(dx) > r.width * MOVER_SIN_REDIBUJAR || Math.abs(dy) > r.height * MOVER_SIN_REDIBUJAR)
     return false;
   mapaSvg.style.transform = 'translate(' + dx.toFixed(1) + 'px, ' + dy.toFixed(1) + 'px)';
+  if (typeof moverFondoReal == 'function') moverFondoReal(mapaSvg.style.transform);
   return true;
 }
 

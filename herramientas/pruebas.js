@@ -620,6 +620,46 @@ prueba('Tema claro y oscuro', async (p, url) => {
   igual(await tema(), claro, 'vuelve a claro');
 });
 
+prueba('Mapa real de fondo: se enciende, sigue al mapa y se recuerda', async (p, url) => {
+  // MapLibre falso (sin red): apunta el encuadre que le pide la app
+  let pedidas = 0;
+  await p.route('https://cdnjs.cloudflare.com/**', r => {
+    pedidas++;
+    r.fulfill({
+      contentType: 'text/javascript',
+      body: `window.maplibregl = { Map: class {
+        constructor(o) { window.estiloFondo = o.style; }
+        jumpTo(c) { window.camaraFondo = c; }
+        resize() {} setStyle(s) { window.estiloFondo = s; }
+      } };`
+    });
+  });
+  const camara = () => p.evaluate(() => window.camaraFondo);
+  cierto(!(await p.$('.capa-fondo-real')), 'apagado de entrada, sin cargar nada');
+  igual(pedidas, 0, 'MapLibre no se pide hasta encenderlo');
+  await p.click('#zc');
+  await p.click('#frb');
+  await p.waitForFunction(() => window.camaraFondo);
+  cierto(await p.$eval('.mw', e => e.classList.contains('fondo-real')), 'encendido');
+  igual(await p.getAttribute('#frb', 'aria-pressed'), 'true', 'el interruptor lo dice');
+  const antes = await camara();
+  cierto(
+    Math.abs(antes.center[0] + 5.66) < 0.05 && Math.abs(antes.center[1] - 40.965) < 0.05,
+    'centrado en Salamanca'
+  );
+  await p.click('#capx');
+  await p.click('#zi');
+  await p.waitForTimeout(700);
+  cierto((await camara()).zoom > antes.zoom + 0.3, 'al acercar el dibujo, el fondo se acerca con él');
+  await p.goto(url);
+  await p.waitForFunction(() => window.camaraFondo);
+  cierto(await p.$eval('.mw', e => e.classList.contains('fondo-real')), 'se recuerda al volver');
+  await p.click('#zc');
+  await p.click('#frb');
+  cierto(!(await p.$eval('.mw', e => e.classList.contains('fondo-real'))), 'se apaga');
+  igual(await p.evaluate(() => localStorage.getItem('charro-fondo-real')), null, 'y se olvida');
+});
+
 prueba('Barrios nuevos y otros nombres', async p => {
   for (const id of ['ciudadjardin', 'huertaotea', 'salasbajas'])
     cierto(await p.evaluate(id => !!buscarZona(id).e, id), 'en el mapa: ' + id);
