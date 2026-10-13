@@ -304,6 +304,8 @@ button,input,#q,.seg button,.sig{line-height:1.25}
 .mw.fondo-real #m{background:transparent;position:relative}
 .mw.fondo-real .termino,.mw.fondo-real .vecino{fill-opacity:0}
 .mw.fondo-real #pk,.mw.fondo-real #rv{display:none}
+/* Con las calles reales sobran nuestras avenidas, rondas y el nombre de la avenida pulsada */
+.mw.fondo-real .avp,.mw.fondo-real .ava{display:none!important}
 .mw.fondo-real .z{fill-opacity:.16}
 .mw.fondo-real .z.v{fill-opacity:.42}
 .mw.fondo-real .z.w{fill-opacity:.5}

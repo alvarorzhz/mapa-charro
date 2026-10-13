@@ -651,6 +651,15 @@ prueba('Mapa real de fondo: se enciende, sigue al mapa y se recuerda', async (p,
   await p.click('#zi');
   await p.waitForTimeout(700);
   cierto((await camara()).zoom > antes.zoom + 0.3, 'al acercar el dibujo, el fondo se acerca con él');
+  await p.evaluate(() => {
+    vistaMapa.w = 120;
+    ajustarVista();
+  });
+  igual(
+    await p.$$eval('.avp, .ava', a => a.filter(e => getComputedStyle(e).display != 'none').length),
+    0,
+    'sin nuestras avenidas ni sus nombres'
+  );
   await p.goto(url);
   await p.waitForFunction(() => window.camaraFondo);
   cierto(await p.$eval('.mw', e => e.classList.contains('fondo-real')), 'se recuerda al volver');

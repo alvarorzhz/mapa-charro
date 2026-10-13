@@ -1,5 +1,16 @@
 [
   {
+    "version": "2.8.1",
+    "fecha": "2026-10-13",
+    "titulo": "Calles reales más limpias",
+    "usuario": [
+      "Con «Calles reales» encendido ya no se dibujan encima nuestras avenidas y rondas: se ven las calles de verdad con sus nombres, sin repetirlas."
+    ],
+    "tecnico": [
+      "estilos.css: .mw.fondo-real oculta .avp (avenidas, rondas y sus trazos de toque) y .ava (nombre de la avenida pulsada) con !important, porque recolocarSegunZoom les pone display en línea. Autovías, nacionales y escudos se quedan. Prueba del mapa real ampliada."
+    ]
+  },
+  {
     "version": "2.8.0",
     "fecha": "2026-10-13",
     "titulo": "Calles reales debajo del mapa",
