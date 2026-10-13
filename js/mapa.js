@@ -209,13 +209,29 @@ function colocarEtiquetasFondo(u) {
       [bx0, by0, bx1, by1] = b.caja;
     if (ax0 > bx1 + TOLERANCIA || bx0 > ax1 + TOLERANCIA || ay0 > by1 + TOLERANCIA || by0 > ay1 + TOLERANCIA)
       return false;
+    // Un vértice o un lado más lejos que TOLERANCIA en x o en y no puede estar a menos de TOLERANCIA:
+    // se descartan sin calcular la distancia (al abrir la página es lo que más tardaba del mapa)
     let comunes = 0;
-    for (const p of a.P)
-      for (let i = 0; i < b.P.length; i++)
-        if (distanciaALado(p, b.P[i], b.P[(i + 1) % b.P.length]) < TOLERANCIA) {
+    for (const p of a.P) {
+      const [x, y] = p;
+      if (x < bx0 - TOLERANCIA || x > bx1 + TOLERANCIA || y < by0 - TOLERANCIA || y > by1 + TOLERANCIA)
+        continue;
+      for (let i = 0; i < b.P.length; i++) {
+        const q = b.P[i],
+          r = b.P[(i + 1) % b.P.length];
+        if (
+          (x < q[0] - TOLERANCIA && x < r[0] - TOLERANCIA) ||
+          (x > q[0] + TOLERANCIA && x > r[0] + TOLERANCIA) ||
+          (y < q[1] - TOLERANCIA && y < r[1] - TOLERANCIA) ||
+          (y > q[1] + TOLERANCIA && y > r[1] + TOLERANCIA)
+        )
+          continue;
+        if (distanciaALado(p, q, r) < TOLERANCIA) {
           if (++comunes >= 2) return true;
           break;
         }
+      }
+    }
     return false;
   };
   const vecinos = new Map(zonas.map(z => [z, zonas.filter(o => o != z && cerca(z, o))]));
