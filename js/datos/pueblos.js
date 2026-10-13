@@ -290,6 +290,10 @@ const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Sequeros']]
   },
   Guijuelo: {
+    foto: [
+      'img/pueblo-guijuelo.jpg',
+      'El Torreón, ábside de una antigua iglesia gótica. Foto: Estevoaei · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'El jamón y los embutidos dan trabajo a unas 2.500 personas en 173 empresas: el 65 % de la población activa.',
       'El tren llegó en 1896 y pasó por el pueblo hasta mediados de los ochenta.',
@@ -733,6 +737,10 @@ const PUEBLOS = {
     ]
   },
   'La Fuente de San Esteban': {
+    foto: [
+      'img/pueblo-fuentesanesteban.jpg',
+      'Estación de La Fuente de San Esteban-Boadilla. Foto: Rodelar · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Su estación abrió en 1886 y desde 1887 fue nudo ferroviario: de aquí salía la línea a Barca de Alba, camino de Oporto, cerrada en 1985.',
       'El Surexpreso, el tren París–Lisboa, paraba aquí: hacía el viaje por Salamanca, sin pasar por Madrid.',
@@ -772,6 +780,10 @@ const PUEBLOS = {
     ]
   },
   Arapiles: {
+    foto: [
+      'img/pueblo-arapiles.jpg',
+      'Monumento a la batalla de los Arapiles. Foto: Mapper59 · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'El 22 de julio de 1812, en sus cerros, Wellington venció a Marmont: unas 12.500 bajas francesas, prisioneros incluidos, frente a 5.220 aliadas.',
       'Los británicos y portugueses la llaman batalla de Salamanca. Tras ella Wellington entró en Madrid el 12 de agosto de 1812.',
@@ -796,6 +808,10 @@ const PUEBLOS = {
     ]
   },
   Tamames: {
+    foto: [
+      'img/pueblo-tamames.jpg',
+      'Iglesia de la Asunción y ayuntamiento. Foto: Coxuxo · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'En octubre de 1809 el duque del Parque derrotó aquí al general francés Marchand: unas 1.500 bajas francesas frente a 700 españolas, y les tomaron un águila.',
       'En 1811 los lanceros de Julián Sánchez «El Charro» asaltaron un convoy francés en el término; en represalia, los franceses saquearon e incendiaron el pueblo.',

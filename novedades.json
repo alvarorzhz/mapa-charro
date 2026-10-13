@@ -1,5 +1,18 @@
 [
   {
+    "version": "2.8.2",
+    "fecha": "2026-10-13",
+    "titulo": "Más fotos de pueblos",
+    "usuario": [
+      "La Fuente de San Esteban ya tiene foto: su estación de tren.",
+      "Guijuelo, Arapiles y Tamames estrenan foto propia del pueblo: El Torreón, el monumento a la batalla y la iglesia con el ayuntamiento.",
+      "Las fotos de La Platina y Carmelitas-Oeste se ven más grandes y nítidas."
+    ],
+    "tecnico": [
+      "img/pueblo-guijuelo.jpg, pueblo-arapiles.jpg, pueblo-tamames.jpg y pueblo-fuentesanesteban.jpg (Wikimedia Commons, 640×430, CC BY-SA 4.0) como foto en PUEBLOS. platina.jpg y carmelitas.jpg recortadas de nuevo a 640×430 desde los mismos originales. Sin fotos libres en Commons para Vidal, Capuchinos, Huerta Otea, Marín, Buenos Aires, La Vega y Los Alcaldes."
+    ]
+  },
+  {
     "version": "2.8.1",
     "fecha": "2026-10-13",
     "titulo": "Calles reales más limpias",
