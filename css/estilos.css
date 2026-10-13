@@ -298,3 +298,16 @@ button,input,#q,.seg button,.sig{line-height:1.25}
 .demo-tabla{width:100%;border-collapse:collapse;margin:4px 0 6px;font-size:13.5px;font-variant-numeric:tabular-nums}.demo-tabla th{text-align:left;font:700 11px Lora,Georgia,serif;text-transform:uppercase;letter-spacing:.6px;color:var(--texto-suave);padding:4px 6px;border-bottom:1px solid var(--borde-suave)}.demo-tabla td{padding:3px 6px;border-bottom:1px solid var(--borde-suave)}.demo-tabla td:nth-child(2),.demo-tabla th:nth-child(2){text-align:right}.demo-tabla tr.no-oficial td{font-style:italic}
 .demo .datos{display:flex;flex-wrap:wrap;gap:8px}.demo .dato{flex:1 1 92px;min-width:0;background:var(--superficie-2);border:1px solid var(--borde-suave);border-radius:var(--radio-control);padding:8px 11px;line-height:1.25}.demo .dato small{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--texto-suave);margin-bottom:3px}.demo .dato b{display:block;font-size:15px;overflow-wrap:break-word}
 .sh p.demo-fte{font-size:12px;line-height:1.5;color:var(--texto-suave);margin:6px 0 2px}.demo-fte a{font-size:12px!important}
+/* Mapa real de fondo (mapa-real.js): debajo del SVG, que se vuelve transparente para dejarlo ver */
+.capa-fondo-real{position:absolute;overflow:hidden;pointer-events:none;will-change:transform}
+.capa-fondo-real canvas{position:absolute;left:0;top:0}
+.mw.fondo-real #m{background:transparent;position:relative}
+.mw.fondo-real .termino,.mw.fondo-real .vecino{fill-opacity:0}
+.mw.fondo-real #pk,.mw.fondo-real #rv{display:none}
+.mw.fondo-real .z{fill-opacity:.16}
+.mw.fondo-real .z.v{fill-opacity:.42}
+.mw.fondo-real .z.w{fill-opacity:.5}
+.credito-fondo-real{display:none;position:absolute;left:6px;bottom:4px;font-size:10px;padding:1px 5px;border-radius:6px;background:var(--card);opacity:.85}
+.mw.fondo-real .credito-fondo-real{display:block}
+.credito-fondo-real a{color:inherit}
+.nota-fondo-real{font-size:12.5px;margin:-4px 0 4px}

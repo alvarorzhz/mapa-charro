@@ -65,8 +65,12 @@ const temaActual = () =>
     document.documentElement.dataset.theme = nuevo;
     escribirLocal(CLAVE_TEMA, nuevo);
     pintar();
+    repintarFondoReal();
   };
-  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', pintar);
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    pintar();
+    repintarFondoReal();
+  });
   pintar();
   $('#ver').append(' · ', boton);
 }

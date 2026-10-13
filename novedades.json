@@ -1,5 +1,16 @@
 [
   {
+    "version": "2.8.0",
+    "fecha": "2026-10-13",
+    "titulo": "Calles reales debajo del mapa",
+    "usuario": [
+      "Nuevo en el botón de capas del mapa: «Calles reales» pone debajo de los barrios las calles, casas, parques y el río de OpenStreetMap, con los colores de la app. Viene apagado y se recuerda en tu móvil. Necesita conexión y no está dentro de Claude."
+    ],
+    "tecnico": [
+      "js/mapa-real.js (después de ubicacion.js): MapLibre 4.7.1 de cdnjs, cargado solo al encender el interruptor #frb, con teselas vectoriales de OpenFreeMap y un estilo propio a partir de las variables del tema (se repinta al cambiar de tema). Capa no interactiva debajo del SVG, sincronizada con el viewBox en ponerViewBox y moverSinRedibujar (desfase medido < 2 px). Con .mw.fondo-real el SVG deja el fondo transparente, oculta parques y río propios y baja la opacidad de las zonas. Preferencia en charro-fondo-real; oculto con EN_MARCO. Prueba nueva con un MapLibre falso."
+    ]
+  },
+  {
     "version": "2.7.2",
     "fecha": "2026-10-13",
     "titulo": "Un mapa que se abre más ligero",
