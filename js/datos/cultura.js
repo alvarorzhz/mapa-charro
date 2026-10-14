@@ -10,6 +10,9 @@
 //   pedanias    [[municipio, pedanía]] cuando el sitio es una pedanía
 //   comarcas    nombres de PROVINCIA.com, si la relación es con toda la comarca
 //   cuando      época del año, solo si está documentada (si no, se omite)
+//   fechas      para la agenda, solo si «cuando» da días concretos: [[desde, hasta, nota]], con 'MM-DD' o
+//               'P+N' / 'P-N' (días desde el Domingo de Resurrección, para las fiestas que cambian cada año);
+//               hasta y nota son opcionales
 //   textos      [[tipo, texto]]: 'hecho' (documentado, con fuente), 'tradicion' (lo que cuenta la tradición
 //               o una interpretación, que no está probado) o 'divulgativo' (descripción general)
 //   relacionados { zonas, monumentos, cultura } (ids de la app)
@@ -44,6 +47,10 @@ const CULTURA = [
     municipios: ['Salamanca', 'Alaraz'],
     cuando:
       'En Salamanca, el lunes siguiente al Lunes de Pascua; en otros pueblos de la provincia, el mismo Lunes de Pascua.',
+    fechas: [
+      ['P+8', '', 'En Salamanca'],
+      ['P+1', '', 'En Alaraz y otros pueblos']
+    ],
     textos: [
       [
         'hecho',
@@ -84,6 +91,7 @@ const CULTURA = [
     municipios: ['Ciudad Rodrigo'],
     cuando:
       'En Carnaval. El encierro a caballo es el Domingo de Carnaval y el Toro del Aguardiente, el Martes de Carnaval a primera hora.',
+    fechas: [['P-49', 'P-47', 'Del encierro a caballo al Toro del Aguardiente']],
     textos: [
       [
         'hecho',
@@ -122,6 +130,7 @@ const CULTURA = [
     resumen: 'Las procesiones de dieciocho cofradías, congregaciones y hermandades.',
     municipios: ['Salamanca'],
     cuando: 'En Semana Santa.',
+    fechas: [['P-7', 'P+0']],
     textos: [
       [
         'hecho',
@@ -159,6 +168,7 @@ const CULTURA = [
     resumen: 'En Béjar, unos hombres vestidos de musgo de pies a cabeza abren la procesión del Corpus.',
     municipios: ['Béjar'],
     cuando: 'El domingo siguiente al Corpus Christi.',
+    fechas: [['P+63']],
     textos: [
       [
         'hecho',
@@ -193,6 +203,7 @@ const CULTURA = [
       'Las fiestas de agosto de La Alberca: la ofrenda a la Virgen con los trajes tradicionales y un auto sacramental hecho por los vecinos.',
     municipios: ['La Alberca'],
     cuando: '15 y 16 de agosto.',
+    fechas: [['08-15', '08-16']],
     textos: [
       [
         'hecho',
@@ -240,6 +251,7 @@ const CULTURA = [
       'Alba de Tormes celebra a su patrona, Santa Teresa de Jesús, que está enterrada en el convento que ella fundó.',
     municipios: ['Alba de Tormes'],
     cuando: 'Del 15 al 22 de octubre.',
+    fechas: [['10-15', '10-22']],
     textos: [
       [
         'hecho',
@@ -273,6 +285,7 @@ const CULTURA = [
     resumen: 'Cada 31 de octubre alguien sube a lo alto de la torre de la Catedral para dar gracias.',
     municipios: ['Salamanca'],
     cuando: '31 de octubre, víspera de Todos los Santos.',
+    fechas: [['10-31']],
     textos: [
       [
         'hecho',
@@ -301,6 +314,10 @@ const CULTURA = [
     resumen: 'En La Alberca un cerdo bendecido vive suelto por las calles medio año y luego se rifa.',
     municipios: ['La Alberca'],
     cuando: 'Se suelta el 13 de junio (San Antonio de Padua) y se rifa el 17 de enero (San Antón).',
+    fechas: [
+      ['06-13', '', 'Se suelta el marrano'],
+      ['01-17', '', 'Se rifa']
+    ],
     textos: [
       [
         'hecho',
@@ -545,6 +562,7 @@ const CULTURA = [
     resumen: 'Ciudad Rodrigo llena su Plaza Mayor de grupos de baile y música tradicional.',
     municipios: ['Ciudad Rodrigo'],
     cuando: 'Sábado Santo.',
+    fechas: [['P-1']],
     textos: [
       [
         'hecho',

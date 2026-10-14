@@ -251,6 +251,7 @@ function relacionadosDeMonumento(m) {
         abrir: () => abrirTiempo(i)
       }))
     ],
+    filaDetallesDeMonumento(m),
     [
       'Cerca, en línea recta',
       cerca.map(([d, o]) => ({

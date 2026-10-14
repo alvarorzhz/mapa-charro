@@ -313,3 +313,6 @@ button,input,#q,.seg button,.sig{line-height:1.25}
 .mw.fondo-real .credito-fondo-real{display:block}
 .credito-fondo-real a{color:inherit}
 .nota-fondo-real{font-size:12.5px;margin:-4px 0 4px}
+@media(max-width:899px){#explorar .acc{grid-auto-flow:row;grid-template-columns:repeat(4,minmax(0,1fr))}}
+.fila-cita .cita-dia{flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;width:46px;min-height:46px;border-radius:10px;background:var(--vit);color:#fff;line-height:1}.cita-dia b{font:20px 'Alfa Slab One',Georgia,serif}.cita-dia small{font-size:12px;text-transform:uppercase;letter-spacing:.4px}.cul-proxima button{margin-left:4px;padding:2px 10px;font-size:13px}
+.det-pista{margin:8px 0;padding:10px 12px;border-radius:10px;border-left:4px solid var(--gold);background:color-mix(in srgb,var(--b) 30%,var(--card));line-height:1.5}.det-botones{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:10px 0}.det-botones button{min-height:44px;padding:8px 14px}.det-hecho{margin:0;font-weight:700}.det-botones .boton-hoy{margin-top:0;background:var(--vit);border-color:var(--vit);color:#fff}.ico-det{flex:none;width:30px;font-size:24px;text-align:center}

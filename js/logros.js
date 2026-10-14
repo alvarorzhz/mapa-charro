@@ -239,6 +239,11 @@ function calcularLogros() {
       ['cp3', 3, 'Embajador', 'Comparte {m} sitios con alguien']
     ]),
     // --- Palabras charras (palabras.js) ---
+    ...escalones('detalle', detallesEncontrados().length, DETALLES.length, [
+      ['de1', 1, 'Ojo avizor', 'Encuentra un detalle escondido'],
+      ['de5', 5, 'Buen ojo', 'Encuentra {m} detalles escondidos'],
+      ['deall', 'todo', 'Ojo de lince', 'Encuentra los {m} detalles escondidos']
+    ]),
     ...escalones('palabras', datoJ('pv', []).length, PALABRAS_CHARRAS.length, [
       ['pa1', 1, 'Hablas charro', 'Descubre tu primera palabra charra'],
       ['pam', 'mitad', 'Pejilguero', 'Descubre {m} palabras charras'],
@@ -356,6 +361,7 @@ const MEDALLAS = {
   rio: '🌉',
   deseo: '⭐',
   rana: '🐸',
+  detalle: '🔍',
   gps: '🥾',
   provincia: '🗺️',
   comarca: '🌾',
@@ -494,6 +500,7 @@ const CATEGORIAS_LOGRO = [
   ['Reto «¿Dónde está?»', '🎯', ['reto']],
   ['Palabras charras', '🗣️', ['palabras']],
   ['Compartir', '📣', ['compartir']],
+  ['Detalles escondidos', '🔍', ['detalle']],
   ['Sorpresas', '🐸', ['leyendas', 'rio', 'deseo', 'rana']]
 ];
 const categoriasAbiertas = new Set(); // las que se han abierto, para que sigan abiertas al repintar

@@ -7,6 +7,8 @@
 //   #ruta  #ruta/3            ruta monumental: resumen y cada parada
 //   #ruta-murales/3           las demás rutas (#ruta-<id>), igual
 //   #pueblo/la-alberca        ficha de un pueblo de la provincia
+//   #agenda                   agenda de fiestas y tradiciones
+//   #detalles  #detalle/rana  detalles escondidos: la lista y cada uno
 //   #lista  #provincia        pestañas
 //   #provincia/alba-de-tormes pueblo seleccionado en la pestaña Provincia
 // Abrir una ficha añade una entrada al historial, así el botón «atrás» del móvil la cierra.
@@ -39,6 +41,9 @@ const esHashDeFicha = h =>
   h == 'cultura' ||
   h.startsWith('cultura/') ||
   h == 'comer' ||
+  h == 'agenda' ||
+  h == 'detalles' ||
+  h.startsWith('detalle/') ||
   todasLasZonas.some(z => z.id == h);
 
 function hashDeVista() {
@@ -105,6 +110,14 @@ function aplicarEnlace() {
       if (!fichaAbierta || nombreFicha != 'Monumentos') abrirMonumentos();
     } else if (a == 'comer') {
       if (!fichaAbierta || nombreFicha != 'Dónde comer') abrirDondeComer();
+    } else if (a == 'agenda') {
+      if (!fichaAbierta || nombreFicha != 'Agenda') abrirAgenda();
+    } else if (a == 'detalles') {
+      if (!fichaAbierta || nombreFicha != 'Detalles escondidos') abrirDetalles();
+    } else if (a == 'detalle') {
+      const d = buscarDetalle(b);
+      if (!d) abrirDetalles();
+      else if (!fichaAbierta || nombreFicha != d.n) abrirDetalle(d.id);
     } else if (RUTAS_PROVINCIA.some(r => hashRutaProvincia(r) == a)) {
       // Ruta por la provincia: #ruta-arribes o #ruta-arribes/2
       const kp = RUTAS_PROVINCIA.findIndex(r => hashRutaProvincia(r) == a),

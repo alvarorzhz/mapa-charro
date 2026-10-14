@@ -62,7 +62,7 @@ const pedanias = PROVINCIA.m.flatMap(m => m.P);
 //                                  y, para los logros, monumentos visitados (mo: [id]) y paradas propias de cada
 //                                  ruta visitadas (r: { idRuta: [idParada] }), fichas de zona abiertas (fl),
 //                                  etapas de «Salamanca en el tiempo» vistas (et), partidas terminadas (n) y
-//                                  veces que se ha creado «Mi Salamanca» (ms) o compartido (cp) palabras charras vistas (pv) e historial con fechas (hi, ver perfil.js). Van dentro de j para no añadir
+//                                  veces que se ha creado «Mi Salamanca» (ms) o compartido (cp) palabras charras vistas (pv), historial con fechas (hi, ver perfil.js) y detalles escondidos encontrados (de). Van dentro de j para no añadir
 //                                  campos nuevos a lo guardado (las reglas de la cuenta de Google solo aceptan estos)
 const CLAVE_LOCAL = 'charro2';
 const ESTADOS_MARCA = [
@@ -113,6 +113,7 @@ function limpiarProgreso(o) {
       ms: contador(j.ms),
       cp: contador(j.cp),
       pv: Array.isArray(j.pv) ? [...new Set(j.pv.filter(id => idsPalabras.has(id)))] : [],
+      de: Array.isArray(j.de) ? [...new Set(j.de.filter(id => idsDetalles.has(id)))] : [],
       hi: limpiarHistorial(j.hi)
     }
   };
@@ -145,6 +146,7 @@ const contador = x => Math.max(0, Math.min(1e6, Math.round(+x) || 0));
 const esFecha = x => typeof x == 'string' && /^\d{4}-\d\d-\d\d$/.test(x);
 const idsMonumentos = new Set(MONUMENTOS.map(m => m.id));
 const idsPalabras = new Set(PALABRAS_CHARRAS.map(w => w.id));
+const idsDetalles = new Set(DETALLES.map(d => d.id));
 // Paradas propias (no monumentos) de cada ruta que existan
 function limpiarParadas(r) {
   const limpio = {};
@@ -161,7 +163,7 @@ function limpiarParadas(r) {
 // leer progreso escrito por una versión más nueva, con zonas, monumentos, rutas o campos de «j» que aún no
 // conoce. limpiarProgreso los deja fuera de lo que usa la app, pero no se pueden perder al volver a guardar:
 // se apartan aquí y se añaden tal cual al guardar, en el navegador y en la cuenta.
-const CLAVES_J = ['m', 'd', 's', 'h', 'pf', 'mo', 'r', 'rs', 'fl', 'et', 'n', 'ms', 'cp', 'pv', 'hi'];
+const CLAVES_J = ['m', 'd', 's', 'h', 'pf', 'mo', 'r', 'rs', 'fl', 'et', 'n', 'ms', 'cp', 'pv', 'hi', 'de'];
 const esIdCorto = k => typeof k == 'string' && /^[a-z0-9-]{1,60}$/.test(k);
 // Nombre de un campo de «j» que esta versión no conoce (sin los nombres especiales de los objetos)
 const esCampoNuevo = k =>
@@ -169,7 +171,7 @@ const esCampoNuevo = k =>
   /^[a-zA-Z][a-zA-Z0-9_-]{0,39}$/.test(k) &&
   !['constructor', 'prototype', '__proto__'].includes(k);
 const esClaveProvincia = k => typeof k == 'string' && /^(m\d{5}|p\d{5}:[a-z0-9-]{1,60})$/.test(k);
-const desconocidos = { z: {}, p: {}, mo: [], rs: {}, r: {}, j: {} };
+const desconocidos = { z: {}, p: {}, mo: [], de: [], rs: {}, r: {}, j: {} };
 function apartarDesconocidos(o) {
   if (!o || typeof o != 'object') return;
   const d = desconocidos,
@@ -182,6 +184,8 @@ function apartarDesconocidos(o) {
     for (const k in o.p) if (!clavesProvincia.has(k) && esClaveProvincia(k) && marca(o.p[k])) d.p[k] = o.p[k];
   if (Array.isArray(j.mo))
     d.mo = [...new Set([...d.mo, ...j.mo.filter(id => esIdCorto(id) && !idsMonumentos.has(id))])];
+  if (Array.isArray(j.de))
+    d.de = [...new Set([...d.de, ...j.de.filter(id => esIdCorto(id) && !idsDetalles.has(id))])];
   if (j.rs && typeof j.rs == 'object')
     for (const k in j.rs) if (!rutas.has(k) && esIdCorto(k) && marca(j.rs[k])) d.rs[k] = j.rs[k];
   if (j.r && typeof j.r == 'object')
@@ -211,6 +215,7 @@ function conDesconocidos(o) {
         ...d.j,
         ...j,
         mo: [...new Set([...(j.mo || []), ...d.mo])],
+        de: [...new Set([...(j.de || []), ...d.de])],
         rs: { ...d.rs, ...(j.rs || {}) },
         r: { ...d.r, ...(j.r || {}) }
       }
