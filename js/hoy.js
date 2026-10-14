@@ -443,6 +443,23 @@ function abrirHoy() {
   }
   caja.appendChild(apartadoHoy('🌟 La recomendación de hoy', tarjeta));
 
+  // Fiestas y tradiciones de esta semana (agenda.js), solo si hay alguna
+  const semana = proximasCitas().filter(x => x.dentro <= 7);
+  if (semana.length) {
+    const lista = crear('div', 'lista-explora'),
+      agenda = crear('button', 'boton-hoy', 'Ver la agenda');
+    semana.forEach(x =>
+      lista.appendChild(
+        filaCita(
+          x,
+          desdeHoy(() => abrirElementoCultura(x.c.id))
+        )
+      )
+    );
+    agenda.onclick = desdeHoy(abrirAgenda);
+    caja.appendChild(apartadoHoy('📅 Esta semana', lista, agenda));
+  }
+
   // 3. Continúa explorando
   const medias = crear('div', 'lista-explora');
   continua.slice(0, 3).forEach(c => {

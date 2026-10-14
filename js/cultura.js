@@ -155,6 +155,22 @@ function abrirElementoCultura(id) {
   caja.appendChild(volver);
   caja.appendChild(crear('p', 'hab', c.resumen));
   if (c.cuando) caja.appendChild(crear('p', 'cul-cuando', crear('b', '', '📅 Cuándo: '), c.cuando));
+  // La próxima vez, calculada (agenda.js), con el botón a la agenda
+  const proxima = proximaCitaDe(c);
+  if (proxima) {
+    const agenda = crear('button', '', 'Ver la agenda');
+    agenda.onclick = () => abrirAgenda();
+    caja.appendChild(
+      crear(
+        'p',
+        'cul-cuando cul-proxima',
+        crear('b', '', '🗓️ Próxima vez: '),
+        textoFechasCita(proxima) + ' de ' + proxima.hasta.getFullYear(),
+        ' (' + textoDentro(proxima) + ')' + (proxima.nota ? ', ' + proxima.nota.toLowerCase() : '') + ' ',
+        agenda
+      )
+    );
+  }
   if (c.audio) caja.appendChild(reproductorCultura(c.audio));
 
   // Dónde: botones a cada municipio, pedanía y comarca, y el mapa con sus términos

@@ -2298,7 +2298,7 @@ prueba('«¿Qué puedo descubrir hoy?»: recomendación, ir a la ficha y volver'
   cierto(await p.isVisible('#volverhoy'), 'con el botón para volver');
   await p.click('#volverhoy');
   cierto((await texto(p, '#k')).startsWith('¿Qué puedo descubrir hoy?'), 'el botón vuelve a Hoy');
-  await p.click('.lista-explora .fila-explora');
+  await p.click('.lista-explora .fila-explora:not(.fila-cita)');
   igual(await texto(p, '#nm'), 'La Vega', 'Continúa explorando abre su ficha');
   // La × cierra la ficha (no se queda dando vueltas entre Hoy y la ficha)
   await p.click('#x');
@@ -2785,6 +2785,113 @@ prueba('Cultura y tradiciones: ficha, mapa sin puntos inventados y enlaces con e
 
 // --- Guardado y recuperación del progreso --------------------------------------------------------------
 const leerGuardado = p => p.evaluate(() => JSON.parse(localStorage.getItem('charro2')));
+
+prueba('Agenda: fechas fijas, fechas desde la Pascua y en las fichas', async (p, url) => {
+  // Domingo de Resurrección de años conocidos
+  igual(
+    await p.evaluate(() =>
+      [2024, 2025, 2026, 2027].map(a => domingoDeResurreccion(a).toISOString().slice(0, 10))
+    ),
+    ['2024-03-31', '2025-04-20', '2026-04-05', '2027-03-28'].map(f =>
+      new Date(f + 'T00:00:00').toISOString().slice(0, 10)
+    ),
+    'Pascua bien calculada'
+  );
+  // Con un día dado: lo que está pasando cuenta, lo pasado salta al año siguiente
+  const citas = await p.evaluate(() =>
+    proximasCitas(new Date(2026, 9, 18)).map(x => [
+      x.c.id,
+      x.desde.getMonth() + 1,
+      x.desde.getDate(),
+      x.dentro
+    ])
+  );
+  igual(citas[0], ['santa-teresa-alba', 10, 15, 0], 'Santa Teresa ya ha empezado y va primero');
+  igual(citas[1], ['mariquelo', 10, 31, 13], 'luego el Mariquelo');
+  cierto(
+    citas.some(([id, m, d]) => id == 'carnaval-del-toro' && m == 2 && d == 7),
+    'el Carnaval de 2027, contado desde la Pascua'
+  );
+  igual(
+    await p.evaluate(() =>
+      textoFechasCita(proximasCitas(new Date(2026, 6, 1)).find(x => x.c.id == 'diagosto-y-la-loa'))
+    ),
+    '15 y 16 de agosto',
+    'texto de dos días seguidos'
+  );
+  // La lista, con su enlace y su botón
+  await p.click('#agn');
+  igual(await texto(p, '#nm'), 'Agenda', 'abre la agenda');
+  igual(await p.evaluate(() => location.hash), '#agenda', 'con su enlace');
+  igual(
+    await p.$$eval('#info .fila-cita', a => a.length),
+    await p.evaluate(() => CULTURA.reduce((n, c) => n + (c.fechas || []).length, 0)),
+    'una fila por cada fecha'
+  );
+  await p.click('#info .fila-cita');
+  cierto(await p.evaluate(() => location.hash.startsWith('#cultura/')), 'la fila abre la ficha cultural');
+  // La ficha cultural dice la próxima vez
+  await p.goto(url + '#cultura/mariquelo');
+  await p.waitForSelector('#sh.o');
+  cierto((await texto(p, '#info')).includes('Próxima vez: 31 de octubre'), 'próxima vez en la ficha');
+  await p.goto(url + '#cultura/farinato');
+  await p.waitForSelector('#sh.o');
+  cierto(!(await texto(p, '#info')).includes('Próxima vez'), 'sin fechas, sin próxima vez');
+});
+
+prueba('Detalles escondidos: pista, encontrarlo, foto, logros y guardado', async (p, url) => {
+  await p.click('#det');
+  igual(await texto(p, '#nm'), 'Detalles escondidos', 'abre la lista');
+  igual(await p.evaluate(() => location.hash), '#detalles', 'con su enlace');
+  igual(
+    await p.$$eval('#info .fila-explora', a => a.length),
+    await p.evaluate(() => DETALLES.length),
+    'están todos'
+  );
+  await p.goto(url + '#detalle/astronauta');
+  await p.waitForSelector('#sh.o');
+  cierto((await texto(p, '#info')).includes('Pista'), 'enseña la pista');
+  cierto(await p.$eval('#ph', e => e.hidden), 'sin la foto hasta encontrarlo');
+  cierto(!(await texto(p, '#info')).includes('Miguel Romero'), 'ni la explicación');
+  await p.click('#info button:has-text("enséñamelo")');
+  cierto(!(await p.$eval('#ph', e => e.hidden)), '«Enséñamelo» enseña la foto');
+  igual(await p.evaluate(() => progreso.j.de), [], 'pero no lo cuenta');
+  await p.click('#info button:has-text("¡Lo he encontrado!")');
+  igual(await p.evaluate(() => progreso.j.de), ['astronauta'], 'encontrado');
+  cierto((await texto(p, '#info')).includes('Miguel Romero'), 'con su explicación');
+  cierto(
+    await p.evaluate(() => calcularLogros().some(a => a.id == 'de1' && a.c >= a.m)),
+    'logro del primer detalle'
+  );
+  cierto(
+    await p.evaluate(() => JSON.parse(localStorage.getItem('charro2')).j.de.includes('astronauta')),
+    'guardado en el navegador'
+  );
+  // En la ficha del monumento, con su ✓
+  await p.goto(url + '#monumento/catedrales');
+  await p.waitForSelector('#sh.o');
+  cierto((await texto(p, '#rel')).includes('El astronauta ✓'), 'en la ficha del monumento');
+  // Un id que esta versión no conoce no se pierde al guardar; uno conocido sigue
+  await p.evaluate(() => {
+    const o = JSON.parse(localStorage.getItem('charro2'));
+    o.j.de.push('detalle-futuro');
+    localStorage.setItem('charro2', JSON.stringify(o));
+  });
+  await p.reload();
+  await p.waitForTimeout(300);
+  await p.evaluate(() => guardar());
+  igual(
+    await p.evaluate(() => JSON.parse(localStorage.getItem('charro2')).j.de.sort()),
+    ['astronauta', 'detalle-futuro'],
+    'lo desconocido se conserva'
+  );
+  igual(await p.evaluate(() => progreso.j.de), ['astronauta'], 'y la app solo usa lo que conoce');
+  // Quitar la marca
+  await p.goto(url + '#detalle/astronauta');
+  await p.waitForSelector('#sh.o');
+  await p.click('#info button:has-text("Quitar la marca")');
+  igual(await p.evaluate(() => progreso.j.de), [], 'marca quitada');
+});
 
 prueba('Guardado: primera ejecución y recarga', async p => {
   igual(await p.evaluate(() => Object.keys(progreso.z).length), 0, 'sin nada marcado');

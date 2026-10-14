@@ -1,5 +1,21 @@
 [
   {
+    "version": "2.9.0",
+    "fecha": "2026-10-14",
+    "titulo": "Agenda y detalles escondidos",
+    "usuario": [
+      "Nueva «Agenda» en Explora: las próximas fiestas y tradiciones con fecha, de la capital y de la provincia. Las que cambian cada año, como Carnaval o Lunes de Aguas, se calculan solas.",
+      "Cada ficha de Cultura dice cuándo es la próxima vez, y «¿Qué puedo descubrir hoy?» enseña lo de esta semana.",
+      "Nuevos «Detalles escondidos»: 11 figuras para buscar en las fachadas (el astronauta, el dragón con helado, la rana…), cada una con su pista. Al encontrarla se ve la foto y su historia.",
+      "Tres logros nuevos por encontrar detalles escondidos."
+    ],
+    "tecnico": [
+      "js/agenda.js: fechas de CULTURA (campo «fechas», 'MM-DD' o 'P±N' desde el Domingo de Resurrección, domingoDeResurreccion), ficha #agenda, «Próxima vez» en la ficha cultural y «Esta semana» en hoy.js.",
+      "js/datos/detalles.js y js/detalles.js: DETALLES con pista, textos, fuentes (Wikipedia) y foto opcional (img/detalle-*.jpg, Commons, 640×430); progreso en j.de (limpiarProgreso, apartarDesconocidos, juntarProgresos); fila en «Para seguir explorando» del monumento; logros cat «detalle».",
+      "comprobar-datos valida «fechas» y DETALLES; pruebas nuevas de agenda y detalles. Explora en móvil pasa a 4 columnas."
+    ]
+  },
+  {
     "version": "2.8.2",
     "fecha": "2026-10-13",
     "titulo": "Más fotos de pueblos",

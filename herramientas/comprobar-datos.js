@@ -28,12 +28,13 @@ const datos = [
   'parques',
   'firebase',
   'palabras',
-  'cultura'
+  'cultura',
+  'detalles'
 ];
 const codigo =
   datos.map(d => leer('js/datos/' + d + '.js')).join('\n;\n') +
   '\n;({ NOMBRES_GRUPOS, ZONAS_GRANDES, ZONAS, OTROS_NOMBRES, SEMILLAS_REPARTO, MONUMENTOS, RUTAS, TRAMOS_RUTAS, PUEBLOS, CURIOSIDADES, LEYENDAS, FOTOS, DONDE_COMER,' +
-  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA, RELACIONES_ETAPA, RANGOS_ETAPA, PALABRAS_CHARRAS, FUENTES_PALABRAS, RUTAS_PROVINCIA, SALIDA_PROVINCIA, TRAMOS_PROVINCIA, CARRETERAS_PROVINCIA, HABITANTES, PARQUES, CULTURA, CATEGORIAS_CULTURA, TIPOS_TEXTO_CULTURA })';
+  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA, RELACIONES_ETAPA, RANGOS_ETAPA, PALABRAS_CHARRAS, FUENTES_PALABRAS, RUTAS_PROVINCIA, SALIDA_PROVINCIA, TRAMOS_PROVINCIA, CARRETERAS_PROVINCIA, HABITANTES, PARQUES, CULTURA, CATEGORIAS_CULTURA, TIPOS_TEXTO_CULTURA, DETALLES })';
 const D = vm.runInNewContext(codigo, {});
 
 const WEB_PUBLICA = 'https://alvarorzhz.github.io/mapa-charro/';
@@ -611,6 +612,30 @@ for (const f of fs.readdirSync(path.join(RAIZ, 'js/datos')).filter(f => f.endsWi
       c.cuando === undefined || (typeof c.cuando == 'string' && c.cuando.trim()),
       `${que}: «cuando» vacío`
     );
+    // Fechas de la agenda: solo con «cuando», y con días que existan ('MM-DD') o días desde la Pascua
+    if (c.fechas !== undefined) {
+      comprobar(c.cuando, `${que}: tiene «fechas» pero no «cuando»`);
+      const fechaValida = f => {
+        if (/^P[+-]\d{1,3}$/.test(f)) return true;
+        const m = /^(\d\d)-(\d\d)$/.exec(f || '');
+        return !!m && +m[1] >= 1 && +m[1] <= 12 && +m[2] >= 1 && +m[2] <= new Date(2024, +m[1], 0).getDate();
+      };
+      comprobar(Array.isArray(c.fechas) && c.fechas.length, `${que}: «fechas» vacío`);
+      (c.fechas || []).forEach((t, i) => {
+        const [de, a, nota] = Array.isArray(t) ? t : [];
+        comprobar(fechaValida(de), `${que}: la fecha ${i + 1} no es 'MM-DD' ni 'P+N'`);
+        comprobar(!a || fechaValida(a), `${que}: el final de la fecha ${i + 1} no es 'MM-DD' ni 'P+N'`);
+        comprobar(
+          !a || (a[0] == 'P') == (de[0] == 'P'),
+          `${que}: la fecha ${i + 1} mezcla Pascua y día fijo`
+        );
+        comprobar(
+          !a || de[0] != 'P' || +a.slice(1) >= +de.slice(1),
+          `${que}: la fecha ${i + 1} acaba antes de empezar`
+        );
+        comprobar(nota === undefined || (typeof nota == 'string' && nota.length < 80), `${que}: nota rara`);
+      });
+    }
     // Textos con su tipo: documentado, tradición o divulgativo
     comprobar(Array.isArray(c.textos) && c.textos.length, `${que}: sin textos`);
     (c.textos || []).forEach(([tipo, texto], i) => {
@@ -687,6 +712,57 @@ for (const f of fs.readdirSync(path.join(RAIZ, 'js/datos')).filter(f => f.endsWi
       `Cultura: la categoría «${n}» no tiene ningún elemento`
     )
   );
+}
+
+// --- Detalles escondidos ---------------------------------------------------------------------------
+{
+  const vistos = new Set(),
+    hoy = new Date().toISOString().slice(0, 10),
+    LICENCIAS = /^(CC0|CC BY(-SA)? [1-4]\.0( ES)?|Dominio público)$/;
+  comprobar(Array.isArray(D.DETALLES) && D.DETALLES.length, 'DETALLES está vacío');
+  D.DETALLES.forEach(d => {
+    const que = `Detalle «${d.id}»`;
+    comprobar(/^[a-z0-9-]{1,60}$/.test(d.id || '') && !vistos.has(d.id), `${que}: id vacío, raro o repetido`);
+    vistos.add(d.id);
+    for (const campo of ['n', 'icono', 'pista'])
+      comprobar(typeof d[campo] == 'string' && d[campo].trim(), `${que}: falta «${campo}»`);
+    comprobar(idsMonumento.has(d.monumento), `${que}: el monumento «${d.monumento}» no existe`);
+    comprobar(Array.isArray(d.textos) && d.textos.length, `${que}: sin textos`);
+    (d.textos || []).forEach(([tipo, texto], i) =>
+      comprobar(
+        D.TIPOS_TEXTO_CULTURA[tipo] && typeof texto == 'string' && texto.length > 20,
+        `${que}: el texto ${i + 1} está vacío o tiene un tipo desconocido`
+      )
+    );
+    comprobar(
+      (d.textos || []).some(([tipo]) => tipo == 'hecho'),
+      `${que}: necesita al menos un dato documentado`
+    );
+    comprobar(Array.isArray(d.fuentes) && d.fuentes.length, `${que}: sin fuentes`);
+    (d.fuentes || []).forEach(([medio, url]) =>
+      comprobar(medio && /^https:\/\/[^\s]+$/.test(url || ''), `${que}: fuente mal escrita («${medio}»)`)
+    );
+    comprobar(
+      /^\d{4}-\d\d-\d\d$/.test(d.revisado || '') && d.revisado <= hoy,
+      `${que}: «revisado» tiene que ser una fecha (AAAA-MM-DD) que no sea futura`
+    );
+    if (d.foto) {
+      const f = d.foto;
+      comprobar(
+        /^img\/detalle-[a-z0-9-]+\.jpg$/.test(f.src || '') && existe(f.src),
+        `${que}: no existe la foto ${f.src}`
+      );
+      comprobar(f.pie && f.autor, `${que}: la foto necesita pie y autor`);
+      comprobar(
+        LICENCIAS.test(f.licencia || ''),
+        `${que}: licencia de la foto desconocida («${f.licencia}»)`
+      );
+      comprobar(
+        /^https:\/\/commons\.wikimedia\.org\/wiki\/File:/.test(f.url || ''),
+        `${que}: la foto necesita el enlace a su página en Commons`
+      );
+    }
+  });
 }
 
 // --- Salamanca en el tiempo: lo relacionado con cada etapa ----------------------------------------
