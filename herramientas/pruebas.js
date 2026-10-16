@@ -295,6 +295,54 @@ prueba('Mapa con teclado y lector de pantalla', async p => {
   cierto(!(await p.$('#rs')), 'sin botón de Resto de la provincia');
 });
 
+prueba(
+  'Novedades al llegar una versión nueva',
+  async (p, url) => {
+    const version = await p.evaluate(() => versionApp());
+    // Venía de antes de existir esto: salen las de esta versión
+    await p.waitForSelector('.modal .novedades h4');
+    igual(await texto(p, '.modal h2'), '¡Novedades de la ' + version + '!', 'título con la versión');
+    igual(await p.$$eval('.modal .novedades h4', a => a.length), 1, 'solo las de esta versión');
+    await p.click('.modal button:has-text("¡Vale!")');
+    cierto(!(await p.$('.modal')), 'se cierran');
+    igual(await p.evaluate(() => localStorage.getItem('charro-version-vista')), version, 'quedan vistas');
+    await p.goto(url);
+    await p.waitForTimeout(600);
+    cierto(!(await p.$('.modal')), 'y no vuelven a salir');
+    // Desde una versión de hace tiempo: las de las versiones que faltan, hasta tres
+    await p.evaluate(() => localStorage.setItem('charro-version-vista', '1.0.0'));
+    await p.goto(url);
+    await p.waitForSelector('.modal .novedades h4');
+    igual(await texto(p, '.modal h2'), '¡Novedades desde la última vez!', 'varias versiones');
+    igual(await p.$$eval('.modal .novedades h4', a => a.length), 3, 'tres como mucho');
+    cierto((await texto(p, '.modal .novedades h4')).startsWith(version), 'la más nueva primero');
+    await p.click('.modal button:has-text("Ver todas")');
+    await p.waitForFunction(() => document.querySelectorAll('.modal .novedades h4').length > 3);
+    igual(await texto(p, '.modal h2'), 'Novedades', '«Ver todas» las enseña todas');
+    // Por un enlace a una ficha no salen (saldrán la próxima vez)
+    await p.evaluate(() => localStorage.setItem('charro-version-vista', '1.0.0'));
+    await p.goto(url + '#tejares');
+    await p.reload();
+    await p.waitForTimeout(600);
+    cierto(!(await p.$('.modal')), 'no tapan un enlace');
+    igual(await p.evaluate(() => localStorage.getItem('charro-version-vista')), '1.0.0', 'quedan pendientes');
+  },
+  { conNovedades: true }
+);
+
+prueba(
+  'La primera vez, la bienvenida y no las novedades',
+  async p => {
+    await p.waitForSelector('.modal .bienvenida');
+    igual(
+      await p.evaluate(() => localStorage.getItem('charro-version-vista')),
+      await p.evaluate(() => versionApp()),
+      'esta versión queda vista'
+    );
+  },
+  { conBienvenida: true, conNovedades: true }
+);
+
 prueba('Salamanca en el tiempo: cada etapa enlazada con monumentos, personajes y pueblos', async (p, url) => {
   await p.goto(url + '#tiempo/5');
   await p.waitForSelector('#sh.o .tetapa-rel');
@@ -620,11 +668,11 @@ prueba('Tema claro y oscuro', async (p, url) => {
   igual(await tema(), claro, 'vuelve a claro');
 });
 
-prueba('Mapa real de fondo: se enciende, sigue al mapa y se recuerda', async (p, url) => {
-  // MapLibre falso (sin red): apunta el encuadre que le pide la app
-  let pedidas = 0;
+// MapLibre falso (sin red): apunta el encuadre que le pide la app y cuántas veces se pide
+const mapLibreFalso = async p => {
+  p.pedidasMapLibre = 0;
   await p.route('https://cdnjs.cloudflare.com/**', r => {
-    pedidas++;
+    p.pedidasMapLibre++;
     r.fulfill({
       contentType: 'text/javascript',
       body: `window.maplibregl = { Map: class {
@@ -634,40 +682,62 @@ prueba('Mapa real de fondo: se enciende, sigue al mapa y se recuerda', async (p,
       } };`
     });
   });
-  const camara = () => p.evaluate(() => window.camaraFondo);
-  cierto(!(await p.$('.capa-fondo-real')), 'apagado de entrada, sin cargar nada');
-  igual(pedidas, 0, 'MapLibre no se pide hasta encenderlo');
-  await p.click('#zc');
-  await p.click('#frb');
-  await p.waitForFunction(() => window.camaraFondo);
-  cierto(await p.$eval('.mw', e => e.classList.contains('fondo-real')), 'encendido');
-  igual(await p.getAttribute('#frb', 'aria-pressed'), 'true', 'el interruptor lo dice');
-  const antes = await camara();
-  cierto(
-    Math.abs(antes.center[0] + 5.66) < 0.05 && Math.abs(antes.center[1] - 40.965) < 0.05,
-    'centrado en Salamanca'
-  );
-  await p.click('#capx');
-  await p.click('#zi');
-  await p.waitForTimeout(700);
-  cierto((await camara()).zoom > antes.zoom + 0.3, 'al acercar el dibujo, el fondo se acerca con él');
-  await p.evaluate(() => {
-    vistaMapa.w = 120;
-    ajustarVista();
-  });
-  igual(
-    await p.$$eval('.avp, .ava', a => a.filter(e => getComputedStyle(e).display != 'none').length),
-    0,
-    'sin nuestras avenidas ni sus nombres'
-  );
-  await p.goto(url);
-  await p.waitForFunction(() => window.camaraFondo);
-  cierto(await p.$eval('.mw', e => e.classList.contains('fondo-real')), 'se recuerda al volver');
-  await p.click('#zc');
-  await p.click('#frb');
-  cierto(!(await p.$eval('.mw', e => e.classList.contains('fondo-real'))), 'se apaga');
-  igual(await p.evaluate(() => localStorage.getItem('charro-fondo-real')), null, 'y se olvida');
-});
+};
+
+prueba(
+  'Mapa real de fondo: encendido de entrada, sigue al mapa y se recuerda si se apaga',
+  async (p, url) => {
+    const camara = () => p.evaluate(() => window.camaraFondo);
+    await p.waitForFunction(() => window.camaraFondo);
+    cierto(await p.$eval('.mw', e => e.classList.contains('fondo-real')), 'encendido de entrada');
+    igual(await p.getAttribute('#frb', 'aria-pressed'), 'true', 'el interruptor lo dice');
+    igual(await p.evaluate(() => localStorage.getItem('charro-fondo-real')), null, 'sin guardar nada');
+    const antes = await camara();
+    cierto(
+      Math.abs(antes.center[0] + 5.66) < 0.05 && Math.abs(antes.center[1] - 40.965) < 0.05,
+      'centrado en Salamanca'
+    );
+    await p.click('#zi');
+    await p.waitForTimeout(700);
+    cierto((await camara()).zoom > antes.zoom + 0.3, 'al acercar el dibujo, el fondo se acerca con él');
+    await p.evaluate(() => {
+      vistaMapa.w = 120;
+      ajustarVista();
+    });
+    igual(
+      await p.$$eval('.avp, .ava', a => a.filter(e => getComputedStyle(e).display != 'none').length),
+      0,
+      'sin nuestras avenidas ni sus nombres'
+    );
+    // Apagado: se recuerda y ya no se pide MapLibre al volver
+    await p.click('#zc');
+    await p.click('#frb');
+    cierto(!(await p.$eval('.mw', e => e.classList.contains('fondo-real'))), 'se apaga');
+    igual(await p.evaluate(() => localStorage.getItem('charro-fondo-real')), '0', 'y se recuerda');
+    p.pedidasMapLibre = 0;
+    await p.goto(url);
+    await p.waitForTimeout(400);
+    cierto(!(await p.$eval('.mw', e => e.classList.contains('fondo-real'))), 'sigue apagado al volver');
+    igual(p.pedidasMapLibre, 0, 'sin pedir MapLibre');
+    // Encendido otra vez a mano
+    await p.click('#zc');
+    await p.click('#frb');
+    await p.waitForFunction(() => window.camaraFondo);
+    igual(await p.evaluate(() => localStorage.getItem('charro-fondo-real')), '1', 'encendido otra vez');
+  },
+  { conFondoReal: true, rutas: mapLibreFalso }
+);
+
+prueba(
+  'Mapa real de fondo: sin poder cargarlo de entrada, se queda apagado sin avisar',
+  async p => {
+    await p.waitForTimeout(600);
+    cierto(!(await p.$eval('.mw', e => e.classList.contains('fondo-real'))), 'apagado');
+    igual(await texto(p, '#ts'), '', 'sin aviso de error');
+    igual(await p.evaluate(() => localStorage.getItem('charro-fondo-real')), null, 'sin guardar nada');
+  },
+  { conFondoReal: true, rutas: p => p.route('https://cdnjs.cloudflare.com/**', r => r.abort()) }
+);
 
 prueba('Barrios nuevos y otros nombres', async p => {
   for (const id of ['ciudadjardin', 'huertaotea', 'salasbajas'])
@@ -3239,7 +3309,19 @@ prueba('Guardado: con la app abierta en dos pestañas no se pisan', async (p, ur
               String(d.getDate()).padStart(2, '0')
           );
         });
+      // Las calles reales (encendidas de entrada) piden mapas a otras webs, y las novedades de una versión
+      // nueva taparían la app: apagadas y vistas salvo en sus propias pruebas
+      if (!opciones.conFondoReal)
+        await p.addInitScript(() => {
+          if (!localStorage.getItem('charro-fondo-real')) localStorage.setItem('charro-fondo-real', '0');
+        });
+      if (!opciones.conNovedades)
+        await p.addInitScript(() => {
+          if (!localStorage.getItem('charro-version-vista'))
+            localStorage.setItem('charro-version-vista', '999');
+        });
       if (opciones.antes) await p.addInitScript(opciones.antes);
+      if (opciones.rutas) await opciones.rutas(p);
       try {
         await p.goto(url + (opciones.hash || ''));
         await p.waitForTimeout(250);

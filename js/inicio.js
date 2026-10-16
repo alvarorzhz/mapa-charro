@@ -1,18 +1,25 @@
 // Arranque
 const formatoFecha = f =>
   new Date(f + 'T12:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+// Con el ?v= de la versión, como el resto de archivos: si no, el navegador o el modo sin conexión
+// podían seguir enseñando las novedades de una versión anterior
+async function cargarNovedades() {
+  const enlace = document.querySelector('link[href^="novedades.json"]');
+  return (await fetch(enlace ? enlace.getAttribute('href') : 'novedades.json')).json();
+}
 async function mostrarNovedades() {
   let lista;
   try {
-    // Con el ?v= de la versión, como el resto de archivos: si no, el navegador o el modo sin conexión
-    // podían seguir enseñando las novedades de una versión anterior
-    const enlace = document.querySelector('link[href^="novedades.json"]');
-    lista = await (await fetch(enlace ? enlace.getAttribute('href') : 'novedades.json')).json();
+    lista = await cargarNovedades();
   } catch (e) {
     aviso('No se han podido cargar las novedades. Comprueba la conexión', { tipo: 'error' });
     return;
   }
-  const caja = crear(
+  escribirLocal(CLAVE_VERSION_VISTA, versionApp());
+  abrirVentana('Novedades', cajaNovedades(lista), [['Cerrar', cerrarVentana]], $('#ver button'));
+}
+const cajaNovedades = lista =>
+  crear(
     'div',
     'novedades',
     ...lista.map(n =>
@@ -28,7 +35,49 @@ async function mostrarNovedades() {
       )
     )
   );
-  abrirVentana('Novedades', caja, [['Cerrar', cerrarVentana]], $('#ver button'));
+
+// Al llegar una versión nueva, una ventana con sus novedades (y las de las versiones que no se vieron,
+// hasta tres). La última vista se recuerda en este navegador (charro-version-vista); quien entra por
+// primera vez ve la bienvenida y no las novedades.
+const CLAVE_VERSION_VISTA = 'charro-version-vista',
+  MAX_VERSIONES_NUEVAS = 3;
+const versionApp = () => (document.querySelector('meta[name="version"]') || {}).content || '';
+function compararVersiones(a, b) {
+  const x = String(a).split('.').map(Number),
+    y = String(b).split('.').map(Number);
+  for (let i = 0; i < 3; i++) if ((x[i] || 0) != (y[i] || 0)) return (x[i] || 0) - (y[i] || 0);
+  return 0;
+}
+// ¿Hay una versión que esta persona aún no ha visto? (sin ninguna apuntada: venía de antes de existir esto)
+const tocaNovedades = () => {
+  const vista = leerLocal(CLAVE_VERSION_VISTA);
+  return !!versionApp() && !location.hash && (!vista || compararVersiones(vista, versionApp()) < 0);
+};
+async function mostrarNovedadesNuevas() {
+  const vista = leerLocal(CLAVE_VERSION_VISTA),
+    actual = versionApp();
+  let lista;
+  try {
+    lista = await cargarNovedades();
+  } catch (e) {
+    return; // sin conexión: ya saldrán la próxima vez
+  }
+  const nuevas = lista
+    .filter(n => compararVersiones(n.version, actual) <= 0)
+    .filter(n => (vista ? compararVersiones(n.version, vista) > 0 : n.version == actual))
+    .slice(0, MAX_VERSIONES_NUEVAS);
+  escribirLocal(CLAVE_VERSION_VISTA, actual);
+  if (!nuevas.length) return;
+  abrirVentana(
+    nuevas.length == 1 ? '¡Novedades de la ' + actual + '!' : '¡Novedades desde la última vez!',
+    cajaNovedades(nuevas),
+    [
+      ['Ver todas', mostrarNovedades],
+      ['¡Vale!', cerrarVentana, 'on']
+    ]
+  );
+  const botones = document.querySelectorAll('.modal .botones button');
+  botones[botones.length - 1].focus({ preventScroll: true });
 }
 // Versión al pie de la página: la de package.json (1.4.0) y, entre paréntesis, el número interno ?v=
 // que sube herramientas/version.js en cada cambio (el que hace que el móvil baje los archivos nuevos).
@@ -116,9 +165,12 @@ if (
     .catch(e => console.warn('Sin modo sin conexión:', e));
 }
 
-// La primera vez, la bienvenida (bienvenida.js), cuando ya se ha pintado el mapa. Si no, la primera vez
-// de cada día, «¿Qué puedo descubrir hoy?» (hoy.js); el día de la bienvenida ya no sale
+// La primera vez, la bienvenida (bienvenida.js), cuando ya se ha pintado el mapa. Si no, las novedades
+// si hay una versión nueva y, si no, la primera vez de cada día, «¿Qué puedo descubrir hoy?» (hoy.js); el
+// día de la bienvenida ya no sale, y el de las novedades sale la próxima vez que se abra
 if (tocaBienvenida()) {
   escribirLocal(CLAVE_HOY, fechaHoy());
+  escribirLocal(CLAVE_VERSION_VISTA, versionApp());
   setTimeout(() => mostrarBienvenida(), 300);
-} else if (tocaHoy()) setTimeout(() => abrirHoy(), 300);
+} else if (tocaNovedades()) setTimeout(() => mostrarNovedadesNuevas(), 300);
+else if (tocaHoy()) setTimeout(() => abrirHoy(), 300);
