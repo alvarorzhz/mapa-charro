@@ -1,5 +1,17 @@
 [
   {
+    "version": "2.11.1",
+    "fecha": "2026-10-16",
+    "titulo": "Ventanas que no se descuadran",
+    "usuario": [
+      "Con una ventana abierta, como la de novedades, la página de detrás ya no se mueve.",
+      "En las ventanas largas solo se desplaza el texto: el título, la × y los botones se quedan a la vista, también en el iPhone."
+    ],
+    "tecnico": [
+      "imagen.js: abrirVentana mete el contenido en .cuerpo (lo único que se desplaza, con overscroll-behavior: contain) y pone html.con-ventana mientras hay una ventana abierta; .caja va en columna con max-height de 92dvh."
+    ]
+  },
+  {
     "version": "2.11.0",
     "fecha": "2026-10-16",
     "titulo": "Entrar con Google en el iPhone",
