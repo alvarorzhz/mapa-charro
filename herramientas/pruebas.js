@@ -2107,6 +2107,40 @@ prueba('Versión nueva con la app abierta: aviso para actualizar', async p => {
   igual(await p.evaluate(() => window.__antesDeRecargar), undefined, '«Actualizar» recarga la app');
 });
 
+prueba('Ventanas largas: solo se desplaza su contenido, no la página de detrás', async p => {
+  await p.evaluate(() => mostrarNovedades());
+  await p.waitForSelector('.modal .cuerpo .novedades');
+  cierto(
+    await p.evaluate(() => document.documentElement.classList.contains('con-ventana')),
+    'la página queda quieta'
+  );
+  const medidas = await p.$eval('.modal .caja', caja => {
+    const cuerpo = caja.querySelector('.cuerpo');
+    cuerpo.scrollTop = 1e6;
+    const r = caja.getBoundingClientRect(),
+      dentro = e => {
+        const b = e.getBoundingClientRect();
+        return b.top >= r.top && b.bottom <= r.bottom;
+      };
+    return {
+      seDesplaza: cuerpo.scrollTop > 0,
+      cabe: r.bottom <= innerHeight,
+      botones: dentro(caja.querySelector('.botones')),
+      cerrar: dentro(caja.querySelector('.cerrar'))
+    };
+  });
+  igual(
+    medidas,
+    { seDesplaza: true, cabe: true, botones: true, cerrar: true },
+    'título, × y botones a la vista'
+  );
+  await p.click('.modal .botones button');
+  cierto(
+    !(await p.evaluate(() => document.documentElement.classList.contains('con-ventana'))),
+    'al cerrar, se suelta'
+  );
+});
+
 prueba('Quitar una marca se puede deshacer', async p => {
   await p.fill('#q', 'tejares');
   await p.press('#q', 'Enter');
