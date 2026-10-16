@@ -92,7 +92,7 @@ const conMayuscula = t => t.charAt(0).toUpperCase() + t.slice(1);
 
 // Una fila de la agenda: fecha, nombre, nota y lugar; abre la ficha del elemento
 function filaCita(x, abrir) {
-  const lugares = [...lugaresCultura(x.c).keys()].map(m => (m.cap ? 'Salamanca' : m.n)),
+  const lugares = lugaresDeCita(x),
     donde = lugares.length > 3 ? lugares.length + ' municipios' : lugares.join(', ');
   const b = crear(
     'button',
@@ -118,12 +118,88 @@ function filaCita(x, abrir) {
   return b;
 }
 
-// Grupos de la agenda: lo de esta semana, lo de los próximos 30 días y el resto del año
+// Grupos de la agenda: lo de los próximos 7 días, lo que queda del mes natural y lo demás
+const delMismoMes = (a, b) => a.getMonth() == b.getMonth() && a.getFullYear() == b.getFullYear();
 const GRUPOS_AGENDA = [
   ['Ahora y esta semana', x => x.dentro <= 7],
-  ['Este mes', x => x.dentro > 7 && x.dentro <= 31],
-  ['Más adelante', x => x.dentro > 31]
+  ['Este mes', (x, hoy) => x.dentro > 7 && delMismoMes(x.desde, hoy)],
+  ['Más adelante', (x, hoy) => x.dentro > 7 && !delMismoMes(x.desde, hoy)]
 ];
+
+// --- Añadir al calendario: un archivo .ics (iCalendar) con eventos de día entero --------------------------
+const diaIcs = d =>
+  d.getFullYear() + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0');
+const textoIcs = t => String(t).replace(/\\/g, '\\\\').replace(/[;,]/g, '\\$&').replace(/\r?\n/g, '\\n');
+// Las líneas de más de 75 bytes se parten y siguen con un espacio (RFC 5545), sin cortar una letra por medio
+function plegarIcs(linea) {
+  const trozos = [];
+  let actual = '',
+    bytes = 0;
+  for (const letra of linea) {
+    const b = new TextEncoder().encode(letra).length;
+    if (bytes + b > (trozos.length ? 74 : 75)) {
+      trozos.push(actual);
+      actual = '';
+      bytes = 0;
+    }
+    actual += letra;
+    bytes += b;
+  }
+  trozos.push(actual);
+  return trozos.join('\r\n ');
+}
+const lugaresDeCita = x => [...lugaresCultura(x.c).keys()].map(m => (m.cap ? 'Salamanca' : m.n));
+
+function eventoIcs(x) {
+  const fin = new Date(x.hasta);
+  fin.setDate(fin.getDate() + 1); // en los eventos de día entero, el final es el día siguiente
+  const enlace = WEB + '#cultura/' + x.c.id;
+  return [
+    'BEGIN:VEVENT',
+    'UID:' + x.c.id + '-' + diaIcs(x.desde) + '@mapa-charro',
+    'DTSTAMP:' + new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+/, ''),
+    'DTSTART;VALUE=DATE:' + diaIcs(x.desde),
+    'DTEND;VALUE=DATE:' + diaIcs(fin),
+    'SUMMARY:' + textoIcs(x.c.n),
+    'LOCATION:' + textoIcs(lugaresDeCita(x).join(', ') + ' (Salamanca)'),
+    'DESCRIPTION:' +
+      textoIcs(
+        [x.nota, x.c.resumen, 'Confirma el programa de cada año antes de ir.', 'Mapa charro: ' + enlace]
+          .filter(Boolean)
+          .join('\n\n')
+      ),
+    'URL:' + enlace,
+    'END:VEVENT'
+  ];
+}
+
+function textoCalendario(citas) {
+  return (
+    [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//Mapa charro//Agenda//ES',
+      'CALSCALE:GREGORIAN',
+      'METHOD:PUBLISH',
+      ...citas.flatMap(eventoIcs),
+      'END:VCALENDAR'
+    ]
+      .map(plegarIcs)
+      .join('\r\n') + '\r\n'
+  );
+}
+
+function anadirAlCalendario(citas, nombre) {
+  guardarArchivo(
+    new Blob([textoCalendario(citas)], { type: 'text/calendar;charset=utf-8' }),
+    nombre + '.ics'
+  );
+}
+const botonCalendario = (x, texto = '📅 Añadir al calendario') => {
+  const b = crear('button', 'boton-cal', texto);
+  b.onclick = () => anadirAlCalendario([x], x.c.id + '-' + x.desde.getFullYear());
+  return b;
+};
 
 function abrirAgenda() {
   activarRuta(false);
@@ -136,12 +212,23 @@ function abrirAgenda() {
       'Lo próximo de «Cultura y tradiciones», de la capital y de la provincia. Las fiestas que cambian cada año (Carnaval, Semana Santa, Lunes de Aguas…) se calculan desde la Pascua.'
     )
   );
+  if (citas.length) {
+    const todas = crear('button', 'boton-cal', '📅 Añadir todas al calendario');
+    todas.onclick = () => anadirAlCalendario(citas, 'agenda-mapa-charro');
+    caja.appendChild(crear('div', 'nb', todas));
+  }
+  const hoy = new Date();
   GRUPOS_AGENDA.forEach(([titulo, entra]) => {
-    const deEste = citas.filter(entra);
+    const deEste = citas.filter(x => entra(x, hoy));
     if (!deEste.length) return;
     caja.appendChild(crear('h3', '', titulo));
     const lista = crear('div', 'lista-explora');
-    deEste.forEach(x => lista.appendChild(filaCita(x)));
+    deEste.forEach(x => {
+      const cal = botonCalendario(x, '📅');
+      cal.title = 'Añadir al calendario: ' + x.c.n;
+      cal.setAttribute('aria-label', cal.title);
+      lista.appendChild(crear('div', 'cita-con-cal', filaCita(x), cal));
+    });
     caja.appendChild(lista);
   });
   const sinFecha = CULTURA.filter(c => c.cuando && !c.fechas);

@@ -2819,9 +2819,36 @@ prueba('Agenda: fechas fijas, fechas desde la Pascua y en las fichas', async (p,
     '15 y 16 de agosto',
     'texto de dos días seguidos'
   );
+  // «Este mes» es el mes natural: el 20 de octubre, lo de noviembre ya va en «Más adelante»
+  igual(
+    await p.evaluate(() => {
+      const hoy = new Date(2026, 9, 20),
+        cita = d => ({ desde: d, dentro: diasEntre(hoy, d) });
+      return [new Date(2026, 9, 31), new Date(2026, 10, 15)].map(
+        d => GRUPOS_AGENDA.find(([, entra]) => entra(cita(d), hoy))[0]
+      );
+    }),
+    ['Este mes', 'Más adelante'],
+    'grupos por mes natural'
+  );
+  // Añadir al calendario: un .ics con eventos de día entero (el final, el día siguiente)
+  const ics = await p.evaluate(() =>
+    textoCalendario([proximasCitas(new Date(2026, 9, 18)).find(x => x.c.id == 'santa-teresa-alba')])
+  );
+  cierto(ics.startsWith('BEGIN:VCALENDAR\r\n') && ics.endsWith('END:VCALENDAR\r\n'), 'calendario completo');
+  cierto(ics.includes('DTSTART;VALUE=DATE:20261015\r\n'), 'empieza el 15 de octubre');
+  cierto(ics.includes('DTEND;VALUE=DATE:20261023\r\n'), 'y acaba al terminar el 22');
+  cierto(
+    ics.split('\r\n').every(l => new TextEncoder().encode(l).length <= 75),
+    'líneas de 75 bytes como mucho'
+  );
   // La lista, con su enlace y su botón
   await p.click('#agn');
   igual(await texto(p, '#nm'), 'Agenda', 'abre la agenda');
+  cierto(
+    await p.$$eval('#info .cita-con-cal .boton-cal', a => a.length > 0),
+    'cada fila con su botón del calendario'
+  );
   igual(await p.evaluate(() => location.hash), '#agenda', 'con su enlace');
   igual(
     await p.$$eval('#info .fila-cita', a => a.length),
@@ -2853,12 +2880,42 @@ prueba('Detalles escondidos: pista, encontrarlo, foto, logros y guardado', async
   cierto((await texto(p, '#info')).includes('Pista'), 'enseña la pista');
   cierto(await p.$eval('#ph', e => e.hidden), 'sin la foto hasta encontrarlo');
   cierto(!(await texto(p, '#info')).includes('Miguel Romero'), 'ni la explicación');
+  cierto(!(await texto(p, '#ap')).includes('Foto:'), 'ni el enlace a la foto en las fuentes');
   await p.click('#info button:has-text("enséñamelo")');
   cierto(!(await p.$eval('#ph', e => e.hidden)), '«Enséñamelo» enseña la foto');
+  cierto((await texto(p, '#ap')).includes('Foto:'), 'y ya el enlace a la foto');
   igual(await p.evaluate(() => progreso.j.de), [], 'pero no lo cuenta');
+  cierto(
+    !(await p.$('#info button:has-text("¡Lo he encontrado!")')),
+    'y ya no deja marcarlo como encontrado sin ayuda'
+  );
+  await p.click('#info button:has-text("Detalles escondidos")');
+  await p.click('#info .fila-explora:has-text("astronauta")');
+  cierto(!(await p.$('#info button:has-text("¡Lo he encontrado!")')), 'ni al volver a abrirlo');
+  // La próxima vez que se abre la app, sí
+  await p.reload();
+  await p.waitForSelector('#sh.o');
   await p.click('#info button:has-text("¡Lo he encontrado!")');
   igual(await p.evaluate(() => progreso.j.de), ['astronauta'], 'encontrado');
   cierto((await texto(p, '#info')).includes('Miguel Romero'), 'con su explicación');
+  cierto(
+    await p.$eval('#info', e => {
+      const hijos = [...e.children];
+      return hijos.indexOf(e.querySelector('.cul-textos')) < hijos.indexOf(e.querySelector('.det-pista'));
+    }),
+    'la explicación va antes que la pista'
+  );
+  cierto(
+    await p.evaluate(() => (progreso.j.hi || []).some(([, tipo, id]) => tipo == 'de' && id == 'astronauta')),
+    'se apunta en el historial'
+  );
+  cierto(
+    await p.evaluate(() => {
+      const h = estadisticas().historial;
+      return h.conFecha.length + h.sinFecha.capital == 1;
+    }),
+    'y cuenta en el mes a mes de Mi Salamanca'
+  );
   cierto(
     await p.evaluate(() => calcularLogros().some(a => a.id == 'de1' && a.c >= a.m)),
     'logro del primer detalle'

@@ -30,6 +30,7 @@ function ladoDeHistorial(tipo, id) {
   }
   if (tipo == 'p') return 'provincia';
   if (tipo == 'mo') return 'capital';
+  if (tipo == 'de') return buscarDetalle(id) ? 'capital' : null; // todos están en monumentos de la ciudad
   if (tipo == 'ru') {
     const ruta = id.split(':')[0];
     return RUTAS.some(r => r.id == ruta)
@@ -136,7 +137,7 @@ function estadisticas() {
 }
 
 // Tipos de entrada del historial que son visitas o rutas (el resto son logros: perfil.js)
-const TIPOS_DE_VISITA = ['z', 'p', 'mo', 'ru', 'rh'];
+const TIPOS_DE_VISITA = ['z', 'p', 'mo', 'ru', 'rh', 'de'];
 
 // Categorías para ver qué se ha explorado más y qué está sin empezar, cada una con su propio total:
 // partes de la ciudad (barrios), comarcas (municipios sin la capital) y tipos de monumento.

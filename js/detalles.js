@@ -1,12 +1,14 @@
 // Detalles escondidos (datos en js/datos/detalles.js): la lista (#detalles) y la ficha de cada uno
 // (#detalle/<id>) con su pista. Al pulsar «¡Lo he encontrado!» se guarda en progreso.j.de y se ven la foto
-// y la explicación; «Enséñamelo» las enseña sin contarlo. También salen en la ficha de su monumento.
+// y la explicación; «Enséñamelo» las enseña y ya no deja marcarlo hasta la próxima vez que se abra la app. También salen en la ficha de su monumento.
 
 const buscarDetalle = id => DETALLES.find(d => d.id == id);
 const detallesEncontrados = () => datoJ('de', []);
 const detalleEncontrado = d => detallesEncontrados().includes(d.id);
 const detallesDeMonumento = id => DETALLES.filter(d => d.monumento == id);
-let detalleRevelado = null; // id del que se ha pedido ver sin encontrarlo (solo mientras está abierto)
+// Los que se han pedido ver sin encontrarlos («Me rindo»): ya no cuentan como encontrados hasta la próxima
+// vez que se abra la app (solo en memoria)
+const detallesRevelados = new Set();
 
 function marcarDetalle(d, encontrado) {
   const j = (progreso.j = progreso.j || {}),
@@ -26,41 +28,9 @@ const filaDetallesDeMonumento = m => [
   }))
 ];
 
-// repintar: la misma ficha otra vez tras marcarlo o enseñarlo, sin cambiar su tamaño
-function abrirDetalle(id, repintar = false) {
-  const grande = repintar && $('#sh').classList.contains('grande');
-  const d = buscarDetalle(id);
-  if (!d) return abrirDetalles();
-  activarRuta(false);
-  const m = buscarMonumento(d.monumento),
-    encontrado = detalleEncontrado(d),
-    visto = encontrado || detalleRevelado == d.id,
-    caja = fichaLimpia('🔍 Detalle escondido · ' + m.n, d.icono + ' ' + d.n);
-  pintarFotoDe(
-    visto && d.foto
-      ? [
-          d.foto.src,
-          d.foto.pie + '. Foto: ' + d.foto.autor + ' · ' + d.foto.licencia + ' · Wikimedia Commons'
-        ]
-      : null
-  );
-  const volver = crear('button', 'volver-hoy', '← Detalles escondidos');
-  volver.onclick = () => abrirDetalles();
-  caja.appendChild(volver);
-  caja.appendChild(crear('p', 'det-pista', crear('b', '', '🔍 Pista: '), d.pista));
-  const ir = crear('button', 'conico', iconoMonumento(m.tipo, 18), 'Dónde está: ' + m.n);
-  ir.onclick = () => abrirMonumento(m.id);
-  caja.appendChild(crear('div', 'nb', ir));
-
-  if (visto) {
-    const textos = crear('div', 'cul-textos');
-    d.textos.forEach(([tipo, texto]) =>
-      textos.appendChild(
-        crear('p', 'cul-t ' + tipo, crear('span', 'cul-tipo', TIPOS_TEXTO_CULTURA[tipo]), texto)
-      )
-    );
-    caja.appendChild(textos);
-  }
+// Los botones de abajo: quitar la marca si ya está; si no, marcarlo o rendirse. Tras rendirse no se puede
+// marcar: la pista promete premio por encontrarlo sin ayuda.
+function botonesDetalle(d, encontrado) {
   const botones = crear('div', 'det-botones');
   if (encontrado) {
     botones.appendChild(crear('p', 'det-hecho', '✓ ¡Lo has encontrado!'));
@@ -79,6 +49,14 @@ function abrirDetalle(id, repintar = false) {
       });
     };
     botones.appendChild(quitar);
+  } else if (detallesRevelados.has(d.id)) {
+    botones.appendChild(
+      crear(
+        'p',
+        'det-hecho det-ayuda',
+        'Esta vez te lo hemos enseñado, así que no cuenta. Cuando lo tengas delante, vuelve a abrir la app y márcalo.'
+      )
+    );
   } else {
     const si = crear('button', 'boton-hoy', '¡Lo he encontrado!');
     si.onclick = () =>
@@ -90,21 +68,58 @@ function abrirDetalle(id, repintar = false) {
         });
       });
     botones.appendChild(si);
-    if (!visto) {
-      const ver = crear('button', '', 'Me rindo: enséñamelo');
-      ver.onclick = () => {
-        detalleRevelado = d.id;
-        abrirDetalle(d.id, true);
-      };
-      botones.appendChild(ver);
-    }
+    const ver = crear('button', '', 'Me rindo: enséñamelo');
+    ver.onclick = () => {
+      detallesRevelados.add(d.id);
+      abrirDetalle(d.id, true);
+    };
+    botones.appendChild(ver);
   }
-  caja.appendChild(botones);
+  return botones;
+}
+
+// repintar: la misma ficha otra vez tras marcarlo o enseñarlo, sin cambiar su tamaño
+function abrirDetalle(id, repintar = false) {
+  const grande = repintar && $('#sh').classList.contains('grande');
+  const d = buscarDetalle(id);
+  if (!d) return abrirDetalles();
+  activarRuta(false);
+  const m = buscarMonumento(d.monumento),
+    encontrado = detalleEncontrado(d),
+    visto = encontrado || detallesRevelados.has(d.id),
+    caja = fichaLimpia('🔍 Detalle escondido · ' + m.n, d.icono + ' ' + d.n);
+  pintarFotoDe(
+    visto && d.foto
+      ? [
+          d.foto.src,
+          d.foto.pie + '. Foto: ' + d.foto.autor + ' · ' + d.foto.licencia + ' · Wikimedia Commons'
+        ]
+      : null
+  );
+  const volver = crear('button', 'volver-hoy', '← Detalles escondidos');
+  volver.onclick = () => abrirDetalles();
+  caja.appendChild(volver);
+  const pista = crear('p', 'det-pista', crear('b', '', '🔍 Pista: '), d.pista);
+  const ir = crear('button', 'conico', iconoMonumento(m.tipo, 18), 'Dónde está: ' + m.n);
+  ir.onclick = () => abrirMonumento(m.id);
+  const dondeEsta = crear('div', 'nb', ir);
+
+  if (visto) {
+    // Visto: lo primero, justo bajo la foto, la explicación y los botones; la pista queda debajo
+    const textos = crear('div', 'cul-textos');
+    d.textos.forEach(([tipo, texto]) =>
+      textos.appendChild(
+        crear('p', 'cul-t ' + tipo, crear('span', 'cul-tipo', TIPOS_TEXTO_CULTURA[tipo]), texto)
+      )
+    );
+    caja.append(textos, botonesDetalle(d, encontrado), pista, dondeEsta);
+  } else caja.append(pista, dondeEsta, botonesDetalle(d, encontrado));
 
   const ap = $('#ap');
   ap.textContent = 'Fuentes: ';
   d.fuentes.forEach((f, i) => ap.append(i ? ', ' : '', enlaceFuente(f)));
-  if (d.foto) {
+  // El enlace a la foto, solo cuando ya se ve: antes destriparía el premio
+  if (d.foto && visto) {
     const a = crear('a', '', d.foto.autor + ', ' + d.foto.licencia);
     a.href = d.foto.url;
     a.target = '_blank';
@@ -119,7 +134,6 @@ function abrirDetalle(id, repintar = false) {
 
 function abrirDetalles() {
   activarRuta(false);
-  detalleRevelado = null;
   const n = detallesEncontrados().length,
     caja = fichaLimpia(n + ' de ' + DETALLES.length + ' encontrados', 'Detalles escondidos');
   caja.appendChild(

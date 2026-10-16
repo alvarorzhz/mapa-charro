@@ -133,7 +133,7 @@ const limpiarHistorial = hi =>
         .slice(-3000)
     : undefined;
 // Seguimiento de las rutas: { idRuta: 'v' (la he hecho) | 'w' (la quiero hacer) }
-const TIPOS_HISTORIAL = ['z', 'p', 'mo', 'ru', 'rh', 'lo'];
+const TIPOS_HISTORIAL = ['z', 'p', 'mo', 'ru', 'rh', 'de', 'lo'];
 function limpiarSeguimiento(rs) {
   const limpio = {};
   if (!rs || typeof rs != 'object') return limpio;

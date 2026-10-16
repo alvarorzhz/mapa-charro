@@ -1,7 +1,7 @@
 // Tu perfil (#perfil): nivel, estadísticas de todo lo que llevas, actividad de las últimas semanas e historial.
 // El historial se guarda en progreso.j.hi como [fecha, tipo, id]: tipo 'z' zona pisada, 'p' pueblo o pedanía
-// pisados, 'mo' monumento visitado, 'ru' parada de una ruta («ruta:parada»), 'rh' ruta hecha, 'lo' logro
-// conseguido (TIPOS_HISTORIAL, en estado.js).
+// pisados, 'mo' monumento visitado, 'ru' parada de una ruta («ruta:parada»), 'rh' ruta hecha, 'de' detalle
+// escondido encontrado, 'lo' logro conseguido (TIPOS_HISTORIAL, en estado.js).
 // No hace falta apuntarlo en cada sitio: cada vez que se guarda, anotarHistorial compara lo que hay marcado
 // con el historial, apunta con la fecha de hoy lo nuevo y quita lo que ya no está marcado. Lo que ya estaba
 // marcado antes de existir el historial se apunta sin fecha ('').
@@ -18,6 +18,7 @@ function marcasActuales() {
   (j.mo || []).forEach(id => claves.push(claveHistorial('mo', id)));
   for (const ruta in j.r || {}) j.r[ruta].forEach(id => claves.push(claveHistorial('ru', ruta + ':' + id)));
   for (const ruta in j.rs || {}) if (j.rs[ruta] == 'v') claves.push(claveHistorial('rh', ruta));
+  (j.de || []).forEach(id => claves.push(claveHistorial('de', id)));
   calcularLogros()
     .filter(conseguido)
     .forEach(a => claves.push(claveHistorial('lo', a.id)));
@@ -54,6 +55,7 @@ function textoHistorial([, tipo, id]) {
     return (p ? p.n : parada) + (r ? ', en la ruta ' + r.nombre : '');
   }
   if (tipo == 'rh') return '🥾 Hiciste la ruta ' + ((buscarRuta(id) || {}).nombre || id);
+  if (tipo == 'de') return '🔍 Encontraste ' + ((buscarDetalle(id) || {}).n || id);
   const logro = calcularLogros().find(a => a.id == id);
   return '🏆 Logro: ' + (logro ? logro.n : id);
 }
