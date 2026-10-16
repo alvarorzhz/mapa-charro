@@ -1,5 +1,23 @@
 [
   {
+    "version": "2.11.0",
+    "fecha": "2026-10-16",
+    "titulo": "Entrar con Google en el iPhone",
+    "usuario": [
+      "En la app del iPhone (la de la pantalla de inicio) ya puedes entrar con Google: te lleva a la página de Google y vuelve al mapa con tu cuenta.",
+      "Si la app lleva tiempo abierta y sale una versión nueva, te avisa arriba con un botón «Actualizar».",
+      "Los logros que consigues ya no se pierden: los de racha cuentan tu mejor racha y los de «todos» siguen aunque añadamos cosas nuevas.",
+      "«Deshacer» devuelve la marca con su fecha de antes en tu historial.",
+      "Las estaciones, los cines y demás salen como «Sitio» y no cuentan para «Guía de la ciudad».",
+      "La página de privacidad explica qué piden «Calles reales» y entrar con Google."
+    ],
+    "tecnico": [
+      "cuenta.js: con navigator.standalone, irAGoogle (OAuth implícito, response_type id_token, state y nonce en charro-ida-google) y vueltaDeGoogle → signInWithCredential; la dirección de la app está en los URI de redirección del cliente web de Firebase.",
+      "inicio.js: vigilarVersionNueva (reg.update al volver a la app, cada 10 min como mucho) y avisarVersionNueva (#nueva) con controllerchange.",
+      "logros.js: j.lg ({ id: m }, apuntarLogros al guardar) y conseguido() que lo tiene en cuenta; mejorRacha con j.rm; esMonumento sin la categoría ciudad. perfil.js: quitadosDelHistorial conserva la fecha de lo que vuelve en la misma visita. estado.js: textoTipoMonumento."
+    ]
+  },
+  {
     "version": "2.10.1",
     "fecha": "2026-10-16",
     "titulo": "Calles reales de entrada",

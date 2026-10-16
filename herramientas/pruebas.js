@@ -2083,6 +2083,30 @@ prueba('Las estaciones y los cines salen como «Sitio» en el buscador', async p
   cierto((await texto(p, '#sr')).includes('Monumento ·'), 'y los monumentos, «Monumento»');
 });
 
+prueba('Versión nueva con la app abierta: aviso para actualizar', async p => {
+  const mirado = await p.evaluate(() => {
+    let veces = 0;
+    vigilarVersionNueva({ update: async () => veces++ }, false);
+    Object.defineProperty(document, 'visibilityState', { value: 'visible', configurable: true });
+    document.dispatchEvent(new Event('visibilitychange'));
+    return veces;
+  });
+  igual(mirado, 0, 'al volver enseguida no mira otra vez');
+  cierto(!(await p.$('#nueva')), 'sin versión nueva, sin aviso');
+  await p.evaluate(() => navigator.serviceWorker.dispatchEvent(new Event('controllerchange')));
+  igual(await texto(p, '#nueva span'), '✨ Hay una versión nueva del mapa', 'avisa');
+  await p.waitForTimeout(2500);
+  cierto(!!(await p.$('#nueva')), 'y no se va solo');
+  await p.click('#nueva .cerrar');
+  cierto(!(await p.$('#nueva')), 'se puede cerrar');
+  await p.evaluate(() => {
+    avisarVersionNueva();
+    window.__antesDeRecargar = 1;
+  });
+  await Promise.all([p.waitForNavigation(), p.click('#nueva button.on')]);
+  igual(await p.evaluate(() => window.__antesDeRecargar), undefined, '«Actualizar» recarga la app');
+});
+
 prueba('Quitar una marca se puede deshacer', async p => {
   await p.fill('#q', 'tejares');
   await p.press('#q', 'Enter');

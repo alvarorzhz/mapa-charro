@@ -161,8 +161,38 @@ if (
           if (w.state == 'activated')
             aviso('✓ Listo: el mapa ya funciona sin conexión', { tipo: 'exito', discreto: true });
         });
+      vigilarVersionNueva(reg, primeraVez);
     })
     .catch(e => console.warn('Sin modo sin conexión:', e));
+}
+
+// Versión nueva con la app abierta (en el iPhone, la de la pantalla de inicio puede llevar días abierta):
+// al volver a ella se mira si hay otro sw.js (como mucho cada 10 minutos). El nuevo toma el control solo
+// (sw.js: skipWaiting y clients.claim) y entonces sale arriba «Hay una versión nueva · Actualizar», que no
+// se va hasta pulsarlo o cerrarlo. No se recarga sola, para no cortar lo que se esté haciendo; al recargar
+// salen sus novedades.
+const ESPERA_VERSION_NUEVA = 10 * 60 * 1000;
+function vigilarVersionNueva(reg, primeraVez) {
+  let ultimaVez = Date.now();
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState != 'visible' || Date.now() - ultimaVez < ESPERA_VERSION_NUEVA) return;
+    ultimaVez = Date.now();
+    reg.update().catch(() => {}); // sin conexión: ya se mirará otra vez
+  });
+  // La primera vez también cambia el control (de nadie al primer sw.js): eso no es una versión nueva
+  if (!primeraVez) navigator.serviceWorker.addEventListener('controllerchange', avisarVersionNueva);
+}
+function avisarVersionNueva() {
+  if ($('#nueva')) return;
+  const actualizar = crear('button', 'on', 'Actualizar'),
+    cerrar = crear('button', 'cerrar', '×'),
+    caja = crear('div', '', crear('span', '', '✨ Hay una versión nueva del mapa'), actualizar, cerrar);
+  caja.id = 'nueva';
+  caja.setAttribute('role', 'status');
+  cerrar.setAttribute('aria-label', 'Cerrar el aviso de versión nueva');
+  actualizar.onclick = () => location.reload();
+  cerrar.onclick = () => caja.remove();
+  document.body.append(caja);
 }
 
 // La primera vez, la bienvenida (bienvenida.js), cuando ya se ha pintado el mapa. Si no, las novedades
