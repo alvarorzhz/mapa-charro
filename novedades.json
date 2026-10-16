@@ -1,5 +1,23 @@
 [
   {
+    "version": "2.10.0",
+    "fecha": "2026-10-16",
+    "titulo": "Fiestas en tu calendario",
+    "usuario": [
+      "La Agenda te deja añadir las fiestas a tu calendario: una a una con el botón 📅, todas a la vez o desde la ficha de cada tradición.",
+      "En la Agenda, «Este mes» es ya el mes del calendario.",
+      "Los detalles escondidos que encuentras salen en tu historial y en «Mi Salamanca».",
+      "Al encontrar un detalle, su historia sale justo debajo de la foto. Si pides que te lo enseñemos, ya no cuenta como encontrado hasta la próxima vez que abras la app, y la foto no se ve antes de tiempo.",
+      "Los avisos salen abajo y ya no tapan los botones del mapa."
+    ],
+    "tecnico": [
+      "agenda.js: textoCalendario/anadirAlCalendario generan un .ics (eventos de día entero, líneas plegadas a 75 bytes) que se baja con guardarArchivo; botón por fila (.cita-con-cal), «Añadir todas» y en la ficha cultural. GRUPOS_AGENDA reciben hoy y agrupan por mes natural.",
+      "Historial: tipo 'de' (detalle encontrado) en TIPOS_HISTORIAL, marcasActuales, textoHistorial y ladoDeHistorial (capital, cuenta en el mes a mes).",
+      "detalles.js: detallesRevelados (Set en memoria) impide marcar tras «Me rindo»; el enlace a la foto en #ap solo cuando se ve; con el detalle visto, textos y botones antes de la pista (botonesDetalle).",
+      "util.js: #ts abajo y, con la ficha abierta, encima de .bt. Pruebas nuevas de todo."
+    ]
+  },
+  {
     "version": "2.9.0",
     "fecha": "2026-10-14",
     "titulo": "Agenda y detalles escondidos",
