@@ -299,6 +299,7 @@ function cerrarVentana() {
   if (v) {
     if (v._url) URL.revokeObjectURL(v._url);
     v.remove();
+    document.documentElement.classList.remove('con-ventana');
     // El foco vuelve al botón que la abrió
     if (v._volverA && v._volverA.isConnected) v._volverA.focus({ preventScroll: true });
     else {
@@ -326,7 +327,8 @@ function abrirVentana(titulo, contenido, botones, volverA = document.activeEleme
     })
   );
   const h = crear('h2', '', titulo),
-    caja = crear('div', 'caja', cerrar, h, contenido, fila),
+    // Solo el contenido se desplaza: el título, la × y los botones se quedan a la vista
+    caja = crear('div', 'caja', cerrar, h, crear('div', 'cuerpo', contenido), fila),
     v = crear('div', 'modal', caja);
   h.id = 'tv';
   caja.setAttribute('role', 'dialog');
@@ -349,6 +351,7 @@ function abrirVentana(titulo, contenido, botones, volverA = document.activeEleme
     }
   });
   document.body.appendChild(v);
+  document.documentElement.classList.add('con-ventana'); // que no se mueva la página de detrás
   (fila.querySelector('button') || cerrar).focus({ preventScroll: true });
   return v;
 }
