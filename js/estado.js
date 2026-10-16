@@ -62,7 +62,7 @@ const pedanias = PROVINCIA.m.flatMap(m => m.P);
 //                                  y, para los logros, monumentos visitados (mo: [id]) y paradas propias de cada
 //                                  ruta visitadas (r: { idRuta: [idParada] }), fichas de zona abiertas (fl),
 //                                  etapas de «Salamanca en el tiempo» vistas (et), partidas terminadas (n) y
-//                                  veces que se ha creado «Mi Salamanca» (ms) o compartido (cp) palabras charras vistas (pv), historial con fechas (hi, ver perfil.js) y detalles escondidos encontrados (de). Van dentro de j para no añadir
+//                                  veces que se ha creado «Mi Salamanca» (ms) o compartido (cp) palabras charras vistas (pv), historial con fechas (hi, ver perfil.js), detalles escondidos encontrados (de), la racha más larga del reto (rm) y los logros conseguidos con cuántas cosas se consiguieron (lg: { id: m }, logros.js). Van dentro de j para no añadir
 //                                  campos nuevos a lo guardado (las reglas de la cuenta de Google solo aceptan estos)
 const CLAVE_LOCAL = 'charro2';
 const ESTADOS_MARCA = [
@@ -114,7 +114,9 @@ function limpiarProgreso(o) {
       cp: contador(j.cp),
       pv: Array.isArray(j.pv) ? [...new Set(j.pv.filter(id => idsPalabras.has(id)))] : [],
       de: Array.isArray(j.de) ? [...new Set(j.de.filter(id => idsDetalles.has(id)))] : [],
-      hi: limpiarHistorial(j.hi)
+      hi: limpiarHistorial(j.hi),
+      rm: contador(j.rm),
+      lg: limpiarLogrosApuntados(j.lg)
     }
   };
 }
@@ -132,6 +134,13 @@ const limpiarHistorial = hi =>
         )
         .slice(-3000)
     : undefined;
+// Logros conseguidos (logros.js, apuntarLogros): { id: con cuántas cosas se consiguió }
+function limpiarLogrosApuntados(lg) {
+  const limpio = {};
+  if (lg && typeof lg == 'object' && !Array.isArray(lg))
+    for (const k in lg) if (esIdCorto(k) && contador(lg[k]) > 0) limpio[k] = contador(lg[k]);
+  return limpio;
+}
 // Seguimiento de las rutas: { idRuta: 'v' (la he hecho) | 'w' (la quiero hacer) }
 const TIPOS_HISTORIAL = ['z', 'p', 'mo', 'ru', 'rh', 'de', 'lo'];
 function limpiarSeguimiento(rs) {
@@ -163,7 +172,26 @@ function limpiarParadas(r) {
 // leer progreso escrito por una versión más nueva, con zonas, monumentos, rutas o campos de «j» que aún no
 // conoce. limpiarProgreso los deja fuera de lo que usa la app, pero no se pueden perder al volver a guardar:
 // se apartan aquí y se añaden tal cual al guardar, en el navegador y en la cuenta.
-const CLAVES_J = ['m', 'd', 's', 'h', 'pf', 'mo', 'r', 'rs', 'fl', 'et', 'n', 'ms', 'cp', 'pv', 'hi', 'de'];
+const CLAVES_J = [
+  'm',
+  'd',
+  's',
+  'h',
+  'pf',
+  'mo',
+  'r',
+  'rs',
+  'fl',
+  'et',
+  'n',
+  'ms',
+  'cp',
+  'pv',
+  'hi',
+  'de',
+  'rm',
+  'lg'
+];
 const esIdCorto = k => typeof k == 'string' && /^[a-z0-9-]{1,60}$/.test(k);
 // Nombre de un campo de «j» que esta versión no conoce (sin los nombres especiales de los objetos)
 const esCampoNuevo = k =>
@@ -281,6 +309,8 @@ const CATEGORIAS_MONUMENTO = [
   ['ciudad', 'Estaciones, cines y más', ['estacion', 'autobus', 'cine', 'comercial', 'cementerio']]
 ];
 const categoriaMonumento = m => (CATEGORIAS_MONUMENTO.find(c => c[2].includes(m.tipo)) || ['otros'])[0];
+// «Monumento» o, para las estaciones, cines y demás sitios de la ciudad de hoy, «Sitio»
+const textoTipoMonumento = m => (categoriaMonumento(m) == 'ciudad' ? 'Sitio' : 'Monumento');
 const ESTADOS_FILTRO = [
   ['v', 'He estado'],
   ['w', 'Quiero ir'],

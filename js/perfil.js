@@ -25,17 +25,28 @@ function marcasActuales() {
   return claves;
 }
 
+// Lo que se quita del historial en esta visita, con su fecha: si vuelve («Deshacer», o se marca otra vez
+// sin cerrar la app), vuelve con la fecha de antes y no con la de hoy. No se guarda.
+const quitadosDelHistorial = new Map();
 function anotarHistorial() {
-  const j = (progreso.j = progreso.j || {}),
+  progreso.j = progreso.j || {};
+  apuntarLogros(); // logros.js: que no se pierdan los ya conseguidos
+  const j = progreso.j,
     primeraVez = !Array.isArray(j.hi),
     actuales = new Set(marcasActuales()),
-    hi = (primeraVez ? [] : j.hi).filter(([, tipo, id]) => actuales.has(claveHistorial(tipo, id))),
-    yaEstan = new Set(hi.map(([, tipo, id]) => claveHistorial(tipo, id))),
+    hi = [],
     hoy = primeraVez ? '' : fechaHoy();
+  (primeraVez ? [] : j.hi).forEach(e => {
+    const k = claveHistorial(e[1], e[2]);
+    if (actuales.has(k)) hi.push(e);
+    else quitadosDelHistorial.set(k, e);
+  });
+  const yaEstan = new Set(hi.map(([, tipo, id]) => claveHistorial(tipo, id)));
   actuales.forEach(k => {
     if (yaEstan.has(k)) return;
     const i = k.indexOf('|');
-    hi.push([hoy, k.slice(0, i), k.slice(i + 1)]);
+    hi.push(quitadosDelHistorial.get(k) || [hoy, k.slice(0, i), k.slice(i + 1)]);
+    quitadosDelHistorial.delete(k);
   });
   j.hi = hi;
 }

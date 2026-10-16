@@ -202,7 +202,7 @@ function abrirMonumento(id, parada) {
   monumentoAbierto = id;
   MONUMENTOS.forEach(o => o.g.classList.toggle('sel', o == m));
   $('#here').hidden = $('#nac').hidden = $('#otros').hidden = true;
-  $('#k').textContent = (categoriaMonumento(m) == 'ciudad' ? 'Sitio' : 'Monumento') + ' · ' + zona.n;
+  $('#k').textContent = textoTipoMonumento(m) + ' · ' + zona.n;
   $('#nm').textContent = m.n;
   $('#hc').hidden = $('#hl').hidden = $('#he').hidden = true;
   $('#cu').textContent = $('#ri').textContent = $('#eat').textContent = '';
