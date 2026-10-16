@@ -1,7 +1,8 @@
-// Mapa real de fondo (opcional, panel de capas): calles, casas, parques y agua de OpenStreetMap por
-// OpenFreeMap, con los colores de la app, debajo del dibujo de la capital. MapLibre se carga de cdnjs
-// solo al encenderlo; no se puede tocar: sigue al encuadre del SVG (sincronizarFondoReal, desde
-// mapa-vista.js). Se recuerda en este navegador (charro-fondo-real). Dentro de Claude no hay
+// Mapa real de fondo (interruptor del panel de capas, encendido de entrada): calles, casas, parques y
+// agua de OpenStreetMap por OpenFreeMap, con los colores de la app, debajo del dibujo de la capital.
+// MapLibre se carga de cdnjs al encenderlo; no se puede tocar: sigue al encuadre del SVG
+// (sincronizarFondoReal, desde mapa-vista.js). Si se apaga, se recuerda en este navegador
+// (charro-fondo-real '0'). Sin conexión, se queda apagado sin avisar. Dentro de Claude no hay
 // interruptor: el visor no deja pedir mapas a otras webs. Va después de ubicacion.js (EN_MARCO).
 
 const CLAVE_FONDO_REAL = 'charro-fondo-real';
@@ -136,10 +137,11 @@ const cargarMapLibre = () =>
     document.head.appendChild(s);
   }));
 
+// recordar: lo ha elegido la persona (se guarda y, si falla, se avisa); si no, es el encendido de entrada
 async function ponerFondoReal(encender, recordar = true) {
   fondoReal.encendido = encender;
   marcarInterruptor($('#frb'), encender);
-  if (recordar) escribirLocal(CLAVE_FONDO_REAL, encender ? '1' : null);
+  if (recordar) escribirLocal(CLAVE_FONDO_REAL, encender ? '1' : '0');
   $('.mw').classList.toggle('fondo-real', encender);
   if (!encender) return;
   if (!fondoReal.capa) {
@@ -158,8 +160,11 @@ async function ponerFondoReal(encender, recordar = true) {
   try {
     await cargarMapLibre();
   } catch (e) {
-    aviso('No se ha podido cargar el mapa real. Comprueba la conexión y vuelve a probar.', { tipo: 'error' });
-    return ponerFondoReal(false);
+    if (recordar)
+      aviso('No se ha podido cargar el mapa real. Comprueba la conexión y vuelve a probar.', {
+        tipo: 'error'
+      });
+    return ponerFondoReal(false, false);
   }
   if (fondoReal.mapa || !fondoReal.encendido) return;
   fondoReal.mapa = new window.maplibregl.Map({
@@ -181,5 +186,5 @@ if (EN_MARCO) $('#fondo-real-opcion').remove();
 else {
   $('#frb').onclick = () => ponerFondoReal(!fondoReal.encendido);
   new ResizeObserver(colocarCapaFondoReal).observe(mapaSvg);
-  if (leerLocal(CLAVE_FONDO_REAL) == '1') ponerFondoReal(true, false);
+  if (leerLocal(CLAVE_FONDO_REAL) != '0' && navigator.onLine !== false) ponerFondoReal(true, false);
 }

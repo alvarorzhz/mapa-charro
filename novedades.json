@@ -1,5 +1,18 @@
 [
   {
+    "version": "2.10.1",
+    "fecha": "2026-10-16",
+    "titulo": "Calles reales de entrada",
+    "usuario": [
+      "El mapa de la capital sale ya con las calles reales debajo. Si prefieres el dibujo solo, apágalas en el panel de capas y se recordará.",
+      "Cuando llegue una versión nueva, verás al entrar una ventanita con sus novedades."
+    ],
+    "tecnico": [
+      "mapa-real.js: encendido de entrada salvo charro-fondo-real '0' (apagado a mano) o sin conexión; si MapLibre no carga de entrada, se apaga sin avisar.",
+      "inicio.js: mostrarNovedadesNuevas al arrancar si la versión es más nueva que charro-version-vista (hasta tres versiones; no con enlace a ficha ni el día de la bienvenida, que la da por vista). Pruebas: opciones conFondoReal, conNovedades y rutas."
+    ]
+  },
+  {
     "version": "2.10.0",
     "fecha": "2026-10-16",
     "titulo": "Fiestas en tu calendario",
