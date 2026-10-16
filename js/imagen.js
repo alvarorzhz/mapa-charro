@@ -35,7 +35,7 @@ function resumenProgreso() {
     pisadas: marcas.filter(x => x == 'v').length,
     porVisitar: marcas.filter(x => x == 'w').length,
     total: todasLasZonas.length,
-    logros: logros.filter(a => a.c >= a.m).length,
+    logros: logros.filter(conseguido).length,
     totalLogros: logros.length,
     pueblos: Object.keys(progreso.p || {}).filter(k => k[0] == 'm' && progreso.p[k] == 'v').length,
     rana: !!progreso.f

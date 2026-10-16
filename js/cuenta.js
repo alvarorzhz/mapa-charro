@@ -79,6 +79,7 @@ function escucharCuenta() {
 let firebaseListo = false;
 async function entrarConGoogle() {
   const proveedor = () => new firebase.auth.GoogleAuthProvider();
+  if (enAppDelIphone()) return irAGoogle();
   try {
     if (!firebaseListo) {
       pintarCuenta('cargando');
@@ -99,6 +100,87 @@ async function entrarConGoogle() {
         : 'No se ha podido entrar' + (codigo ? ' (' + codigo.replace('auth/', '') + ')' : ''),
       { tipo: 'error' }
     );
+  }
+}
+
+// --- En la app del iPhone (la web añadida a la pantalla de inicio) ---------------------------
+// Allí la ventanita de Google se abre aparte y nunca puede avisar a la app de que ya has entrado: el botón
+// se quedaba en «Conectando con Google…». Por eso la app se va a la página de Google y Google la devuelve
+// a la misma dirección con la credencial tras «#id_token=…», que se le da a Firebase
+// (signInWithCredential). Así no hace falta nada de firebaseapp.com, que Safari separa de github.io.
+// En Google Cloud, el cliente web de Firebase tiene que llevar esta dirección en «URI de redirección».
+const CLIENTE_GOOGLE = '144754065906-va6bh6ce6o0om5ui3re12j818c67vmog.apps.googleusercontent.com',
+  CLAVE_IDA_GOOGLE = 'charro-ida-google'; // { estado, nonce, hash } mientras se está en la página de Google
+const enAppDelIphone = () => navigator.standalone === true;
+const direccionDeVuelta = () => location.origin + location.pathname;
+const azarHex = () =>
+  [...crypto.getRandomValues(new Uint8Array(16))].map(b => b.toString(16).padStart(2, '0')).join('');
+
+function irAGoogle() {
+  const ida = { estado: azarHex(), nonce: azarHex(), hash: location.hash };
+  escribirLocal(CLAVE_IDA_GOOGLE, JSON.stringify(ida));
+  if (!leerLocal(CLAVE_IDA_GOOGLE))
+    return aviso('No se ha podido entrar: este navegador no deja guardar nada', { tipo: 'error' });
+  pintarCuenta('cargando');
+  const datos = new URLSearchParams({
+    client_id: CLIENTE_GOOGLE,
+    redirect_uri: direccionDeVuelta(),
+    response_type: 'id_token',
+    scope: 'openid email profile',
+    prompt: 'select_account',
+    state: ida.estado,
+    nonce: ida.nonce
+  });
+  location.assign('https://accounts.google.com/o/oauth2/v2/auth?' + datos);
+}
+
+// Al volver de Google: se lee y se quita la respuesta de la dirección antes de que la mire nadie más
+// (enlaces.js la tomaría por una ficha) y se deja el enlace que había antes de ir
+const vueltaDeGoogle = (() => {
+  const h = location.hash.slice(1);
+  if (!/(^|&)state=/.test(h) || !/(^|&)(id_token|error)=/.test(h)) return null;
+  const respuesta = new URLSearchParams(h);
+  const ida = leerLocalJson(CLAVE_IDA_GOOGLE, null); // sin ida apuntada: no viene de aquí
+  escribirLocal(CLAVE_IDA_GOOGLE, null);
+  try {
+    history.replaceState(history.state, '', location.pathname + location.search + ((ida && ida.hash) || ''));
+  } catch (e) {}
+  return { respuesta, ida };
+})();
+
+// Lo que lleva dentro la credencial (un JWT): solo para comprobar que es la respuesta a esta ida
+function datosDeCredencial(token) {
+  try {
+    const parte = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(decodeURIComponent(escape(atob(parte))));
+  } catch (e) {
+    return {};
+  }
+}
+
+async function terminarVueltaDeGoogle({ respuesta, ida }) {
+  const token = respuesta.get('id_token');
+  if (!token) {
+    if (respuesta.get('error') != 'access_denied')
+      aviso('No se ha podido entrar (' + respuesta.get('error') + ')', { tipo: 'error' });
+    return pintarCuenta('');
+  }
+  if (!ida || respuesta.get('state') != ida.estado || datosDeCredencial(token).nonce != ida.nonce) {
+    aviso('No se ha podido entrar: vuelve a probar', { tipo: 'error' });
+    return pintarCuenta('');
+  }
+  try {
+    pintarCuenta('cargando');
+    await cargarFirebase();
+    escucharCuenta();
+    firebaseListo = true;
+    await cuentaWeb.auth.signInWithCredential(firebase.auth.GoogleAuthProvider.credential(token));
+  } catch (e) {
+    console.error(e);
+    pintarCuenta('');
+    aviso('No se ha podido entrar' + (e && e.code ? ' (' + e.code.replace('auth/', '') + ')' : ''), {
+      tipo: 'error'
+    });
   }
 }
 
@@ -221,6 +303,7 @@ function pintarCuenta(estado = cuentaWeb.estadoBoton) {
 // Al arrancar fuera de Claude (lo llama iniciarNube)
 function iniciarCuentaWeb() {
   pintarCuenta();
+  if (puedeUsarCuenta() && vueltaDeGoogle) return terminarVueltaDeGoogle(vueltaDeGoogle);
   if (!puedeUsarCuenta() || !leerCuentaGuardada()) return;
   mostrarEstadoGuardado('sync');
   cargarFirebase()

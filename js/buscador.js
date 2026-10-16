@@ -31,7 +31,9 @@ function candidatos() {
     )
   );
   MONUMENTOS.forEach(m =>
-    poner(m.n, 'Monumento · ' + buscarZona(m.zona).n, 'monumento', m.id, 1, () => abrirMonumento(m.id))
+    poner(m.n, textoTipoMonumento(m) + ' · ' + buscarZona(m.zona).n, 'monumento', m.id, 1, () =>
+      abrirMonumento(m.id)
+    )
   );
   poner(
     'Rutas',

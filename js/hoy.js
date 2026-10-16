@@ -41,7 +41,7 @@ function todosLosLugares() {
       tipo: 'mo',
       id: m.id,
       n: m.n,
-      sub: 'Monumento · ' + buscarZona(m.zona).n,
+      sub: textoTipoMonumento(m) + ' · ' + buscarZona(m.zona).n,
       la: m.la,
       lo: m.lo,
       hecho: visitados.includes(m.id),

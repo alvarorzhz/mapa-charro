@@ -736,7 +736,10 @@ prueba(
     igual(await texto(p, '#ts'), '', 'sin aviso de error');
     igual(await p.evaluate(() => localStorage.getItem('charro-fondo-real')), null, 'sin guardar nada');
   },
-  { conFondoReal: true, rutas: p => p.route('https://cdnjs.cloudflare.com/**', r => r.abort()) }
+  {
+    conFondoReal: true,
+    rutas: p => p.route('https://cdnjs.cloudflare.com/**', r => r.abort())
+  }
 );
 
 prueba('Barrios nuevos y otros nombres', async p => {
@@ -1521,6 +1524,112 @@ prueba(
   }
 );
 
+// Firebase falso para entrar desde la app del iPhone: solo con la credencial que devuelve Google
+function firebaseConCredencial() {
+  let usuario = null;
+  const oyentes = [],
+    nube = { datos: null };
+  window.__nubeGoogle = nube;
+  const auth = {
+    onAuthStateChanged: f => {
+      oyentes.push(f);
+      setTimeout(() => f(usuario));
+      return () => {};
+    },
+    signInWithPopup: async () => {
+      throw new Error('en la app del iPhone no se usa la ventanita');
+    },
+    signInWithCredential: async c => {
+      window.__credencial = c;
+      usuario = { uid: 'u2', email: 'iphone@ejemplo.es' };
+      oyentes.forEach(f => f(usuario));
+    },
+    signOut: async () => {}
+  };
+  const doc = {
+    get: async () => ({ exists: !!nube.datos, data: () => nube.datos }),
+    set: async d => (nube.datos = d),
+    onSnapshot: () => () => {}
+  };
+  window.firebase = {
+    prueba: true,
+    apps: [1],
+    auth: Object.assign(() => auth, {
+      GoogleAuthProvider: Object.assign(function () {}, { credential: t => ({ token: t }) })
+    }),
+    firestore: () => ({ collection: () => ({ doc: () => doc }) })
+  };
+  Object.defineProperty(navigator, 'standalone', { get: () => true });
+}
+
+prueba(
+  'Cuenta con Google desde la app del iPhone: va a la página de Google',
+  async p => {
+    await p.waitForTimeout(200);
+    const aqui = await p.evaluate(() => location.origin + location.pathname),
+      ida = p.waitForRequest(r => r.url().startsWith('https://accounts.google.com/'));
+    // Lo apuntado antes de irse (luego la página ya es la de Google)
+    const guardada = await p.evaluate(() => {
+      document.querySelector('#cuenta button').click();
+      return JSON.parse(localStorage.getItem('charro-ida-google'));
+    });
+    const url = new URL((await ida).url());
+    igual(url.searchParams.get('response_type'), 'id_token', 'pide la credencial');
+    igual(url.searchParams.get('redirect_uri'), aqui, 'vuelve aquí');
+    igual(url.searchParams.get('state'), guardada.estado, 'con el estado apuntado');
+    igual(url.searchParams.get('nonce'), guardada.nonce, 'y el nonce');
+    igual(guardada.hash, '#tejares', 'recuerda dónde estaba');
+  },
+  {
+    hash: '#tejares',
+    antes: firebaseConCredencial,
+    rutas: p => p.route('https://accounts.google.com/**', r => r.fulfill({ body: 'Google' }))
+  }
+);
+
+prueba(
+  'Cuenta con Google desde la app del iPhone: vuelve de Google y entra',
+  async p => {
+    await p.waitForTimeout(400);
+    igual(await texto(p, '#sv'), 'Guardado en tu cuenta (iphone@ejemplo.es)', 'entra y conecta');
+    igual(await p.evaluate(() => location.hash), '#tejares', 'deja el enlace de antes');
+    cierto(await fichaAbierta(p), 'y abre su ficha');
+    igual(await p.evaluate(() => localStorage.getItem('charro-ida-google')), null, 'olvida la ida');
+    cierto(await p.evaluate(() => window.__credencial.token.includes('.')), 'con la credencial de Google');
+    igual(await p.evaluate(() => localStorage.getItem('charro-cuenta')), 'u2', 'recuerda la cuenta');
+  },
+  {
+    hash:
+      '#state=e1&id_token=' +
+      ['{"alg":"none"}', '{"nonce":"n1","email":"iphone@ejemplo.es"}']
+        .map(t => Buffer.from(t).toString('base64url'))
+        .join('.') +
+      '.firma',
+    antes:
+      `localStorage.setItem('charro-ida-google', '{"estado":"e1","nonce":"n1","hash":"#tejares"}');` +
+      `(${firebaseConCredencial})();`
+  }
+);
+
+prueba(
+  'Cuenta con Google desde la app del iPhone: no acepta una vuelta que no es suya',
+  async p => {
+    await p.waitForTimeout(400);
+    igual(await texto(p, '#sv'), 'Guardado en este navegador', 'no entra');
+    igual(await p.evaluate(() => window.__credencial), undefined, 'ni le da nada a Firebase');
+    igual(await p.evaluate(() => location.hash), '', 'y limpia la dirección');
+  },
+  {
+    hash:
+      '#state=otro&id_token=' +
+      ['{"alg":"none"}', '{"nonce":"n1"}'].map(t => Buffer.from(t).toString('base64url')).join('.') +
+      '.firma',
+    antes:
+      `localStorage.setItem('charro-ida-google', '{"estado":"e1","nonce":"n1","hash":""}');` +
+      `(${firebaseConCredencial})();`
+  }
+);
+
 prueba(
   'Cuenta de Claude en un dispositivo nuevo con enlace a una zona',
   async p => {
@@ -1891,6 +2000,87 @@ prueba('Imagen «Mi Salamanca»', async p => {
   );
   await p.click('.modal .cerrar');
   cierto(!(await p.$('.modal')), 'la ventana se cierra');
+});
+
+prueba(
+  'Deshacer devuelve la marca con su fecha de antes',
+  async p => {
+    await p.fill('#q', 'tejares');
+    await p.press('#q', 'Enter');
+    await p.click('.bt button[data-s=v]');
+    await p.click('#ts button');
+    const fecha = await p.evaluate(() => progreso.j.hi.find(e => e[1] == 'z' && e[2] == 'tejares'));
+    igual(fecha, ['2025-03-01', 'z', 'tejares'], 'conserva la fecha en que se pisó');
+  },
+  {
+    antes: () =>
+      localStorage.setItem(
+        'charro2',
+        JSON.stringify({ z: { tejares: 'v' }, t: 5, v: 1, j: { hi: [['2025-03-01', 'z', 'tejares']] } })
+      )
+  }
+);
+
+prueba(
+  'Los logros conseguidos no se pierden',
+  async p => {
+    const logro = id => p.evaluate(i => conseguido(calcularLogros().find(a => a.id == i)), id);
+    cierto(await logro('jr3'), 'la racha de tres días sigue aunque hoy no se haya jugado');
+    igual(await p.evaluate(() => progreso.j.rm), 3, 'y se apunta la mejor racha');
+    // Si la app trae más monumentos, «Guía de la ciudad» sigue conseguida; si se quita una visita, no
+    const todos = await p.evaluate(() => MONUMENTOS.filter(esMonumento).map(m => m.id));
+    await p.evaluate(ids => {
+      progreso.j.mo = ids;
+      guardar();
+    }, todos);
+    cierto(await logro('mot'), 'conseguida con todos');
+    igual(await p.evaluate(() => progreso.j.lg.mot), todos.length, 'apunta con cuántos');
+    await p.evaluate(() => (progreso.j.lg.mot = progreso.j.lg.mot - 1)); // como si antes hubiera uno menos
+    await p.evaluate(ids => {
+      progreso.j.mo = ids.slice(1);
+      guardar();
+    }, todos);
+    cierto(await logro('mot'), 'con un monumento nuevo sin visitar, se mantiene');
+    await p.evaluate(ids => {
+      progreso.j.mo = ids.slice(2);
+      guardar();
+    }, todos);
+    cierto(!(await logro('mot')), 'quitando una visita, se pierde');
+    cierto(
+      !(await p.evaluate(() => progreso.j.hi.some(e => e[1] == 'lo' && e[2] == 'mot'))),
+      'y sale del historial'
+    );
+    // Las estaciones, cines y demás no cuentan como monumentos
+    const sitios = await p.evaluate(() => MONUMENTOS.filter(m => !esMonumento(m)).length);
+    cierto(sitios > 0, 'hay sitios de la ciudad');
+    igual(
+      await p.evaluate(() => calcularLogros().find(a => a.id == 'mot').m),
+      todos.length,
+      '«Guía de la ciudad» cuenta solo los monumentos'
+    );
+  },
+  {
+    antes: () => {
+      const dia = n => {
+        const d = new Date();
+        d.setDate(d.getDate() - n);
+        return d.toLocaleDateString('sv');
+      };
+      localStorage.setItem(
+        'charro2',
+        JSON.stringify({ z: {}, t: 5, v: 1, j: { h: [dia(9), dia(8), dia(7), dia(2)] } })
+      );
+    }
+  }
+);
+
+prueba('Las estaciones y los cines salen como «Sitio» en el buscador', async p => {
+  await p.fill('#q', 'estación de tren');
+  await p.waitForTimeout(200);
+  cierto((await texto(p, '#sr')).includes('Sitio ·'), 'dice «Sitio»');
+  await p.fill('#q', 'catedral nueva');
+  await p.waitForTimeout(200);
+  cierto((await texto(p, '#sr')).includes('Monumento ·'), 'y los monumentos, «Monumento»');
 });
 
 prueba('Quitar una marca se puede deshacer', async p => {

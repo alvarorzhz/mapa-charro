@@ -11,6 +11,7 @@
 // Visitas y usos guardados en progreso.j (ver estado.js)
 const datoJ = (campo, vacio) => (progreso.j && progreso.j[campo]) || vacio;
 const monumentosVisitados = () => datoJ('mo', []);
+const esMonumento = m => !!m && categoriaMonumento(m) != 'ciudad';
 const paradasVisitadas = idRuta => datoJ('r', {})[idRuta] || [];
 const paradaVisitada = (ruta, p) =>
   typeof p == 'string' ? monumentosVisitados().includes(p) : paradasVisitadas(ruta.id).includes(p.id);
@@ -33,6 +34,20 @@ function rachaReto() {
     d.setDate(d.getDate() - 1);
   }
   return n;
+}
+
+// La racha más larga que se ha hecho nunca: la apuntada (j.rm) o la que se ve en los días guardados
+function mejorRacha() {
+  const dias = [...new Set(datoJ('h', []))].sort();
+  let mejor = 0,
+    seguidos = 0;
+  dias.forEach((f, i) => {
+    const antes = new Date(f + 'T12:00:00');
+    antes.setDate(antes.getDate() - 1);
+    seguidos = i && dias[i - 1] == antes.toLocaleDateString('sv') ? seguidos + 1 : 1;
+    mejor = Math.max(mejor, seguidos);
+  });
+  return Math.max(mejor, datoJ('rm', 0), rachaReto());
 }
 
 // Moldes
@@ -169,11 +184,17 @@ function calcularLogros() {
       )
     ),
     // --- Monumentos y rutas a pie ---
-    ...escalones('monumento', monumentosVisitados().length, MONUMENTOS.length, [
-      ['mo1', 1, 'Primera visita', 'Visita un monumento (pulsa «He estado aquí» en su ficha)'],
-      ['mo5', 5, 'Turista de primera', 'Visita {m} monumentos'],
-      ['mot', 'todo', 'Guía de la ciudad', 'Visita todos los monumentos del mapa ({m})']
-    ]),
+    // Sin los sitios de la ciudad de hoy (estaciones, cines…): esos no son monumentos
+    ...escalones(
+      'monumento',
+      monumentosVisitados().filter(id => esMonumento(buscarMonumento(id))).length,
+      MONUMENTOS.filter(esMonumento).length,
+      [
+        ['mo1', 1, 'Primera visita', 'Visita un monumento (pulsa «He estado aquí» en su ficha)'],
+        ['mo5', 5, 'Turista de primera', 'Visita {m} monumentos'],
+        ['mot', 'todo', 'Guía de la ciudad', 'Visita todos los monumentos del mapa ({m})']
+      ]
+    ),
     ...ESTILOS_LOGRO.flatMap(([estilo, nombre]) =>
       coleccion(
         'es-' + slugLogro(estilo),
@@ -212,7 +233,7 @@ function calcularLogros() {
       ['jn1', 1, 'Primera partida', 'Termina una partida de «¿Dónde está?»'],
       ['jn10', 10, 'Jugador habitual', 'Termina {m} partidas']
     ]),
-    ...escalones('reto', rachaReto(), Infinity, [
+    ...escalones('reto', mejorRacha(), Infinity, [
       ['jr3', 3, 'Tres en raya', 'Haz el reto del día {m} días seguidos'],
       ['jr7', 7, 'Semana charra', 'Haz el reto del día {m} días seguidos'],
       ['jr30', 30, 'Mes charro', 'Haz el reto del día {m} días seguidos']
@@ -348,7 +369,14 @@ function marcarVisita(v = visitaAbierta) {
 }
 // «3 de 9 en Ruta monumental»: cómo va el logro al que suma una visita
 function progresoDeLogro(v) {
-  const id = v.tipo == 'ru' ? 'ru-' + v.ruta : rutaActiva ? 'ru-' + rutaActual().id : 'mot',
+  const id =
+      v.tipo == 'ru'
+        ? 'ru-' + v.ruta
+        : rutaActiva
+          ? 'ru-' + rutaActual().id
+          : esMonumento(buscarMonumento(v.id))
+            ? 'mot'
+            : '',
     a = calcularLogros().find(x => x.id == id);
   return a && a.c < a.m ? a.c + ' de ' + a.m + ' en «' + a.n + '»' : '';
 }
@@ -373,7 +401,19 @@ const MEDALLAS = {
   compartir: '📣',
   palabras: '🗣️'
 };
-const conseguido = a => a.c >= a.m;
+// Un logro conseguido no se pierde porque la app crezca: j.lg apunta con cuántas cosas se consiguió
+// ({ id: m }) y sigue conseguido mientras no se quite nada de lo que lo dio (apuntarLogros, al guardar)
+const conseguido = a => a.c >= a.m || (datoJ('lg', {})[a.id] > 0 && a.c >= datoJ('lg', {})[a.id]);
+function apuntarLogros() {
+  const j = progreso.j,
+    lg = { ...(j.lg || {}) };
+  calcularLogros().forEach(a => {
+    if (a.c >= a.m) lg[a.id] = Math.min(lg[a.id] || a.m, a.m);
+    else if (lg[a.id] && a.c < lg[a.id]) delete lg[a.id];
+  });
+  j.lg = lg;
+  j.rm = mejorRacha();
+}
 // El emoji de la medalla es adorno: el lector no lo lee («trofeo», «chincheta»…)
 const medallaDecorativa = (clase, emoji) => {
   const e = crear('span', clase, emoji);
@@ -509,11 +549,11 @@ const categoriasAbiertas = new Set(); // las que se han abierto, para que sigan 
 function conAvisoDeLogros(cambio) {
   const antes = new Set(
     calcularLogros()
-      .filter(a => a.c >= a.m)
+      .filter(conseguido)
       .map(a => a.id)
   );
   cambio();
-  const nuevos = calcularLogros().filter(a => a.c >= a.m && !antes.has(a.id));
+  const nuevos = calcularLogros().filter(a => conseguido(a) && !antes.has(a.id));
   // Después del aviso del cambio; si hay uno con «Deshacer» a la vista, se espera a que se vaya
   const avisarLogro = () =>
     $('#ts').classList.contains('con-accion')

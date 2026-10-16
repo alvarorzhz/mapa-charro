@@ -190,6 +190,8 @@ function juntarProgresos(a, b) {
       n: Math.max(ja.n || 0, jb.n || 0),
       ms: Math.max(ja.ms || 0, jb.ms || 0),
       cp: Math.max(ja.cp || 0, jb.cp || 0),
+      rm: Math.max(ja.rm || 0, jb.rm || 0),
+      lg: juntarLogrosApuntados(ja.lg, jb.lg),
       r: Object.fromEntries(
         [...RUTAS, ...RUTAS_PROVINCIA].map(ruta => [
           ruta.id,
@@ -199,6 +201,13 @@ function juntarProgresos(a, b) {
     },
     t: Date.now()
   });
+}
+
+// Logros apuntados de los dos lados; si están en los dos, el que se consiguió con menos
+function juntarLogrosApuntados(a = {}, b = {}) {
+  const r = { ...a };
+  for (const k in b) r[k] = r[k] ? Math.min(r[k], b[k]) : b[k];
+  return r;
 }
 
 // Junta dos historiales: cada cosa una vez, con la fecha más antigua que se conozca
