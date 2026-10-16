@@ -167,7 +167,9 @@ function abrirElementoCultura(id) {
         crear('b', '', '🗓️ Próxima vez: '),
         textoFechasCita(proxima) + ' de ' + proxima.hasta.getFullYear(),
         ' (' + textoDentro(proxima) + ')' + (proxima.nota ? ', ' + proxima.nota.toLowerCase() : '') + ' ',
-        agenda
+        agenda,
+        ' ',
+        botonCalendario(proxima)
       )
     );
   }

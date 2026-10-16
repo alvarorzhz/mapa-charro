@@ -136,10 +136,11 @@ const crearSvg = (etiqueta, atributos, padre) => {
   return e;
 };
 
-// Mensaje breve arriba de la pantalla. opciones:
+// Mensaje breve abajo de la pantalla (arriba tapaba los botones del mapa con la ficha abierta) y, con una
+// ficha abierta, encima de sus botones. opciones:
 //   tipo: 'info' (por defecto), 'exito', 'logro' o 'error' (cada uno con su color; el de error dura más
 //         y lo anuncian antes los lectores de pantalla)
-//   discreto: abajo, más pequeño y un poco más rato (avisos que no vienen de algo que acabas de hacer)
+//   discreto: más pequeño y un poco más rato (avisos que no vienen de algo que acabas de hacer)
 //   accion: [texto, alPulsar] para un botón dentro del aviso, como «Deshacer» (dura 10 s y no se va
 //           mientras el ratón o el foco están encima)
 // Se acepta aviso(texto, true) como discreto, como antes.
@@ -165,6 +166,10 @@ const aviso = (texto, opciones = {}) => {
     };
     t.append(b);
   }
+  // Con una ficha abierta, justo encima de su fila de botones (He estado, Quiero ir, Compartir), sin taparla
+  const pie = $('#sh').classList.contains('o') && $('#sh .bt'),
+    arriba = pie && pie.offsetHeight ? pie.getBoundingClientRect().top : 0;
+  t.style.bottom = arriba > 0 && arriba < innerHeight ? innerHeight - arriba + 10 + 'px' : '';
   t.setAttribute('role', tipo == 'error' ? 'alert' : 'status');
   t.className = 'on ' + clase + (accion ? ' con-accion' : '');
   clearTimeout(temporizadorAviso);
