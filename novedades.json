@@ -1,5 +1,21 @@
 [
   {
+    "version": "2.12.0",
+    "fecha": "2026-10-17",
+    "titulo": "Todo lo tuyo en «Tu Salamanca»",
+    "usuario": [
+      "«Tu perfil» y «Mi Salamanca» ahora son una sola cosa, «Tu Salamanca», con tres pestañas: Resumen, Actividad y Logros.",
+      "Todos los logros están en su pestaña. Al pulsar «Siguiente logro», arriba, se abre ahí con su categoría desplegada.",
+      "«¿Qué puedo descubrir hoy?» es lo primero de «Explora», y es el único sitio donde salen lo que tienes en «Quiero ir» y las rutas a medias.",
+      "La agenda está ahora dentro de Cultura y los detalles escondidos, dentro de Monumentos.",
+      "Los enlaces de antes siguen funcionando."
+    ],
+    "tecnico": [
+      "mi-salamanca.js: abrirTuSalamanca(pestana) con #tu-salamanca/actividad|logros; #perfil y #mi-salamanca abren el resumen. perfil.js deja cabeceraPerfil, apartadosActividad y apartadoJuego; logros.js, listaDeLogros. Fuera #foto, #lgr, #agn, #det y apartadoSeguir. Explora con #hy; #iragn en Cultura y #irdet en Monumentos.",
+      "pruebas.js: la de «Hoy» ya no falla si la recomendación del día es la zona que pisa la prueba."
+    ]
+  },
+  {
     "version": "2.11.1",
     "fecha": "2026-10-16",
     "titulo": "Ventanas que no se descuadran",
