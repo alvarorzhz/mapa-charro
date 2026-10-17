@@ -3672,6 +3672,67 @@ prueba('Laboratorio: medición en el navegador, sin datos personales', async p =
   igual(await p.evaluate(() => leerMedicion().p.length), 0, 'se borra');
 });
 
+prueba(
+  'Laboratorio: compartir los datos de uso es voluntario y anónimo',
+  async p => {
+    await p.evaluate(() => {
+      abrirFicha('tejares');
+      marcarZona('tejares', 'v');
+    });
+    await p.waitForTimeout(300);
+    igual(await p.evaluate(() => window.subidas.length), 0, 'apagado de entrada: no se sube nada');
+    await p.click('#x');
+    await p.click('#ayuda');
+    await p.click('.modal button:has-text("Laboratorio")');
+    await p.click('.modal button:has-text("Compartir mis datos de uso")');
+    await p.waitForFunction(() => window.subidas.length > 0);
+    const [coleccion, id, datos] = await p.evaluate(() => window.subidas[0]);
+    igual(coleccion, 'uso', 'a su colección');
+    cierto(/^[0-9a-f]{32}$/.test(id), 'con un id al azar');
+    igual(
+      Object.keys(datos).sort(),
+      ['cargas', 'f', 'mapa', 'movil', 'primeras', 'pruebas', 'usos', 'v'],
+      'solo cifras'
+    );
+    cierto(datos.usos.marca >= 1, 'con lo que se usa');
+    const todo = JSON.stringify(datos);
+    cierto(!todo.includes('tejares') && !todo.includes(id), 'sin sitios ni el id dentro');
+    // Una vez por semana: al recargar no se vuelve a subir
+    await p.reload();
+    await p.waitForTimeout(300);
+    await p.evaluate(() => subirUso());
+    igual(await p.evaluate(() => window.subidas.length), 0, 'no se repite en la semana');
+    // Al apagarlo se borra lo subido
+    await p.click('#ayuda');
+    await p.click('.modal button:has-text("Laboratorio")');
+    await p.click('.modal button:has-text("Compartir mis datos de uso")');
+    await p.waitForFunction(() => window.borrados.length > 0);
+    igual(await p.evaluate(() => window.borrados[0]), id, 'se borra al apagarlo');
+  },
+  {
+    antes: () => {
+      window.subidas = [];
+      window.borrados = [];
+      window.firebase = {
+        prueba: true,
+        apps: [1],
+        auth: Object.assign(() => ({ onAuthStateChanged: () => () => {} }), {
+          GoogleAuthProvider: function () {}
+        }),
+        firestore: () => ({
+          collection: c => ({
+            doc: id => ({
+              set: async d => window.subidas.push([c, id, d]),
+              delete: async () => window.borrados.push(id),
+              onSnapshot: () => () => {}
+            })
+          })
+        })
+      };
+    }
+  }
+);
+
 // --- Ejecución ----------------------------------------------------------------
 (async () => {
   const srv = await servir();
