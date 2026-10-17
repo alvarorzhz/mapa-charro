@@ -72,7 +72,7 @@ prueba('Carga el mapa', async p => {
   );
   igual(
     await texto(p, '#cn'),
-    `0 de ${await p.evaluate(() => todasLasZonas.length)} zonas pisadas, 0 por visitar`,
+    `0 de ${await p.evaluate(() => todasLasZonas.length)} zonas pisadas`,
     'contador'
   );
   cierto(
@@ -799,7 +799,7 @@ prueba('Buscar, abrir ficha y marcar', async p => {
   await p.click('.bt button[data-s=v]');
   igual(
     await texto(p, '#cn'),
-    `1 de ${await p.evaluate(() => todasLasZonas.length)} zonas pisadas, 0 por visitar`,
+    `1 de ${await p.evaluate(() => todasLasZonas.length)} zonas pisadas`,
     'contador tras marcar'
   );
   igual(
@@ -810,7 +810,7 @@ prueba('Buscar, abrir ficha y marcar', async p => {
   await p.reload();
   igual(
     await texto(p, '#cn'),
-    `1 de ${await p.evaluate(() => todasLasZonas.length)} zonas pisadas, 0 por visitar`,
+    `1 de ${await p.evaluate(() => todasLasZonas.length)} zonas pisadas`,
     'sigue tras recargar'
   );
 });
@@ -1288,9 +1288,13 @@ prueba(
         enlace + ' en su pestaña'
       );
     }
-    // El siguiente logro lleva a su categoría, abierta
+    // Los logros del marcador llevan a su pestaña
     await p.click('#x');
-    await p.click('#sig');
+    await p.click('#lgr');
+    igual(await p.evaluate(() => location.hash), '#tu-salamanca/logros', 'los logros del marcador');
+    // El siguiente logro (a la vista solo si está al alcance) lleva a su categoría, abierta
+    await p.click('#x');
+    await p.evaluate(() => $('#sig').click());
     igual(
       await p.evaluate(() => location.hash),
       '#tu-salamanca/logros',
@@ -2239,7 +2243,7 @@ prueba('Palabras charras: tarjeta, ficha y logros', async p => {
   cierto(await p.isVisible('#palabra'), 'tarjeta a la vista');
   const antes = await texto(p, '#palabra .pal-def');
   cierto((await p.$$('#palabra a[href^="https://"]')).length == 1, 'con su fuente');
-  await p.click('#palabra .pal-cab button');
+  await p.click('#palabra .pal-otra');
   cierto((await texto(p, '#palabra .pal-def')) != antes, 'otra palabra');
   igual(await p.evaluate(() => progreso.j.pv.length), 2, 'dos palabras vistas');
   // La ficha del Centro trae la suya; una zona sin palabra propia, siempre la misma
@@ -2347,6 +2351,17 @@ prueba('Logros: los que salen de los datos, el siguiente y su barra', async p =>
     (await texto(p, '#sig')).startsWith('📍Siguiente logro: Primer vítor'),
     'siguiente logro a la vista'
   );
+  // Solo se enseña si está al alcance; los conseguidos van al lado de lo explorado
+  igual(
+    await p.evaluate(() => [
+      logroAlAlcance({ c: 0, m: 1 }),
+      logroAlAlcance({ c: 4, m: 6 }),
+      logroAlAlcance({ c: 2, m: 20 })
+    ]),
+    [true, true, false],
+    'el siguiente logro, solo al alcance'
+  );
+  cierto(/^🏅0\/\d+ logros$/.test(await texto(p, '#lgr')), 'logros conseguidos en el marcador');
   // Marcar una zona dice cuánto falta para el logro de su grupo
   await p.fill('#q', 'vidal');
   await p.press('#q', 'Enter');
@@ -2423,7 +2438,12 @@ prueba('Juego «¿Dónde está?»', async p => {
     'none',
     'sin pictogramas, que darían pistas'
   );
-  // Tocar la zona buena en el mapa
+  // Tocar la zona buena en el mapa (en el móvil, cuando la página acaba de subir hasta él)
+  await p.waitForFunction(
+    () => esEscritorio() || Math.abs(document.querySelector('.mw').getBoundingClientRect().top - 8) < 3,
+    null,
+    { timeout: 3000 }
+  );
   const buena = await p.evaluate(() => juego.preguntas[0].zona.id);
   const xy = await p.evaluate(id => {
     const z = zonas.find(q => q.id == id),

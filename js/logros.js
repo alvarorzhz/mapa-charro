@@ -429,6 +429,8 @@ function siguienteLogro(logros) {
     pendientes[0]
   );
 }
+// Merece la pena enseñarlo si con poco se consigue: le faltan 3 o menos, o ya va por la mitad
+const logroAlAlcance = a => a.m - a.c <= 3 || a.c / a.m >= 0.5;
 const barra = fraccion => {
   const i = crear('i');
   i.style.width = Math.round(Math.min(1, fraccion) * 100) + '%';
@@ -454,11 +456,20 @@ function pintarLogros() {
     ' de ' +
     logros.length +
     ' logros';
-  // El siguiente, siempre a la vista bajo el marcador; al pulsarlo se abren los logros de «Tu Salamanca»
+  // Junto a lo explorado, los logros conseguidos: llevan a la pestaña de logros de «Tu Salamanca»
+  const conseguidos = $('#lgr');
+  conseguidos.textContent = '';
+  conseguidos.append(
+    medallaDecorativa('medalla', '🏅'),
+    crear('span', '', crear('b', '', String(hechos)), '/' + logros.length + ' logros')
+  );
+  conseguidos.setAttribute('aria-label', hechos + ' de ' + logros.length + ' logros: ver tus logros');
+  conseguidos.onclick = () => abrirTuSalamanca('logros');
+  // El siguiente, bajo el marcador solo cuando está al alcance; al pulsarlo se abren sus logros
   const sig = siguienteLogro(logros),
     linea = $('#sig');
   linea.textContent = '';
-  linea.hidden = !sig;
+  linea.hidden = !sig || !logroAlAlcance(sig);
   linea.removeAttribute('tabindex'); // en el HTML no se alcanza con el tabulador hasta tener contenido
   if (sig) {
     linea.append(
@@ -466,7 +477,7 @@ function pintarLogros() {
       crear(
         'span',
         'texto',
-        crear('b', '', 'Siguiente logro: ' + sig.n),
+        crear('b', '', 'Siguiente', crear('span', 'largo', ' logro'), ': ' + sig.n),
         crear('small', '', sig.d + ' · ' + Math.min(sig.c, sig.m) + ' de ' + sig.m)
       ),
       crear('span', 'cuenta-sig', Math.min(sig.c, sig.m) + '/' + sig.m), // en el móvil, en vez de la descripción

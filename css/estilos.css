@@ -349,3 +349,31 @@ button,input,#q,.seg button,.sig{line-height:1.25}
 #prueba{position:fixed;z-index:45;top:calc(env(safe-area-inset-top,0px) + 10px);left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;width:max-content;max-width:calc(100vw - 24px);box-sizing:border-box;padding:8px 14px;border-radius:14px;background:var(--ink);color:var(--card);font-size:14px;box-shadow:var(--sombra-flotante)}#prueba .reloj{font-variant-numeric:tabular-nums;font-weight:700}#prueba .enlace{color:inherit}
 .ayuda-lista .fila-explora{width:100%}.lista-fuentes .fuentes{padding-left:18px}
 .paseo .botones .enlace,#prueba .enlace{background:none;border:0;padding:6px 8px;font:inherit;font-weight:600;color:inherit;text-decoration:underline;cursor:pointer;min-height:36px}
+/* Marcador: lo explorado y los logros en una sola tarjeta; el siguiente logro, solo cuando está al alcance */
+.marcador{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:6px 12px;margin:0 0 10px;padding:8px 10px 8px 12px;border:1px solid var(--borde-suave);border-radius:var(--radio-tarjeta);background:var(--card);box-shadow:var(--sombra-tarjeta)}
+.marcador .progreso{display:flex;flex-direction:column;align-items:stretch;gap:4px;margin:0;min-height:0}.marcador #cn{font-size:13.5px;line-height:1.3;margin:0}.marcador .bar{flex:none;height:6px;border-width:1px;border-radius:4px;background:var(--b)}
+.lgr{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:3px 12px 3px 4px;border-radius:99px;border:1.5px solid var(--gold);background:var(--superficie-2);font:13.5px Lora,Georgia,serif;color:var(--ink);white-space:nowrap}.lgr b{font-size:15px}.lgr .medalla{width:28px;height:28px;font-size:15px;filter:none;opacity:1;border-width:1.5px}
+.marcador .sig{grid-column:1/-1;margin:0;padding:6px 2px 0;border:0;border-top:1px dashed var(--borde-suave);border-radius:0;background:none;box-shadow:none;gap:8px;font-size:13.5px}.marcador .sig .medalla{width:24px;height:24px;font-size:13px;border-width:1.5px;filter:none;opacity:1}.marcador .sig .pb{width:56px}.marcador .sig[hidden],.marcador .sig:empty{display:none}
+.marcador .sig b{font-weight:600}
+@media(max-width:899px){.marcador .sig .texto{min-width:0}.marcador .sig b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
+/* Botones del mapa: un solo bloque, sin huecos; en pantallas táctiles, sin + y − (se acerca con dos dedos) */
+.zb{gap:0;border:2px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card);box-shadow:0 1px 4px rgba(0,0,0,.22)}.zb button{width:42px;height:42px;min-width:42px;min-height:42px;border:0;border-radius:0;background:var(--card)}.zb button+button{border-top:1px solid var(--borde-suave)}.zb button[hidden]{display:none}
+@media(hover:none) and (pointer:coarse){.mw .zb #zi,.mw .zb #zo{display:none}}
+.leyenda-mini{position:absolute;left:8px;bottom:8px;z-index:1;display:flex;gap:4px 10px;margin:0;padding:3px 9px;font-size:11.5px;line-height:1.4;border-radius:99px;background:color-mix(in srgb,var(--card) 88%,transparent);box-shadow:0 1px 3px rgba(0,0,0,.18);pointer-events:none}.leyenda-mini span:before{width:9px;height:9px;border-width:1.5px;margin-right:4px;vertical-align:-1px}
+.mw:has(.z:focus-visible) .leyenda-mini{display:none}.mw.fondo-real .leyenda-mini{bottom:24px}
+@media(max-width:899px){
+h1{font-size:24px;margin:0 0 8px}main>.sub{display:none}.ayudas{top:10px}
+.top{display:flex;flex-wrap:wrap;align-items:flex-start;gap:8px;order:1;position:relative}.top>*{order:0}
+.qs{flex:1 1 0;min-width:0}.qs input{height:40px;margin:0;padding:6px 10px}
+.qs .sr{position:absolute;left:0;right:0;z-index:30;margin-top:4px;box-shadow:var(--sombra-flotante)}
+.seg{flex:none;margin:0}.seg button{height:40px;padding:0 12px;font-size:14.5px}
+.marcador{flex:1 1 100%;margin:0 0 8px}
+#m{aspect-ratio:auto;height:max(360px,calc(100vh - 222px));height:max(360px,calc(100svh - 222px))}
+.ir-lista{padding:6px 11px}.ir-lista .largo{display:none}
+}
+/* La palabra charra: la palabra y su significado delante; la fuente, discreta, al pie */
+#palabra{padding:8px 12px 6px}#palabra .pal-cab{display:block;margin:0;font:11px Lora,Georgia,serif;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--vit-texto)}
+#palabra .pal-def{margin:1px 0 2px;font-size:15px;line-height:1.35}#palabra .pal-def b{font:21px/1.2 'Alfa Slab One',Georgia,serif;font-weight:400;letter-spacing:.2px}
+#palabra .pal-ej{font-size:13.5px;margin:0}
+#palabra .pal-pie{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:2px}#palabra .pal-fuente{font-size:11.5px;color:var(--texto-suave)}#palabra .pal-fuente a{font-size:11.5px;font-weight:400;color:inherit}#palabra .pal-otra{flex:none;padding:6px 0;min-height:32px;font-size:13px}
+@media(max-width:899px){.marcador .sig .largo{display:none}}

@@ -296,7 +296,12 @@ let pestana = 'map'; // 'map' | 'list' | 'prov'
 let filtroLista = 'all'; // filtro de la pestaña Lista (ver FILTROS)
 let zonaAbierta = null; // id de la zona cuya ficha está abierta
 // Encuadre inicial del mapa (viewBox): el centro de la ciudad
-const encuadreInicial = () => ({ x: 131, y: 200, w: esEscritorio() ? 190 : 150, h: 180 });
+// En el móvil el mapa es tan alto como deja la pantalla: la ciudad va centrada en vertical
+const encuadreInicial = () => {
+  if (esEscritorio()) return { x: 131, y: 200, w: 190, h: 180 };
+  const h = 150 * proporcionMapa();
+  return { x: 131, y: 290 - h / 2, w: 150, h };
+};
 let vistaMapa = encuadreInicial();
 
 // --- Filtros del mapa (panel de capas): se combinan entre sí ------------------------------

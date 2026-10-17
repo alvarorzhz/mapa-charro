@@ -307,6 +307,12 @@ function mostrarRecientes() {
   recientes.forEach(c => caja.appendChild(botonResultado(c, [])));
 }
 
+// En el móvil la caja comparte fila con «Capital | Provincia»: el texto de ayuda, más corto
+const TEXTO_BUSCADOR = $('#q').placeholder;
+const ponerTextoBuscador = () => ($('#q').placeholder = esEscritorio() ? TEXTO_BUSCADOR : 'Buscar un sitio…');
+ponerTextoBuscador();
+matchMedia('(min-width:900px)').addEventListener('change', ponerTextoBuscador);
+
 $('#q').addEventListener('input', buscar);
 // Al volver a la caja, los resultados de lo que haya escrito (o los recientes, si está vacía)
 $('#q').addEventListener('focus', buscar);
