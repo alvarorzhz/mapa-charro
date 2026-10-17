@@ -237,6 +237,7 @@ function botonResultado(c, palabras, sub = c.sub) {
   );
   b.onclick = () => {
     recordarBusqueda(c);
+    apuntarTarea('buscar');
     c.abrir();
     $('#q').value = '';
     $('#sr').textContent = '';

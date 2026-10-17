@@ -171,8 +171,10 @@ function abrirDondeComer() {
         )
       );
       b.onclick = () => {
+        // La ficha del sitio, a su altura de siempre para que se vea su zona en el mapa
         x.abrir();
-        irAApartado('#he');
+        irAApartado('#he', false);
+        apuntarTarea('comer-sitio');
       };
       lista.appendChild(b);
     });
@@ -180,6 +182,7 @@ function abrirDondeComer() {
   });
   $('#ap').textContent =
     'Cada sitio lleva su fuente y su fecha en la ficha de su zona: Guía Repsol, Guía Michelin, Tripadvisor o Gastroranking.';
+  fichaAlta = true;
   mostrarFicha();
   enlaceFicha('comer', 'Dónde comer');
 }

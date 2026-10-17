@@ -154,6 +154,7 @@ function ponerEstadoRuta(id, s) {
 }
 // Pulsar el botón marcado lo quita (con «Deshacer»); pulsar el otro cambia la marca
 function marcarRuta(id, s) {
+  apuntarTarea('marca'); // medicion.js
   conAvisoDeLogros(() => marcarRutaSinLogros(id, s)); // y anuncia los logros de rutas hechas
 }
 function marcarRutaSinLogros(id, s) {
@@ -281,6 +282,7 @@ function abrirRutas() {
   }
   $('#ap').textContent =
     'Caminos por calles y carreteras reales de OpenStreetMap. Los tiempos son orientativos y no cuentan las paradas.';
+  fichaAlta = filtroRutas == 'coche'; // las de la provincia no usan el mapa de la capital
   mostrarFicha();
   enlaceFicha('rutas', 'Rutas');
 }

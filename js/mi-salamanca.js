@@ -37,12 +37,19 @@ const verRutas = filtro => {
   abrirRutas();
 };
 
-// Las pestañas de la ficha y su enlace (#tu-salamanca, #tu-salamanca/actividad, #tu-salamanca/logros)
+// Las pestañas de la ficha y su enlace (#tu-salamanca, #tu-salamanca/actividad, #tu-salamanca/logros).
+// Resumen: cuánto llevas de cada cosa, hasta hoy. Diario: qué marcaste y cuándo (por eso solo él tiene el
+// filtro de periodo). Logros: las medallas.
 const PESTANAS_TU_SALAMANCA = [
   ['resumen', 'Resumen'],
-  ['actividad', 'Actividad'],
+  ['actividad', 'Diario'],
   ['logros', 'Logros']
 ];
+const EXPLICA_PESTANA_TS = {
+  resumen: 'Cuánto llevas de cada cosa, hasta hoy. Cada cifra lleva a su sitio del mapa.',
+  actividad: 'Qué marcaste y cuándo: mes a mes, semana a semana y día a día.',
+  logros: 'Tus medallas y las que tienes más cerca.'
+};
 let pestanaTuSalamanca = 'resumen';
 const hashTuSalamanca = () =>
   'tu-salamanca' + (pestanaTuSalamanca == 'resumen' ? '' : '/' + pestanaTuSalamanca);
@@ -67,13 +74,7 @@ function pintarEstadisticas(refrescar = false) {
   const nombre = nombreUsuario(),
     scroll = document.querySelector('#sh .sb').scrollTop,
     caja = fichaLimpia('Tu Salamanca', nombre ? 'Hola, ' + nombre : 'Lo que llevas'),
-    desde = inicioPeriodo(periodoEstadisticas),
-    desdeTexto = desde
-      ? desde.getFullYear() + '-' + String(desde.getMonth() + 1).padStart(2, '0') + '-01'
-      : '',
-    nuevosEnPeriodo = lado => historial.conFecha.filter(v => v.lado == lado && v.fecha >= desdeTexto).length,
-    enPeriodo = lado => (desde ? nuevosEnPeriodo(lado) : 0),
-    filtros = () => {
+    filtros = conPeriodo => {
       caja.appendChild(
         filaFiltros(
           'Mostrar',
@@ -86,7 +87,7 @@ function pintarEstadisticas(refrescar = false) {
           v => (ambitoEstadisticas = v)
         )
       );
-      if (hay)
+      if (hay && conPeriodo)
         caja.appendChild(
           filaFiltros('Periodo', PERIODOS, periodoEstadisticas, v => (periodoEstadisticas = v))
         );
@@ -96,22 +97,18 @@ function pintarEstadisticas(refrescar = false) {
   const pestanas = filaFiltros('Apartado', PESTANAS_TU_SALAMANCA, pestanaTuSalamanca, v => {
     pestanaTuSalamanca = v;
     document.querySelector('#sh .sb').scrollTop = 0;
+    apuntarFicha(hashTuSalamanca());
   });
   pestanas.classList.add('pestanas-ts');
   caja.appendChild(pestanas);
+  caja.appendChild(crear('p', 'explica-ts', EXPLICA_PESTANA_TS[pestanaTuSalamanca]));
 
   if (pestanaTuSalamanca == 'resumen') {
     if (nada) caja.appendChild(avisoSinNada());
-    else {
-      caja.appendChild(
-        crear('p', 'hab', 'Lo que llevas recorrido. Sin prisa: cada cifra lleva a su sitio del mapa.')
-      );
-      caja.appendChild(resumenPorcentajes(capital, provincia, ambitoEstadisticas));
-    }
-    filtros();
-    if (ambitoEstadisticas != 'provincia') caja.appendChild(apartadoCapital(capital, enPeriodo('capital')));
-    if (ambitoEstadisticas != 'capital')
-      caja.appendChild(apartadoProvincia(provincia, enPeriodo('provincia')));
+    else caja.appendChild(resumenPorcentajes(capital, provincia, ambitoEstadisticas));
+    filtros(false);
+    if (ambitoEstadisticas != 'provincia') caja.appendChild(apartadoCapital(capital));
+    if (ambitoEstadisticas != 'capital') caja.appendChild(apartadoProvincia(provincia));
     // Qué se ha explorado más y qué está sin empezar
     if (!nada) caja.appendChild(apartadoCategorias(datos.categorias, ambitoEstadisticas));
     // Por dónde seguir: en «¿Qué puedo descubrir hoy?», que lo tiene todo (no se repite aquí)
@@ -123,14 +120,19 @@ function pintarEstadisticas(refrescar = false) {
     caja.appendChild(crear('div', 'botones-aviso', hoy, imagen));
   } else if (pestanaTuSalamanca == 'actividad') {
     if (!nada) {
-      filtros();
+      filtros(true);
       caja.appendChild(apartadoMeses(historial, ambitoEstadisticas, periodoEstadisticas));
     }
     caja.append(...apartadosActividad());
   } else {
-    caja.appendChild(apartadoColecciones(logros));
+    caja.appendChild(apartadoVitrina(logros));
     caja.appendChild(
-      crear('section', 'ms-apartado', crear('h3', '', '📋 Todos los logros'), listaDeLogros())
+      crear(
+        'section',
+        'ms-apartado',
+        crear('h3', '', '📋 Todos, por categorías'),
+        listaDeLogros(logros.todos)
+      )
     );
     caja.appendChild(apartadoJuego());
   }
@@ -145,6 +147,7 @@ function pintarEstadisticas(refrescar = false) {
     escribirHash(hashTuSalamanca(), false);
     return;
   }
+  fichaAlta = true;
   mostrarFicha();
   enlaceFicha(hashTuSalamanca(), 'Tu Salamanca');
 }

@@ -1,5 +1,24 @@
 [
   {
+    "version": "2.13.0",
+    "fecha": "2026-10-17",
+    "titulo": "Un primer paseo para empezar",
+    "usuario": [
+      "La primera vez, un primer paseo de tres pasos: abre un sitio, márcalo y mira qué descubrir hoy. Se puede saltar y retomar desde Ayuda (?).",
+      "En el móvil, Tu Salamanca, Cultura, Dónde comer y las rutas por la provincia se abren casi a pantalla completa.",
+      "En Tu Salamanca, «Actividad» ahora se llama «Diario», y cada pestaña dice qué es.",
+      "Los logros tienen vitrina: tus medallas, las que tienes más cerca y todas en tarjetas.",
+      "Las fuentes están ahora al pie, junto a «Avisar de un error».",
+      "Nuevo Laboratorio en Ayuda: tiempos de carga y pruebas de tareas que se quedan en tu navegador. Si quieres, «Enviárnoslo» nos manda el resumen por correo para mejorar la app."
+    ],
+    "tecnico": [
+      "fichaAlta (ficha.js) abre la ficha grande en el móvil; Dónde comer vuelve a la altura normal al elegir sitio.",
+      "Tu Salamanca: EXPLICA_PESTANA_TS, periodo solo en el Diario, apartadoVitrina y medallas por logro en listaDeLogros.",
+      "js/paseo.js (primer paseo, abrirAyuda) y js/medicion.js (apuntarTarea, charro-medicion, PRUEBAS_TAREAS, Laboratorio, versionApp).",
+      "Fuentes en #fuentes oculto, abiertas en ventana desde el pie. PRUEBAS_DETALLE=1 en las pruebas."
+    ]
+  },
+  {
     "version": "2.12.0",
     "fecha": "2026-10-17",
     "titulo": "Todo lo tuyo en «Tu Salamanca»",

@@ -38,10 +38,9 @@ const cajaNovedades = lista =>
 
 // Al llegar una versión nueva, una ventana con sus novedades (y las de las versiones que no se vieron,
 // hasta tres). La última vista se recuerda en este navegador (charro-version-vista); quien entra por
-// primera vez ve la bienvenida y no las novedades.
+// primera vez hace el primer paseo y no ve las novedades.
 const CLAVE_VERSION_VISTA = 'charro-version-vista',
   MAX_VERSIONES_NUEVAS = 3;
-const versionApp = () => (document.querySelector('meta[name="version"]') || {}).content || '';
 function compararVersiones(a, b) {
   const x = String(a).split('.').map(Number),
     y = String(b).split('.').map(Number);
@@ -129,6 +128,16 @@ if (!EN_MARCO) {
   enlace.href = 'privacidad.html';
   $('#ver').append(' · ', enlace);
 }
+// Las fuentes, al pie (antes de «Avisar de un error»): en una ventana, para no cargar el final de la página
+{
+  const boton = crear('button', 'enlace', 'Fuentes');
+  boton.onclick = () => {
+    const lista = crear('div', 'lista-fuentes');
+    lista.innerHTML = $('#fuentes').innerHTML.replace(' id="dt"', ''); // el texto está en index.html
+    abrirVentana('Fuentes', lista, [['Cerrar', cerrarVentana]], boton);
+  };
+  $('#ver').append(' · ', boton);
+}
 // Si lo guardado en el navegador estaba ilegible, se apartó sin borrarlo (estado.js) y se avisa
 if (progresoDanado)
   aviso(
@@ -144,6 +153,7 @@ ajustarVista();
 actualizar();
 iniciarPalabras();
 aplicarEnlace();
+marcarMapaListo(); // medicion.js: el tiempo de carga hasta aquí
 iniciarNube();
 // Sin conexión: solo en la web (dentro de Claude la app va en un marco y no hace falta)
 if (
@@ -195,12 +205,13 @@ function avisarVersionNueva() {
   document.body.append(caja);
 }
 
-// La primera vez, la bienvenida (bienvenida.js), cuando ya se ha pintado el mapa. Si no, las novedades
+// La primera vez, el primer paseo (paseo.js), cuando ya se ha pintado el mapa. Si no, las novedades
 // si hay una versión nueva y, si no, la primera vez de cada día, «¿Qué puedo descubrir hoy?» (hoy.js); el
-// día de la bienvenida ya no sale, y el de las novedades sale la próxima vez que se abra
+// día del primer paseo ya no sale, y el de las novedades sale la próxima vez que se abra
 if (tocaBienvenida()) {
   escribirLocal(CLAVE_HOY, fechaHoy());
   escribirLocal(CLAVE_VERSION_VISTA, versionApp());
-  setTimeout(() => mostrarBienvenida(), 300);
+  marcarBienvenidaVista();
+  setTimeout(() => empezarPaseo(), 300);
 } else if (tocaNovedades()) setTimeout(() => mostrarNovedadesNuevas(), 300);
 else if (tocaHoy()) setTimeout(() => abrirHoy(), 300);

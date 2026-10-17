@@ -13,6 +13,7 @@ let vistaProvincia = null;
 
 // Marca o desmarca un pueblo (m<INE>) o una pedanía (p<INE>:<slug>). Pisar cualquiera marca también «Resto de la provincia».
 function marcarEnProvincia(clave, marca, nombre) {
+  apuntarTarea('marca'); // medicion.js
   conAvisoDeLogros(() => {
     progreso.p = progreso.p || {};
     progreso.gv = progreso.gv || [];

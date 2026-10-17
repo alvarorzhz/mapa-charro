@@ -474,6 +474,7 @@ function abrirCultura() {
   pintarListaCultura(lista);
   $('#ap').textContent =
     'Cada ficha lleva sus fuentes y la fecha de su última revisión. Solo hay categorías con contenido comprobado.';
+  fichaAlta = true;
   mostrarFicha();
   enlaceFicha('cultura', 'Cultura y tradiciones');
 }

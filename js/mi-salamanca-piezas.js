@@ -12,7 +12,7 @@ const nombreMes = (clave, largo) => {
 };
 
 // Una tarjeta: cifra grande, «de N», qué es, barra con texto accesible y, si hay, un acceso al mapa
-function tarjetaCifra({ v, total, que, detalle, accion, nuevos }) {
+function tarjetaCifra({ v, total, que, detalle, accion }) {
   const t = crear('div', 'ms-tarjeta');
   t.appendChild(
     crear(
@@ -36,7 +36,6 @@ function tarjetaCifra({ v, total, que, detalle, accion, nuevos }) {
     t.append(barraPct, crear('small', 'ms-pct', pct + ' %'));
   }
   if (detalle) t.appendChild(crear('small', 'ms-detalle', detalle));
-  if (nuevos) t.appendChild(crear('small', 'ms-nuevos', '+' + nuevos + ' en este periodo'));
   if (accion) {
     const b = crear('button', 'enlace ms-ir', accion[0]);
     b.onclick = accion[1];
@@ -223,8 +222,8 @@ function avisoSinNada() {
   );
 }
 
-// Barrios, monumentos, sitios y rutas de la capital, y sus partes de la ciudad. nuevos: pisados en el periodo
-function apartadoCapital(capital, nuevos) {
+// Barrios, monumentos, sitios y rutas de la capital, y sus partes de la ciudad
+function apartadoCapital(capital) {
   const faltaPoco = capital.grupos
     .filter(g => g.v && g.v < g.total && g.total - g.v <= 2)
     .map(
@@ -247,7 +246,6 @@ function apartadoCapital(capital, nuevos) {
         total: capital.barrios.total,
         que: 'Barrios pisados',
         detalle: 'Sin los pueblos de alrededor: van en la provincia.',
-        nuevos,
         accion: capital.barrios.v
           ? [
               'Verlos en el mapa',
@@ -321,8 +319,8 @@ function apartadoCapital(capital, nuevos) {
   );
 }
 
-// Municipios, pedanías, comarcas, sitios y rutas de la provincia. nuevos: pisados en el periodo
-function apartadoProvincia(provincia, nuevos) {
+// Municipios, pedanías, comarcas, sitios y rutas de la provincia
+function apartadoProvincia(provincia) {
   return crear(
     'section',
     'ms-apartado',
@@ -335,7 +333,6 @@ function apartadoProvincia(provincia, nuevos) {
         total: provincia.municipios.total,
         que: 'Municipios pisados',
         detalle: 'Sin la capital; con los pueblos de alrededor.',
-        nuevos,
         accion: provincia.municipios.v ? ['Verlos en la provincia', () => verProvinciaFiltrada('v')] : null
       }),
       tarjetaCifra({
@@ -411,41 +408,82 @@ function apartadoMeses(historial, ambito, periodo) {
   return evolucion;
 }
 
-// Colecciones completas, logros, próximos objetivos y lo último conseguido
-function apartadoColecciones(logros) {
-  const proximas = crear('div', 'ms-grupos');
-  logros.proximas.forEach(a => {
-    proximas.appendChild(
-      crear(
-        'div',
-        'ms-grupo',
-        crear('span', '', a.n),
-        crear('small', '', a.c + ' de ' + a.m),
-        barra(a.c / a.m)
-      )
-    );
-  });
-  return crear(
-    'section',
-    'ms-apartado',
-    crear('h3', '', '🏆 Colecciones y logros'),
-    crear(
+// La vitrina de la pestaña Logros: cuántos llevas, las medallas conseguidas (lo último, con fecha) y los
+// próximos objetivos, que llevan a su categoría
+function apartadoVitrina(logros) {
+  const hechos = logros.todos.filter(conseguido),
+    fechaDe = new Map(logros.recientes.map(r => [r.logro.id, r.fecha])),
+    // Las medallas conseguidas: las de fecha más reciente primero
+    medallas = crear(
       'div',
-      'ms-tarjetas',
-      tarjetaCifra({
-        v: logros.colecciones.v,
-        total: logros.colecciones.total,
-        que: 'Colecciones completas',
-        detalle: 'Una parte de la ciudad, una época, una ruta, una comarca…'
-      }),
-      tarjetaCifra({
-        v: logros.v,
-        total: logros.total,
-        que: 'Logros conseguidos'
+      'medallero',
+      ...hechos
+        .sort((a, b) => (fechaDe.get(b.id) || '').localeCompare(fechaDe.get(a.id) || ''))
+        .map(a =>
+          crear(
+            'div',
+            'medalla-vitrina',
+            medallaDecorativa('medalla con', MEDALLAS[a.cat] || '🏆'),
+            crear('b', '', a.n)
+          )
+        )
+    ),
+    // Los próximos: tarjetas que llevan a su categoría, abierta
+    proximas = crear(
+      'div',
+      'objetivos',
+      ...logros.proximas.map(a => {
+        const b = crear(
+          'button',
+          'objetivo',
+          medallaDecorativa('medalla', MEDALLAS[a.cat] || '🏆'),
+          crear('span', 'texto', crear('b', '', a.n), crear('small', '', a.d)),
+          crear('span', 'cuenta', a.c + ' de ' + a.m),
+          barra(a.c / a.m)
+        );
+        b.onclick = () => {
+          const categoria = CATEGORIAS_LOGRO.find(c => c[2].includes(a.cat)),
+            plegable =
+              categoria && document.querySelector('#info .cat-logros[data-cat="' + categoria[0] + '"]');
+          if (!plegable) return;
+          plegable.open = true;
+          plegable.scrollIntoView({ behavior: comoDesplazar(), block: 'start' });
+        };
+        return b;
       })
     ),
-    logros.proximas.length ? crear('p', 'mu', 'Tus próximos objetivos, los que tienes más cerca:') : '',
-    proximas,
+    cabecera = crear(
+      'div',
+      'vitrina-cab',
+      medallaDecorativa('medalla grande' + (hechos.length ? ' con' : ''), '🏆'),
+      crear(
+        'div',
+        'texto',
+        crear(
+          'p',
+          'ms-cifra',
+          crear('b', '', String(logros.v)),
+          crear('span', '', ' de ' + logros.total + ' logros')
+        ),
+        barra(logros.v / logros.total),
+        crear(
+          'small',
+          '',
+          logros.colecciones.v +
+            ' de ' +
+            logros.colecciones.total +
+            ' colecciones completas: una parte de la ciudad, una época, una ruta, una comarca…'
+        )
+      )
+    );
+  return crear(
+    'section',
+    'ms-apartado vitrina',
+    cabecera,
+    crear('h3', '', '🏅 Tus medallas'),
+    hechos.length
+      ? medallas
+      : crear('p', 'mu', 'Aún ninguna. La primera está a un paso: marca un barrio con «He estado».'),
     logros.recientes.length
       ? crear(
           'div',
@@ -455,6 +493,8 @@ function apartadoColecciones(logros) {
             crear('p', 'ms-reciente', '🏆 ' + r.logro.n, crear('small', '', ' · ' + fechaLarga(r.fecha)))
           )
         )
-      : ''
+      : '',
+    logros.proximas.length ? crear('h3', '', '🎯 Tus próximos objetivos, los que tienes más cerca') : '',
+    proximas
   );
 }

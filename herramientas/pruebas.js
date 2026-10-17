@@ -187,27 +187,59 @@ prueba('Nombres de avenidas solo al pulsarlas', async p => {
 });
 
 prueba(
-  'Bienvenida la primera vez',
+  'Primer paseo la primera vez: tres pasos con lo de verdad',
   async (p, url) => {
-    await p.waitForSelector('.modal .bienvenida');
-    igual(await texto(p, '.modal h2'), '¡Bienvenido al Mapa charro!', 'sale al entrar la primera vez');
+    await p.waitForSelector('#paseo');
+    cierto(!(await p.$('.modal')), 'sin ventana que tape la app');
+    cierto((await texto(p, '#paseo')).includes('paso 1 de 3'), 'empieza por el primer paso');
+    // Paso 1: la recomendación principal abre su ficha
+    await p.click('#paseo button.on');
+    cierto(await fichaAbierta(p), 'abre el Centro');
+    await p.waitForFunction(() => document.querySelector('#paseo').textContent.includes('paso 2 de 3'));
+    cierto(
+      await p.$eval('.bt button[data-s="v"]', e => e.classList.contains('paseo-foco')),
+      'señala «He estado» de la ficha abierta'
+    );
+    // Paso 2: marcar de verdad
+    await p.click('.bt button[data-s="v"]');
+    await p.waitForFunction(() => document.querySelector('#paseo').textContent.includes('paso 3 de 3'));
+    // Saltar y retomar desde Ayuda, donde se quedó
+    await p.click('#paseo .cerrar');
+    cierto(!(await p.$('#paseo')), 'se puede saltar');
+    await p.reload();
+    await p.waitForTimeout(400);
+    cierto(!(await p.$('#paseo')), 'saltado no vuelve a salir solo');
+    if (await fichaAbierta(p)) await p.click('#x'); // en el escritorio la ficha tapa la ayuda
+    await p.click('#ayuda');
+    await p.click('.modal button:has-text("Seguir el primer paseo (paso 3 de 3)")');
+    cierto((await texto(p, '#paseo')).includes('paso 3 de 3'), 'se retoma desde Ayuda');
+    // Paso 3: lo de hoy
+    await p.click('#paseo button.on');
+    igual(await p.evaluate(() => location.hash), '#hoy', 'abre «¿Qué puedo descubrir hoy?»');
+    cierto((await texto(p, '#paseo')).includes('Primer paseo hecho'), 'y se acaba');
+    await p.click('#paseo button.on');
+    cierto(!(await p.$('#paseo')), '«Vale» lo cierra');
+    // «Cómo se usa» sigue en Ayuda: las cuatro pantallas de antes
+    await p.click('#x');
+    await p.click('#ayuda');
+    await p.click('.modal button:has-text("Cómo se usa")');
+    igual(await texto(p, '.modal h2'), '¡Bienvenido al Mapa charro!', 'la bienvenida, desde Ayuda');
     for (let i = 0; i < 3; i++) await p.click('.modal .botones button.on');
     igual(await texto(p, '.modal .botones button.on'), '¡A pisar Salamanca!', 'cuatro pasos');
     await p.click('.modal .botones button:first-child');
     igual(await texto(p, '.modal h2'), 'Mucho por descubrir', '«Anterior» vuelve un paso');
     await p.keyboard.press('Escape');
     cierto(!(await p.$('.modal')), 'Esc la cierra');
-    await p.reload();
-    await p.waitForTimeout(600);
-    cierto(!(await p.$('.modal')), 'la segunda vez ya no sale');
-    await p.click('#ayuda');
-    cierto(!!(await p.$('.modal .bienvenida')), 'el botón «?» la vuelve a abrir');
-    await p.click('.modal .cerrar');
-    // Entrando por un enlace a una ficha, no tapa la ficha
-    await p.evaluate(() => localStorage.removeItem('charro-bienvenida'));
+    // Entrando por un enlace a una ficha, no sale
+    await p.evaluate(() => {
+      localStorage.removeItem('charro-bienvenida');
+      localStorage.removeItem('charro-paseo');
+    });
     await p.goto(url + '#tejares');
     await p.waitForTimeout(600);
-    cierto(!(await p.$('.modal')) && (await fichaAbierta(p)), 'con un enlace a una ficha no sale');
+    cierto(!(await p.$('#paseo')) && (await fichaAbierta(p)), 'con un enlace a una ficha no sale');
+    // Lo del paseo no va en el progreso
+    cierto(!(await p.evaluate(() => JSON.stringify(progreso).includes('paseo'))), 'fuera del progreso');
   },
   { conBienvenida: true }
 );
@@ -331,9 +363,10 @@ prueba(
 );
 
 prueba(
-  'La primera vez, la bienvenida y no las novedades',
+  'La primera vez, el primer paseo y no las novedades',
   async p => {
-    await p.waitForSelector('.modal .bienvenida');
+    await p.waitForSelector('#paseo');
+    cierto(!(await p.$('.modal')), 'sin novedades');
     igual(
       await p.evaluate(() => localStorage.getItem('charro-version-vista')),
       await p.evaluate(() => versionApp()),
@@ -1175,7 +1208,7 @@ prueba(
     cierto((await texto(p, '#info')).includes('2 de 63 zonas pisadas'), 'zonas pisadas');
     igual(
       await p.$$eval('#info [aria-label="Apartado"] button', a => a.map(b => b.textContent)),
-      ['Resumen', 'Actividad', 'Logros'],
+      ['Resumen', 'Diario', 'Logros'],
       'tres pestañas'
     );
     cierto(!(await p.$('#info .historial')), 'el historial no está en el resumen');
@@ -1244,7 +1277,7 @@ prueba(
     for (const [enlace, boton] of [
       ['#perfil', 'Resumen'],
       ['#mi-salamanca', 'Resumen'],
-      ['#tu-salamanca/actividad', 'Actividad']
+      ['#tu-salamanca/actividad', 'Diario']
     ]) {
       await p.goto(url + enlace);
       await p.waitForTimeout(300);
@@ -2937,7 +2970,10 @@ prueba('Mi Salamanca: cálculos con datos controlados y capital y provincia por 
   cierto(!(await texto(p, '#info')).includes('Salamanca capital'), 'solo la provincia');
   await p.click('#info [aria-label="Mostrar"] button:nth-child(2)');
   cierto(!(await texto(p, '#info')).includes('Provincia de Salamanca'), 'solo la capital');
-  cierto(await p.$('#info [aria-label="Periodo"]'), 'con fechas, filtro de periodo');
+  // El periodo solo en el diario (el resumen es lo que llevas hasta hoy)
+  cierto(!(await p.$('#info [aria-label="Periodo"]')), 'el resumen, sin periodo');
+  await p.click('#info [aria-label="Apartado"] button:nth-child(2)');
+  cierto(await p.$('#info [aria-label="Periodo"]'), 'con fechas, filtro de periodo en el diario');
   // Recargar: las cifras salen otra vez del progreso guardado
   await p.reload();
   await p.waitForSelector('#sh.o');
@@ -3542,6 +3578,100 @@ prueba('Guardado: con la app abierta en dos pestañas no se pisan', async (p, ur
   await otra.close();
 });
 
+prueba('En el móvil, Tu Salamanca y las listas que no usan el mapa se abren altas', async p => {
+  if (await p.evaluate(() => esEscritorio())) return; // en el escritorio la ficha va al lado, siempre alta
+  const alta = () => p.$eval('#sh', e => e.classList.contains('grande'));
+  await p.click('#perfil');
+  cierto(await alta(), 'Tu Salamanca');
+  await p.evaluate(() => abrirCultura());
+  cierto(await alta(), 'Cultura');
+  await p.evaluate(() => abrirFicha('tejares'));
+  cierto(!(await alta()), 'una zona, a su altura de siempre (se ve en el mapa)');
+  await p.evaluate(() => abrirDondeComer());
+  cierto(await alta(), 'Dónde comer');
+  await p.click('#info .fila-explora');
+  cierto(!(await alta()), 'al elegir un sitio, a su altura para ver su zona');
+  await p.evaluate(() => {
+    filtroRutas = 'coche';
+    abrirRutas();
+  });
+  cierto(await alta(), 'las rutas por la provincia');
+  await p.evaluate(() => abrirRutaProvincia(0));
+  cierto(await alta(), 'y cada ruta en coche, con su mapa');
+  await p.evaluate(() => {
+    filtroRutas = 'pie';
+    abrirRutas();
+  });
+  cierto(!(await alta()), 'las de a pie, con el mapa de la ciudad a la vista');
+});
+
+prueba('Tu Salamanca: logros con medallas y objetivos', async p => {
+  await p.evaluate(() => ['centro', 'univ'].forEach(z => marcarZona(z, 'v')));
+  await p.evaluate(() => abrirTuSalamanca('logros'));
+  cierto((await texto(p, '.explica-ts')).includes('medallas'), 'dice qué es la pestaña');
+  cierto((await texto(p, '.medallero')).includes('Primer vítor'), 'la medalla conseguida, a la vista');
+  igual(
+    await p.$$eval('#info .lista-logros .ac .medalla', a => a.length),
+    await p.evaluate(() => calcularLogros().length),
+    'cada logro con su medalla'
+  );
+  await p.click('#info .objetivo');
+  cierto(await p.$('#info .cat-logros[open]'), 'un objetivo abre su categoría');
+  await p.click('#info [aria-label="Apartado"] button:nth-child(2)');
+  cierto((await texto(p, '.explica-ts')).includes('cuándo'), 'el diario dice que va de cuándo');
+});
+
+prueba('Las fuentes, al pie y antes de «Avisar de un error»', async p => {
+  const pie = await p.$$eval('#ver button, #ver a', a => a.map(e => e.textContent));
+  cierto(
+    pie.indexOf('Fuentes') >= 0 && pie.indexOf('Fuentes') == pie.indexOf('Avisar de un error') - 1,
+    'justo antes: ' + pie.join(' · ')
+  );
+  cierto(!(await p.isVisible('#fuentes')), 'no ocupan el final de la página');
+  await p.click('#ver button:has-text("Fuentes")');
+  igual(await texto(p, '.modal h2'), 'Fuentes', 'en una ventana');
+  cierto((await texto(p, '.modal')).includes('OpenStreetMap'), 'con la lista');
+  igual(await p.$$eval('[id="dt"]', a => a.length), 1, 'sin repetir ids');
+});
+
+prueba('Laboratorio: medición en el navegador, sin datos personales', async p => {
+  await p.evaluate(() => {
+    abrirFicha('tejares');
+    marcarZona('tejares', 'v');
+  });
+  // Los tiempos de carga se apuntan un poco después de cargar
+  await p.waitForFunction(() => leerMedicion().c.length > 0, null, { timeout: 5000 });
+  const m = await p.evaluate(() => leerMedicion());
+  cierto(m.u.zona >= 1 && m.u.marca >= 1, 'cuenta lo que se hace');
+  cierto(m.s[0].t.zona >= 0, 'y cuándo, la primera vez de la visita');
+  cierto(m.c[0].mapa > 0, 'el tiempo hasta tener el mapa');
+  cierto(!JSON.stringify(m).includes('tejares'), 'nunca qué sitio');
+  cierto(!JSON.stringify(await p.evaluate(() => progreso)).includes('"u"'), 'fuera del progreso');
+  // Una prueba de tarea: se cronometra y se cuentan los toques
+  await p.click('#x');
+  await p.click('#ayuda');
+  await p.click('.modal button:has-text("Laboratorio")');
+  cierto((await texto(p, '.modal')).includes('Mapa listo'), 'el panel enseña los tiempos');
+  const resumen = await p.evaluate(() => resumenMedicion());
+  cierto(
+    resumen.includes('Abrir una zona') && !resumen.includes('tejares'),
+    'el resumen para enviar, sin sitios'
+  );
+  await p.click('.prueba-lab:has-text("Mira cuántos logros llevas") button');
+  cierto(await p.isVisible('#prueba'), 'la prueba en marcha, a la vista');
+  await p.click('#perfil');
+  await p.click('#info [aria-label="Apartado"] button:nth-child(3)');
+  cierto(!(await p.$('#prueba')), 'acaba sola al hacer la tarea');
+  const prueba = await p.evaluate(() => leerMedicion().p.pop());
+  cierto(prueba.ok && prueba.id == 'logros' && prueba.toques >= 2 && prueba.ms > 0, 'con su tiempo y toques');
+  // Se puede borrar
+  await p.click('#x');
+  await p.click('#ayuda');
+  await p.click('.modal button:has-text("Laboratorio")');
+  await p.click('.modal button:has-text("Borrar mediciones")');
+  igual(await p.evaluate(() => leerMedicion().p.length), 0, 'se borra');
+});
+
 // --- Ejecución ----------------------------------------------------------------
 (async () => {
   const srv = await servir();
@@ -3605,7 +3735,9 @@ prueba('Guardado: con la app abierta en dos pestañas no se pisan', async (p, ur
         console.log(`✓ ${nombre} · ${n}`);
       } catch (e) {
         fallos++;
-        console.log(`✗ ${nombre} · ${n}\n    ${e.message.split('\n')[0]}`);
+        console.log(
+          `✗ ${nombre} · ${n}\n    ${process.env.PRUEBAS_DETALLE ? e.message : e.message.split('\n')[0]}`
+        );
       }
       await ctx.close();
     }
