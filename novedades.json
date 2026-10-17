@@ -1,5 +1,23 @@
 [
   {
+    "version": "2.14.0",
+    "fecha": "2026-10-17",
+    "titulo": "Más mapa en el móvil",
+    "usuario": [
+      "En el móvil el mapa es mucho más grande: llena la pantalla y empieza con la ciudad en el centro.",
+      "El buscador y Capital/Provincia van en una sola fila; al buscar, los resultados salen por encima del mapa.",
+      "Lo que llevas, en una tarjeta: las zonas pisadas a un lado y tus logros (🏅) al otro, que te llevan a ellos.",
+      "El siguiente logro solo sale cuando lo tienes cerca.",
+      "Los botones del mapa van juntos y ocupan menos; en el móvil se acerca con dos dedos. Abajo, una leyenda corta: he estado, quiero ir y monumento.",
+      "La palabra charra, más a la vista y en menos espacio."
+    ],
+    "tecnico": [
+      "Cabecera del móvil: .top en flex (buscador + .seg), #sr flotante, main>.sub oculto, placeholder corto (ponerTextoBuscador, buscador.js). #m alto con 100svh y encuadreInicial centrado en vertical (estado.js).",
+      "Marcador (.marcador): #cn más corto, #lgr con los logros conseguidos y #sig solo si logroAlAlcance (logros.js).",
+      ".zb en un bloque; #zi/#zo ocultos con (hover:none) and (pointer:coarse); .leyenda-mini; «☰ Lista». Tarjeta #palabra con .pal-pie (fuente y .pal-otra)."
+    ]
+  },
+  {
     "version": "2.13.1",
     "fecha": "2026-10-17",
     "titulo": "Ayúdanos a mejorar, si quieres",

@@ -100,7 +100,7 @@ function pintarPaseo(recienAcabado = false) {
       crear(
         'p',
         '',
-        'Ya sabes lo básico. Arriba tienes tu siguiente logro, y «¿Qué puedo descubrir hoy?» te propone algo nuevo cada día.'
+        'Ya sabes lo básico. Arriba ves lo que llevas y tus logros, y «¿Qué puedo descubrir hoy?» te propone algo nuevo cada día.'
       ),
       crear('div', 'botones', vale)
     );

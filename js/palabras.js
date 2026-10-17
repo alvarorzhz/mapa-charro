@@ -59,8 +59,17 @@ function pintarTarjetaPalabra(w) {
     pintarTarjetaPalabra(siguiente);
     verPalabra(siguiente);
   };
+  otra.classList.add('pal-otra');
+  otra.setAttribute('aria-label', 'Otra palabra charra');
+  // La palabra y su significado, grandes; el ejemplo debajo y, al pie, la fuente (discreta) y «Otra palabra»
+  const [definicion, ejemplo, fuente] = contenidoPalabra(w);
   caja.textContent = '';
-  caja.append(crear('div', 'pal-cab', crear('span', '', '🗣️ Palabra charra'), otra), ...contenidoPalabra(w));
+  caja.append(
+    crear('p', 'pal-cab', '🗣️ Palabra charra'),
+    definicion,
+    ejemplo,
+    crear('div', 'pal-pie', fuente, otra)
+  );
   caja.hidden = false;
 }
 function iniciarPalabras() {

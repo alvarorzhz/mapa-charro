@@ -7,14 +7,15 @@ function actualizar() {
     porVisitar = marcas.filter(x => x == 'w').length,
     total = todasLasZonas.length;
   $('#pg').style.width = (pisadas / total) * 100 + '%';
+  // Lo explorado, en una línea corta: «por visitar» y la rana solo cuando los hay
   $('#cn').textContent =
     pisadas +
     ' de ' +
     total +
-    ' zonas pisadas, ' +
-    porVisitar +
-    ' por visitar' +
-    (progreso.f ? '. Rana encontrada 🐸' : '');
+    ' zonas pisadas' +
+    (porVisitar ? ' · ' + porVisitar + ' por visitar' : '') +
+    (progreso.f ? ' · 🐸' : '');
+  $('#cn').title = progreso.f ? 'Rana encontrada' : '';
   $('#fr').style.opacity = progreso.f ? 1 : 0.45;
   try {
     pintarLogros();
