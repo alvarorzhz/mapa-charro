@@ -357,8 +357,9 @@ function abrirLaboratorio(volverA = document.activeElement) {
       crear(
         'p',
         'hab',
-        'Para saber si un cambio mejora de verdad. Se queda en este navegador: no se envía a ningún sitio ni guarda nada personal (ni qué sitios, ni dónde estás).'
+        'Para saber si un cambio mejora de verdad. Se guarda en este navegador y no lleva nada personal (ni qué sitios, ni dónde estás).'
       ),
+      apartadoCompartir(),
       apartadoCargas(m),
       apartadoPrimeras(m),
       apartadoPruebas(m),
@@ -401,3 +402,109 @@ function abrirLaboratorio(volverA = document.activeElement) {
     volverA
   );
 }
+
+// --- Compartir los datos de uso (voluntario, apagado de entrada) --------------------------------------
+// Quien lo enciende sube como mucho una vez por semana un resumen anónimo a Firestore (uso/<id>): el id es
+// un número al azar de este navegador, sin relación con la cuenta, y el resumen solo lleva cifras (versión,
+// tiempos, tipos de tarea, pruebas). Al apagarlo se borra lo subido. Solo en la web (dentro de Claude no hay
+// Firebase) y Firebase solo se descarga si está encendido. Las reglas de Firestore solo dejan escribir esos
+// campos y no dejan leer a nadie desde la app.
+const CLAVE_COMPARTIR_USO = 'charro-compartir-uso'; // { id, t: última subida (ms) }
+const CADA_CUANTO_USO = 7 * 24 * 3600 * 1000;
+const compartirUso = () => leerLocalJson(CLAVE_COMPARTIR_USO, null);
+const puedeCompartirUso = () => typeof puedeUsarCuenta == 'function' && puedeUsarCuenta();
+
+// El resumen que se sube: medianas y cuentas, nunca la lista de lo hecho
+function datosDeUso(m = leerMedicion()) {
+  const v = versionApp(),
+    esta = lista => lista.filter(x => x.v == v),
+    primeras = {},
+    pruebas = {};
+  ['zona', 'marca', 'hoy', 'buscar'].forEach(t => {
+    const tiempos = esta(m.s)
+      .map(s => s.t[t])
+      .filter(x => x > 0);
+    if (tiempos.length) primeras[t] = [Math.round(mediana(tiempos)), tiempos.length];
+  });
+  PRUEBAS_TAREAS.forEach(([id]) => {
+    const hechas = esta(m.p).filter(p => p.id == id),
+      bien = hechas.filter(p => p.ok);
+    if (hechas.length)
+      pruebas[id] = [
+        hechas.length,
+        bien.length,
+        Math.round(mediana(bien.map(p => p.ms))),
+        Math.round(mediana(bien.map(p => p.toques)))
+      ];
+  });
+  const mapas = esta(m.c)
+    .map(c => c.mapa)
+    .filter(Boolean);
+  return {
+    v,
+    f: fechaMedida(),
+    movil: !esEscritorio(),
+    cargas: mapas.length,
+    mapa: Math.round(mediana(mapas)),
+    primeras,
+    usos: Object.fromEntries(Object.entries(m.u).filter(([t]) => NOMBRES_TAREAS[t])),
+    pruebas
+  };
+}
+
+async function subirUso(forzar = false) {
+  const c = compartirUso();
+  if (!c || !puedeCompartirUso() || (!forzar && Date.now() - (c.t || 0) < CADA_CUANTO_USO)) return;
+  try {
+    await cargarFirebase(); // cuenta.js
+    await cuentaWeb.db.collection('uso').doc(c.id).set(datosDeUso());
+    escribirLocal(CLAVE_COMPARTIR_USO, JSON.stringify({ ...c, t: Date.now() }));
+  } catch (e) {
+    console.warn('No se han podido subir los datos de uso:', e); // ya se probará la próxima vez
+  }
+}
+
+async function cambiarCompartirUso(encender) {
+  const c = compartirUso();
+  if (encender) {
+    const id = [...crypto.getRandomValues(new Uint8Array(16))]
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('');
+    escribirLocal(CLAVE_COMPARTIR_USO, JSON.stringify({ id, t: 0 }));
+    aviso('Gracias: compartirás tus datos de uso, sin nada personal', { tipo: 'exito', discreto: true });
+    await subirUso(true);
+  } else if (c) {
+    escribirLocal(CLAVE_COMPARTIR_USO, null);
+    aviso('Ya no compartes tus datos de uso', { tipo: 'info', discreto: true });
+    try {
+      await cargarFirebase();
+      await cuentaWeb.db.collection('uso').doc(c.id).delete();
+    } catch (e) {
+      console.warn('No se han podido borrar los datos de uso subidos:', e);
+    }
+  }
+}
+
+function apartadoCompartir() {
+  if (!puedeCompartirUso()) return '';
+  const boton = crear('button', 'capa', 'Compartir mis datos de uso');
+  marcarInterruptor(boton, !!compartirUso());
+  boton.onclick = () => {
+    const encender = !compartirUso();
+    marcarInterruptor(boton, encender);
+    cambiarCompartirUso(encender);
+  };
+  return crear(
+    'section',
+    'lab-apartado',
+    crear('div', 'interr', boton),
+    crear(
+      'p',
+      'mu',
+      'Si lo enciendes, una vez por semana nos llegan estas cifras, sin tu nombre ni tu cuenta ni qué sitios: así sabemos qué mejorar. Al apagarlo se borran.'
+    )
+  );
+}
+
+// Al abrir la app, si está encendido y toca (un rato después, para no estorbar a la carga)
+addEventListener('load', () => setTimeout(() => subirUso(), 8000));
