@@ -1,4 +1,5 @@
-// Tu perfil (#perfil): nivel, estadísticas de todo lo que llevas, actividad de las últimas semanas e historial.
+// Tu perfil, dentro de «Tu Salamanca» (mi-salamanca.js): la cabecera con el nivel, la actividad de las últimas
+// semanas, el historial y el juego.
 // El historial se guarda en progreso.j.hi como [fecha, tipo, id]: tipo 'z' zona pisada, 'p' pueblo o pedanía
 // pisados, 'mo' monumento visitado, 'ru' parada de una ruta («ruta:parada»), 'rh' ruta hecha, 'de' detalle
 // escondido encontrado, 'lo' logro conseguido (TIPOS_HISTORIAL, en estado.js).
@@ -176,159 +177,55 @@ const nombreUsuario = () => {
   return c ? c.nombre.trim().split(/\s+/)[0] : '';
 };
 
-function abrirPerfil() {
-  if (!Array.isArray((progreso.j || {}).hi)) anotarHistorial(); // primera vez: lo de antes, sin fecha
-  const j = progreso.j || {},
-    zonasPisadas = todasLasZonas.filter(z => progreso.z[z.id] == 'v'),
-    porVisitar = todasLasZonas.filter(z => progreso.z[z.id] == 'w'),
-    logros = calcularLogros(),
-    hechos = logros.filter(conseguido),
-    todasRutas = [...RUTAS, ...RUTAS_PROVINCIA],
+// La cabecera de «Tu Salamanca» (mi-salamanca.js): nombre, nivel, zonas pisadas y el siguiente nivel
+function cabeceraPerfil() {
+  const zonasPisadas = todasLasZonas.filter(z => progreso.z[z.id] == 'v').length,
+    total = todasLasZonas.length,
+    hechos = calcularLogros().filter(conseguido).length,
     cuenta = cuentaDelPerfil(),
     nombre = nombreUsuario(),
-    titulo = nivel(zonasPisadas.length, todasLasZonas.length),
-    siguiente = siguienteNivel(zonasPisadas.length, todasLasZonas.length),
-    rutasHechas = todasRutas.filter(r => estadoRuta(r.id) == 'v'),
-    rutasQuiero = todasRutas.filter(r => estadoRuta(r.id) == 'w');
-
-  const caja = fichaLimpia('Tu perfil', nombre ? 'Hola, ' + nombre : 'Tu progreso');
-  caja.appendChild(
+    siguiente = siguienteNivel(zonasPisadas, total);
+  return crear(
+    'div',
+    'perfil-cab',
+    crear('span', 'avatar', nombre ? nombre[0].toUpperCase() : '🧑'),
     crear(
       'div',
-      'perfil-cab',
-      crear('span', 'avatar', nombre ? nombre[0].toUpperCase() : '🧑'),
+      '',
+      cuenta ? crear('span', 'perfil-nombre', cuenta.nombre) : null,
+      crear('b', '', nivel(zonasPisadas, total)),
       crear(
-        'div',
+        'small',
         '',
-        cuenta ? crear('span', 'perfil-nombre', cuenta.nombre) : null,
-        crear('b', '', titulo),
-        crear(
-          'small',
-          '',
-          zonasPisadas.length +
-            ' de ' +
-            todasLasZonas.length +
-            ' zonas pisadas · ' +
-            hechos.length +
-            (hechos.length == 1 ? ' logro' : ' logros')
-        ),
-        barra(zonasPisadas.length / todasLasZonas.length),
-        crear(
-          'small',
-          'mu',
-          siguiente
-            ? 'Te ' +
-                (siguiente.faltan == 1 ? 'falta 1 zona' : 'faltan ' + siguiente.faltan + ' zonas') +
-                ' para ser «' +
-                siguiente.nombre +
-                '»'
-            : '¡Has llegado a lo más alto!'
-        )
-      )
-    )
-  );
-  caja.appendChild(
-    crear(
-      'p',
-      'mu perfil-cuenta',
-      cuenta
-        ? 'Has entrado con tu cuenta de ' + cuenta.cuenta + ': tu progreso se guarda en ella.'
-        : 'Sin cuenta: tu progreso se guarda solo en este navegador.'
-    )
-  );
-  // La pantalla de inicio del día (hoy.js), también desde aquí
-  const hoy = crear('button', 'boton-hoy perfil-hoy', '🌅 ¿Qué puedo descubrir hoy?');
-  hoy.onclick = () => desdeHoy(abrirHoy)();
-  caja.appendChild(hoy);
-
-  const apartado = (titulo, ...hijos) => caja.append(crear('h3', '', titulo), ...hijos);
-  // Las cifras de la capital y la provincia, en «Mi Salamanca» (mi-salamanca.js)
-  const cifras = crear(
-    'button',
-    'boton-hoy perfil-hoy',
-    '📊 Mi Salamanca: tus cifras de la capital y la provincia'
-  );
-  cifras.onclick = () => abrirEstadisticas();
-  caja.appendChild(cifras);
-  // Atajos a las rutas: las que quieres hacer y las hechas
-  const botonesRutas = lista => {
-    const nb = crear('div', 'nb');
-    lista.forEach(r => {
-      const b = crear('button', '', r.icono + ' ' + r.nombre);
-      b.onclick = () => abrirRutaPorId(r.id);
-      nb.appendChild(b);
-    });
-    return nb;
-  };
-  if (rutasQuiero.length) apartado('Rutas que quieres hacer', botonesRutas(rutasQuiero));
-  if (rutasHechas.length) apartado('Rutas hechas', botonesRutas(rutasHechas));
-  if (!rutasQuiero.length && !rutasHechas.length) {
-    const ver = crear('button', '', '🥾 Ver las rutas');
-    ver.onclick = abrirRutas;
-    apartado(
-      'Tus rutas',
-      crear('p', 'mu', 'En cada ruta puedes marcar «La he hecho» o «La quiero hacer» para llevar la cuenta.'),
-      crear('div', 'nb', ver)
-    );
-  }
-  apartado(
-    'Juego, lectura y logros',
-    cajaDatos([
-      ['Partidas', String(j.n || 0)],
-      ['Récord', (j.m || 0) + ' puntos'],
-      ['Racha del reto', rachaReto() + (rachaReto() == 1 ? ' día' : ' días')],
-      ['Fichas leídas', (j.fl || []).length + ' / ' + zonas.length],
-      ['Palabras charras', (j.pv || []).length + ' / ' + PALABRAS_CHARRAS.length],
-      ['Logros', hechos.length + ' / ' + logros.length]
-    ])
-  );
-  // Los últimos logros conseguidos (los que tienen fecha)
-  const ultimosLogros = (j.hi || [])
-    .filter(e => e[1] == 'lo' && e[0])
-    .sort((a, b) => (a[0] < b[0] ? 1 : a[0] > b[0] ? -1 : 0))
-    .slice(0, 3);
-  if (ultimosLogros.length)
-    apartado(
-      'Últimos logros',
+        zonasPisadas + ' de ' + total + ' zonas pisadas · ' + hechos + (hechos == 1 ? ' logro' : ' logros')
+      ),
+      barra(zonasPisadas / total),
       crear(
-        'div',
-        'historial',
-        ...ultimosLogros.map(e =>
-          crear(
-            'p',
-            '',
-            textoHistorial(e).replace('🏆 Logro: ', '🏆 '),
-            crear('small', '', ' · ' + fechaLarga(e[0]))
-          )
-        )
+        'small',
+        'mu',
+        siguiente
+          ? 'Te ' +
+              (siguiente.faltan == 1 ? 'falta 1 zona' : 'faltan ' + siguiente.faltan + ' zonas') +
+              ' para ser «' +
+              siguiente.nombre +
+              '»'
+          : '¡Has llegado a lo más alto!'
       )
-    );
-  // «Quiero ir»: atajos a esas zonas
-  if (porVisitar.length) {
-    const lista = crear('div', 'nb');
-    porVisitar.slice(0, 12).forEach(z => {
-      const b = crear('button', '', z.n);
-      b.onclick = () => abrirFicha(z.id);
-      lista.appendChild(b);
-    });
-    apartado('Te quedan por ir', lista);
-  }
-
-  const { sv, dias } = mapaActividad();
-  apartado(
-    'Actividad',
-    crear(
-      'p',
-      'mu',
-      dias
-        ? dias + (dias == 1 ? ' día' : ' días') + ' con algo nuevo en las últimas 12 semanas.'
-        : 'Aún no hay actividad con fecha.'
-    ),
-    sv
+    )
   );
+}
+const textoCuentaPerfil = () => {
+  const cuenta = cuentaDelPerfil();
+  return cuenta
+    ? 'Has entrado con tu cuenta de ' + cuenta.cuenta + ': tu progreso se guarda en ella.'
+    : 'Sin cuenta: tu progreso se guarda solo en este navegador.';
+};
 
-  // Historial: lo más reciente primero, agrupado por día
-  const conFecha = (j.hi || []).filter(e => e[0]).sort((a, b) => (a[0] < b[0] ? 1 : a[0] > b[0] ? -1 : 0)),
+// Pestaña «Actividad»: el cuadro de las últimas 12 semanas y el historial, lo más reciente primero
+function apartadosActividad() {
+  const j = progreso.j || {},
+    { sv, dias } = mapaActividad(),
+    conFecha = (j.hi || []).filter(e => e[0]).sort((a, b) => (a[0] < b[0] ? 1 : a[0] > b[0] ? -1 : 0)),
     sinFecha = (j.hi || []).filter(e => !e[0]).length,
     historial = crear('div', 'historial');
   let dia = '';
@@ -352,15 +249,38 @@ function abrirPerfil() {
           ' de antes de que la app apuntara las fechas.'
       )
     );
-  apartado('Historial', historial);
-
-  const foto = crear('button', 'principal', '📸 Crear mi imagen «Mi Salamanca»');
-  foto.onclick = () => abrirImagenMiSalamanca(foto);
-  $('#nb').append(foto);
-  $('#ap').textContent =
-    'Todo esto sale de tu progreso: se guarda en este navegador y, si has entrado, en tu cuenta. Nadie más lo ve.';
-  mostrarFicha();
-  enlaceFicha('perfil', 'Tu perfil');
+  return [
+    crear(
+      'section',
+      'ms-apartado',
+      crear('h3', '', '🗓️ Las últimas 12 semanas'),
+      crear(
+        'p',
+        'mu',
+        dias
+          ? dias + (dias == 1 ? ' día' : ' días') + ' con algo nuevo en las últimas 12 semanas.'
+          : 'Aún no hay actividad con fecha.'
+      ),
+      sv
+    ),
+    crear('section', 'ms-apartado', crear('h3', '', '📜 Historial'), historial)
+  ];
 }
 
-$('#perfil').onclick = abrirPerfil;
+// Pestaña «Logros»: juego y lectura
+function apartadoJuego() {
+  const j = progreso.j || {},
+    racha = rachaReto();
+  return crear(
+    'section',
+    'ms-apartado',
+    crear('h3', '', '🎯 Juego y lectura'),
+    cajaDatos([
+      ['Partidas', String(j.n || 0)],
+      ['Récord', (j.m || 0) + ' puntos'],
+      ['Racha del reto', racha + (racha == 1 ? ' día' : ' días')],
+      ['Fichas leídas', (j.fl || []).length + ' / ' + zonas.length],
+      ['Palabras charras', (j.pv || []).length + ' / ' + PALABRAS_CHARRAS.length]
+    ])
+  );
+}

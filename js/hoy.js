@@ -560,3 +560,4 @@ function abrirHoy() {
 }
 
 $('#volverhoy').onclick = () => abrirHoy();
+$('#hy').onclick = () => abrirHoy();

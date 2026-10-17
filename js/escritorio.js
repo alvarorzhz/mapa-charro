@@ -67,7 +67,3 @@ addEventListener('keydown', e => {
   $('#q').focus();
   $('#q').select();
 });
-
-// --- Logros a la vista en escritorio ---------------------------------------------------
-// Vienen abiertos en index.html (así no empujan nada al rellenarse); en el móvil se cierran
-if (!esEscritorio()) $('#lgr').open = false;

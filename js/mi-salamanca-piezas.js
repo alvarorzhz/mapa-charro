@@ -201,59 +201,6 @@ function apartadoCategorias(categorias, ambito) {
   return caja;
 }
 
-// Por dónde seguir: rutas a medias, lo guardado en «Quiero ir» y «La quiero hacer» (hoy.js: cosasAMedias) y
-// las rutas hechas. Si no hay nada guardado, la recomendación del día. «Quiero ir» no es «He estado».
-function apartadoSeguir(datos) {
-  const caja = crear('section', 'ms-apartado', crear('h3', '', '📌 Para seguir explorando')),
-    pendientes = cosasAMedias(),
-    lista = crear('div', 'lista-explora');
-  pendientes.slice(0, 6).forEach(c => {
-    const b = crear(
-      'button',
-      'fila-explora',
-      crear('span', 'texto', crear('b', '', c.icono + ' ' + c.titulo), crear('small', '', c.texto))
-    );
-    b.onclick = c.abrir;
-    lista.appendChild(b);
-  });
-  if (pendientes.length) {
-    caja.append(crear('p', 'mu', 'Lo que tienes guardado para hacer o a medias:'), lista);
-    if (pendientes.length > 6)
-      caja.appendChild(
-        crear('p', 'mu', 'Y ' + (pendientes.length - 6) + ' más en «¿Qué puedo descubrir hoy?».')
-      );
-  } else {
-    const dia = recomendacionDelDia(),
-      rec = dia && !dia.hechoHoy ? dia.lugar : null;
-    caja.appendChild(
-      crear('p', 'mu', 'No tienes nada en «Quiero ir» ni rutas a medias. Una idea para empezar:')
-    );
-    if (rec) {
-      const b = crear(
-        'button',
-        'fila-explora',
-        crear('span', 'texto', crear('b', '', rec.n), crear('small', '', rec.sub))
-      );
-      b.onclick = rec.abrir;
-      lista.appendChild(b);
-      caja.appendChild(lista);
-    }
-  }
-  if (datos.rutasHechas.length) {
-    const nb = crear('div', 'nb', '✔ Rutas hechas: ');
-    datos.rutasHechas.forEach(r => {
-      const b = crear('button', '', r.icono + ' ' + r.nombre.split(':')[0]);
-      b.onclick = () => abrirRutaPorId(r.id);
-      nb.appendChild(b);
-    });
-    caja.appendChild(nb);
-  }
-  const hoy = crear('button', 'boton-hoy', '🌅 ¿Qué puedo descubrir hoy?');
-  hoy.onclick = () => abrirHoy();
-  caja.appendChild(hoy);
-  return caja;
-}
-
 // Sin nada marcado: por dónde empezar
 function avisoSinNada() {
   const mapa = crear('button', 'boton-hoy', '🗺️ Ir al mapa'),
@@ -494,8 +441,7 @@ function apartadoColecciones(logros) {
       tarjetaCifra({
         v: logros.v,
         total: logros.total,
-        que: 'Logros conseguidos',
-        accion: ['Ver los logros', verLogros]
+        que: 'Logros conseguidos'
       })
     ),
     logros.proximas.length ? crear('p', 'mu', 'Tus próximos objetivos, los que tienes más cerca:') : '',

@@ -392,6 +392,28 @@ function abrirCultura() {
       'De la capital y de la provincia, cada uno con su sitio en el mapa y sus fuentes. Distinguimos lo documentado de lo que cuenta la tradición.'
     )
   );
+  // La agenda: lo que tiene fecha, lo primero que viene
+  const proxima = proximasCitas()[0],
+    agenda = crear(
+      'button',
+      'fila-explora fila-destacada',
+      crear('span', 'ico-det', '📅'),
+      crear(
+        'span',
+        'texto',
+        crear('b', '', 'Agenda: las próximas fechas'),
+        crear(
+          'small',
+          '',
+          proxima
+            ? 'Lo siguiente: ' + proxima.c.n + ' · ' + textoFechasCita(proxima)
+            : 'Fiestas y tradiciones con fecha'
+        )
+      )
+    );
+  agenda.id = 'iragn';
+  agenda.onclick = abrirAgenda;
+  caja.appendChild(crear('div', 'lista-explora', agenda));
   // Búsqueda
   const buscar = crear('input');
   buscar.type = 'search';

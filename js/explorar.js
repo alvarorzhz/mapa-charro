@@ -16,6 +16,30 @@ function abrirMonumentos() {
   caja.appendChild(
     crear('p', 'hab', 'Los imprescindibles de la capital. Pulsa uno para ver su ficha y su sitio en el mapa.')
   );
+  // Los detalles escondidos están en las fachadas de los monumentos: se llega a ellos desde aquí
+  const encontrados = detallesEncontrados().length,
+    detalles = crear(
+      'button',
+      'fila-explora fila-destacada',
+      crear('span', 'ico-det', '🔍'),
+      crear(
+        'span',
+        'texto',
+        crear('b', '', 'Detalles escondidos'),
+        crear(
+          'small',
+          '',
+          'Figuras de las fachadas para buscar con pista · ' +
+            encontrados +
+            ' de ' +
+            DETALLES.length +
+            ' encontrados'
+        )
+      )
+    );
+  detalles.id = 'irdet';
+  detalles.onclick = abrirDetalles;
+  caja.appendChild(crear('div', 'lista-explora', detalles));
   const filtros = crear('div', 'fl');
   filtros.setAttribute('role', 'group');
   filtros.setAttribute('aria-label', 'Mostrar');

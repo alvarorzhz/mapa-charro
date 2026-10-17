@@ -204,7 +204,10 @@ const botonCalendario = (x, texto = '📅 Añadir al calendario') => {
 function abrirAgenda() {
   activarRuta(false);
   const citas = proximasCitas(),
-    caja = fichaLimpia('Fiestas y tradiciones con fecha', 'Agenda');
+    caja = fichaLimpia('Fiestas y tradiciones con fecha', 'Agenda'),
+    volver = crear('button', 'volver-hoy', '← Cultura y tradiciones');
+  volver.onclick = () => abrirCultura();
+  caja.appendChild(volver);
   caja.appendChild(
     crear(
       'p',
@@ -248,5 +251,3 @@ function abrirAgenda() {
   mostrarFicha();
   enlaceFicha('agenda', 'Agenda');
 }
-
-$('#agn').onclick = abrirAgenda;

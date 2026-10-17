@@ -38,6 +38,8 @@ const esHashDeFicha = h =>
   h == 'monumentos' ||
   h == 'hoy' ||
   h == 'mi-salamanca' ||
+  h == 'tu-salamanca' ||
+  h.startsWith('tu-salamanca/') ||
   h == 'cultura' ||
   h.startsWith('cultura/') ||
   h == 'comer' ||
@@ -94,16 +96,17 @@ function aplicarEnlace() {
     if (a == 'pueblo' && b) {
       const m = PROVINCIA.m.find(m => slug(m.n) == b);
       if (m && PUEBLOS[m.n] && (puebloAbierto != m || !fichaAbierta)) abrirPueblo(m);
-    } else if (a == 'perfil') {
-      if (!fichaAbierta || nombreFicha != 'Tu perfil') abrirPerfil();
+    } else if (a == 'tu-salamanca' || a == 'perfil' || a == 'mi-salamanca') {
+      // #perfil y #mi-salamanca, de antes de juntarlos, abren el resumen
+      const pestana = (a == 'tu-salamanca' && b) || 'resumen';
+      if (!fichaAbierta || nombreFicha != 'Tu Salamanca' || pestanaTuSalamanca != pestana)
+        abrirTuSalamanca(pestana);
     } else if (a == 'rutas') {
       if (!fichaAbierta || rutaActiva) abrirRutas();
     } else if (a == 'cultura') {
       if (b && elementoCultura(b)) {
         if (!fichaAbierta || nombreFicha != elementoCultura(b).n) abrirElementoCultura(b);
       } else if (!fichaAbierta || nombreFicha != 'Cultura y tradiciones') abrirCultura();
-    } else if (a == 'mi-salamanca') {
-      if (!fichaAbierta || nombreFicha != 'Mi Salamanca') abrirEstadisticas();
     } else if (a == 'hoy') {
       if (!fichaAbierta || nombreFicha != '¿Qué puedo descubrir hoy?') abrirHoy();
     } else if (a == 'monumentos') {

@@ -442,13 +442,18 @@ function progresoDeZona(z) {
 
 function pintarLogros() {
   const logros = calcularLogros(),
-    caja = $('#lga'),
-    hechos = logros.filter(conseguido).length;
-  // Resumen plegado: cuántos, con su barra
-  const resumen = $('#lgs');
-  resumen.textContent = '';
-  resumen.append('Logros (' + hechos + '/' + logros.length + ')', barra(hechos / logros.length));
-  // El siguiente, siempre a la vista bajo el marcador; al pulsarlo se abre la lista
+    hechos = logros.filter(conseguido).length,
+    pisadas = todasLasZonas.filter(z => progreso.z[z.id] == 'v').length;
+  // El botón de «Lo tuyo» lleva el resumen
+  $('#tsr').textContent =
+    pisadas +
+    (pisadas == 1 ? ' zona pisada' : ' zonas pisadas') +
+    ' · ' +
+    hechos +
+    ' de ' +
+    logros.length +
+    ' logros';
+  // El siguiente, siempre a la vista bajo el marcador; al pulsarlo se abren los logros de «Tu Salamanca»
   const sig = siguienteLogro(logros),
     linea = $('#sig');
   linea.textContent = '';
@@ -467,19 +472,19 @@ function pintarLogros() {
       barra(sig.c / sig.m)
     );
     linea.onclick = () => {
-      $('#lgr').open = true;
       const categoria = CATEGORIAS_LOGRO.find(c => c[2].includes(sig.cat));
-      if (categoria) {
-        categoriasAbiertas.add(categoria[0]);
-        pintarLogros();
-      }
-      $('#lgr').scrollIntoView({ behavior: comoDesplazar(), block: 'start' });
+      if (categoria) categoriasAbiertas.add(categoria[0]);
+      abrirTuSalamanca('logros', categoria && categoria[0]);
     };
   }
-  // Lista plegada por categorías: en cada cabecera, su medalla, cuántos y su barra. Dentro, primero los
-  // empezados (los más cerca, arriba), luego los que faltan y al final los conseguidos.
-  const orden = a => (conseguido(a) ? 2 : a.c > 0 ? 0 : 1);
-  caja.textContent = '';
+}
+
+// Lista plegada por categorías (pestaña «Logros» de «Tu Salamanca»): en cada cabecera, su medalla, cuántos y
+// su barra. Dentro, primero los empezados (los más cerca, arriba), luego los que faltan y al final los
+// conseguidos.
+function listaDeLogros(logros = calcularLogros()) {
+  const orden = a => (conseguido(a) ? 2 : a.c > 0 ? 0 : 1),
+    caja = crear('div', 'lista-logros');
   CATEGORIAS_LOGRO.forEach(([nombre, medalla, cats]) => {
     const deLaCategoria = logros.filter(a => cats.includes(a.cat));
     if (!deLaCategoria.length) return;
@@ -526,6 +531,7 @@ function pintarLogros() {
       });
     caja.appendChild(plegable);
   });
+  return caja;
 }
 // Categorías de la lista de logros: [nombre, medalla, categorías de los logros (cat)]
 const CATEGORIAS_LOGRO = [
