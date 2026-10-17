@@ -349,6 +349,7 @@ function ponerVisita(v, si) {
 }
 function marcarVisita(v = visitaAbierta) {
   if (!v) return;
+  apuntarTarea('marca'); // medicion.js
   conAvisoDeLogros(() => {
     if (estaVisitada(v)) {
       ponerVisita(v, false);
@@ -518,12 +519,12 @@ function listaDeLogros(logros = calcularLogros()) {
           crear(
             'div',
             'ac' + (hecho ? ' ok' : ''),
-            crear('span', 'st', hecho ? '✓' : ''),
+            medallaDecorativa('medalla', MEDALLAS[a.cat] || '🏆'),
             crear(
               'div',
               'texto',
               crear('b', '', a.n),
-              crear('small', '', a.d + ' · ' + (hecho ? 'conseguido' : cuenta + ' de ' + a.m))
+              crear('small', '', a.d + ' · ' + (hecho ? '✓ conseguido' : cuenta + ' de ' + a.m))
             ),
             barra(cuenta / a.m)
           )

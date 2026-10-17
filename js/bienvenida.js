@@ -1,7 +1,8 @@
-// Bienvenida: cuatro pantallitas que explican la app la primera vez que se abre (y con el botón «?»).
-// Si se entra por un enlace a una ficha (#tejares…), no se muestra para no tapar lo que se quería ver;
-// saldrá la próxima vez que se abra la app sin enlace. Que ya se ha visto se recuerda en este
-// navegador (es una comodidad: si no se puede guardar, se vuelve a ver la próxima vez).
+// Bienvenida: cuatro pantallitas que explican la app («Cómo se usa», en Ayuda: paseo.js). La primera vez
+// que se abre la app sale, en su lugar, el primer paseo (paseo.js); charro-bienvenida apunta que ya se
+// abrió. Si se entra por un enlace a una ficha (#tejares…), no sale nada para no tapar lo que se quería
+// ver: saldrá la próxima vez que se abra la app sin enlace. Se recuerda en este navegador (es una
+// comodidad: si no se puede guardar, se vuelve a ver la próxima vez).
 
 const CLAVE_BIENVENIDA = 'charro-bienvenida';
 const PASOS_BIENVENIDA = [
@@ -55,5 +56,3 @@ function mostrarBienvenida(paso = 0, volverA = document.activeElement) {
 
 // Al arrancar (inicio.js): solo la primera vez y sin enlace a una ficha
 const tocaBienvenida = () => !bienvenidaVista() && !location.hash;
-
-$('#ayuda').onclick = () => mostrarBienvenida(0, $('#ayuda'));

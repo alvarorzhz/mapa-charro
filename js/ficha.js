@@ -212,8 +212,8 @@ function pintarIndiceFicha() {
 }
 
 // Lleva a un apartado de la ficha abierta (en el móvil, agrandándola antes para que quede arriba)
-function irAApartado(sel) {
-  if (!esEscritorio()) $('#sh').classList.add('grande');
+function irAApartado(sel, agrandar = true) {
+  if (agrandar && !esEscritorio()) $('#sh').classList.add('grande');
   requestAnimationFrame(() => $(sel).scrollIntoView({ behavior: comoDesplazar(), block: 'start' }));
 }
 
@@ -223,6 +223,9 @@ let fichaConCultura = false;
 let fichaConDemografia = false;
 // La ficha se abre desde «¿Qué puedo descubrir hoy?» (hoy.js): lleva el botón para volver allí
 let fichaDesdeHoy = false;
+// En el móvil, la ficha se abre alta (casi toda la pantalla): listas y paneles que no necesitan el mapa
+// de la capital a la vista (Tu Salamanca, Cultura, Dónde comer, las rutas en coche)
+let fichaAlta = false;
 
 // Dónde estaba el foco antes de abrir la ficha, para devolverlo al cerrarla
 let focoAntesDeFicha = null;
@@ -232,7 +235,8 @@ function mostrarFicha() {
   if (typeof juego != 'undefined' && juego.activo) salirJuego(); // abrir una ficha (p. ej. desde el buscador) deja el juego
   document.querySelector('.sb').scrollTop = 0;
   // Con la pantalla baja (móvil en horizontal, zoom al 200 %) la ficha se abre grande: si no, se leen dos líneas
-  $('#sh').classList.toggle('grande', !esEscritorio() && innerHeight < 520);
+  $('#sh').classList.toggle('grande', !esEscritorio() && (innerHeight < 520 || fichaAlta));
+  fichaAlta = false;
   // La palabra charra y el índice solo van en las fichas de zona (los pinta abrirFicha justo antes)
   $('#pch').hidden = !fichaConPalabra;
   $('#idx').hidden = !fichaConIndice;
@@ -341,6 +345,7 @@ function abrirFichaVia(nombre, tramo = 0) {
 
 // Marca o desmarca (si ya lo estaba) una zona del mapa con 'v' (He estado) o 'w' (Quiero ir)
 function marcarZona(id, marca) {
+  apuntarTarea('marca'); // medicion.js
   conAvisoDeLogros(() => {
     progreso.gv = progreso.gv || [];
     if (progreso.z[id] == marca) {

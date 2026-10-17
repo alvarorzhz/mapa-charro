@@ -167,6 +167,7 @@ function abrirRutaProvincia(k = rutaProvinciaAbierta) {
     '.'
   );
   seguirRuta(r.id);
+  fichaAlta = true; // lleva su propio mapa: el de la capital no hace falta
   mostrarFicha();
   enlaceFicha(hashRutaProvincia(r), r.nombre);
 }

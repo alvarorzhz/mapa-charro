@@ -119,6 +119,7 @@ function estadisticas() {
       }
     },
     logros: {
+      todos: logros,
       v: logros.filter(conseguido).length,
       total: logros.length,
       colecciones: { v: colecciones.filter(conseguido).length, total: colecciones.length },

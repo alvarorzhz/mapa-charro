@@ -69,6 +69,7 @@ function ponerTitulo() {
 // Llamada al abrir una ficha (pick y pickRoad)
 function enlaceFicha(h, nombre) {
   nombreFicha = nombre;
+  apuntarFicha(h); // medicion.js: qué tipo de ficha (nunca cuál)
   ponerTitulo();
   escribirHash(h, !esHashDeFicha(hashActual()));
 }
