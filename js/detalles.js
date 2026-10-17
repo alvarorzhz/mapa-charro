@@ -135,7 +135,10 @@ function abrirDetalle(id, repintar = false) {
 function abrirDetalles() {
   activarRuta(false);
   const n = detallesEncontrados().length,
-    caja = fichaLimpia(n + ' de ' + DETALLES.length + ' encontrados', 'Detalles escondidos');
+    caja = fichaLimpia(n + ' de ' + DETALLES.length + ' encontrados', 'Detalles escondidos'),
+    volver = crear('button', 'volver-hoy', '← Monumentos');
+  volver.onclick = () => abrirMonumentos();
+  caja.appendChild(volver);
   caja.appendChild(
     crear(
       'p',
@@ -166,5 +169,3 @@ function abrirDetalles() {
   mostrarFicha();
   enlaceFicha('detalles', 'Detalles escondidos');
 }
-
-$('#det').onclick = abrirDetalles;

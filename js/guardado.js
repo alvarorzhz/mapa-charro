@@ -327,7 +327,7 @@ async function iniciarNube() {
           .then(() => user.me())
           .then(yo => {
             nombreClaude = (yo && yo.name) || '';
-            if (nombreClaude && location.hash == '#perfil') abrirPerfil();
+            if (nombreClaude) refrescarEstadisticas(); // el saludo de «Tu Salamanca», si está abierta
           })
           .catch(() => {});
         // La primera vez que esta cuenta de Claude se conecta en este dispositivo, se juntan las copias

@@ -504,9 +504,9 @@ prueba('Contraste de los textos', async (p, url) => {
       ['#rutas', null],
       ['#ruta-arribes-norte', null],
       ['#ruta-arribes-norte/5', null],
-      ['#perfil', null],
+      ['#tu-salamanca', null],
       ['#hoy', null],
-      ['#mi-salamanca', null],
+      ['#tu-salamanca/logros', null],
       ['#cultura', null],
       ['#cultura/lunes-de-aguas', null]
     ]) {
@@ -519,7 +519,6 @@ prueba('Contraste de los textos', async (p, url) => {
       // de la palabra charra (su contraste se mira sin ficha, en «inicio») para que no haya scroll
       if (hash && hash != '#lista' && hash != '#provincia')
         await p.evaluate(() => {
-          $('#lgr').open = false;
           $('#palabra').style.display = 'none';
         });
       await p.waitForTimeout(450); // que acaben las transiciones de los paneles
@@ -648,9 +647,8 @@ prueba('Con ratón: globo, «/» y atajos', async p => {
   await p.click('h1');
   await p.keyboard.press('/');
   igual(await p.evaluate(() => document.activeElement.id), 'q', '«/» enfoca el buscador');
-  // Atajos a la vista y Logros abierto, solo en escritorio
+  // Atajos a la vista, solo en escritorio
   igual(await p.$eval('.atajos', e => getComputedStyle(e).display != 'none'), escritorio, 'línea de atajos');
-  igual(await p.$eval('#lgr', e => e.open), escritorio, 'Logros abierto');
 });
 
 prueba('Tema claro y oscuro', async (p, url) => {
@@ -1108,6 +1106,7 @@ prueba('Panel de capas y leyenda', async p => {
   cierto(await p.$eval('#capas', e => e.hidden), 'tocar fuera lo cierra');
   // «Explora», bajo el mapa (en escritorio no lo tapa la ficha)
   for (const [id, que] of [
+    ['#hy', '¿Qué puedo descubrir hoy?'],
     ['#mns', 'Monumentos'],
     ['#rt', 'Rutas'],
     ['#tm', 'Salamanca en el tiempo'],
@@ -1148,7 +1147,7 @@ prueba('Sellos «V» y rutas sobre zonas pisadas', async p => {
 });
 
 prueba(
-  'Tu perfil: estadísticas e historial',
+  'Tu Salamanca: perfil, estadísticas e historial',
   async (p, url) => {
     // Lo que ya estaba marcado se apunta sin fecha; lo nuevo, con la de hoy
     igual(
@@ -1165,22 +1164,39 @@ prueba(
       await p.evaluate(() => fechaHoy()),
       'lo nuevo, con fecha'
     );
+    cierto((await texto(p, '#perfil')).includes('2 zonas pisadas'), 'el botón de «Lo tuyo» lleva el resumen');
     await p.click('#perfil');
-    igual(await p.evaluate(() => location.hash), '#perfil', 'abre el perfil');
-    igual(await texto(p, '#nm'), 'Tu progreso', 'sin nombre, el título no repite «Tu perfil»');
+    igual(await p.evaluate(() => location.hash), '#tu-salamanca', 'abre «Tu Salamanca»');
+    igual(await texto(p, '#nm'), 'Lo que llevas', 'sin nombre, el título no repite «Tu Salamanca»');
     cierto(
       await p.$eval('.bt', e => e.classList.contains('solo-compartir')),
       'compartir lleva texto cuando va solo'
     );
     cierto((await texto(p, '#info')).includes('2 de 63 zonas pisadas'), 'zonas pisadas');
+    igual(
+      await p.$$eval('#info [aria-label="Apartado"] button', a => a.map(b => b.textContent)),
+      ['Resumen', 'Actividad', 'Logros'],
+      'tres pestañas'
+    );
+    cierto(!(await p.$('#info .historial')), 'el historial no está en el resumen');
+    await p.click('#info [aria-label="Apartado"] button:nth-child(2)');
+    igual(await p.evaluate(() => location.hash), '#tu-salamanca/actividad', 'la pestaña, con su enlace');
     cierto((await texto(p, '.historial')).includes('Pisaste Vidal'), 'historial');
     cierto(await p.isVisible('.actividad'), 'actividad de las últimas semanas');
     cierto((await texto(p, '#info')).includes('Te faltan 8 zonas para ser «Paseante»'), 'el siguiente nivel');
-    cierto((await texto(p, '#info')).includes('Sin cuenta'), 'sin cuenta');
+    cierto((await texto(p, '#ap')).includes('Sin cuenta'), 'sin cuenta');
+    await p.click('#info [aria-label="Apartado"] button:nth-child(3)');
+    igual(await p.evaluate(() => location.hash), '#tu-salamanca/logros', 'los logros, con su enlace');
+    igual(
+      await p.$$eval('#info .lista-logros .ac', a => a.length),
+      await p.evaluate(() => calcularLogros().length),
+      'todos los logros en su pestaña'
+    );
+    cierto((await texto(p, '#info')).includes('Partidas'), 'y el juego');
     // Con la cuenta de Claude (o de Google) saluda por el nombre, que no se guarda en el progreso
     await p.evaluate(() => {
       nombreClaude = 'Álvaro Rodríguez';
-      abrirPerfil();
+      abrirTuSalamanca();
     });
     igual(await texto(p, '#nm'), 'Hola, Álvaro', 'saluda por el nombre');
     cierto((await texto(p, '.perfil-nombre')) == 'Álvaro Rodríguez', 'y lo pone entero');
@@ -1224,10 +1240,30 @@ prueba(
       [['2026-10-01', 'z', 'vega']],
       'se guarda limpio'
     );
-    // Enlace directo
-    await p.goto(url + '#perfil');
-    await p.waitForTimeout(300);
-    cierto((await texto(p, '#k')) == 'Tu perfil', 'enlace al perfil');
+    // Enlaces directos, también los de antes (#perfil y #mi-salamanca abren el resumen)
+    for (const [enlace, boton] of [
+      ['#perfil', 'Resumen'],
+      ['#mi-salamanca', 'Resumen'],
+      ['#tu-salamanca/actividad', 'Actividad']
+    ]) {
+      await p.goto(url + enlace);
+      await p.waitForTimeout(300);
+      cierto((await texto(p, '#k')) == 'Tu Salamanca', 'enlace ' + enlace);
+      igual(
+        await texto(p, '#info [aria-label="Apartado"] [aria-pressed="true"]'),
+        boton,
+        enlace + ' en su pestaña'
+      );
+    }
+    // El siguiente logro lleva a su categoría, abierta
+    await p.click('#x');
+    await p.click('#sig');
+    igual(
+      await p.evaluate(() => location.hash),
+      '#tu-salamanca/logros',
+      'el siguiente logro abre los logros'
+    );
+    cierto(await p.$('#info .cat-logros[open]'), 'con su categoría abierta');
   },
   {
     antes: () => {
@@ -1806,7 +1842,7 @@ prueba('Las fichas no se desplazan de lado', async p => {
   // Nada más ancho que la ficha: en el móvil, si no, se puede arrastrar hacia los lados
   const fichas = [
     () => abrirFicha('centro'),
-    () => abrirPerfil(),
+    () => abrirTuSalamanca('actividad'),
     () => abrirRutas(),
     () => abrirRuta(0),
     () => (location.hash = '#ruta-arribes-norte'),
@@ -1986,7 +2022,7 @@ prueba('Imagen «Mi Salamanca»', async p => {
   });
   igual([info.tipo, info.ancho, info.alto], ['image/png', 1080, 1350], 'imagen PNG de 1080×1350');
   igual([info.resumen.pisadas, info.resumen.porVisitar], [2, 1], 'cuenta lo pisado y lo pendiente');
-  await p.click('#foto'); // abre «Mi Salamanca»; la imagen, con su botón
+  await p.click('#perfil'); // abre «Tu Salamanca»; la imagen, con su botón
   await p.click('text=Crear mi imagen para compartir');
   await p.waitForSelector('.modal img');
   cierto(
@@ -2206,7 +2242,7 @@ prueba('Palabras charras: tarjeta, ficha y logros', async p => {
     'cada logro en una categoría'
   );
   igual(
-    await p.$$eval('#lga .ac', a => a.length),
+    await p.evaluate(() => listaDeLogros().querySelectorAll('.ac').length),
     await p.evaluate(() => calcularLogros().length),
     'todos en la lista'
   );
@@ -2435,26 +2471,23 @@ prueba('Tres niveles: lo principal, «Explora» y «Lo tuyo»', async p => {
     cierto((await arriba('.mw')) < (await arriba('#explorar')), 'Explora, bajo el mapa');
     cierto((await arriba('#explorar')) < (await arriba('#tuyo')), 'Lo tuyo, después');
   }
-  for (const id of ['#perfil', '#foto', '#sv', '#lgr'])
-    cierto(await p.$('#tuyo ' + id), id + ' en «Lo tuyo»');
+  for (const id of ['#perfil', '#sv']) cierto(await p.$('#tuyo ' + id), id + ' en «Lo tuyo»');
   cierto(await p.isVisible('#error'), '«Avisar de un error» a la vista arriba');
 });
 
 prueba('Monumentos y Dónde comer, en listas', async (p, url) => {
   await p.click('#mns');
   igual(await texto(p, '#nm'), 'Monumentos', 'abre la lista de monumentos');
-  igual(
-    await p.$$eval('#info .fila-explora', a => a.length),
-    await p.evaluate(() => MONUMENTOS.length),
-    'están todos'
-  );
+  const monumentos = '#info .fila-explora:not(.fila-destacada)';
+  igual(await p.$$eval(monumentos, a => a.length), await p.evaluate(() => MONUMENTOS.length), 'están todos');
+  cierto((await texto(p, '#irdet')).includes('Detalles escondidos'), 'y arriba, los detalles escondidos');
   await p.evaluate(() => {
     progreso.j.mo = ['catedrales'];
     guardar();
   });
   await p.click('#info .fl button:nth-child(2)'); // Visitados
-  igual(await p.$$eval('#info .fila-explora', a => a.length), 1, 'el filtro deja el visitado');
-  await p.click('#info .fila-explora');
+  igual(await p.$$eval(monumentos, a => a.length), 1, 'el filtro deja el visitado');
+  await p.click(monumentos);
   igual(await p.evaluate(() => location.hash), '#monumento/catedrales', 'abre su ficha');
   await p.goto(url + '#comer');
   igual(await texto(p, '#nm'), 'Dónde comer', 'el enlace abre la lista de sitios');
@@ -2598,7 +2631,8 @@ prueba(
 
 prueba('«¿Qué puedo descubrir hoy?»: recomendación, ir a la ficha y volver', async (p, url) => {
   await p.evaluate(() => {
-    marcarZona('centro', 'v');
+    // Se pisa un barrio que no sea el del día: si lo fuera, Hoy lo enseña como «ya lo has marcado hoy»
+    marcarZona(recomendacionDelDia().lugar.id == 'centro' ? 'tejares' : 'centro', 'v');
     marcarZona('vega', 'w');
   });
   await p.goto(url + '#hoy');
@@ -2624,12 +2658,11 @@ prueba('«¿Qué puedo descubrir hoy?»: recomendación, ir a la ficha y volver'
   // Abrir una ficha normal no enseña el botón de volver
   await p.evaluate(() => abrirFicha('tejares'));
   cierto(!(await p.isVisible('#volverhoy')), 'sin botón en las fichas que no vienen de Hoy');
-  // Desde el perfil (en escritorio la ficha tapa el botón: se cierra antes)
+  // Desde «Explora» (en escritorio la ficha tapa el botón: se cierra antes)
   await p.click('#x');
   cierto(!(await fichaAbierta(p)), 'la × cierra la ficha');
-  await p.click('#perfil');
-  await p.click('.perfil-hoy');
-  cierto((await texto(p, '#k')).startsWith('¿Qué puedo descubrir hoy?'), 'se abre desde el perfil');
+  await p.click('#hy');
+  cierto((await texto(p, '#k')).startsWith('¿Qué puedo descubrir hoy?'), 'se abre desde «Explora»');
   // Que no salga sola cada día
   await p.click('#hoyauto');
   igual(await p.evaluate(() => localStorage.getItem('charro-hoy-auto')), '0', 'se puede quitar');
@@ -2758,9 +2791,9 @@ const progresoDePrueba = () => {
 };
 
 prueba('Mi Salamanca: progreso vacío', async p => {
-  await p.click('#foto');
-  igual(await texto(p, '#nm'), 'Mi Salamanca', 'abre el panel');
-  igual(await p.evaluate(() => location.hash), '#mi-salamanca', 'con su enlace');
+  await p.click('#perfil');
+  igual(await texto(p, '#k'), 'Tu Salamanca', 'abre el panel');
+  igual(await p.evaluate(() => location.hash), '#tu-salamanca', 'con su enlace');
   cierto((await texto(p, '#info')).includes('Aún no has marcado nada'), 'estado vacío útil');
   cierto(await p.isVisible('#info .ms-vacio button'), 'con atajos para empezar');
   cierto(!(await p.$('#info [aria-label="Periodo"]')), 'sin fechas no hay filtro de periodo');
@@ -2800,20 +2833,10 @@ prueba('Mi Salamanca: porcentajes, categorías, por dónde seguir y objetivos', 
     (await texto(p, '.ms-apartado')).length > 0 && (await texto(p, '#info')).includes('Sin empezar:'),
     'lo que está sin empezar'
   );
-  // Por dónde seguir: lo guardado («Quiero ir», «La quiero hacer») y las rutas hechas, aparte de lo visitado
-  const seguir = await p.evaluate(
-    () =>
-      [...document.querySelectorAll('.ms-apartado')].find(s =>
-        s.textContent.includes('Para seguir explorando')
-      ).textContent
-  );
-  cierto(
-    seguir.includes('Vega') && seguir.includes('«Quiero ir»'),
-    'el barrio en «Quiero ir», como pendiente'
-  );
-  cierto(seguir.includes('«La quiero hacer»'), 'la ruta que quiere hacer');
-  cierto(seguir.includes('Rutas hechas'), 'y las rutas hechas');
-  // Logros: el último conseguido, con fecha, y los próximos objetivos
+  // Por dónde seguir no se repite aquí: lo tiene «¿Qué puedo descubrir hoy?»
+  cierto(!(await texto(p, '#info')).includes('Para seguir explorando'), 'sin repetir lo de hoy');
+  // Logros (su pestaña): el último conseguido, con fecha, y los próximos objetivos
+  await p.click('#info [aria-label="Apartado"] button:nth-child(3)');
   cierto((await texto(p, '.ms-recientes')).includes('Primer vítor'), 'último logro con su fecha');
   cierto((await texto(p, '#info')).includes('Tus próximos objetivos'), 'próximos objetivos');
   // Mirar y filtrar las cifras no cambia nada de lo guardado
@@ -2824,13 +2847,11 @@ prueba('Mi Salamanca: porcentajes, categorías, por dónde seguir y objetivos', 
     pintarEstadisticas(true);
   });
   igual(await p.evaluate(() => localStorage.charro2), antes, 'mirar las cifras no cambia el progreso');
-  // Un acceso directo lleva a la ficha pendiente
-  await p.evaluate(() =>
-    [...document.querySelectorAll('.ms-apartado .fila-explora')]
-      .find(b => b.textContent.includes('Vega'))
-      .click()
-  );
-  igual(await p.evaluate(() => location.hash), '#vega', 'el acceso abre la zona pendiente');
+  // «Por dónde seguir» lleva a «¿Qué puedo descubrir hoy?», con lo pendiente
+  await p.click('#info [aria-label="Apartado"] button:nth-child(1)');
+  await p.click('#info button:has-text("Por dónde seguir")');
+  igual(await p.evaluate(() => location.hash), '#hoy', 'abre lo de hoy');
+  cierto((await texto(p, '#info')).includes('Vega'), 'con el barrio en «Quiero ir»');
 });
 
 prueba('Mi Salamanca: cálculos con datos controlados y capital y provincia por separado', async (p, url) => {
@@ -2897,11 +2918,15 @@ prueba('Mi Salamanca: cálculos con datos controlados y capital y provincia por 
   // Lo que se ve
   const info = await texto(p, '#info');
   cierto(info.includes('Salamanca capital') && info.includes('Provincia de Salamanca'), 'dos apartados');
-  cierto(info.includes('Mes a mes') && (await p.$('.ms-grafico')), 'gráfico con dos meses con datos');
+  // El mes a mes, en «Actividad»
+  await p.click('#info [aria-label="Apartado"] button:nth-child(2)');
+  const actividad = await texto(p, '#info');
+  cierto(actividad.includes('Mes a mes') && (await p.$('.ms-grafico')), 'gráfico con dos meses con datos');
   cierto(
-    info.includes('1 sitio marcado antes de que la app apuntara las fechas'),
+    actividad.includes('1 sitio marcado antes de que la app apuntara las fechas'),
     'avisa de lo que no tiene fecha'
   );
+  await p.click('#info [aria-label="Apartado"] button:nth-child(1)');
   igual(
     await p.$eval('.ms-barra', b => b.getAttribute('aria-valuetext')),
     `2 de ${totales.barrios} (${Math.round((2 / totales.barrios) * 100)} %)`,
@@ -2921,7 +2946,7 @@ prueba('Mi Salamanca: cálculos con datos controlados y capital y provincia por 
 
 prueba('Mi Salamanca: cambios de estado, sincronización y acceso al mapa filtrado', async p => {
   await p.evaluate(() => marcarZona('centro', 'v'));
-  await p.click('#foto');
+  await p.click('#perfil');
   const barrios = () => p.$eval('.ms-tarjeta .ms-cifra b', b => b.textContent);
   igual(await barrios(), '1', 'un barrio');
   // Un cambio con el panel abierto (como los que llegan de la cuenta) lo repinta
@@ -3160,8 +3185,9 @@ prueba('Agenda: fechas fijas, fechas desde la Pascua y en las fichas', async (p,
     ics.split('\r\n').every(l => new TextEncoder().encode(l).length <= 75),
     'líneas de 75 bytes como mucho'
   );
-  // La lista, con su enlace y su botón
-  await p.click('#agn');
+  // La lista, desde Cultura, con su enlace y su botón
+  await p.click('#cult');
+  await p.click('#iragn');
   igual(await texto(p, '#nm'), 'Agenda', 'abre la agenda');
   cierto(
     await p.$$eval('#info .cita-con-cal .boton-cal', a => a.length > 0),
@@ -3185,8 +3211,9 @@ prueba('Agenda: fechas fijas, fechas desde la Pascua y en las fichas', async (p,
 });
 
 prueba('Detalles escondidos: pista, encontrarlo, foto, logros y guardado', async (p, url) => {
-  await p.click('#det');
-  igual(await texto(p, '#nm'), 'Detalles escondidos', 'abre la lista');
+  await p.click('#mns');
+  await p.click('#irdet');
+  igual(await texto(p, '#nm'), 'Detalles escondidos', 'abre la lista, desde Monumentos');
   igual(await p.evaluate(() => location.hash), '#detalles', 'con su enlace');
   igual(
     await p.$$eval('#info .fila-explora', a => a.length),
