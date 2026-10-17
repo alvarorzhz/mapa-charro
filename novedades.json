@@ -1,5 +1,16 @@
 [
   {
+    "version": "2.13.1",
+    "fecha": "2026-10-17",
+    "titulo": "Ayúdanos a mejorar, si quieres",
+    "usuario": [
+      "En el Laboratorio (Ayuda), «Compartir mis datos de uso»: si lo enciendes, una vez por semana nos llegan unas cifras sin nada personal para saber qué mejorar. Viene apagado y, al apagarlo, se borran."
+    ],
+    "tecnico": [
+      "subirUso, datosDeUso y apartadoCompartir (medicion.js): resumen semanal opcional a Firestore uso/<id al azar> (charro-compartir-uso); regla nueva de Firestore para uso/{id}."
+    ]
+  },
+  {
     "version": "2.13.0",
     "fecha": "2026-10-17",
     "titulo": "Un primer paseo para empezar",
