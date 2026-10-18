@@ -172,7 +172,7 @@ const EPOCA_ZONA = {
   carbajosa: [2, 'Aparece por escrito en 1248'],
   cabrerizos: [2, 'En el siglo XIII se llamaba «Cabrarizos»'],
   castmoriscos: [2, 'Ya citado en el siglo XIII'],
-  pelabravo: [2, 'Castillo de la Torre Mocha, de los siglos XII y XIII'],
+  pelabravo: [2, 'Castillo de la Torre Mocha, de los siglos XII y XIII (derribado en 2025)'],
   moriscos: [3, 'Su origen se remonta al siglo XIV'],
   villares: [3, 'Iglesia de San Silvestre, empezada en 1619'],
   doninos: [3, 'A comienzos del siglo XVII tenía menos de seis vecinos'],
