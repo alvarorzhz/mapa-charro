@@ -1,5 +1,15 @@
 [
   {
+    "version": "2.14.2",
+    "fecha": "2026-10-18",
+    "titulo": "Más curiosidades del Rollo y Santo Tomás",
+    "usuario": [
+      "Rollo-Las Pajas: de dónde viene su nombre, el Paseo del Rollo y por qué la carretera de Cabrerizos se llamaba «Las Pajas».",
+      "Santo Tomás: su iglesia románica, su cura dramaturgo Lucas Fernández y los jinetes de un capitel."
+    ],
+    "tecnico": ["contenido.js: CURIOSIDADES de rollo y santotomas, con fuentes."]
+  },
+  {
     "version": "2.14.1",
     "fecha": "2026-10-18",
     "titulo": "Más curiosidades",

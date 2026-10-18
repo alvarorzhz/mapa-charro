@@ -104,7 +104,13 @@ const CURIOSIDADES = {
   ],
   santotomas: [
     'La iglesia de Santo Tomás Cantuariense la fundaron en 1175 dos hermanos ingleses, Ricardo y Randulfo. Fue la primera fuera de Inglaterra dedicada a Tomás Becket, canonizado muy poco antes.',
-    'En la repoblación medieval esta parte de la ciudad se llenó de colonos portugueses.'
+    'En la repoblación medieval esta parte de la ciudad se llenó de colonos portugueses.',
+    // Fuente: https://www.turismocastillayleon.com/es/patrimonio-cultura/iglesias-ermitas/iglesia-santo-tomas-cantuariense-29cf6
+    'Por fuera luce tres ábsides románicos escalonados, y se entra por debajo de la torre, a los pies del templo, como en otras iglesias salmantinas.',
+    // Fuente: https://es.wikipedia.org/wiki/Iglesia_de_Santo_Tom%C3%A1s_Cantuariense_(Salamanca)
+    'Desde 1514 fue su cura Lucas Fernández, el dramaturgo salmantino, el mismo año en que se imprimieron sus «Farsas y églogas».',
+    // Fuente: https://es.wikipedia.org/wiki/Iglesia_de_Santo_Tom%C3%A1s_Cantuariense_(Salamanca)
+    'En un capitel del crucero pelean dos jinetes: se lee como una imagen de la guerra entre cristianos y musulmanes. La iglesia es Bien de Interés Cultural desde 1983.'
   ],
   delicias: [
     'Lo bautizaron los ferroviarios que vivían aquí, inspirados en el barrio madrileño de Las Delicias.',
@@ -127,7 +133,13 @@ const CURIOSIDADES = {
   ],
   rollo: [
     'Lo parceló el mismo contratista que después creó la Prosperidad, Esteban Corral y Castro.',
-    'Aquí está el Museo del Comercio y la Industria, con la antigua marca de la fábrica Mirat en su fachada.'
+    'Aquí está el Museo del Comercio y la Industria, con la antigua marca de la fábrica Mirat en su fachada.',
+    // Fuente: https://lacronicadesalamanca.com/331518-el-rollo-el-barrio-con-jurisdiccion-propia/
+    'El nombre viene del rollo de justicia, la columna de piedra que marcaba la jurisdicción de la ciudad. Al levantar la Plaza Mayor se trasladó aquí, y el sitio pasó a llamarse Alto del Rollo.',
+    // Fuente: https://lacronicadesalamanca.com/331518-el-rollo-el-barrio-con-jurisdiccion-propia/
+    'En 1793 se arregló como paseo el camino desde la Puerta de Toro hasta el Alto del Rollo: el Paseo del Rollo, que hoy es la avenida de los Comuneros.',
+    // Fuente: https://salamancartvaldia.es/noticia/2025-12-24-memorias-del-rollo-382647
+    '«Las Pajas» era como llamaban los vecinos a la carretera de Cabrerizos, con establos, un campo de fútbol y luego una gran fábrica de zapatillas. Casi todas las familias del barrio trabajaban en la RENFE.'
   ],
   puenteladrillo: [
     'Su nombre viene del puente de ladrillo que cruza las vías del tren hacia Madrid. Hace casi 150 años lo levantaron familias de ferroviarios junto a los talleres de reparación.',
