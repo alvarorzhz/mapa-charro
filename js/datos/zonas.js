@@ -43,7 +43,7 @@ const ZONAS = [
   ['sancti', 'Sancti-Spíritus', 'Sancti-Spíritus', 0, 40.96539, -5.65922, 'Toma el nombre de la iglesia de Sancti-Spíritus, en el lado este del casco histórico.'],
   ['sanjuan', 'San Juan', 'San|Juan', 0, 40.96783, -5.66614, 'Su nombre viene de la iglesia de San Juan de Barbalos, en el norte del casco.'],
   ['tenerias', 'Tenerías', 'Tenerías', 0, 40.95824, -5.66812, 'Creció al sur de las murallas, junto al Tormes; el nombre recuerda a las antiguas curtidurías.'],
-  ['ursulas', 'Úrsulas-San Marcos', 'Úrsulas', 0, 40.96631, -5.6671, 'Con el Convento de la Anunciación, las Úrsulas, fundado por el arzobispo Fonseca en 1512.'],
+  ['ursulas', 'Úrsulas-San Marcos', 'Úrsulas', 0, 40.96631, -5.6671, 'Con el Convento de las Úrsulas, que fundó Sancha Maldonado y amplió el arzobispo Fonseca.'],
   ['sancristobal', 'San Cristóbal', 'San|Cristóbal', 0, 40.96394, -5.65903, 'Barrio del este del casco, con la iglesia de San Cristóbal y su torre románica.'],
   ['sanesteban', 'San Esteban', 'San|Esteban', 0, 40.96014, -5.66252, 'Aquí está el Convento de San Esteban, dominico, con su fachada plateresca del siglo XVI.'],
   ['labradores', 'Labradores', 'Labradores', 1, 40.97039, -5.6594, 'Uno de los primeros ensanches del casco histórico; hoy, zona de bares y restaurantes.'],

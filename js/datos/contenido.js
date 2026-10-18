@@ -34,7 +34,12 @@ const CURIOSIDADES = {
     'El 26 de enero de 1626 la riada de San Policarpo arrasó la ribera: murieron 142 personas, más de 1.500 viviendas sufrieron daños y se hundieron cuatro arcos del Puente Romano.'
   ],
   ursulas: [
-    'Con el Convento de la Anunciación, las Úrsulas, fundado por el arzobispo Fonseca en 1512. Enfrente, en la calle Bordadores, está la Casa de las Muertes.'
+    // Fuentes: https://es.wikipedia.org/wiki/Convento_de_las_%C3%9Arsulas_(Salamanca) y https://www.spain.info/es/lugares-interes/convento-las-ursulas/
+    'El Convento de la Anunciación, las Úrsulas, lo fundó Sancha Maldonado en el siglo XV y lo amplió su sobrino, el arzobispo Alonso de Fonseca, para enterrarse en él. Enfrente, en la calle Bordadores, está la Casa de las Muertes.',
+    // Fuente: https://es.wikipedia.org/wiki/Convento_de_las_%C3%9Arsulas_(Salamanca)
+    'El sepulcro del arzobispo lo talló Diego de Siloé en 1529, en Granada, con mármol de la sierra de los Filabres.',
+    // Fuente: https://es.wikipedia.org/wiki/Convento_de_las_%C3%9Arsulas_(Salamanca)
+    'Las monjas se fueron en abril de 2018 y desde entonces cuida el edificio la Fundación Las Edades del Hombre. Su museo, abierto en 1968 en el coro bajo, se renovó en 2019.'
   ],
   sancristobal: [
     'La iglesia de San Cristóbal es de 1128 y desde 1145 fue de la Orden de San Juan de Jerusalén. En 1919 se convirtió en colegio, cerró en 1960 y se restauró a partir de 1991.',
@@ -82,7 +87,15 @@ const CURIOSIDADES = {
     'A finales de los setenta aquí se ponían las ferias, antes de mudarse a La Aldehuela. Hoy tiene el parque Würzburg, la biblioteca Torrente Ballester y el Conservatorio Superior de Música.'
   ],
   glorieta: [
-    'La plaza de toros de La Glorieta la impulsaron los comerciantes a finales del siglo XIX, y a su lado estuvo, a comienzos del XX, el primer campo de fútbol de la ciudad.'
+    'La plaza de toros de La Glorieta la impulsaron los comerciantes a finales del siglo XIX, y a su lado estuvo, a comienzos del XX, el primer campo de fútbol de la ciudad.',
+    // Fuente: https://es.wikipedia.org/wiki/Plaza_de_toros_de_Salamanca
+    'La pagaron 213 familias salmantinas, y por eso se la llamó «la plaza de las 200 familias». Su ruedo mide 54 metros de diámetro.',
+    // Fuente: https://www.salamancaenelayer.com/2016/11/la-plaza-de-toros-de-la-glorieta.html
+    'Se inauguró el 11 de septiembre de 1893 sin una de sus figuras: cuatro días antes llegó de Murcia un telegrama de Mazzantini, «Guerrita cogido, cornada cuello». El primer toro de su historia, Ranchero, lo mató Mazzantini de una estocada.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/las-tres-plazas-de-toros-que-ha-tenido-salamanca-FK10298836
+    'Es la tercera plaza de toros fija de la ciudad, después de la del Campo de San Francisco (1840-1863) y la de los Mínimos (1864-1892). Desde que abrió solo se ha quedado sin toros dos veces: en 1936, por la Guerra Civil, y en septiembre de 2020, por la pandemia.',
+    // Fuente: https://es.wikipedia.org/wiki/Plaza_de_toros_de_Salamanca
+    'Su ruedo ha visto de todo: en 1960, un rodeo benéfico de militares estadounidenses de la base de Morón, y la llegada de una contrarreloj de la Vuelta a España.'
   ],
   alamedilla: [
     'Fue el primer parque moderno de Salamanca: el terreno se compró en 1879 y se inauguró en 1884.',
@@ -269,11 +282,20 @@ const CURIOSIDADES = {
   ],
   aldeatejada: [
     'Aparece como «Aldea Teiada» en 1186. Del 10 al 13 de noviembre de 1543, Felipe II y María Manuela de Portugal se alojaron aquí antes de su boda en Salamanca.',
-    'Por su término pasa la Cañada Real de la Vizana.'
+    'Por su término pasa la Cañada Real de la Vizana.',
+    // Fuente: https://es.wikipedia.org/wiki/Aldeatejada
+    'Su nombre fue cambiando en los papeles: «Aldea Teiada» en 1186, «Aldea Tellada» en 1210 y «Aldeatellada» en el siglo XIII, antes de quedarse en Aldeatejada.',
+    // Fuente: https://es.wikipedia.org/wiki/Aldeatejada
+    'La riada de San Policarpo de 1626, la que hundió arcos del Puente Romano, también llegó aquí: dañó la iglesia y se llevó tres casas.',
+    // Fuente: https://www.lagacetadesalamanca.es/provincia/aldeatejada-cierra-fiestas-santa-barbara-bailes-paleos-20241201155654-ga.html
+    'Su patrona es Santa Bárbara: a primeros de diciembre la sacan en procesión y los jóvenes bailan paleos al son de la gaita y el tamboril; después hay caldo para todos en la sede de la asociación Santa Bárbara.'
   ],
   doninos: [
     'A comienzos del siglo XVII tenía menos de seis vecinos; en 1842, 140. Hoy supera los 2.200 (2.273 en el padrón de 2025).',
-    'Tiene el museo del escultor Ángel Mateos, que trabajó con hormigón.'
+    // Fuente: https://es.wikipedia.org/wiki/Do%C3%B1inos_de_Salamanca
+    'En la Edad Media era parte del cuarto de Baños, en la tierra de Salamanca. Hasta el siglo XVII dependía de Carrascal de Barregas para la iglesia; al crecer se hizo municipio y se quedó con Santibáñez del Río y El Pegollo.',
+    // Fuentes: https://www.turismocastillayleon.com/es/patrimonio-cultura/museo-angel-mateos y https://www.terranostrum.es/turismo/salamanca/el-campo-charro/doninos-de-salamanca/museo-angel-mateos-escultura-hormigon
+    'El Museo Ángel Mateos guarda más de 170 obras en hormigón que el escultor hizo entre los años setenta y los noventa. El propio edificio es una «escultura habitable»: él decía que era una escultura que contiene muchas esculturas.'
   ],
   carrascal: [
     'Su término, de casi 77 km², es de los más grandes de la provincia, y la mayoría de sus vecinos vive en la urbanización Peñasolana, junto a Los Montalvos.',
@@ -291,7 +313,10 @@ const CURIOSIDADES = {
   ],
   pelabravo: [
     'Según la tradición lo fundó Pelay o Pelayo Bravo, por orden de los reyes de León.',
-    'En Naharros del Río se conservan los restos del castillo de la Torre Mocha, de los siglos XII y XIII. La mayoría de sus vecinos vive en Nuevo Naharros.'
+    // Fuentes: https://es.wikipedia.org/wiki/Pelabravo y https://www.lagacetadesalamanca.es/provincia/junta-abre-expediente-infraccion-vecino-derribo-ruinas-20251105134123-nt.html
+    'En Naharros del Río estaban las ruinas del castillo de la Torre Mocha, de los siglos XII y XIII y Bien de Interés Cultural. En octubre de 2025 el dueño de la finca las derribó y tiró las piedras a una laguna; la Junta abrió un expediente y llevó el caso a la Fiscalía.',
+    // Fuente: https://es.wikipedia.org/wiki/Pelabravo
+    'La mayoría de sus vecinos vive en Nuevo Naharros. La iglesia de San Juan Bautista se rehízo a finales del siglo XVIII y su espadaña quedó suelta, apartada del templo, porque la obra nunca se terminó.'
   ],
   castmoriscos: [
     'En el siglo XIII ya se llamaba «Castellanos de Morisco», porque lo repoblaron colonos de Castilla. Su iglesia de San Esteban es Bien de Interés Cultural desde 1999.',
@@ -299,7 +324,11 @@ const CURIOSIDADES = {
   ],
   castvilliquera: [
     'Lo repoblaron hacia el año 975 castellanos del ejército de Ramiro II. «Villiquera» podría venir del latín villicus, el administrador de una finca romana.',
-    'A sus vecinos los llaman «cucos», por los dos cucos de su escudo.'
+    'A sus vecinos los llaman «cucos», por los dos cucos de su escudo.',
+    // Fuente: https://es.wikipedia.org/wiki/Castellanos_de_Villiquera
+    'Los repobladores eligieron un alto para librarse de las crecidas del arroyo de la Encina. El pueblo de Villiquera, más antiguo, estaba uno o dos kilómetros al sur.',
+    // Fuente: https://es.wikipedia.org/wiki/Castellanos_de_Villiquera
+    'Su escudo es de 2014 y lleva alrededor catorce espigas de oro. En 2017 su pedanía de Mozodiel de Sanchiñigo pasó a Villamayor.'
   ],
   fontana: [
     'Del monasterio de Santa María de la Vega, de hacia 1150 y después de los canónigos de San Agustín, quedan cinco arcos con 16 capiteles de escenas de caza, bailes y animales.',
@@ -387,7 +416,13 @@ const CURIOSIDADES = {
     // Fuente: https://salamancartvaldia.es/noticia/2025-01-27-ciudad-jardin-el-barrio-que-surgio-de-una-utopia-fotos-362169
     'Sus vecinos lo llaman el barrio «de las dos mentiras»: ni ciudad ni jardín.',
     // Fuente: https://www.salamancahoy.es/salamanca/ciudad/ciudad-jardin-barrio-lleva-anos-sonando-calles-20230501135134-nt.html
-    'En 1973 una inmobiliaria madrileña compró el barrio por nueve millones de pesetas; en 1980 cada piso se vendía por un millón.'
+    'En 1973 una inmobiliaria madrileña compró el barrio por nueve millones de pesetas; en 1980 cada piso se vendía por un millón.',
+    // Fuente: https://salamancartvaldia.es/noticia/2025-01-27-ciudad-jardin-el-barrio-que-surgio-de-una-utopia-fotos-362169
+    'Las casas iban a ir forradas de piedra de Villamayor, pero se quedaron en unas líneas pintadas en la pared que la imitaban. En algunos bloques todavía se ven.',
+    // Fuente: https://salamancartvaldia.es/noticia/2025-01-27-ciudad-jardin-el-barrio-que-surgio-de-una-utopia-fotos-362169
+    'En los primeros años casi no había luz en la calle, el agua se cogía cada dos días del depósito de detrás del bloque 1 o de la fuente del Cántaro, y el único autobús, el de Villares, pasaba dos veces al día.',
+    // Fuente: https://salamancartvaldia.es/noticia/2025-01-27-ciudad-jardin-el-barrio-que-surgio-de-una-utopia-fotos-362169
+    'Su parroquia es «una casa hecha capilla». En una Misa del Gallo volvió a sonar un armonio que llevaba unos 50 años mudo: se lo había regalado a los vecinos don Luis, un pastor protestante que vivía en el barrio.'
   ],
   huertaotea: [
     // Fuente: https://www.elespanol.com/castilla-y-leon/region/20180701/huerta-otea-mirador-botanico-rio-tormes/319218877_0.html
@@ -514,7 +549,7 @@ const FOTOS = {
   ],
   pelabravo: [
     'img/pelabravo.jpg',
-    'Castillo de la Torre Mocha, en Naharros del Río. Foto: Ramajero · CC BY-SA 4.0 · Wikimedia Commons'
+    'Ruinas del castillo de la Torre Mocha, en Naharros del Río, antes de su derribo en 2025. Foto: Ramajero · CC BY-SA 4.0 · Wikimedia Commons'
   ],
   aldeatejada: [
     'img/aldeatejada.jpg',
@@ -873,6 +908,15 @@ const DONDE_COMER = {
       a: 'Calle Constitución 17',
       p: 'Muy valorado por su menú degustación: 4,6 sobre 5 en Google con unas 890 opiniones.',
       s: 'Gastroranking, oct. 2026'
+    }
+  ],
+  aldeatejada: [
+    {
+      n: 'Bar Mati',
+      t: 'Bar de tapas',
+      a: 'Avenida de la Peña de Francia, 53',
+      p: 'Más de 50 años en el pueblo: callos, morro, oreja, chanfaina y paellas, con terraza en verano.',
+      s: 'Salamanca en Bandeja, oct. 2026'
     }
   ],
   sancristobal: [

@@ -1,5 +1,20 @@
 [
   {
+    "version": "2.14.1",
+    "fecha": "2026-10-18",
+    "titulo": "Más curiosidades",
+    "usuario": [
+      "Más curiosidades en La Glorieta, Ciudad Jardín, Úrsulas, Aldeatejada, Doñinos, Pelabravo y Castellanos de Villiquera.",
+      "Un sitio nuevo para comer en Aldeatejada.",
+      "Pelabravo: el castillo de la Torre Mocha ya no existe; lo derribaron en octubre de 2025.",
+      "Úrsulas: el convento lo fundó Sancha Maldonado y lo amplió el arzobispo Fonseca."
+    ],
+    "tecnico": [
+      "contenido.js: CURIOSIDADES de glorieta, ciudadjardin, ursulas, aldeatejada, doninos, pelabravo y castvilliquera; DONDE_COMER de aldeatejada; pie de la foto de pelabravo.",
+      "Frase de ursulas (zonas.js, tarjeta z/ursulas regenerada) y texto de pelabravo en EPOCA_ZONA (tiempo.js)."
+    ]
+  },
+  {
     "version": "2.14.0",
     "fecha": "2026-10-17",
     "titulo": "Más mapa en el móvil",
