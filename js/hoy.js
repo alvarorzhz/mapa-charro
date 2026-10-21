@@ -460,6 +460,11 @@ function abrirHoy() {
     caja.appendChild(apartadoHoy('📅 Esta semana', lista, agenda));
   }
 
+  // La hora dorada: a qué fachadas les da el sol bajo en el próximo rato (hora-dorada.js)
+  const dorada = crear('button', 'boton-hoy', 'Ver la hora dorada');
+  dorada.onclick = desdeHoy(() => abrirHoraDorada());
+  caja.appendChild(apartadoHoy('🌇 La hora dorada', crear('p', '', resumenHoraDorada()), dorada));
+
   // 3. Continúa explorando
   const medias = crear('div', 'lista-explora');
   continua.slice(0, 3).forEach(c => {

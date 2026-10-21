@@ -162,7 +162,8 @@ function relacionadosDeZona(z) {
         abrir: () => abrirRuta(k)
       }))
     ],
-    ['Parques', parquesDeZona(z).map(pq => ({ texto: '🌳 ' + pq.n, detalle: conMiles(pq.ha) + ' ha' }))]
+    ['Parques', parquesDeZona(z).map(pq => ({ texto: '🌳 ' + pq.n, detalle: conMiles(pq.ha) + ' ha' }))],
+    filaDesaparecidosDeZona(z) // desaparecida.js
   ];
 }
 

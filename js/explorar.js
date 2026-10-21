@@ -39,7 +39,39 @@ function abrirMonumentos() {
     );
   detalles.id = 'irdet';
   detalles.onclick = abrirDetalles;
-  caja.appendChild(crear('div', 'lista-explora', detalles));
+  // La hora dorada: a qué fachadas les da hoy el sol bajo (hora-dorada.js)
+  const dorada = crear(
+    'button',
+    'fila-explora fila-destacada',
+    crear('span', 'ico-det', '🌇'),
+    crear(
+      'span',
+      'texto',
+      crear('b', '', 'La hora dorada'),
+      crear(
+        'small',
+        '',
+        'A qué fachadas les da el sol bajo · hoy se pone a las ' + horaSalamanca(horaDorada().puesta)
+      )
+    )
+  );
+  dorada.id = 'irhd';
+  dorada.onclick = () => abrirHoraDorada();
+  // Salamanca desaparecida: lo que ya no está (desaparecida.js)
+  const desaparecida = crear(
+    'button',
+    'fila-explora fila-destacada',
+    crear('span', 'ico-det', '👻'),
+    crear(
+      'span',
+      'texto',
+      crear('b', '', 'Salamanca desaparecida'),
+      crear('small', '', DESAPARECIDOS.length + ' conventos, colegios e iglesias que ya no existen')
+    )
+  );
+  desaparecida.id = 'irdes';
+  desaparecida.onclick = abrirSalamancaDesaparecida;
+  caja.appendChild(crear('div', 'lista-explora', detalles, dorada, desaparecida));
   const filtros = crear('div', 'fl');
   filtros.setAttribute('role', 'group');
   filtros.setAttribute('aria-label', 'Mostrar');
