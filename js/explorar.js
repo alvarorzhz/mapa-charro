@@ -57,7 +57,21 @@ function abrirMonumentos() {
   );
   dorada.id = 'irhd';
   dorada.onclick = () => abrirHoraDorada();
-  caja.appendChild(crear('div', 'lista-explora', detalles, dorada));
+  // Salamanca desaparecida: lo que ya no está (desaparecida.js)
+  const desaparecida = crear(
+    'button',
+    'fila-explora fila-destacada',
+    crear('span', 'ico-det', '👻'),
+    crear(
+      'span',
+      'texto',
+      crear('b', '', 'Salamanca desaparecida'),
+      crear('small', '', DESAPARECIDOS.length + ' conventos, colegios e iglesias que ya no existen')
+    )
+  );
+  desaparecida.id = 'irdes';
+  desaparecida.onclick = abrirSalamancaDesaparecida;
+  caja.appendChild(crear('div', 'lista-explora', detalles, dorada, desaparecida));
   const filtros = crear('div', 'fl');
   filtros.setAttribute('role', 'group');
   filtros.setAttribute('aria-label', 'Mostrar');

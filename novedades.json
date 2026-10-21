@@ -1,5 +1,23 @@
 [
   {
+    "version": "2.15.0",
+    "fecha": "2026-10-21",
+    "titulo": "La hora dorada y la Salamanca desaparecida",
+    "usuario": [
+      "La hora dorada (en Monumentos): a qué fachadas les da el sol bajo cada día, al amanecer y al atardecer, y a qué hora. Plaza Mayor, Universidad, Catedral, Anaya, Clerecía, San Esteban y Monterrey.",
+      "Puedes mirar cualquier día con las flechas; hoy sale también en «¿Qué puedo descubrir hoy?» y en la ficha de cada monumento con fachada.",
+      "Salamanca desaparecida (en Monumentos): ocho conventos, colegios e iglesias que la ciudad perdió, casi todos con la guerra de la Independencia, cada uno con su historia y sus fuentes.",
+      "En «Salamanca en el tiempo» aparecen en la etapa en que se levantan, siguen en pie mientras duran y desde 1812 quedan en el mapa como fantasmas.",
+      "Las fichas de barrio dicen qué hubo allí que ya no está."
+    ],
+    "tecnico": [
+      "hora-dorada.js: posicionSol (fórmulas de NOAA), horaDorada(dia) minuto a minuto con horas de Europe/Madrid; ficha #hora-dorada (fichaAlta), resumenHoraDorada (hoy.js) y filaHoraDoradaDeMonumento (monumentos.js).",
+      "datos/fachadas.js (edificio y delante de OpenStreetMap) y datos/orientacion-fachadas.js, generado con herramientas/fachadas.js (API de OpenStreetMap); comprobar-datos avisa si cambian.",
+      "datos/desaparecida.js (DESAPARECIDOS con levantado y perdido por etapa, textos con tipo y fuentes) y desaparecida.js: capa #desap del mapa (estados no, viva y fantasma), lista #desaparecida, ficha #desaparecida/<id>, apartado en cada etapa de tiempo.js y fila «Aquí hubo» en las fichas de zona.",
+      "Pruebas nuevas de las dos y comprobaciones de datos."
+    ]
+  },
+  {
     "version": "2.14.2",
     "fecha": "2026-10-18",
     "titulo": "Más curiosidades del Rollo y Santo Tomás",

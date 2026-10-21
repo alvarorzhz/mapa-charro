@@ -10,6 +10,7 @@
 //   #agenda                   agenda de fiestas y tradiciones
 //   #detalles  #detalle/rana  detalles escondidos: la lista y cada uno
 //   #hora-dorada              la hora dorada: a qué fachadas les da el sol bajo hoy
+//   #desaparecida  #desaparecida/san-adrian  Salamanca desaparecida: la lista y cada sitio
 //   #lista  #provincia        pestañas
 //   #provincia/alba-de-tormes pueblo seleccionado en la pestaña Provincia
 // Abrir una ficha añade una entrada al historial, así el botón «atrás» del móvil la cierra.
@@ -47,6 +48,8 @@ const esHashDeFicha = h =>
   h == 'agenda' ||
   h == 'detalles' ||
   h == 'hora-dorada' ||
+  h == 'desaparecida' ||
+  h.startsWith('desaparecida/') ||
   h.startsWith('detalle/') ||
   todasLasZonas.some(z => z.id == h);
 
@@ -118,6 +121,11 @@ function aplicarEnlace() {
       if (!fichaAbierta || nombreFicha != 'Dónde comer') abrirDondeComer();
     } else if (a == 'agenda') {
       if (!fichaAbierta || nombreFicha != 'Agenda') abrirAgenda();
+    } else if (a == 'desaparecida') {
+      const d = buscarDesaparecido(b);
+      if (!d) {
+        if (!fichaAbierta || nombreFicha != 'Salamanca desaparecida') abrirSalamancaDesaparecida();
+      } else if (!fichaAbierta || nombreFicha != d.n) abrirDesaparecido(d.id);
     } else if (a == 'hora-dorada') {
       if (!fichaAbierta || nombreFicha != 'La hora dorada') abrirHoraDorada();
     } else if (a == 'detalles') {

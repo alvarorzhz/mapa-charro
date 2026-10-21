@@ -31,12 +31,13 @@ const datos = [
   'cultura',
   'detalles',
   'fachadas',
-  'orientacion-fachadas'
+  'orientacion-fachadas',
+  'desaparecida'
 ];
 const codigo =
   datos.map(d => leer('js/datos/' + d + '.js')).join('\n;\n') +
   '\n;({ NOMBRES_GRUPOS, ZONAS_GRANDES, ZONAS, OTROS_NOMBRES, SEMILLAS_REPARTO, MONUMENTOS, RUTAS, TRAMOS_RUTAS, PUEBLOS, CURIOSIDADES, LEYENDAS, FOTOS, DONDE_COMER,' +
-  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA, RELACIONES_ETAPA, RANGOS_ETAPA, PALABRAS_CHARRAS, FUENTES_PALABRAS, RUTAS_PROVINCIA, SALIDA_PROVINCIA, TRAMOS_PROVINCIA, CARRETERAS_PROVINCIA, HABITANTES, PARQUES, CULTURA, CATEGORIAS_CULTURA, TIPOS_TEXTO_CULTURA, DETALLES, FACHADAS, ORIENTACION_FACHADAS })';
+  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA, RELACIONES_ETAPA, RANGOS_ETAPA, PALABRAS_CHARRAS, FUENTES_PALABRAS, RUTAS_PROVINCIA, SALIDA_PROVINCIA, TRAMOS_PROVINCIA, CARRETERAS_PROVINCIA, HABITANTES, PARQUES, CULTURA, CATEGORIAS_CULTURA, TIPOS_TEXTO_CULTURA, DETALLES, FACHADAS, ORIENTACION_FACHADAS, DESAPARECIDOS })';
 const D = vm.runInNewContext(codigo, {});
 
 const WEB_PUBLICA = 'https://alvarorzhz.github.io/mapa-charro/';
@@ -748,6 +749,56 @@ for (const f of fs.readdirSync(path.join(RAIZ, 'js/datos')).filter(f => f.endsWi
       vistos.has(id),
       `ORIENTACION_FACHADAS: «${id}» ya no está en FACHADAS; ejecuta: node herramientas/fachadas.js`
     );
+}
+
+// --- Salamanca desaparecida ------------------------------------------------------------------------
+{
+  const vistos = new Set(),
+    hoy = new Date().toISOString().slice(0, 10),
+    etapaValida = e => Number.isInteger(e) && e >= 0 && e < D.ETAPAS.length;
+  comprobar(Array.isArray(D.DESAPARECIDOS) && D.DESAPARECIDOS.length, 'DESAPARECIDOS está vacío');
+  D.DESAPARECIDOS.forEach(d => {
+    const que = `Desaparecido «${d.id}»`;
+    comprobar(/^[a-z0-9-]{1,60}$/.test(d.id || '') && !vistos.has(d.id), `${que}: id vacío, raro o repetido`);
+    vistos.add(d.id);
+    for (const campo of ['n', 'donde'])
+      comprobar(typeof d[campo] == 'string' && d[campo].trim(), `${que}: falta «${campo}»`);
+    comprobar(
+      d.tipo in { iglesia: 1, universidad: 1, torre: 1, palacio: 1, plaza: 1 },
+      `${que}: tipo de pictograma raro`
+    );
+    comprobar(
+      d.la > 40.9 && d.la < 41.05 && d.lo > -5.75 && d.lo < -5.6,
+      `${que}: coordenadas fuera de la capital`
+    );
+    for (const campo of ['levantado', 'perdido'])
+      comprobar(
+        Array.isArray(d[campo]) && typeof d[campo][0] == 'string' && d[campo][0] && etapaValida(d[campo][1]),
+        `${que}: «${campo}» tiene que ser [texto, etapa]`
+      );
+    comprobar(
+      d.levantado && d.perdido && d.levantado[1] <= d.perdido[1],
+      `${que}: se pierde antes de levantarse`
+    );
+    comprobar(
+      Array.isArray(d.textos) && d.textos.some(([tipo]) => tipo == 'hecho'),
+      `${que}: necesita al menos un dato documentado`
+    );
+    (d.textos || []).forEach(([tipo, texto], i) =>
+      comprobar(
+        D.TIPOS_TEXTO_CULTURA[tipo] && typeof texto == 'string' && texto.length > 20,
+        `${que}: el texto ${i + 1} está vacío o tiene un tipo desconocido`
+      )
+    );
+    comprobar(
+      Array.isArray(d.fuentes) && d.fuentes.length && d.fuentes.every(enlaceValido),
+      `${que}: sin fuentes o con una mal escrita`
+    );
+    comprobar(
+      /^\d{4}-\d\d-\d\d$/.test(d.revisado || '') && d.revisado <= hoy,
+      `${que}: «revisado» tiene que ser una fecha (AAAA-MM-DD) que no sea futura`
+    );
+  });
 }
 
 // --- Detalles escondidos ---------------------------------------------------------------------------

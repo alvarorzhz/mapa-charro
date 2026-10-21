@@ -3320,6 +3320,52 @@ prueba('La hora dorada: sol, fachadas, ficha y enlaces', async (p, url) => {
   cierto(/el sol (sale|se pone) a las \d\d:\d\d/.test(await texto(p, '#info')), 'con la hora del sol');
 });
 
+prueba('Salamanca desaparecida: lista, ficha, fantasmas y línea del tiempo', async (p, url) => {
+  // La lista, desde Monumentos
+  await p.click('#mns');
+  await p.click('#irdes');
+  igual(await texto(p, '#nm'), 'Salamanca desaparecida', 'abre la lista desde Monumentos');
+  igual(await p.evaluate(() => location.hash), '#desaparecida', 'con su enlace');
+  igual(
+    await p.$$eval('#info .lista-explora .fila-explora', a => a.length),
+    await p.evaluate(() => DESAPARECIDOS.length),
+    'una fila por cada sitio'
+  );
+  cierto(await p.$eval('#desap', e => e.style.display != 'none'), 'los fantasmas se ven en el mapa');
+  // La ficha de uno
+  await p.click('#info .lista-explora .fila-explora');
+  cierto(await p.evaluate(() => location.hash.startsWith('#desaparecida/')), 'cada fila abre su ficha');
+  cierto((await texto(p, '#info')).includes('Se perdió'), 'dice cuándo se perdió');
+  cierto((await texto(p, '#ap')).startsWith('Fuentes:'), 'con sus fuentes');
+  cierto(await p.$eval('#desap .desap.sel', e => !!e), 'y su fantasma, marcado en el mapa');
+  // Al cerrar, los fantasmas se van
+  await p.click('#x');
+  cierto(
+    await p.$eval('#desap', e => e.style.display == 'none'),
+    'al cerrar, el mapa vuelve a ser el de hoy'
+  );
+  // En «Salamanca en el tiempo»: en pie en su época, fantasma después, nada antes
+  await p.goto(url + '#tiempo/4');
+  await p.waitForSelector('#sh.o');
+  const estado = async () =>
+    p.$eval('#desap .desap[aria-label="Iglesia de San Adrián"]', e => e.dataset.estado);
+  igual(await estado(), 'viva', 'San Adrián en pie en el Siglo de Oro');
+  cierto((await texto(p, '#info')).includes('Salamanca desaparecida'), 'la etapa dice lo que se pierde');
+  await p.evaluate(() => pintarEtapa(4));
+  igual(await estado(), 'fantasma', 'y fantasma desde 1812');
+  await p.evaluate(() => pintarEtapa(0));
+  igual(await estado(), 'no', 'antes de levantarse no se ve');
+  // En la ficha de su zona
+  const zona = await p.evaluate(() =>
+    zonaDePunto(buscarDesaparecido('san-adrian').la, buscarDesaparecido('san-adrian').lo)
+  );
+  if (zona) {
+    await p.goto(url + '#' + zona);
+    await p.waitForSelector('#sh.o');
+    cierto((await texto(p, '#rel')).includes('Iglesia de San Adrián'), 'la zona dice lo que hubo en ella');
+  }
+});
+
 prueba('Detalles escondidos: pista, encontrarlo, foto, logros y guardado', async (p, url) => {
   await p.click('#mns');
   await p.click('#irdet');

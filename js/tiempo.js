@@ -72,6 +72,7 @@ function pintarEtapa(i) {
   capaMuralla.style.display = levantada ? '' : 'none';
   capaMuralla.classList.toggle('derribada', i >= MURALLA.derribada);
   colocarTiempo(ultimaEscala || vistaMapa.w / (tamMapa.w || 380));
+  if (typeof pintarDesaparecidos == 'function') pintarDesaparecidos(); // desaparecida.js: en pie o fantasmas
   pintarPanelTiempo(i);
   // Cada etapa tiene su enlace (#tiempo/1 … #tiempo/7); al cambiar de etapa se sustituye, sin llenar el historial
   if ($('#sh').classList.contains('o') && hashActual().split('/')[0] == 'tiempo') {
@@ -127,6 +128,7 @@ function pintarPanelTiempo(i) {
   );
   if (nacen.length) caja.appendChild(listaNacen(nacen));
   caja.appendChild(enEstaEtapa(i));
+  if (typeof apartadoDesaparecidosEtapa == 'function') caja.appendChild(apartadoDesaparecidosEtapa(i));
   caja.appendChild(
     crear(
       'div',
@@ -358,6 +360,7 @@ function salirTiempo() {
   });
   $('#tm').classList.remove('on');
   $('#tm').setAttribute('aria-pressed', 'false');
+  if (typeof pintarDesaparecidos == 'function') pintarDesaparecidos();
 }
 
 $('#tm').onclick = () => {
