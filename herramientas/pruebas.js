@@ -3266,6 +3266,60 @@ prueba('Agenda: fechas fijas, fechas desde la Pascua y en las fichas', async (p,
   cierto(!(await texto(p, '#info')).includes('Próxima vez'), 'sin fechas, sin próxima vez');
 });
 
+prueba('La hora dorada: sol, fachadas, ficha y enlaces', async (p, url) => {
+  // El cálculo del sol, con horas de Salamanca sea cual sea la zona horaria del navegador
+  const dia = await p.evaluate(() =>
+    ['2026-10-21', '2026-06-21', '2026-12-21'].map(d => {
+      const h = horaDorada(d);
+      return [horaSalamanca(h.salida), horaSalamanca(h.puesta), h.tarde.map(x => x.f.id)];
+    })
+  );
+  igual(dia[0].slice(0, 2), ['08:41', '19:34'], 'sale y se pone el 21 de octubre');
+  igual(dia[1][1], '21:58', 'se pone tarde en verano');
+  igual(dia[2][1], '17:57', 'y pronto en invierno');
+  igual(dia[0][2][0], 'sanesteban', 'en octubre, al atardecer, la que más de frente es San Esteban');
+  cierto(
+    dia[1][2].includes('universidad') && !dia[0][2].includes('pm-petrineros'),
+    'cada fachada según hacia dónde mira'
+  );
+  cierto(
+    await p.evaluate(() => FACHADAS.every(f => ORIENTACION_FACHADAS[f.id] && buscarMonumento(f.monumento))),
+    'todas las fachadas con orientación y monumento'
+  );
+  // La ficha, desde Monumentos
+  await p.click('#mns');
+  await p.click('#irhd');
+  igual(await texto(p, '#nm'), 'La hora dorada', 'abre la ficha desde Monumentos');
+  igual(await p.evaluate(() => location.hash), '#hora-dorada', 'con su enlace');
+  igual(await texto(p, '#info .hd-dia b'), 'Hoy', 'empieza por hoy');
+  igual(
+    await p.$$eval('#info .hd-rato h3', a => a.map(h => h.textContent.split(' · ')[0])),
+    ['🌅 Al amanecer', '🌇 Al atardecer'],
+    'al amanecer y al atardecer'
+  );
+  await p.click('#info .hd-dia-b[aria-label="Día siguiente"]');
+  igual(await texto(p, '#info .hd-dia b'), 'Mañana', 'pasa al día siguiente');
+  await p.click('#info .hd-hoy');
+  igual(await texto(p, '#info .hd-dia b'), 'Hoy', 'y vuelve a hoy');
+  await p.click('#info .hd-rato .fila-explora');
+  cierto(await p.evaluate(() => location.hash.startsWith('#monumento/')), 'cada fachada abre su monumento');
+  // En la ficha del monumento, lo de hoy
+  const enFicha = await p.evaluate(() => {
+    const m = buscarMonumento(FACHADAS[0].monumento);
+    return filaHoraDoradaDeMonumento(m)[1].length;
+  });
+  const deHoy = await p.evaluate(() => {
+    const h = horaDorada();
+    return [...h.manana, ...h.tarde].filter(x => x.f.monumento == FACHADAS[0].monumento).length;
+  });
+  igual(enFicha, deHoy, 'el monumento dice a qué hora le da el sol hoy');
+  // En «¿Qué puedo descubrir hoy?»
+  await p.goto(url + '#hoy');
+  await p.waitForSelector('#sh.o');
+  cierto((await texto(p, '#info')).includes('La hora dorada'), 'sale en «¿Qué puedo descubrir hoy?»');
+  cierto(/el sol (sale|se pone) a las \d\d:\d\d/.test(await texto(p, '#info')), 'con la hora del sol');
+});
+
 prueba('Detalles escondidos: pista, encontrarlo, foto, logros y guardado', async (p, url) => {
   await p.click('#mns');
   await p.click('#irdet');

@@ -252,6 +252,7 @@ function relacionadosDeMonumento(m) {
       }))
     ],
     filaDetallesDeMonumento(m),
+    filaHoraDoradaDeMonumento(m),
     [
       'Cerca, en línea recta',
       cerca.map(([d, o]) => ({

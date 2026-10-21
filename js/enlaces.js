@@ -9,6 +9,7 @@
 //   #pueblo/la-alberca        ficha de un pueblo de la provincia
 //   #agenda                   agenda de fiestas y tradiciones
 //   #detalles  #detalle/rana  detalles escondidos: la lista y cada uno
+//   #hora-dorada              la hora dorada: a qué fachadas les da el sol bajo hoy
 //   #lista  #provincia        pestañas
 //   #provincia/alba-de-tormes pueblo seleccionado en la pestaña Provincia
 // Abrir una ficha añade una entrada al historial, así el botón «atrás» del móvil la cierra.
@@ -45,6 +46,7 @@ const esHashDeFicha = h =>
   h == 'comer' ||
   h == 'agenda' ||
   h == 'detalles' ||
+  h == 'hora-dorada' ||
   h.startsWith('detalle/') ||
   todasLasZonas.some(z => z.id == h);
 
@@ -116,6 +118,8 @@ function aplicarEnlace() {
       if (!fichaAbierta || nombreFicha != 'Dónde comer') abrirDondeComer();
     } else if (a == 'agenda') {
       if (!fichaAbierta || nombreFicha != 'Agenda') abrirAgenda();
+    } else if (a == 'hora-dorada') {
+      if (!fichaAbierta || nombreFicha != 'La hora dorada') abrirHoraDorada();
     } else if (a == 'detalles') {
       if (!fichaAbierta || nombreFicha != 'Detalles escondidos') abrirDetalles();
     } else if (a == 'detalle') {

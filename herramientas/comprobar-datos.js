@@ -29,12 +29,14 @@ const datos = [
   'firebase',
   'palabras',
   'cultura',
-  'detalles'
+  'detalles',
+  'fachadas',
+  'orientacion-fachadas'
 ];
 const codigo =
   datos.map(d => leer('js/datos/' + d + '.js')).join('\n;\n') +
   '\n;({ NOMBRES_GRUPOS, ZONAS_GRANDES, ZONAS, OTROS_NOMBRES, SEMILLAS_REPARTO, MONUMENTOS, RUTAS, TRAMOS_RUTAS, PUEBLOS, CURIOSIDADES, LEYENDAS, FOTOS, DONDE_COMER,' +
-  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA, RELACIONES_ETAPA, RANGOS_ETAPA, PALABRAS_CHARRAS, FUENTES_PALABRAS, RUTAS_PROVINCIA, SALIDA_PROVINCIA, TRAMOS_PROVINCIA, CARRETERAS_PROVINCIA, HABITANTES, PARQUES, CULTURA, CATEGORIAS_CULTURA, TIPOS_TEXTO_CULTURA, DETALLES })';
+  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA, RELACIONES_ETAPA, RANGOS_ETAPA, PALABRAS_CHARRAS, FUENTES_PALABRAS, RUTAS_PROVINCIA, SALIDA_PROVINCIA, TRAMOS_PROVINCIA, CARRETERAS_PROVINCIA, HABITANTES, PARQUES, CULTURA, CATEGORIAS_CULTURA, TIPOS_TEXTO_CULTURA, DETALLES, FACHADAS, ORIENTACION_FACHADAS })';
 const D = vm.runInNewContext(codigo, {});
 
 const WEB_PUBLICA = 'https://alvarorzhz.github.io/mapa-charro/';
@@ -712,6 +714,40 @@ for (const f of fs.readdirSync(path.join(RAIZ, 'js/datos')).filter(f => f.endsWi
       `Cultura: la categoría «${n}» no tiene ningún elemento`
     )
   );
+}
+
+// --- La hora dorada: fachadas y su orientación (generada con herramientas/fachadas.js) -------------
+{
+  const vistos = new Set();
+  comprobar(Array.isArray(D.FACHADAS) && D.FACHADAS.length, 'FACHADAS está vacío');
+  D.FACHADAS.forEach(f => {
+    const que = `Fachada «${f.id}»`;
+    comprobar(/^[a-z0-9-]{1,60}$/.test(f.id || '') && !vistos.has(f.id), `${que}: id vacío, raro o repetido`);
+    vistos.add(f.id);
+    for (const campo of ['n', 'sitio'])
+      comprobar(typeof f[campo] == 'string' && f[campo].trim(), `${que}: falta «${campo}»`);
+    comprobar(idsMonumento.has(f.monumento), `${que}: el monumento «${f.monumento}» no existe`);
+    comprobar(
+      /^(way|relation)\/\d+$/.test(f.edificio || ''),
+      `${que}: «edificio» tiene que ser way/N o relation/N`
+    );
+    comprobar(/^node\/\d+$/.test(f.delante || ''), `${que}: «delante» tiene que ser node/N`);
+    comprobar(['fuera', 'dentro'].includes(f.hacia), `${que}: «hacia» tiene que ser 'fuera' o 'dentro'`);
+    comprobar(
+      Array.isArray(f.fuente) && f.fuente.length && f.fuente.every(enlaceValido),
+      `${que}: sin fuente`
+    );
+    const o = D.ORIENTACION_FACHADAS[f.id];
+    comprobar(
+      o && o[0] >= 0 && o[0] < 360 && o[1] == [f.edificio, f.delante, f.hacia].join(' '),
+      `${que}: falta su orientación o ha cambiado; ejecuta: node herramientas/fachadas.js`
+    );
+  });
+  for (const id in D.ORIENTACION_FACHADAS)
+    comprobar(
+      vistos.has(id),
+      `ORIENTACION_FACHADAS: «${id}» ya no está en FACHADAS; ejecuta: node herramientas/fachadas.js`
+    );
 }
 
 // --- Detalles escondidos ---------------------------------------------------------------------------
