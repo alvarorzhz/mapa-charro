@@ -1,5 +1,22 @@
 [
   {
+    "version": "2.15.1",
+    "fecha": "2026-10-22",
+    "titulo": "Más seguridad",
+    "usuario": [
+      "La app es más segura: solo ejecuta su propio código y el de las webs de confianza (mapas y cuenta de Google).",
+      "Los mapas de calles y la cuenta con Google se cargan comprobando que nadie los ha cambiado por el camino.",
+      "Al cargar una copia de seguridad, los archivos demasiado grandes se rechazan."
+    ],
+    "tecnico": [
+      "CSP en <meta> de index.html y privacidad.html (huella sha256 del script del tema, object-src 'none', base-uri 'self', form-action 'none') y referrer explícito; en el Artifact queda en el body y no se aplica.",
+      "SRI en MapLibre y Firebase con cargarScriptExterno (util.js).",
+      "Fuera innerHTML; ESLint prohíbe innerHTML, outerHTML, insertAdjacentHTML, document.write, eval y new Function.",
+      "Copia de seguridad: máximo 5 MB. sw.js: solo guarda respuestas buenas de la propia web; fuera la rama de Google Fonts.",
+      "GitHub Actions con permisos de solo lectura; comprobar-datos vigila la CSP y las huellas; pruebas fallan si algo incumple la CSP."
+    ]
+  },
+  {
     "version": "2.15.0",
     "fecha": "2026-10-21",
     "titulo": "La hora dorada y la Salamanca desaparecida",
