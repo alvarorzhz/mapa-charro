@@ -1,7 +1,8 @@
 // Copia de seguridad del progreso: se descarga en un archivo y se puede cargar en otro navegador.
 // Cargar una copia la junta con lo que ya hay (juntarProgresos): no se pierde nada de ninguno de los dos.
 
-const APP_COPIA = 'mapa-charro';
+const APP_COPIA = 'mapa-charro',
+  MAX_COPIA = 5e6; // bytes: una copia de verdad ocupa unos pocos KB; más que esto no se lee
 const nombreCopia = () => 'mapa-charro-copia-' + new Date().toISOString().slice(0, 10) + '.json';
 
 function textoCopia() {
@@ -73,7 +74,10 @@ function abrirCopia() {
   archivo.hidden = true;
   archivo.onchange = async () => {
     const f = archivo.files && archivo.files[0];
+    archivo.value = ''; // para poder elegir otra vez el mismo archivo
     if (!f) return;
+    if (f.size > MAX_COPIA)
+      return aviso('Ese archivo es demasiado grande para ser una copia del Mapa charro', { tipo: 'error' });
     if (cargarCopia(await f.text())) cerrarVentana();
   };
   caja.appendChild(archivo);

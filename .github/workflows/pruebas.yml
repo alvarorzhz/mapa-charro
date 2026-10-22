@@ -10,6 +10,10 @@ on:
   pull_request:
   workflow_dispatch:
 
+# Lo mínimo: leer el repositorio (publicar pide además lo suyo, abajo)
+permissions:
+  contents: read
+
 concurrency:
   group: pruebas-${{ github.ref }}
   cancel-in-progress: true

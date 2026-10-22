@@ -555,7 +555,7 @@ prueba('Contraste de los textos', async (p, url) => {
           $('#palabra').style.display = 'none';
         });
       await p.waitForTimeout(450); // que acaben las transiciones de los paneles
-      await p.addScriptTag({ content: AXE });
+      await p.evaluate(AXE); // no con addScriptTag: la CSP de la página no deja scripts escritos dentro
       const malos = await p.evaluate(async () =>
         (await axe.run(document, { runOnly: ['color-contrast'] })).violations.flatMap(v =>
           v.nodes.map(n => n.target.join(' '))
@@ -700,19 +700,32 @@ prueba('Tema claro y oscuro', async (p, url) => {
 });
 
 // MapLibre falso (sin red): apunta el encuadre que le pide la app y cuántas veces se pide
-const mapLibreFalso = async p => {
-  p.pedidasMapLibre = 0;
-  await p.route('https://cdnjs.cloudflare.com/**', r => {
+const MAPLIBRE_FALSO = `window.maplibregl = { Map: class {
+  constructor(o) { window.estiloFondo = o.style; }
+  jumpTo(c) { window.camaraFondo = c; }
+  resize() {} setStyle(s) { window.estiloFondo = s; }
+} };`;
+const huellaSri = texto => 'sha384-' + require('crypto').createHash('sha384').update(texto).digest('base64');
+const servirMapLibreFalso = p =>
+  p.route('https://cdnjs.cloudflare.com/**', r => {
     p.pedidasMapLibre++;
     r.fulfill({
       contentType: 'text/javascript',
-      body: `window.maplibregl = { Map: class {
-        constructor(o) { window.estiloFondo = o.style; }
-        jumpTo(c) { window.camaraFondo = c; }
-        resize() {} setStyle(s) { window.estiloFondo = s; }
-      } };`
+      headers: { 'Access-Control-Allow-Origin': '*' },
+      body: MAPLIBRE_FALSO
     });
   });
+const mapLibreFalso = async p => {
+  p.pedidasMapLibre = 0;
+  // La app solo ejecuta el MapLibre de verdad (SRI): aquí se le da la huella del falso
+  await p.route(/\/js\/mapa-real\.js/, async r => {
+    const res = await r.fetch();
+    r.fulfill({
+      response: res,
+      body: (await res.text()).replace(/sha384-[A-Za-z0-9+/=]+/, huellaSri(MAPLIBRE_FALSO))
+    });
+  });
+  await servirMapLibreFalso(p);
 };
 
 prueba(
@@ -772,6 +785,59 @@ prueba(
     rutas: p => p.route('https://cdnjs.cloudflare.com/**', r => r.abort())
   }
 );
+
+prueba(
+  'Seguridad: un MapLibre cambiado en cdnjs no se ejecuta (SRI) y el fondo se queda apagado',
+  async p => {
+    await p.waitForTimeout(600);
+    cierto(p.pedidasMapLibre > 0, 'se pidió');
+    cierto(!(await p.evaluate(() => !!window.maplibregl)), 'pero no se ejecutó');
+    cierto(!(await p.$eval('.mw', e => e.classList.contains('fondo-real'))), 'apagado');
+    igual(await texto(p, '#ts'), '', 'sin aviso de error');
+  },
+  {
+    conFondoReal: true,
+    rutas: p => {
+      p.pedidasMapLibre = 0;
+      return servirMapLibreFalso(p);
+    }
+  }
+);
+
+prueba(
+  'Seguridad: la página lleva su CSP y no deja ejecutar scripts metidos en ella',
+  async p => {
+    const csp = await p.$eval('meta[http-equiv="Content-Security-Policy"]', m => m.content);
+    cierto(csp.includes("object-src 'none'") && !csp.includes('unsafe-eval'), 'CSP estricta');
+    const ejecutado = await p.evaluate(async () => {
+      const s = document.createElement('script');
+      s.textContent = 'window.inyectado = 1';
+      document.body.appendChild(s);
+      const img = document.createElement('img');
+      img.setAttribute('onerror', 'window.inyectado = 2');
+      img.src = 'no-existe.png';
+      document.body.appendChild(img);
+      await new Promise(ok => setTimeout(ok, 300));
+      return window.inyectado;
+    });
+    igual(ejecutado, undefined, 'ni un <script> escrito ni un onerror se ejecutan');
+    cierto(p.violacionesCSP.length >= 2, 'el navegador los bloquea por la CSP');
+  },
+  { conViolacionCSP: true }
+);
+
+prueba('Seguridad: una copia demasiado grande no se lee', async p => {
+  await p.evaluate(() => abrirCopia());
+  const antes = await p.evaluate(() => JSON.stringify(progreso));
+  await p.setInputFiles('.copia input[type=file]', {
+    name: 'grande.json',
+    mimeType: 'application/json',
+    buffer: Buffer.alloc(5e6 + 10, ' ')
+  });
+  await p.waitForTimeout(200);
+  cierto((await texto(p, '#ts')).includes('demasiado grande'), 'avisa');
+  igual(await p.evaluate(() => JSON.stringify(progreso)), antes, 'y no cambia nada');
+});
 
 prueba('Barrios nuevos y otros nombres', async p => {
   for (const id of ['ciudadjardin', 'huertaotea', 'salasbajas'])
@@ -3878,6 +3944,14 @@ prueba(
       const p = await ctx.newPage();
       const errores = [];
       p.on('pageerror', e => errores.push(e.message));
+      // Lo que bloquee la CSP de la página es un fallo (salvo en la prueba que lo provoca a propósito)
+      p.violacionesCSP = [];
+      await p.exposeFunction('avisarCSP', t => p.violacionesCSP.push(t));
+      await p.addInitScript(() =>
+        document.addEventListener('securitypolicyviolation', e =>
+          window.avisarCSP(e.effectiveDirective + ' ' + (e.blockedURI || 'inline'))
+        )
+      );
       await p.route(/fonts\.(googleapis|gstatic)\.com/, r => r.abort());
       // La bienvenida de la primera vez taparía la app: se da por vista salvo en su propia prueba
       if (!opciones.conBienvenida)
@@ -3913,6 +3987,8 @@ prueba(
         await p.waitForTimeout(250);
         await fn(p, url, ctx);
         if (errores.length) throw new Error('errores de JavaScript: ' + errores.join(' | '));
+        if (p.violacionesCSP.length && !opciones.conViolacionCSP)
+          throw new Error('bloqueado por la CSP: ' + p.violacionesCSP.join(' | '));
         console.log(`✓ ${nombre} · ${n}`);
       } catch (e) {
         fallos++;

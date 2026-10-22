@@ -1,84 +1,84 @@
 // Service worker: deja la app guardada en el móvil para que funcione sin conexión.
 // No edites VERSION ni ARCHIVOS a mano: los actualiza `node herramientas/version.js`.
-const VERSION = 211;
+const VERSION = 212;
 const CACHE = 'mapa-charro-v' + VERSION;
 // <archivos>
 const ARCHIVOS = [
   './',
   'index.html',
   'manifest.webmanifest',
-  'novedades.json?v=211',
+  'novedades.json?v=212',
   'icons/icon-180.png',
   'icons/icon-192.png',
   'fuentes/alfa-slab-one.woff2',
   'fuentes/lora.woff2',
-  'css/estilos.css?v=211',
-  'js/util.js?v=211',
-  'js/medicion.js?v=211',
-  'js/datos/zonas.js?v=211',
-  'js/datos/monumentos.js?v=211',
-  'js/datos/rutas-provincia.js?v=211',
-  'js/datos/tramos-provincia.js?v=211',
-  'js/datos/rutas.js?v=211',
-  'js/datos/tramos.js?v=211',
-  'js/datos/habitantes.js?v=211',
-  'js/datos/pueblos.js?v=211',
-  'js/datos/cultura.js?v=211',
-  'js/datos/detalles.js?v=211',
-  'js/datos/fachadas.js?v=211',
-  'js/datos/orientacion-fachadas.js?v=211',
-  'js/datos/desaparecida.js?v=211',
-  'js/datos/contenido.js?v=211',
-  'js/datos/geometria.js?v=211',
-  'js/datos/alfoz.js?v=211',
-  'js/datos/tiempo.js?v=211',
-  'js/datos/carreteras.js?v=211',
-  'js/datos/parques.js?v=211',
-  'js/datos/carreteras-provincia.js?v=211',
-  'js/datos/provincia.js?v=211',
-  'js/datos/firebase.js?v=211',
-  'js/datos/palabras.js?v=211',
-  'js/estado.js?v=211',
-  'js/guardado.js?v=211',
-  'js/mapa.js?v=211',
-  'js/mapa-fondo.js?v=211',
-  'js/mapa-vias.js?v=211',
-  'js/mapa-vista.js?v=211',
-  'js/ficha.js?v=211',
-  'js/monumentos.js?v=211',
-  'js/ruta.js?v=211',
-  'js/ruta-provincia.js?v=211',
-  'js/logros.js?v=211',
-  'js/palabras.js?v=211',
-  'js/vistas.js?v=211',
-  'js/ubicacion.js?v=211',
-  'js/mapa-real.js?v=211',
-  'js/provincia.js?v=211',
-  'js/pueblos.js?v=211',
-  'js/perfil.js?v=211',
-  'js/imagen.js?v=211',
-  'js/explorar.js?v=211',
-  'js/cultura.js?v=211',
-  'js/agenda.js?v=211',
-  'js/detalles.js?v=211',
-  'js/hora-dorada.js?v=211',
-  'js/copia.js?v=211',
-  'js/hoy.js?v=211',
-  'js/mi-salamanca-calculos.js?v=211',
-  'js/mi-salamanca-piezas.js?v=211',
-  'js/mi-salamanca.js?v=211',
-  'js/juego.js?v=211',
-  'js/mapa-teclado.js?v=211',
-  'js/escritorio.js?v=211',
-  'js/bienvenida.js?v=211',
-  'js/paseo.js?v=211',
-  'js/tiempo.js?v=211',
-  'js/desaparecida.js?v=211',
-  'js/buscador.js?v=211',
-  'js/enlaces.js?v=211',
-  'js/cuenta.js?v=211',
-  'js/inicio.js?v=211',
-  'js/avisar.js?v=211',
+  'css/estilos.css?v=212',
+  'js/util.js?v=212',
+  'js/medicion.js?v=212',
+  'js/datos/zonas.js?v=212',
+  'js/datos/monumentos.js?v=212',
+  'js/datos/rutas-provincia.js?v=212',
+  'js/datos/tramos-provincia.js?v=212',
+  'js/datos/rutas.js?v=212',
+  'js/datos/tramos.js?v=212',
+  'js/datos/habitantes.js?v=212',
+  'js/datos/pueblos.js?v=212',
+  'js/datos/cultura.js?v=212',
+  'js/datos/detalles.js?v=212',
+  'js/datos/fachadas.js?v=212',
+  'js/datos/orientacion-fachadas.js?v=212',
+  'js/datos/desaparecida.js?v=212',
+  'js/datos/contenido.js?v=212',
+  'js/datos/geometria.js?v=212',
+  'js/datos/alfoz.js?v=212',
+  'js/datos/tiempo.js?v=212',
+  'js/datos/carreteras.js?v=212',
+  'js/datos/parques.js?v=212',
+  'js/datos/carreteras-provincia.js?v=212',
+  'js/datos/provincia.js?v=212',
+  'js/datos/firebase.js?v=212',
+  'js/datos/palabras.js?v=212',
+  'js/estado.js?v=212',
+  'js/guardado.js?v=212',
+  'js/mapa.js?v=212',
+  'js/mapa-fondo.js?v=212',
+  'js/mapa-vias.js?v=212',
+  'js/mapa-vista.js?v=212',
+  'js/ficha.js?v=212',
+  'js/monumentos.js?v=212',
+  'js/ruta.js?v=212',
+  'js/ruta-provincia.js?v=212',
+  'js/logros.js?v=212',
+  'js/palabras.js?v=212',
+  'js/vistas.js?v=212',
+  'js/ubicacion.js?v=212',
+  'js/mapa-real.js?v=212',
+  'js/provincia.js?v=212',
+  'js/pueblos.js?v=212',
+  'js/perfil.js?v=212',
+  'js/imagen.js?v=212',
+  'js/explorar.js?v=212',
+  'js/cultura.js?v=212',
+  'js/agenda.js?v=212',
+  'js/detalles.js?v=212',
+  'js/hora-dorada.js?v=212',
+  'js/copia.js?v=212',
+  'js/hoy.js?v=212',
+  'js/mi-salamanca-calculos.js?v=212',
+  'js/mi-salamanca-piezas.js?v=212',
+  'js/mi-salamanca.js?v=212',
+  'js/juego.js?v=212',
+  'js/mapa-teclado.js?v=212',
+  'js/escritorio.js?v=212',
+  'js/bienvenida.js?v=212',
+  'js/paseo.js?v=212',
+  'js/tiempo.js?v=212',
+  'js/desaparecida.js?v=212',
+  'js/buscador.js?v=212',
+  'js/enlaces.js?v=212',
+  'js/cuenta.js?v=212',
+  'js/inicio.js?v=212',
+  'js/avisar.js?v=212',
   'icons/icon-512.png',
   'icons/icono.svg',
   'img/alambres.jpg',
@@ -270,8 +270,9 @@ self.addEventListener('activate', e => {
   );
 });
 
+// Solo se guardan respuestas buenas de esta web (nunca de otras ni redirecciones)
 const guardar = (req, res) => {
-  if (res && (res.ok || res.type == 'opaque')) {
+  if (res && res.ok && res.type == 'basic' && !res.redirected) {
     const copia = res.clone();
     caches.open(CACHE).then(c => c.put(req, copia));
   }
@@ -310,19 +311,6 @@ self.addEventListener('fetch', e => {
       conLimite(fetch(req), ESPERA_RED)
         .then(res => guardar(copia, res))
         .catch(() => caches.match(copia).then(guardada => guardada || caches.match('index.html')))
-    );
-    return;
-  }
-
-  // Tipografías de Google: la copia guardada al momento y se refresca por detrás
-  if (/^fonts\.(googleapis|gstatic)\.com$/.test(url.hostname)) {
-    e.respondWith(
-      caches.match(req).then(guardada => {
-        const red = fetch(req)
-          .then(res => guardar(req, res))
-          .catch(() => guardada);
-        return guardada || red;
-      })
     );
     return;
   }

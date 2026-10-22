@@ -149,14 +149,24 @@ function construirMinimapa(contenedor) {
     { id: 'pm', role: 'img', 'aria-label': 'Mapa de los municipios de la provincia de Salamanca' },
     caja
   );
-  const zb = crear('div', 'zb');
-  zb.innerHTML =
-    '<button aria-label="Acercar">+</button><button aria-label="Alejar">−</button><button aria-label="Ver toda la provincia" title="Ver toda la provincia">⌂</button>';
+  const boton = (texto, etiqueta) => {
+    const b = crear('button', '', texto);
+    b.setAttribute('aria-label', etiqueta);
+    return b;
+  };
+  const zb = crear(
+    'div',
+    'zb',
+    boton('+', 'Acercar'),
+    boton('−', 'Alejar'),
+    boton('⌂', 'Ver toda la provincia')
+  );
+  zb.lastChild.title = 'Ver toda la provincia';
   // «Estoy aquí», con el mismo icono que el del mapa de la capital (ubicacion.js)
   const localizar = crear('button', 'pzl');
   localizar.setAttribute('aria-label', 'Estoy aquí: buscar mi pueblo');
   localizar.title = 'Estoy aquí';
-  localizar.innerHTML = $('#zl').innerHTML;
+  localizar.append(...[...$('#zl').childNodes].map(n => n.cloneNode(true)));
   localizar.onclick = () => pedirUbicacion(localizar, alLocalizarEnProvincia, mensajeUbicacionProvincia);
   zb.appendChild(localizar);
   caja.appendChild(zb);
@@ -400,14 +410,24 @@ function construirProvincia() {
   caja.textContent = '';
   vistaProvincia = { filas: [], comarcas: [] };
   const cabecera = crear('div', 'pvh');
-  cabecera.innerHTML =
-    '<input id="pq" type="search" placeholder="Buscar pueblo o pedanía..." autocomplete="off" aria-label="Buscar pueblo o pedanía"><div id="pcn" class="pcn"></div>';
+  const buscar = Object.assign(crear('input'), {
+    id: 'pq',
+    type: 'search',
+    placeholder: 'Buscar pueblo o pedanía...',
+    autocomplete: 'off'
+  });
+  buscar.setAttribute('aria-label', 'Buscar pueblo o pedanía');
+  const cuenta = crear('div', 'pcn');
+  cuenta.id = 'pcn';
+  cabecera.append(buscar, cuenta);
   caja.appendChild(cabecera);
   Object.assign(vistaProvincia, construirMinimapa(caja));
 
   const seleccion = crear('div', 'psb');
   seleccion.id = 'psb';
-  seleccion.innerHTML = '<p class="mu" style="margin:0">Pulsa un municipio del mapa para verlo aquí.</p>';
+  const pista = crear('p', 'mu', 'Pulsa un municipio del mapa para verlo aquí.');
+  pista.style.margin = '0';
+  seleccion.appendChild(pista);
   caja.appendChild(seleccion);
 
   // Marcar en el mapa los pueblos con alguna tradición (cultura.js)

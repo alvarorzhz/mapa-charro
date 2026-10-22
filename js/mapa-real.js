@@ -6,7 +6,9 @@
 // interruptor: el visor no deja pedir mapas a otras webs. Va después de ubicacion.js (EN_MARCO).
 
 const CLAVE_FONDO_REAL = 'charro-fondo-real';
-const MAPLIBRE_URL = 'https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.js';
+const MAPLIBRE_URL = 'https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.js',
+  // Huella del archivo (SRI): si se cambia la versión, hay que poner la del archivo nuevo
+  MAPLIBRE_SRI = 'sha384-KKgyz2mG25bKJ1O2PyqTJPlAF8Kw2BpDmsLTNBXslICOBvhTAyF5F0XhLWF2ZovY';
 const fondoReal = { encendido: false, mapa: null, capa: null, cargando: null };
 
 // Inversa de proyectar (util.js): punto del mapa → [latitud, longitud]
@@ -125,17 +127,12 @@ function colocarCapaFondoReal() {
 }
 
 const cargarMapLibre = () =>
-  (fondoReal.cargando ||= new Promise((ok, mal) => {
-    if (window.maplibregl) return ok();
-    const s = document.createElement('script');
-    s.src = MAPLIBRE_URL;
-    s.onload = ok;
-    s.onerror = () => {
-      fondoReal.cargando = null; // se podrá volver a intentar
-      mal(new Error('sin MapLibre'));
-    };
-    document.head.appendChild(s);
-  }));
+  (fondoReal.cargando ||= window.maplibregl
+    ? Promise.resolve()
+    : cargarScriptExterno(MAPLIBRE_URL, MAPLIBRE_SRI).catch(e => {
+        fondoReal.cargando = null; // se podrá volver a intentar
+        throw e;
+      }));
 
 // recordar: lo ha elegido la persona (se guarda y, si falla, se avisa); si no, es el encendido de entrada
 async function ponerFondoReal(encender, recordar = true) {
@@ -148,11 +145,16 @@ async function ponerFondoReal(encender, recordar = true) {
     fondoReal.capa = crear('div', 'capa-fondo-real');
     fondoReal.capa.setAttribute('aria-hidden', 'true');
     $('.mw').insertBefore(fondoReal.capa, mapaSvg);
+    const enlace = (texto, href) =>
+      Object.assign(crear('a', '', texto), { href, target: '_blank', rel: 'noopener' });
     $('.mw').appendChild(
-      Object.assign(crear('div', 'credito-fondo-real'), {
-        innerHTML:
-          '<a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a> © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
-      })
+      crear(
+        'div',
+        'credito-fondo-real',
+        enlace('OpenFreeMap', 'https://openfreemap.org'),
+        ' © ',
+        enlace('OpenStreetMap', 'https://www.openstreetmap.org/copyright')
+      )
     );
   }
   colocarCapaFondoReal();

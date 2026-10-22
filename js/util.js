@@ -128,6 +128,25 @@ function crear(etiqueta, clase, ...hijos) {
   return e;
 }
 
+// Carga un script de otra web (cdnjs, gstatic) solo si es exactamente el esperado: «integridad» es su huella
+// (SRI, sha384); si el archivo cambia, el navegador no lo ejecuta y la promesa falla
+const cargarScriptExterno = (src, integridad) =>
+  new Promise((bien, mal) => {
+    if (!/^sha(256|384|512)-[A-Za-z0-9+/]+=*$/.test(integridad || ''))
+      return mal(new Error('Sin huella SRI para ' + src));
+    const s = document.createElement('script');
+    s.src = src;
+    s.integrity = integridad;
+    s.crossOrigin = 'anonymous';
+    s.referrerPolicy = 'no-referrer';
+    s.onload = bien;
+    s.onerror = () => {
+      s.remove();
+      mal(new Error('No se pudo cargar ' + src));
+    };
+    document.head.appendChild(s);
+  });
+
 // Crea un elemento SVG con sus atributos y lo cuelga de «padre»
 const crearSvg = (etiqueta, atributos, padre) => {
   const e = document.createElementNS(SVG_NS, etiqueta);
