@@ -60,7 +60,28 @@ module.exports = [
       // Lo declarado arriba se usa desde otros archivos: solo se avisa de lo que sobra dentro de una función
       'no-unused-vars': ['error', { vars: 'local', args: 'none', caughtErrors: 'none' }],
       'no-redeclare': ['error', { builtinGlobals: false }],
-      'no-empty': ['error', { allowEmptyCatch: true }]
+      'no-empty': ['error', { allowEmptyCatch: true }],
+      // Seguridad: el HTML se construye con crear()/textContent, nunca con texto que el navegador interprete
+      'no-eval': 'error',
+      'no-implied-eval': 'error',
+      'no-new-func': 'error',
+      'no-script-url': 'error',
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'MemberExpression[property.name=/^(innerHTML|outerHTML)$/]',
+          message: 'Nada de innerHTML/outerHTML: usa crear(), textContent o cloneNode (seguridad, CSP).'
+        },
+        {
+          selector: 'Property[key.name=/^(innerHTML|outerHTML)$/]',
+          message: 'Nada de innerHTML/outerHTML: usa crear(), textContent o cloneNode (seguridad, CSP).'
+        },
+        {
+          selector:
+            'CallExpression[callee.property.name=/^(insertAdjacentHTML|write|writeln|createContextualFragment)$/]',
+          message: 'No insertes HTML como texto: usa crear() (seguridad, CSP).'
+        }
+      ]
     }
   },
   {

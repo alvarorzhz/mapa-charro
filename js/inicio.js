@@ -133,7 +133,8 @@ if (!EN_MARCO) {
   const boton = crear('button', 'enlace', 'Fuentes');
   boton.onclick = () => {
     const lista = crear('div', 'lista-fuentes');
-    lista.innerHTML = $('#fuentes').innerHTML.replace(' id="dt"', ''); // el texto está en index.html
+    lista.append(...[...$('#fuentes').cloneNode(true).childNodes]); // el texto está en index.html
+    lista.querySelector('#dt').removeAttribute('id');
     abrirVentana('Fuentes', lista, [['Cerrar', cerrarVentana]], boton);
   };
   $('#ver').append(' · ', boton);

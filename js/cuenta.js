@@ -16,22 +16,22 @@ const leerCuentaGuardada = () => leerLocal(CLAVE_CUENTA);
 const recordarCuenta = uid => escribirLocal(CLAVE_CUENTA, uid || null);
 
 // --- Cargar Firebase (de su web, en orden: primero app) -------------------------------
-const cargarScript = src =>
-  new Promise((bien, mal) => {
-    const s = document.createElement('script');
-    s.src = src;
-    s.onload = bien;
-    s.onerror = () => mal(new Error('No se pudo cargar ' + src));
-    document.head.appendChild(s);
-  });
+// Huella de cada archivo (SRI, cargarScriptExterno en util.js): al cambiar VERSION_FIREBASE hay que
+// poner las de la versión nueva (openssl dgst -sha384 -binary archivo.js | base64)
+const SRI_FIREBASE = {
+  app: 'sha384-aUtWR1iCiOCHS8pn1nKNXMZm3I/eDrV63IXWXgE+mHHqJfYTWYV+jGk0sCXz57+U',
+  auth: 'sha384-ZRqyA8Xkw0A6FmVya9A0Werzt9yjKKAp2TCzqVJjHK1O3oyb0z9jMxpkWPVoFtUm',
+  firestore: 'sha384-jxdN9nS+cvQavyzo/bNcMoHfxvk0kWtPAfPDRq3EQ/wvbCVLNheaVIphKWMD4/g0'
+};
 let cargaFirebase = null;
 function cargarFirebase() {
   if (!cargaFirebase)
     cargaFirebase = (async () => {
       if (!window.firebase)
         for (const parte of ['app', 'auth', 'firestore'])
-          await cargarScript(
-            `https://www.gstatic.com/firebasejs/${VERSION_FIREBASE}/firebase-${parte}-compat.js`
+          await cargarScriptExterno(
+            `https://www.gstatic.com/firebasejs/${VERSION_FIREBASE}/firebase-${parte}-compat.js`,
+            SRI_FIREBASE[parte]
           );
       if (!firebase.apps.length) firebase.initializeApp(configFirebase());
       cuentaWeb.auth = firebase.auth();

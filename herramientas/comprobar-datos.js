@@ -891,6 +891,47 @@ D.RELACIONES_ETAPA.forEach((r, i) => {
     comprobar(fs.existsSync(path.join(RAIZ, 'fuentes', f)), `falta fuentes/${f}`);
 }
 
+// --- Seguridad: CSP de las páginas y huellas (SRI) de los scripts de otras webs ------------------------
+{
+  const huella = t => "'sha256-" + require('crypto').createHash('sha256').update(t).digest('base64') + "'";
+  for (const pagina of ['index.html', 'privacidad.html']) {
+    const texto = leer(pagina),
+      csp = (texto.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)">/) || [])[1];
+    comprobar(csp, `${pagina} no lleva la política de seguridad (meta Content-Security-Policy)`);
+    if (!csp) continue;
+    comprobar(
+      texto.indexOf('Content-Security-Policy') < texto.indexOf('<script'),
+      `${pagina}: la política de seguridad tiene que ir antes del primer <script>`
+    );
+    const scripts = (csp.match(/script-src ([^;]+)/) || [])[1] || '';
+    comprobar(
+      !/'unsafe-(inline|eval)'/.test(scripts),
+      `${pagina}: la CSP no puede permitir 'unsafe-inline' ni 'unsafe-eval' en scripts`
+    );
+    for (const directiva of ["object-src 'none'", "base-uri 'self'", "form-action 'none'"])
+      comprobar(csp.includes(directiva), `${pagina}: a la CSP le falta «${directiva}»`);
+    // Cada <script> escrito en la página tiene que tener su huella en script-src (si se cambia, se recalcula)
+    for (const m of texto.matchAll(/<script>([\s\S]*?)<\/script>/g))
+      comprobar(
+        scripts.includes(huella(m[1])),
+        `${pagina}: un <script> de la página no tiene su huella en la CSP; pon ${huella(m[1])} en script-src`
+      );
+  }
+  // Los scripts que se cargan de otras webs llevan huella (SRI) y su web está permitida en la CSP
+  const cspApp = (html.match(/content="(default-src[^"]+)"/) || [])[1] || '';
+  for (const archivo of fs.readdirSync(path.join(RAIZ, 'js')).filter(f => f.endsWith('.js'))) {
+    const codigo = leer('js/' + archivo);
+    comprobar(
+      !/createElement\('script'\)/.test(codigo) || archivo == 'util.js',
+      `js/${archivo} crea un <script> a mano: usa cargarScriptExterno (util.js), que exige la huella SRI`
+    );
+    for (const m of codigo.matchAll(/'(sha384-[A-Za-z0-9+/=]+)'/g))
+      comprobar(m[1].length == 71, `js/${archivo}: huella SRI mal copiada (${m[1]})`);
+  }
+  for (const web of ['https://cdnjs.cloudflare.com', 'https://www.gstatic.com'])
+    comprobar(cspApp.includes(web), `index.html: la CSP no deja cargar scripts de ${web}`);
+}
+
 // --- Resultado ----------------------------------------------------------------
 avisos.forEach(a => console.log('! Aviso: ' + a));
 if (errores.length) {
