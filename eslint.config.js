@@ -91,7 +91,7 @@ module.exports = [
   },
   {
     // Herramientas de Node; el código que va dentro de page.evaluate() se ejecuta en la app
-    files: ['herramientas/*.js', 'eslint.config.js'],
+    files: ['herramientas/**/*.js', 'eslint.config.js'],
     languageOptions: {
       sourceType: 'commonjs',
       globals: { ...globals.node, ...globals.browser, ...globalesApp, axe: 'readonly' }
