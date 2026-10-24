@@ -412,7 +412,9 @@ const PUEBLOS = {
     ],
     cur: [
       'Su puente de piedra, de un solo ojo, se hizo hacia 1700 sobre el río Cuerpo de Hombre; era del marqués y se pagaba portazgo.',
-      'Es conjunto histórico desde 1982.'
+      'Es conjunto histórico desde 1982.',
+      'Sus banasteros hacían cestos con tiras de castaño: la madera se calentaba en un horno casi siempre bajo tierra y, aún caliente, se hendía en tiras finas, las «verganchas». Madoz cuenta en 1848 que los vendían en Candelario.',
+      'El 1 de noviembre es el día de los calbotes, una merienda con castañas asadas; el 17 de enero, San Antón, el del chorizo.'
     ],
     mon: {
       n: 'Castillo de San Vicente',
@@ -538,7 +540,9 @@ const PUEBLOS = {
   'San Felices de los Gallegos': {
     cur: [
       'Su castillo lo mandó levantar en 1296 el rey Dionisio I de Portugal.',
-      'Con el Tratado de Alcañices (1297) pasó a Portugal, y en 1326 volvió a León.'
+      'Con el Tratado de Alcañices (1297) pasó a Portugal, y en 1326 volvió a León.',
+      'El «noveno» era el impuesto de los duques de Alba: la novena parte de la cosecha. Tras un pleito de 1837 a 1852 los pueblos se lo quitaron, y desde 1864 lo celebran con la fiesta del Noveno, en mayo.',
+      'El 15 de marzo de 1809 lo tomaron los franceses y fue su cuartel general en la zona durante unos tres años.'
     ],
     mon: {
       n: 'Castillo',
@@ -563,7 +567,9 @@ const PUEBLOS = {
     ],
     cur: [
       'El río Alagón forma aquí el meandro del Melero, entre Salamanca y Cáceres.',
-      'Un documento de 1289 muestra a judíos de Miranda prestando dinero a vecinos del pueblo.'
+      'Un documento de 1289 muestra a judíos de Miranda prestando dinero a vecinos del pueblo.',
+      'Con 508 metros, es el pueblo más bajo de la provincia, y en sus huertas se dan naranjos y cerezos.',
+      'En 1927 un incendio quemó todo el archivo del ayuntamiento. El Sábado Santo se cuelga en la plaza el Judas, un muñeco de paja que se quema el Lunes de Pascua.'
     ],
     mon: {
       n: 'Iglesia de Nuestra Señora de la Asunción',
@@ -590,7 +596,9 @@ const PUEBLOS = {
   Mieza: {
     cur: [
       'En las Cortes de Burgos de 1315 aparece como aldea del concejo de Ledesma.',
-      'Entre 2000 y 2018 perdió 146 vecinos, el 42 %.'
+      'Entre 2000 y 2018 perdió 146 vecinos, el 42 %.',
+      'Desde el mirador de la Code se ve el cañón del Duero frente a Portugal. Sus vecinos al otro lado de la raya son Fornos y Mazouco.',
+      'Tuvo castillo, como Vilvestre, Barruecopardo y Aldeadávila, para defender la frontera de León frente a Portugal.'
     ],
     mon: {
       n: 'Iglesia de San Sebastián',
@@ -1040,5 +1048,208 @@ const PUEBLOS = {
       datos: [['Naves', 'tres']]
     },
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Puente_del_Congosto']]
+  },
+  Fuenteguinaldo: {
+    cur: [
+      'Entre noviembre de 1807 y mayo de 1813, en plena Guerra de la Independencia, por sus calles no dejaron de pasar tropas francesas, españolas, portuguesas y británicas.',
+      'Wellington tuvo aquí su cuartel general en tres ocasiones. Una placa de bronce de Ricardo Flecha recuerda sus estancias, y un portal señala la casa donde vivió.',
+      'En su término está el castro de Irueña, de origen celta y luego romanizado. En las fiestas de agosto se mantiene la vieja costumbre de los toros a caballo, que atrae a jinetes también de Portugal.'
+    ],
+    mon: {
+      n: 'Iglesia parroquial',
+      tipo: 'iglesia',
+      epoca: 'Siglo XVI',
+      datos: [['Retablo', 'de Lucas Mitata, manierismo romanista salmantino']]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Fuenteguinaldo']]
+  },
+  'Yecla de Yeltes': {
+    cur: [
+      'A un kilómetro del pueblo está el castro vetón de Yecla la Vieja, que conserva entera su muralla, tres puertas y un campo de piedras hincadas para frenar a los atacantes.',
+      'Su escudo, aprobado en 2006, lleva una escena de caza grabada en uno de los sillares del castro.',
+      'En el siglo XII se llamaba «Ecla» y a finales del XIII «Ecra»; el nombre de Yecla de Yeltes es oficial desde el 2 de julio de 1916.'
+    ],
+    mon: {
+      n: 'Castro de Yecla la Vieja',
+      tipo: 'roca',
+      epoca: 'Edad del Hierro, con huellas romanas y visigodas',
+      datos: [
+        ['Pueblo', 'vetones'],
+        ['Dentro', 'la ermita de Nuestra Señora del Castillo']
+      ]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Yecla_de_Yeltes']]
+  },
+  'Villavieja de Yeltes': {
+    cur: [
+      'El 8 de septiembre de 1650, durante la fiesta de la Virgen de la Peña de Francia, la atacaron tropas portuguesas. Los vecinos que se quedaron resistieron en la iglesia y les causaron más de cien muertos y heridos.',
+      'Fue un pueblo de curtidores y zapateros: hacia 1909 había unos 50 talleres de calzado y 18 tenerías.',
+      'Se llama a sí misma «Capital de la Charrería». El 27 de agosto, en las fiestas de Nuestra Señora de los Caballeros, se baila el Cordón en la Plaza Mayor.'
+    ],
+    mon: {
+      n: 'Puente de Hierro',
+      tipo: 'puente',
+      epoca: 'Finales del siglo XIX',
+      estilo: 'Viaducto metálico de tipo Eiffel',
+      datos: [
+        ['Cruza', 'el valle del Yeltes'],
+        ['Era de', 'la línea de La Fuente de San Esteban a Pocinho (Portugal)']
+      ]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Villavieja_de_Yeltes']]
+  },
+  Cepeda: {
+    cur: [
+      'A mediados del siglo XVII se hizo villa independiente pagando 3.500 ducados.',
+      'Ya aparece en el «Repertorio de todos los caminos de España» de Juan de Villuga, de 1546.',
+      'En San Marcos, el 25 de abril, se recitan «Las Relaciones»: peticiones y agradecimientos en verso. El Sábado Santo los mozos cortan ramas para El Ramo, y cada especie tiene su significado.'
+    ],
+    mon: {
+      n: 'Iglesia parroquial',
+      tipo: 'iglesia',
+      epoca: 'Siglos XVI–XVIII',
+      estilo: 'Sobre todo barroco',
+      datos: [['Retablo', 'siglo XVII, de Ambrosio de Villalobos']]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Cepeda_(Salamanca)']]
+  },
+  Valero: {
+    cur: [
+      'El 19 de septiembre de 1636 Felipe IV creó el marquesado de Valero para el duque de Béjar, con Valero, El Endrinal, San Miguel, Los Santos, Frades y Tornadizo.',
+      'Su piscina natural en el río Quilamas, de 1985, aprovecha la presa de una central eléctrica de 1920 que daba luz también a Frades de la Sierra. Antes se llamaba «Charco el Pozo».',
+      'La batalla de Segoyuela, entre don Rodrigo y los musulmanes, está en el origen de la leyenda de la reina Quilama, que da nombre a esta sierra.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Valero_(Salamanca)']]
+  },
+  'San Esteban de la Sierra': {
+    cur: [
+      'Los documentos más antiguos, del siglo XV, hablan de una comunidad judía con su propio barrio; entonces el pueblo se llamaba Santisteban.',
+      'Su vino, que lleva el nombre de la sierra del Tiriñuelo, ganó la Espiga de Plata en 1997. Los dulces del pueblo son las perronillas y los sacatrapos.',
+      'Las fiestas del Cristo, desde el 14 de septiembre, cierran la cosecha y la vendimia. Empiezan con la Quema del Castillo: un mozo trepa por un tronco engrasado hasta el premio, desde hace décadas un jamón.'
+    ],
+    mon: {
+      n: 'Puente sobre el Alagón',
+      tipo: 'puente',
+      epoca: 'Época románica',
+      datos: [
+        ['Ojos', '4 (Madoz, 1847)'],
+        ['Se le llama', '«puente romano», aunque no lo es']
+      ]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/San_Esteban_de_la_Sierra']]
+  },
+  'Fuenterroble de Salvatierra': {
+    cur: [
+      'Por el pueblo pasa la Vía de la Plata, que conserva aquí su firme romano en buen estado; a las afueras quedan dos miliarios.',
+      'Antes que de peregrinos fue camino de arrieros. Su albergue, junto a la iglesia y llevado por el párroco don Blas Rodríguez, lo ha hecho uno de los grandes sitios del Camino de Santiago del sur, con un museo dedicado a la Vía.',
+      'Las casas tradicionales están hechas con pizarra.'
+    ],
+    mon: {
+      n: 'Iglesia de Santa María la Blanca',
+      tipo: 'iglesia',
+      epoca: 'Siglo XV',
+      estilo: 'Gótico',
+      datos: [['Retablo', 'atribuido a Churriguera']]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Fuenterroble_de_Salvatierra']]
+  },
+  'Villanueva del Conde': {
+    cur: [
+      'Primero se llamó Aldea el Conde; lo de «Villanueva» llegó al hacerse villa, y «del Conde» recuerda a los condes de Miranda.',
+      'Sus casas forman un núcleo cerrado, como una muralla, terminado en el siglo XVIII. Dentro quedan las «huertitas», a las que se entra por tres pasadizos bajo las casas y por «callejinas» entre muros de piedra de un metro.',
+      'Cada familia tiene su mote: «Lobos», «Quitapenas», «Dientes», «Canala» o «Puñalines». Por el pueblo pasa el Camino de los Prodigios, de unos 11 km con obras de arte, que sale de Miranda del Castañar.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Villanueva_del_Conde']]
+  },
+  'Herguijuela de la Sierra': {
+    cur: [
+      'Su nombre viene del latín «ecclesiola», iglesita: en 1188 aparece como «Ecclesiola», y nada tiene que ver con Guijuelo.',
+      'Ese mismo año de 1188 Alfonso IX de León lo donó al arzobispado de Santiago de Compostela.',
+      'Unamuno lo nombra en un poema de su «Cancionero» fechado el 28 de junio de 1928.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Herguijuela_de_la_Sierra']]
+  },
+  Alaraz: {
+    cur: [
+      'El primer documento que lo nombra es de 1224, cuando se llamaba Santa María del Campo. Su nombre se relaciona con el árabe y querría decir «campo de cultivo».',
+      'Carlos V pasó por aquí camino de su retiro de Yuste: lo dice un documento del 8 de noviembre de 1556.',
+      'Cerca de la ermita del Cristo aparecieron pizarras visigodas con inscripciones en latín, hoy en el Museo de Salamanca. Es el pueblo del pintor Lorenzo Albarrán (1874–1938), que restauró obras del Palacio Real.'
+    ],
+    mon: {
+      n: 'Iglesia de Nuestra Señora del Castillo',
+      tipo: 'iglesia',
+      epoca: 'Siglo XVI',
+      datos: [
+        ['Planta', 'de cruz latina, una nave'],
+        ['Crucero', 'terminado en 1555 por Juan Sánchez del Castillo'],
+        ['Retablo', 'barroco, dorado en 1704']
+      ]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Alaraz']]
+  },
+  Barruecopardo: {
+    cur: [
+      'Su nombre junta «barrueco», una roca suelta, con el color pardo del lugar.',
+      'En 1157 Fernando II de León creó el señorío de Barruecopardo para Armengol VII, conde de Urgel, según se cuenta como regalo de boda. Desde 1195 fue de la Orden de Santiago.',
+      'Las tropas portuguesas lo saquearon en 1644 y lo quemaron en 1653 y 1654. Su mina de wolframio dio mineral en las dos guerras mundiales.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Barruecopardo']]
+  },
+  Monsagro: {
+    cur: [
+      'En las fachadas de algunas casas se ven fósiles marinos de más de 400 millones de años, del Ordovícico: rastros de trilobites (cruzianas) y galerías de gusanos.',
+      'El Museo de los Mares Antiguos enseña fósiles de distintas épocas.',
+      'Su escudo lleva dos truchas bajo un sombrero de obispo, porque fue de la jurisdicción y el obispado de Ciudad Rodrigo.'
+    ],
+    mon: {
+      n: 'Museo de los Mares Antiguos',
+      tipo: 'museo',
+      datos: [['Fósiles', 'de más de 400 millones de años']]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Monsagro']]
+  },
+  'Calzada de Valdunciel': {
+    cur: [
+      'Su nombre, «Calçada», viene de la Vía de la Plata, que pasa por el pueblo: junto al arroyo Valdunciel, a unos 14 km de Salamanca, queda un miliario partido.',
+      'El pilón de la Fuente Buena, de origen romano, aprovecha una estela de granito de época imperial con una mujer recostada que sostiene un vaso.',
+      'Los «pontones» que servían para cruzar el arroyo de la Vega serían, según algunos autores, trozos de miliarios romanos sin inscripción.'
+    ],
+    mon: {
+      n: 'Iglesia de Santa Elena',
+      tipo: 'iglesia',
+      epoca: 'Sobre todo del siglo XVI',
+      datos: [
+        ['Retablo', 'siglo XVIII, churrigueresco'],
+        ['Antes', 'restos de una iglesia románica del XII']
+      ]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Calzada_de_Valdunciel']]
+  },
+  'Salvatierra de Tormes': {
+    cur: [
+      'Alfonso IX de León le dio concejo y título de villa en 1203: estaba junto al Tormes, en la raya con Ávila, y se le levantó una fortaleza para defenderla.',
+      'Se quedó casi vacía en los años cincuenta y sesenta con el embalse de Santa Teresa, que iba a inundarla; al final el agua no llegó a anegar el pueblo.',
+      'Aquí nació en 1879 el médico Filiberto Villalobos, que fue ministro de Instrucción Pública en la Segunda República. Quedan trozos de su muralla medieval y restos de una sinagoga.'
+    ],
+    mon: {
+      n: 'Castillo de la Mora Encantada',
+      tipo: 'torre',
+      datos: [['Defendía', 'la villa desde el fuero de 1203']]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Salvatierra_de_Tormes']]
+  },
+  Navasfrías: {
+    cur: [
+      'Se nombra por primera vez en 1219, en una donación de Alfonso IX de León; en 1226 el rey lo dio a la Orden de Alcántara.',
+      'En los ríos Águeda, Roladrón y Rubiós se pueden encontrar pepitas de oro con la batea, y siempre han sido ricos en truchas.',
+      'Junto a la ermita del Cristo de la Misericordia, pequeña y gótica, hay un tilo milenario. Por San Juan, el 24 de junio, hay encierros y desencierros a caballo.'
+    ],
+    mon: {
+      n: 'Iglesia de San Juan Evangelista',
+      tipo: 'iglesia',
+      estilo: 'Románico hispano-portugués',
+      datos: [['Visitada', 'en 1499 por frey Nicolás de Ovando']]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Navasfr%C3%ADas']]
   }
 };
