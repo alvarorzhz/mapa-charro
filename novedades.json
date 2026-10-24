@@ -1,5 +1,19 @@
 [
   {
+    "version": "2.15.2",
+    "fecha": "2026-10-24",
+    "titulo": "Más pueblos y más curiosidades",
+    "usuario": [
+      "15 pueblos nuevos con ficha: Fuenteguinaldo, Yecla de Yeltes, Villavieja de Yeltes, Cepeda, Valero, San Esteban de la Sierra, Fuenterroble de Salvatierra, Villanueva del Conde, Herguijuela de la Sierra, Alaraz, Barruecopardo, Monsagro, Calzada de Valdunciel, Salvatierra de Tormes y Navasfrías.",
+      "Más curiosidades en Montemayor del Río, San Felices de los Gallegos, Sotoserrano y Mieza.",
+      "Más curiosidades en San Esteban, San Juan, San José, Cabrerizos y Castellanos de Moriscos."
+    ],
+    "tecnico": [
+      "PUEBLOS: 15 fichas nuevas (58 en total) con curiosidades y monumento, de Wikipedia; 4 ampliadas a 4 curiosidades.",
+      "CURIOSIDADES: 11 nuevas en 5 zonas, con su fuente en comentario."
+    ]
+  },
+  {
     "version": "2.15.1",
     "fecha": "2026-10-22",
     "titulo": "Más seguridad",

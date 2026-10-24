@@ -26,7 +26,9 @@ const CURIOSIDADES = {
   ],
   sanjuan: [
     'La iglesia de San Juan de Barbalos es de 1150 y la levantaron los caballeros de la Orden del Hospital de San Juan de Jerusalén. «Barbalos» era el pueblo donde la orden tenía sus tierras.',
-    'Dentro está el Cristo de la Zarza, del siglo XII: una talla en nogal de unos dos metros.'
+    'Dentro está el Cristo de la Zarza, del siglo XII: una talla en nogal de unos dos metros.',
+    // Fuente: https://es.wikipedia.org/wiki/Iglesia_de_San_Juan_de_Barbalos
+    'Aunque en el siglo XVIII la reformaron a lo barroco, conserva su ábside románico con tres ventanas y una cornisa con caras, animales y hasta una escena de músicos. Es Bien de Interés Cultural desde 1983.'
   ],
   tenerias: [
     'Su nombre viene de las tenerías, los talleres donde se curtían las pieles junto al río. Antes se le llamó barrio de Santiago.',
@@ -47,7 +49,13 @@ const CURIOSIDADES = {
     'En el convento de Santa Clara, en febrero de 1973, unos obreros que arreglaban el tejado encontraron un artesonado mudéjar de los siglos XIV y XV, oculto unos 250 años sobre la bóveda barroca. Hoy se visita por pasarelas.'
   ],
   sanesteban: [
-    'En 1527 encarcelaron aquí a Ignacio de Loyola, y Colón se alojó con los dominicos mientras buscaba apoyo para su viaje. La fachada del convento es plateresca.'
+    'En 1527 encarcelaron aquí a Ignacio de Loyola, y Colón se alojó con los dominicos mientras buscaba apoyo para su viaje. La fachada del convento es plateresca.',
+    // Fuente: https://es.wikipedia.org/wiki/Convento_de_San_Esteban_(Salamanca)
+    'La escalera de Soto la trazó Rodrigo Gil de Hontañón entre 1553 y 1556 y la pagó fray Domingo de Soto. Unía la iglesia, la sacristía, el coro, la biblioteca y las celdas.',
+    // Fuente: https://es.wikipedia.org/wiki/Convento_de_San_Esteban_(Salamanca)
+    'Aquí descansa el Gran Duque de Alba, muerto en Tomar (Portugal) en 1582. Sus restos llegaron en 1619 y desde 1983 están en una capilla con un mausoleo de Chueca Goitia.',
+    // Fuente: https://es.wikipedia.org/wiki/Convento_de_las_Dueñas_(Salamanca)
+    'Enfrente, el convento de las Dueñas lo fundó en 1419 Juana Rodríguez de Monroy. Su claustro de 1533 tiene forma de pentágono irregular, porque sigue las casas de antes, y capiteles llenos de monstruos de un escultor desconocido.'
   ],
   labradores: [
     'Su nombre viene de las tierras de labranza que había aquí. Desde 1900 fue el primer ensanche de la ciudad; ya en 1858 un plano mostraba un camino llamado Ronda de Labradores.',
@@ -266,7 +274,11 @@ const CURIOSIDADES = {
   ],
   sanjose: [
     'Surgió en los años setenta, como continuación de La Vega, para la gente que llegaba de los pueblos. Al principio no tenía consultorio, ni tiendas, ni colegios.',
-    'El puente de Felipe VI, del año 2000, lo une con el paseo de Canalejas. En el campo Reina Sofía juega Unionistas de Salamanca.'
+    'El puente de Felipe VI, del año 2000, lo une con el paseo de Canalejas. En el campo Reina Sofía juega Unionistas de Salamanca.',
+    // Fuente: https://www.elespanol.com/castilla-y-leon/region/salamanca/20220303/san-jose-barrio-obrero-surgio-reivindicacion-vecinal/653934766_0.html
+    'Fue cuna del movimiento vecinal. Para tener consultorio, en la calle Manuel Parada, los vecinos hicieron colas enormes, y su asociación llegó hasta el Ministerio de Vivienda, en Madrid, para conseguir dinero contra las humedades de los pisos.',
+    // Fuente: https://www.elespanol.com/castilla-y-leon/region/salamanca/20220303/san-jose-barrio-obrero-surgio-reivindicacion-vecinal/653934766_0.html
+    'La primera tienda del barrio, en la calle Manuel Parada, vendía «un poco de todo». Después llegaron la farmacia y los bares.'
   ],
   villamayor: [
     'De sus canteras, documentadas desde el siglo XVI, salió la piedra dorada de las catedrales, la Casa de las Conchas y la Plaza Mayor.',
@@ -280,7 +292,11 @@ const CURIOSIDADES = {
   ],
   cabrerizos: [
     'En el siglo XIII se llamaba «Cabrarizos». En su término, en La Flecha, está el oratorio de Fray Luis de León.',
-    'Entre 1996 y 2006 su población creció un 128,8 %: fue el primero del alfoz en apostar por los chalets.'
+    'Entre 1996 y 2006 su población creció un 128,8 %: fue el primero del alfoz en apostar por los chalets.',
+    // Fuente: https://es.wikipedia.org/wiki/Cabrerizos
+    'El pueblo se levantó en alto, a unos 823 metros, para que no lo alcanzaran las riadas del Tormes. En su término está el despoblado de Ribas, que repobló Ramiro II de León en el siglo X.',
+    // Fuente: https://es.wikipedia.org/wiki/Cabrerizos
+    'Su pabellón de deportes lleva el nombre de Vicente del Bosque, y su biblioteca, el de Berta Pallares.'
   ],
   carbajosa: [
     'Aparece en 1248 como «Carvayosa la Sagrada»: el nombre viene del carbajo, un tipo de roble. La fundó Alfonso IX a comienzos del siglo XIII.',
@@ -332,7 +348,11 @@ const CURIOSIDADES = {
   ],
   castmoriscos: [
     'En el siglo XIII ya se llamaba «Castellanos de Morisco», porque lo repoblaron colonos de Castilla. Su iglesia de San Esteban es Bien de Interés Cultural desde 1999.',
-    'En 1826 tenía unos 221 habitantes; hoy supera los 3.100.'
+    'En 1826 tenía unos 221 habitantes; hoy supera los 3.100.',
+    // Fuente: https://es.wikipedia.org/wiki/Castellanos_de_Moriscos
+    'Madoz cuenta que el nombre recuerda el reparto de Raimundo de Borgoña, hacia 1100: los franceses se quedaron casi toda La Armuña, y los castellanos, esta parte. Por eso hay un Castellanos de Moriscos y un Castellanos de Villiquera.',
+    // Fuente: https://es.wikipedia.org/wiki/Castellanos_de_Moriscos
+    'Su patrón es el Cristo de las Batallas, que tenía ermita propia en el siglo XIX, a las afueras del pueblo.'
   ],
   castvilliquera: [
     'Lo repoblaron hacia el año 975 castellanos del ejército de Ramiro II. «Villiquera» podría venir del latín villicus, el administrador de una finca romana.',
