@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(./js/datos/alfoz.js)",
+      "Read(./js/datos/provincia.js)",
+      "Read(./js/datos/geometria.js)",
+      "Read(./js/datos/carreteras.js)",
+      "Read(./js/datos/carreteras-provincia.js)",
+      "Read(./js/datos/tramos.js)",
+      "Read(./js/datos/tramos-provincia.js)",
+      "Read(./js/datos/habitantes.js)",
+      "Read(./js/datos/parques.js)",
+      "Read(./js/datos/orientacion-fachadas.js)"
+    ]
+  }
+}

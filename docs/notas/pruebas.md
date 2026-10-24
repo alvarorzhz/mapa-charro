@@ -1,0 +1,5 @@
+# Pruebas en el navegador
+
+- Pruebas en el navegador: `herramientas/pruebas.js` es la única entrada (servidor, Chromium y opciones de cada prueba) y las pruebas van en `herramientas/pruebas/`, un archivo por zona: `inicio`, `mapa`, `fichas`, `provincia`, `explora`, `tu-salamanca`, `guardado`, `cuenta`, `accesibilidad` y `seguridad` (lista `ZONAS`). Cada archivo toma de `pruebas/comun.js` `prueba`, `igual`, `cierto`, `texto`, `fichaAbierta` y los falsos que usa más de una zona (MapLibre); lo que solo usa una zona va arriba de su archivo. `PRUEBAS_ZONA=mapa` (o `mapa,fichas`) pasa solo esas zonas.
+- Si añades una función nueva a la app, añade su prueba en el archivo de su zona de `herramientas/pruebas/` (una zona nueva, también en `ZONAS`); si añades un tipo de dato, su comprobación en `herramientas/comprobar-datos.js`.
+- Opciones: `PRUEBAS_ZONA=mapa` (o `mapa,fichas`) pasa solo esas zonas, `PRUEBAS_SOLO=texto` solo las pruebas cuyo nombre lo contiene, `PRUEBAS_TAMANO=movil|escritorio` solo ese tamaño y `PRUEBAS_DETALLE=1` enseña el error entero de una prueba que falla.

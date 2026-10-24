@@ -1,0 +1,4 @@
+# Rutas a pie y en coche
+
+- Rutas a pie: paradas en `js/datos/rutas.js` (monumentos o sitios propios con fuente) y caminos en `js/datos/tramos.js`, generado sobre las calles de OpenStreetMap con `node herramientas/rutas.js <id>`: si cambian las paradas hay que recalcular los tramos (`comprobar-datos` lo detecta).
+- Rutas: un solo botón «Rutas» (`abrirRutas`, ruta.js) con las rutas a pie (RUTAS, mapa de la ciudad) y las de la provincia en coche (`js/datos/rutas-provincia.js`, `js/ruta-provincia.js`: ficha con mapa propio de la provincia, Google Maps y OpenStreetMap). Sus tramos por carretera están en `js/datos/tramos-provincia.js`, generado con `node herramientas/rutas-provincia.js <id>`; `comprobar-datos` avisa si cambian las paradas. Los ids de las rutas de la provincia no pueden coincidir con los de RUTAS (enlaces `#ruta-<id>`).
