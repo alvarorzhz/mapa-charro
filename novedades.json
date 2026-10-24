@@ -1,5 +1,15 @@
 [
   {
+    "version": "2.15.4",
+    "fecha": "2026-10-24",
+    "titulo": "Notas más cortas",
+    "usuario": ["Orden por dentro para que preparar novedades cueste menos; al usarla no cambia nada."],
+    "tecnico": [
+      "CLAUDE.md, de 28 KB a menos de 5 KB: reglas imprescindibles, cómo gastar poco y un mapa de qué archivo lleva qué. El detalle de cada parte pasa a docs/notas/ (publicar, pruebas, guardado, mapa, provincia, rutas, contenido, interfaz, logros-y-tu-salamanca, seguridad).",
+      ".claude/settings.json impide leer sin querer los datos voluminosos de js/datos/ (lindes, carreteras, tramos, habitantes, parques, orientación de fachadas)."
+    ]
+  },
+  {
     "version": "2.15.3",
     "fecha": "2026-10-24",
     "titulo": "Pruebas por zonas",

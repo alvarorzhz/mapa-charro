@@ -1,0 +1,3 @@
+# Seguridad
+
+- Seguridad: `index.html` y `privacidad.html` llevan su CSP en un `<meta>` (GitHub Pages no deja poner cabeceras; dentro del Artifact queda en el body y no se aplica). Los `<script>` escritos en la página van con su huella `sha256-` en `script-src` (`comprobar-datos` dice cuál poner si cambian). Nada de `innerHTML`, `eval` ni HTML como texto (ESLint lo prohíbe): se construye con `crear()`. Los scripts de otras webs (MapLibre, Firebase) se cargan con `cargarScriptExterno(src, huella)` (util.js) y su huella SRI: al subir de versión, se pone la nueva (`openssl dgst -sha384 -binary archivo.js | base64`). Si se añade una web nueva (scripts, mapas, conexiones), hay que permitirla en la CSP; las pruebas fallan si algo la incumple.
