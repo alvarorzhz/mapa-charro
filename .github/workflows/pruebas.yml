@@ -33,7 +33,7 @@ jobs:
       - name: Comprobar los datos
         run: node herramientas/comprobar-datos.js
       - name: Comprobar el formato
-        run: npx prettier --check "js/**/*.js" sw.js "herramientas/*.js"
+        run: npx prettier --check "js/**/*.js" sw.js "herramientas/**/*.js"
       - name: Buscar errores en el código (ESLint)
         run: npx eslint .
 
