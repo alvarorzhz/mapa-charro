@@ -19,7 +19,6 @@ const WEB = 'https://alvarorzhz.github.io/mapa-charro/';
 const TITULO = 'Mapa charro de Salamanca';
 const HASH_PESTANA = { map: '', list: 'lista', prov: 'provincia' };
 let aplicandoEnlace = false; // true mientras se aplica la dirección, para no reescribirla
-let nombreFicha = '';
 
 // Lo que va tras «#», decodificado; un enlace mal formado (%E0%A4%A…) cuenta como vacío y no rompe el arranque
 const hashActual = () => {
@@ -54,8 +53,8 @@ const esHashDeFicha = h =>
   todasLasZonas.some(z => z.id == h);
 
 function hashDeVista() {
-  if (pestana == 'prov' && puebloSeleccionado) return 'provincia/' + slug(puebloSeleccionado.n);
-  return HASH_PESTANA[pestana] || '';
+  if (estadoApp.pestana == 'prov' && puebloSeleccionado) return 'provincia/' + slug(puebloSeleccionado.n);
+  return HASH_PESTANA[estadoApp.pestana] || '';
 }
 
 function escribirHash(h, nuevaEntrada) {
@@ -68,12 +67,12 @@ function escribirHash(h, nuevaEntrada) {
 }
 
 function ponerTitulo() {
-  document.title = nombreFicha ? nombreFicha + ' · ' + TITULO : TITULO;
+  document.title = estadoApp.nombreFicha ? estadoApp.nombreFicha + ' · ' + TITULO : TITULO;
 }
 
 // Llamada al abrir una ficha (pick y pickRoad)
 function enlaceFicha(h, nombre) {
-  nombreFicha = nombre;
+  estadoApp.nombreFicha = nombre;
   apuntarFicha(h); // medicion.js: qué tipo de ficha (nunca cuál)
   ponerTitulo();
   escribirHash(h, !esHashDeFicha(hashActual()));
@@ -87,7 +86,7 @@ function enlaceVista() {
 
 // Llamada al cerrar la ficha con la ×
 function volverEnlace() {
-  nombreFicha = '';
+  estadoApp.nombreFicha = '';
   ponerTitulo();
   if (history.state && history.state.charro && esHashDeFicha(hashActual())) history.back();
   else escribirHash(hashDeVista(), false);
@@ -101,39 +100,39 @@ function aplicarEnlace() {
   try {
     if (a == 'pueblo' && b) {
       const m = PROVINCIA.m.find(m => slug(m.n) == b);
-      if (m && PUEBLOS[m.n] && (puebloAbierto != m || !fichaAbierta)) abrirPueblo(m);
+      if (m && PUEBLOS[m.n] && (estadoApp.puebloAbierto != m || !fichaAbierta)) abrirPueblo(m);
     } else if (a == 'tu-salamanca' || a == 'perfil' || a == 'mi-salamanca') {
       // #perfil y #mi-salamanca, de antes de juntarlos, abren el resumen
       const pestana = (a == 'tu-salamanca' && b) || 'resumen';
-      if (!fichaAbierta || nombreFicha != 'Tu Salamanca' || pestanaTuSalamanca != pestana)
+      if (!fichaAbierta || estadoApp.nombreFicha != 'Tu Salamanca' || pestanaTuSalamanca != pestana)
         abrirTuSalamanca(pestana);
     } else if (a == 'rutas') {
       if (!fichaAbierta || rutaActiva) abrirRutas();
     } else if (a == 'cultura') {
       if (b && elementoCultura(b)) {
-        if (!fichaAbierta || nombreFicha != elementoCultura(b).n) abrirElementoCultura(b);
-      } else if (!fichaAbierta || nombreFicha != 'Cultura y tradiciones') abrirCultura();
+        if (!fichaAbierta || estadoApp.nombreFicha != elementoCultura(b).n) abrirElementoCultura(b);
+      } else if (!fichaAbierta || estadoApp.nombreFicha != 'Cultura y tradiciones') abrirCultura();
     } else if (a == 'hoy') {
-      if (!fichaAbierta || nombreFicha != '¿Qué puedo descubrir hoy?') abrirHoy();
+      if (!fichaAbierta || estadoApp.nombreFicha != '¿Qué puedo descubrir hoy?') abrirHoy();
     } else if (a == 'monumentos') {
-      if (!fichaAbierta || nombreFicha != 'Monumentos') abrirMonumentos();
+      if (!fichaAbierta || estadoApp.nombreFicha != 'Monumentos') abrirMonumentos();
     } else if (a == 'comer') {
-      if (!fichaAbierta || nombreFicha != 'Dónde comer') abrirDondeComer();
+      if (!fichaAbierta || estadoApp.nombreFicha != 'Dónde comer') abrirDondeComer();
     } else if (a == 'agenda') {
-      if (!fichaAbierta || nombreFicha != 'Agenda') abrirAgenda();
+      if (!fichaAbierta || estadoApp.nombreFicha != 'Agenda') abrirAgenda();
     } else if (a == 'desaparecida') {
       const d = buscarDesaparecido(b);
       if (!d) {
-        if (!fichaAbierta || nombreFicha != 'Salamanca desaparecida') abrirSalamancaDesaparecida();
-      } else if (!fichaAbierta || nombreFicha != d.n) abrirDesaparecido(d.id);
+        if (!fichaAbierta || estadoApp.nombreFicha != 'Salamanca desaparecida') abrirSalamancaDesaparecida();
+      } else if (!fichaAbierta || estadoApp.nombreFicha != d.n) abrirDesaparecido(d.id);
     } else if (a == 'hora-dorada') {
-      if (!fichaAbierta || nombreFicha != 'La hora dorada') abrirHoraDorada();
+      if (!fichaAbierta || estadoApp.nombreFicha != 'La hora dorada') abrirHoraDorada();
     } else if (a == 'detalles') {
-      if (!fichaAbierta || nombreFicha != 'Detalles escondidos') abrirDetalles();
+      if (!fichaAbierta || estadoApp.nombreFicha != 'Detalles escondidos') abrirDetalles();
     } else if (a == 'detalle') {
       const d = buscarDetalle(b);
       if (!d) abrirDetalles();
-      else if (!fichaAbierta || nombreFicha != d.n) abrirDetalle(d.id);
+      else if (!fichaAbierta || estadoApp.nombreFicha != d.n) abrirDetalle(d.id);
     } else if (RUTAS_PROVINCIA.some(r => hashRutaProvincia(r) == a)) {
       // Ruta por la provincia: #ruta-arribes o #ruta-arribes/2
       const kp = RUTAS_PROVINCIA.findIndex(r => hashRutaProvincia(r) == a),
@@ -146,8 +145,9 @@ function aplicarEnlace() {
         i = parseInt(b) - 1;
       if (k < 0) abrirRutas();
       else if (i >= 0 && i < RUTAS[k].paradas.length) {
-        if (paradaActual != i || rutaElegida != k || !fichaAbierta) abrirParada(i, k);
-      } else if (paradaActual >= 0 || rutaElegida != k || !fichaAbierta || !rutaActiva) abrirRuta(k);
+        if (estadoApp.paradaActual != i || rutaElegida != k || !fichaAbierta) abrirParada(i, k);
+      } else if (estadoApp.paradaActual >= 0 || rutaElegida != k || !fichaAbierta || !rutaActiva)
+        abrirRuta(k);
     } else if (a == 'tiempo') {
       const n = parseInt(b),
         i = n >= 1 && n <= ETAPAS.length ? n - 1 : 0;
@@ -159,14 +159,14 @@ function aplicarEnlace() {
       const t = Object.keys(INFO_VIAS).find(k => slug(k) == b);
       if (t) abrirFichaVia(t);
     } else if (a && todasLasZonas.some(z => z.id == a)) {
-      if (zonaAbierta != a || !fichaAbierta) abrirFicha(a);
+      if (estadoApp.zonaAbierta != a || !fichaAbierta) abrirFicha(a);
     } else {
       if (fichaAbierta) {
         cerrarFicha();
-        nombreFicha = '';
+        estadoApp.nombreFicha = '';
       }
       const v = a == 'lista' ? 'list' : a == 'provincia' ? 'prov' : 'map';
-      if (v != pestana) cambiarPestana(v);
+      if (v != estadoApp.pestana) cambiarPestana(v);
       if (v == 'prov' && b) {
         const m = PROVINCIA.m.find(m => slug(m.n) == b);
         if (m && m != puebloSeleccionado) seleccionarPueblo(m, true);
@@ -195,7 +195,7 @@ async function compartir() {
   const url = urlParaCompartir();
   const datos = {
     title: document.title,
-    text: nombreFicha ? nombreFicha + ', en el Mapa charro' : TITULO,
+    text: estadoApp.nombreFicha ? estadoApp.nombreFicha + ', en el Mapa charro' : TITULO,
     url
   };
   try {

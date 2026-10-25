@@ -221,7 +221,7 @@ function abrirHoraDorada(dia) {
   caja.appendChild(fuentes);
   $('#ap').textContent =
     'Cálculo propio: la posición del sol en Salamanca minuto a minuto y hacia dónde mira cada fachada según su planta en OpenStreetMap (© colaboradores de OpenStreetMap). No tiene en cuenta los edificios de alrededor ni el tiempo que haga.';
-  fichaAlta = true;
+  estadoApp.fichaAlta = true;
   mostrarFicha();
   enlaceFicha('hora-dorada', 'La hora dorada');
 }

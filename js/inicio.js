@@ -146,7 +146,7 @@ if (progresoDanado)
     { tipo: 'error' }
   );
 // Historial del perfil: lo que ya estaba marcado antes de que existiera queda apuntado sin fecha
-if (!Array.isArray(progreso.j.hi)) {
+if (!Array.isArray(estadoApp.progreso.j.hi)) {
   anotarHistorial();
   guardarLocal();
 }

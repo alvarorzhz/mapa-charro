@@ -270,7 +270,7 @@ function apartadoCapital(capital) {
         accion: [
           'Ver la lista',
           () => {
-            filtroMonumentos = capital.monumentos.v ? 'v' : 'n';
+            estadoApp.filtroMonumentos = capital.monumentos.v ? 'v' : 'n';
             abrirMonumentos();
           }
         ]

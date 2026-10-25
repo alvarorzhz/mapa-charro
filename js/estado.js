@@ -254,16 +254,43 @@ function conDesconocidos(o) {
 const datosParaGuardar = o =>
   conDesconocidos({ z: o.z, f: o.f, t: o.t || 0, gv: o.gv || [], p: o.p || {}, j: o.j || {}, v: 1 });
 
+// Estado que comparten varios archivos y que más de uno cambia: va junto en un objeto para que se vea
+// de dónde sale cada cosa (y para poder pasar a módulos, que no dejan reasignar lo de otro archivo)
+const estadoApp = {
+  progreso: { z: {}, f: 0 }, // lo guardado (campos en docs/notas/guardado.md)
+  // Vista actual
+  pestana: 'map', // 'map' | 'list' | 'prov'
+  filtroLista: 'all', // filtro de la pestaña Lista (ver FILTROS)
+  filtroMonumentos: 'all', // lista de Monumentos (explorar.js)
+  filtroProvincia: 'all', // pestaña Provincia (provincia.js)
+  filtroRutas: 'todas', // 'todas' | 'pie' | 'coche' (ruta.js)
+  // Ficha abierta
+  nombreFicha: '', // su nombre, para el título y «Avisar de un error» (enlaces.js)
+  zonaAbierta: null, // id de la zona cuya ficha está abierta
+  puebloAbierto: null, // municipio (de PROVINCIA.m) cuya ficha está abierta (pueblos.js)
+  rutaSeguida: null, // id de la ruta cuya ficha está abierta: sus botones de abajo la marcan (ruta.js)
+  paradaActual: -1, // índice en sus paradas de la parada abierta, o -1 (ruta.js)
+  // Lo que muestra la ficha ahora, si se puede marcar como visitado (logros.js):
+  //   { tipo: 'mo', id, n } o { tipo: 'ru', ruta, id, n }
+  visitaAbierta: null,
+  fichaConCultura: false, // lleva «Cultura y tradiciones» (cultura.js: pintarCulturaEnFicha)
+  fichaConDemografia: false, // lleva la evolución de la población de su municipio (pueblos.js: pintarDemografia)
+  fichaDesdeHoy: false, // se abre desde «¿Qué puedo descubrir hoy?» (hoy.js): lleva el botón para volver allí
+  fichaConPalabra: false, // abrirFicha la pide; mostrarFicha (ficha.js) esconde la caja en las demás fichas
+  // En el móvil se abre alta (casi toda la pantalla): listas y paneles que no necesitan el mapa de la
+  // capital a la vista (Tu Salamanca, Cultura, Dónde comer, las rutas en coche)
+  fichaAlta: false
+};
+
 // Al arrancar, lo guardado en este navegador. Si está ilegible (JSON roto), se aparta tal cual en
 // CLAVE_DANADO antes de que nada lo pise y se empieza de cero (inicio.js lo avisa)
 const CLAVE_DANADO = 'charro2-danado';
 let progresoDanado = false;
-let progreso = { z: {}, f: 0 };
 try {
   const crudo = localStorage.getItem(CLAVE_LOCAL);
   if (crudo)
     try {
-      progreso = JSON.parse(crudo) || progreso;
+      estadoApp.progreso = JSON.parse(crudo) || estadoApp.progreso;
     } catch (e) {
       progresoDanado = true;
       try {
@@ -275,13 +302,13 @@ try {
 } catch (e) {
   // sin localStorage (modo privado, visores): se empieza de cero y guardarLocal lo avisará
 }
-apartarDesconocidos(progreso);
-progreso = limpiarProgreso(progreso);
+apartarDesconocidos(estadoApp.progreso);
+estadoApp.progreso = limpiarProgreso(estadoApp.progreso);
 // Guarda en el navegador. Devuelve false si no se puede (modo privado, sin espacio…) y lo avisa una vez
 let guardadoLocalFalla = false;
 const guardarLocal = () => {
   try {
-    localStorage.setItem(CLAVE_LOCAL, JSON.stringify(conDesconocidos(progreso)));
+    localStorage.setItem(CLAVE_LOCAL, JSON.stringify(conDesconocidos(estadoApp.progreso)));
     guardadoLocalFalla = false;
     return true;
   } catch (e) {
@@ -292,9 +319,6 @@ const guardarLocal = () => {
 };
 
 // --- Vista actual -----------------------------------------------------------
-let pestana = 'map'; // 'map' | 'list' | 'prov'
-let filtroLista = 'all'; // filtro de la pestaña Lista (ver FILTROS)
-let zonaAbierta = null; // id de la zona cuya ficha está abierta
 // Encuadre inicial del mapa (viewBox): el centro de la ciudad
 // En el móvil el mapa es tan alto como deja la pantalla: la ciudad va centrada en vertical
 const encuadreInicial = () => {
@@ -335,7 +359,7 @@ const filtrosMapa = {
   monumentos: new Set(CATEGORIAS_MONUMENTO.map(c => c[0]))
 };
 const zonaPasaFiltros = z =>
-  filtrosMapa.estados.has(progreso.z[z.id] || 'n') && (z.g > 5 || filtrosMapa.grupos.has(z.g));
+  filtrosMapa.estados.has(estadoApp.progreso.z[z.id] || 'n') && (z.g > 5 || filtrosMapa.grupos.has(z.g));
 const monumentoPasaFiltros = m => filtrosMapa.monumentos.has(categoriaMonumento(m));
 const hayFiltrosMapa = () =>
   filtrosMapa.estados.size < ESTADOS_FILTRO.length ||

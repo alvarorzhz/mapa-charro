@@ -30,7 +30,7 @@ function todosLosLugares() {
       sub: z.g == 5 ? 'Pueblo de alrededor' : NOMBRES_GRUPOS[z.g],
       la: z.la,
       lo: z.lo,
-      hecho: progreso.z[z.id] == 'v',
+      hecho: estadoApp.progreso.z[z.id] == 'v',
       cur: z.cur[0] || z.c,
       foto: FOTOS[z.id],
       abrir: () => abrirFicha(z.id)
@@ -71,11 +71,13 @@ function todosLosLugares() {
 }
 // ¿Se marcó hoy? (el historial apunta la fecha de lo nuevo: perfil.js)
 const hechoHoy = l =>
-  ((progreso.j || {}).hi || []).some(([f, t, id]) => f == fechaHoy() && t == l.tipo && id == l.id);
+  ((estadoApp.progreso.j || {}).hi || []).some(([f, t, id]) => f == fechaHoy() && t == l.tipo && id == l.id);
 
 // La última zona pisada (la más reciente del historial), o null
 function ultimaZonaPisada() {
-  const hi = ((progreso.j || {}).hi || []).filter(([f, t, id]) => t == 'z' && progreso.z[id] == 'v');
+  const hi = ((estadoApp.progreso.j || {}).hi || []).filter(
+    ([f, t, id]) => t == 'z' && estadoApp.progreso.z[id] == 'v'
+  );
   hi.sort((a, b) => (a[0] || '').localeCompare(b[0] || ''));
   const ultima = hi.length ? buscarZona(hi[hi.length - 1][2]) : null;
   return ultima && ultima.id != 'resto' ? ultima : null;
@@ -149,8 +151,8 @@ function cosasAMedias() {
       });
   });
   // Zonas y pueblos en «Quiero ir», lo último apuntado primero
-  Object.keys(progreso.z)
-    .filter(id => progreso.z[id] == 'w' && buscarZona(id) && id != 'resto')
+  Object.keys(estadoApp.progreso.z)
+    .filter(id => estadoApp.progreso.z[id] == 'w' && buscarZona(id) && id != 'resto')
     .reverse()
     .forEach(id =>
       cosas.push({
@@ -160,8 +162,8 @@ function cosasAMedias() {
         abrir: () => abrirFicha(id)
       })
     );
-  Object.keys(progreso.p || {})
-    .filter(k => progreso.p[k] == 'w')
+  Object.keys(estadoApp.progreso.p || {})
+    .filter(k => estadoApp.progreso.p[k] == 'w')
     .reverse()
     .forEach(k => {
       const m = PROVINCIA.m.find(m => m.k == k);
@@ -185,7 +187,7 @@ function cosasAMedias() {
 
 // --- Objetivo: terminar la parte de la ciudad a la que menos le falta, o un monumento -----------------
 function objetivoDelDia() {
-  const pisadas = zonas.filter(z => progreso.z[z.id] == 'v').length;
+  const pisadas = zonas.filter(z => estadoApp.progreso.z[z.id] == 'v').length;
   if (!pisadas)
     return {
       titulo: 'Pisa tu primera zona',
@@ -197,7 +199,7 @@ function objetivoDelDia() {
   const grupos = NOMBRES_GRUPOS.slice(0, 6)
       .map((nombre, g) => {
         const todas = zonas.filter(z => z.g == g);
-        return { nombre, todas, faltan: todas.filter(z => progreso.z[z.id] != 'v') };
+        return { nombre, todas, faltan: todas.filter(z => estadoApp.progreso.z[z.id] != 'v') };
       })
       .filter(x => x.faltan.length)
       .sort((a, b) => a.faltan.length - b.faltan.length),
@@ -356,11 +358,11 @@ async function pintarCercaDeTi(caja, pedir = false) {
 // La ficha que se abre lleva el botón «← ¿Qué puedo descubrir hoy?» (ficha.js) para volver aquí. Como las
 // demás fichas, sustituye a esta en el historial: la × y «Atrás» la cierran y se vuelve al mapa.
 const desdeHoy = abrir => () => {
-  fichaDesdeHoy = true;
+  estadoApp.fichaDesdeHoy = true;
   try {
     abrir();
   } finally {
-    fichaDesdeHoy = false;
+    estadoApp.fichaDesdeHoy = false;
   }
 };
 
@@ -376,7 +378,7 @@ function abrirHoy() {
   activarRuta(false);
   escribirLocal(CLAVE_HOY, fechaHoy());
   const nombre = nombreUsuario(),
-    pisadas = todasLasZonas.filter(z => progreso.z[z.id] == 'v').length,
+    pisadas = todasLasZonas.filter(z => estadoApp.progreso.z[z.id] == 'v').length,
     visitados = monumentosVisitados().length,
     pueblosPisados = pueblos.filter(m => estadoMunicipio(m) == 'v').length,
     nuevo = !pisadas && !visitados && !pueblosPisados,

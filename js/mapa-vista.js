@@ -147,7 +147,7 @@ function recolocarSegunZoom(siempre) {
       maximo = z.t ? 13.5 : 11,
       tam1 = Math.min(maximo, (anchoPx * 0.92) / (z.w1 * k), (altoPx * 0.85) / 1.25),
       tam2 = z.tx2 ? Math.min(maximo, (anchoPx * 0.92) / (z.w2 * k), (altoPx * 0.85) / 2.5) : 0,
-      forzar = (z.t && v.w <= 260) || zonaAbierta == z.id;
+      forzar = (z.t && v.w <= 260) || estadoApp.zonaAbierta == z.id;
     let tam = Math.max(tam1, tam2),
       dosLineas = tam2 > tam1;
     const mostrar = tam >= 8 || forzar;
@@ -205,11 +205,14 @@ function quitarEtiquetasQueSeTapan(u) {
   zonas
     .filter(z => z.etiqueta)
     .sort(
-      (a, b) => (b.id == zonaAbierta) - (a.id == zonaAbierta) || b.t - a.t || b.etiqueta.tam - a.etiqueta.tam
+      (a, b) =>
+        (b.id == estadoApp.zonaAbierta) - (a.id == estadoApp.zonaAbierta) ||
+        b.t - a.t ||
+        b.etiqueta.tam - a.etiqueta.tam
     )
     .forEach(z => {
       const c = caja(z);
-      if (z.id != zonaAbierta && puestas.some(o => pisan(c, o))) {
+      if (z.id != estadoApp.zonaAbierta && puestas.some(o => pisan(c, o))) {
         z.etiqueta.el.style.display = 'none';
         z.dt.style.display = '';
         z.etiqueta = null;

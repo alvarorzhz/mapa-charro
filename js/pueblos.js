@@ -1,6 +1,5 @@
 // Fichas de pueblos de la provincia (datos en js/datos/pueblos.js). Enlace: #pueblo/<nombre>
 
-let puebloAbierto = null; // municipio (de PROVINCIA.m) cuya ficha está abierta
 const fichaPueblo = m => PUEBLOS[m.n];
 const municipioPorNombre = n => PROVINCIA.m.find(m => m.n == n);
 
@@ -13,9 +12,9 @@ const textoHabitantes = m => {
 
 function abrirPueblo(m) {
   const f = fichaPueblo(m);
-  zonaAbierta = null;
+  estadoApp.zonaAbierta = null;
   olvidarMonumento();
-  puebloAbierto = m;
+  estadoApp.puebloAbierto = m;
   resaltarVia(null);
   $('#here').hidden = !(ubicacionReciente() && ubicacion.pid == m.k);
   $('#here').className = 'here';
@@ -234,8 +233,8 @@ function pintarDemografia(m) {
   const caja = $('#demo'),
     puntos = serieHabitantes(m);
   caja.textContent = '';
-  fichaConDemografia = !!puntos.length;
-  if (!fichaConDemografia) return;
+  estadoApp.fichaConDemografia = !!puntos.length;
+  if (!estadoApp.fichaConDemografia) return;
   caja.appendChild(crear('h3', '', 'Evolución de la población')).id = 'hd';
   const primero = puntos[0],
     ultimo = puntos[puntos.length - 1];

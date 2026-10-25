@@ -104,7 +104,7 @@ function abrirSalamancaDesaparecida() {
   $('#ap').textContent =
     'Cada ficha lleva sus fuentes. Los sitios salen de OpenStreetMap: lo que hay hoy donde estaban (≈ si las fuentes solo dan la zona).';
   centrarMapaEn(209, 292, Math.min(vistaMapa.w, 90));
-  fichaAlta = true;
+  estadoApp.fichaAlta = true;
   mostrarFicha();
   pintarDesaparecidos();
   enlaceFicha('desaparecida', 'Salamanca desaparecida');

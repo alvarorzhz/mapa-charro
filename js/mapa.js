@@ -13,7 +13,7 @@ const etiquetaAccesible = (z, marca) =>
 
 // Colores y sello «V» de una zona según su marca
 function pintarZona(z) {
-  const marca = progreso.z[z.id];
+  const marca = estadoApp.progreso.z[z.id];
   if (z.id == 'resto') return; // sin dibujo en el mapa
   const fuera = !zonaPasaFiltros(z); // los filtros del mapa la atenúan
   z.e.setAttribute('aria-label', etiquetaAccesible(z, marca));
@@ -24,12 +24,12 @@ function pintarZona(z) {
       ' t' +
       (z.tono || 0) +
       (marca ? ' ' + marca : '') +
-      (zonaAbierta == z.id ? ' sel' : '') +
+      (estadoApp.zonaAbierta == z.id ? ' sel' : '') +
       (fuera ? ' fuera' : '')
   );
   if (typeof limiteSeleccion != 'undefined') {
-    if (zonaAbierta == z.id) limiteSeleccion.setAttribute('d', trazoAnillo(z.P));
-    else if (!zonaAbierta) limiteSeleccion.setAttribute('d', '');
+    if (estadoApp.zonaAbierta == z.id) limiteSeleccion.setAttribute('d', trazoAnillo(z.P));
+    else if (!estadoApp.zonaAbierta) limiteSeleccion.setAttribute('d', '');
   }
   [z.tx, z.tx2].forEach(
     t => t && t.setAttribute('class', 'lb' + (marca == 'v' ? ' v' : '') + (fuera ? ' fuera' : ''))

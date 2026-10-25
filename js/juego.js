@@ -281,8 +281,8 @@ function empezarJuego(diario) {
     volverEnlace();
   }
   cerrarVentana();
-  if (pestana != 'map') cambiarPestana('map');
-  const j = progreso.j || {};
+  if (estadoApp.pestana != 'map') cambiarPestana('map');
+  const j = estadoApp.progreso.j || {};
   juego.diario = diario && j.d != fechaHoy();
   juego.preguntas = elegirPistas(
     juego.diario
@@ -338,9 +338,9 @@ function terminarJuego() {
   conAvisoDeLogros(terminarJuegoYGuardar);
 }
 function terminarJuegoYGuardar() {
-  const j = progreso.j || {},
+  const j = estadoApp.progreso.j || {},
     mejorAntes = j.m || 0;
-  progreso.j = {
+  estadoApp.progreso.j = {
     ...j,
     m: Math.max(mejorAntes, juego.puntos),
     d: juego.diario ? fechaHoy() : j.d || '',
@@ -434,7 +434,7 @@ async function compartirResultadoJuego() {
 // Botón: el reto del día si aún no se ha jugado hoy; si ya, una partida libre.
 // Pulsado con el teclado (e.detail == 0), el foco pasa al mapa para responder con las flechas.
 $('#jug').onclick = e => {
-  const yaHoy = (progreso.j || {}).d == fechaHoy();
+  const yaHoy = (estadoApp.progreso.j || {}).d == fechaHoy();
   empezarJuego(true);
   if (yaHoy) aviso('Reto de hoy hecho: partida libre');
   if (e.detail == 0) {

@@ -7,7 +7,6 @@ const FILTROS_MONUMENTOS = [
   ['v', 'Visitados'],
   ['n', 'Sin visitar']
 ];
-let filtroMonumentos = 'all';
 
 function abrirMonumentos() {
   activarRuta(false);
@@ -77,9 +76,9 @@ function abrirMonumentos() {
   filtros.setAttribute('aria-label', 'Mostrar');
   FILTROS_MONUMENTOS.forEach(([clave, texto]) => {
     const b = crear('button', '', texto);
-    marcarInterruptor(b, clave == filtroMonumentos);
+    marcarInterruptor(b, clave == estadoApp.filtroMonumentos);
     b.onclick = () => {
-      filtroMonumentos = clave;
+      estadoApp.filtroMonumentos = clave;
       abrirMonumentos();
       $('#info .fl [aria-pressed="true"]').focus();
     };
@@ -90,7 +89,8 @@ function abrirMonumentos() {
   CATEGORIAS_MONUMENTO.forEach(([clave, nombre]) => {
     const deEsta = MONUMENTOS.filter(
       m =>
-        categoriaMonumento(m) == clave && cumpleFiltro(filtroMonumentos, visitados.includes(m.id) ? 'v' : '')
+        categoriaMonumento(m) == clave &&
+        cumpleFiltro(estadoApp.filtroMonumentos, visitados.includes(m.id) ? 'v' : '')
     ).sort((a, b) => a.n.localeCompare(b.n, 'es'));
     if (!deEsta.length) return;
     alguno = true;
@@ -119,7 +119,7 @@ function abrirMonumentos() {
       crear(
         'p',
         'mu',
-        filtroMonumentos == 'v'
+        estadoApp.filtroMonumentos == 'v'
           ? 'Aún no has visitado ninguno: en su ficha está «He estado aquí».'
           : '¡Los has visitado todos!'
       )
@@ -214,7 +214,7 @@ function abrirDondeComer() {
   });
   $('#ap').textContent =
     'Cada sitio lleva su fuente y su fecha en la ficha de su zona: Guía Repsol, Guía Michelin, Tripadvisor o Gastroranking.';
-  fichaAlta = true;
+  estadoApp.fichaAlta = true;
   mostrarFicha();
   enlaceFicha('comer', 'Dónde comer');
 }

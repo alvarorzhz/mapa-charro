@@ -29,7 +29,7 @@ function rectanguloRedondeado(ctx, x, y, w, h, r) {
 
 // Los números que salen en la imagen
 function resumenProgreso() {
-  const marcas = Object.values(progreso.z),
+  const marcas = Object.values(estadoApp.progreso.z),
     logros = calcularLogros();
   return {
     pisadas: marcas.filter(x => x == 'v').length,
@@ -37,8 +37,10 @@ function resumenProgreso() {
     total: todasLasZonas.length,
     logros: logros.filter(conseguido).length,
     totalLogros: logros.length,
-    pueblos: Object.keys(progreso.p || {}).filter(k => k[0] == 'm' && progreso.p[k] == 'v').length,
-    rana: !!progreso.f
+    pueblos: Object.keys(estadoApp.progreso.p || {}).filter(
+      k => k[0] == 'm' && estadoApp.progreso.p[k] == 'v'
+    ).length,
+    rana: !!estadoApp.progreso.f
   };
 }
 
@@ -89,7 +91,7 @@ function dibujarMapaImagen(ctx, x, y, w, h, encuadre, sellos = true) {
   [...zonas]
     .sort((a, b) => (b.g == 5) - (a.g == 5))
     .forEach(z => {
-      const marca = progreso.z[z.id];
+      const marca = estadoApp.progreso.z[z.id];
       ctx.beginPath();
       z.P.forEach((q, i) => ctx[i ? 'lineTo' : 'moveTo'](...aImagen(q[0], q[1])));
       ctx.closePath();
@@ -122,7 +124,7 @@ function dibujarMapaImagen(ctx, x, y, w, h, encuadre, sellos = true) {
 
   // Sello «V» en cada zona pisada
   zonas
-    .filter(z => sellos && progreso.z[z.id] == 'v')
+    .filter(z => sellos && estadoApp.progreso.z[z.id] == 'v')
     .forEach(z => {
       const [px, py] = aImagen(z.x, z.y);
       if (px < x || px > x + w || py < y || py > y + h) return;

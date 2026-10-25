@@ -11,7 +11,7 @@ const detallesDeMonumento = id => DETALLES.filter(d => d.monumento == id);
 const detallesRevelados = new Set();
 
 function marcarDetalle(d, encontrado) {
-  const j = (progreso.j = progreso.j || {}),
+  const j = (estadoApp.progreso.j = estadoApp.progreso.j || {}),
     antes = detallesEncontrados();
   j.de = encontrado ? [...new Set([...antes, d.id])] : antes.filter(id => id != d.id);
   guardar();

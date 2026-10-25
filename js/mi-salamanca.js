@@ -27,13 +27,13 @@ function filaFiltros(nombre, opciones, actual, alElegir) {
 
 const verProvinciaFiltrada = filtro => {
   cerrarFicha();
-  filtroProvincia = filtro;
+  estadoApp.filtroProvincia = filtro;
   cambiarPestana('prov');
   aplicarFiltroProvincia();
   $('#pv').scrollIntoView({ behavior: comoDesplazar(), block: 'start' });
 };
 const verRutas = filtro => {
-  filtroRutas = filtro;
+  estadoApp.filtroRutas = filtro;
   abrirRutas();
 };
 
@@ -147,7 +147,7 @@ function pintarEstadisticas(refrescar = false) {
     escribirHash(hashTuSalamanca(), false);
     return;
   }
-  fichaAlta = true;
+  estadoApp.fichaAlta = true;
   mostrarFicha();
   enlaceFicha(hashTuSalamanca(), 'Tu Salamanca');
 }
@@ -161,7 +161,7 @@ function abrirTuSalamanca(pestana = 'resumen', categoria) {
 const abrirEstadisticas = () => abrirTuSalamanca();
 // Si cambia el progreso con el panel abierto (p. ej. llega de la cuenta), se repinta (vistas.js: actualizar)
 function refrescarEstadisticas() {
-  if (nombreFicha == 'Tu Salamanca' && $('#sh').classList.contains('o')) pintarEstadisticas(true);
+  if (estadoApp.nombreFicha == 'Tu Salamanca' && $('#sh').classList.contains('o')) pintarEstadisticas(true);
 }
 
 $('#perfil').onclick = () => abrirTuSalamanca();

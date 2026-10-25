@@ -15,7 +15,7 @@ const TEXTO_EPOCA = {
 };
 const textoEstadoZona = z => {
   if (document.body.classList.contains('tiempo') && z.e.dataset.ep) return TEXTO_EPOCA[z.e.dataset.ep];
-  const marca = progreso.z[z.id];
+  const marca = estadoApp.progreso.z[z.id];
   return (
     (marca == 'v' ? '✓ Pisada' : marca == 'w' ? '☆ Quieres ir' : 'Sin pisar') + ' · ' + NOMBRES_GRUPOS[z.g]
   );

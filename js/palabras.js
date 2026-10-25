@@ -2,7 +2,7 @@
 // («Otra palabra» pasa a la siguiente) y una en cada ficha de zona. Las vistas se apuntan en
 // progreso.j.pv para los logros «Hablas charro», «Pejilguero» y «Charro lígrimo».
 
-const palabrasVistas = () => (progreso.j && progreso.j.pv) || [];
+const palabrasVistas = () => (estadoApp.progreso.j && estadoApp.progreso.j.pv) || [];
 const verPalabra = w => {
   if (typeof apuntarUso == 'function') apuntarUso('pv', w.id);
 };
@@ -28,15 +28,13 @@ function palabraDeZona(id) {
   const libres = PALABRAS_CHARRAS.filter(w => !w.z);
   return libres[(semillaDeTexto(id) >>> 0) % libres.length];
 }
-// abrirFicha la pide; mostrarFicha (ficha.js) esconde la caja en las demás fichas
-let fichaConPalabra = false;
 function pintarPalabraDeZona(z) {
   const caja = $('#pch');
   caja.textContent = '';
   if (z.id == 'resto') return;
   const w = palabraDeZona(z.id);
   caja.append(crear('h3', '', '🗣️ Palabra charra'), ...contenidoPalabra(w));
-  fichaConPalabra = true;
+  estadoApp.fichaConPalabra = true;
   verPalabra(w);
 }
 

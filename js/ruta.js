@@ -6,7 +6,6 @@
 const VELOCIDAD_A_PIE = 4.2; // km/h, paseando
 let rutaActiva = false;
 let rutaElegida = 0; // índice en RUTAS de la ruta que se ve
-let paradaActual = -1; // índice en sus paradas de la parada abierta, o -1
 
 const rutaActual = () => RUTAS[rutaElegida];
 const tramosDe = r => TRAMOS_RUTAS[r.id] || [];
@@ -69,10 +68,10 @@ function colocarRuta(u) {
     )
   );
   d.trazos.forEach((t, i) => {
-    t.trazo.classList.toggle('act', i == paradaActual);
-    t.borde.classList.toggle('act', i == paradaActual);
+    t.trazo.classList.toggle('act', i == estadoApp.paradaActual);
+    t.borde.classList.toggle('act', i == estadoApp.paradaActual);
   });
-  d.numeros.forEach((n, i) => n.g.classList.toggle('sel', i == paradaActual));
+  d.numeros.forEach((n, i) => n.g.classList.toggle('sel', i == estadoApp.paradaActual));
 }
 
 function activarRuta(si, k = rutaElegida) {
@@ -83,7 +82,7 @@ function activarRuta(si, k = rutaElegida) {
   dibujosRutas.forEach((d, i) => (d.g.style.display = si && i == k ? '' : 'none'));
   $('#rt').classList.toggle('on', si);
   $('#rt').setAttribute('aria-pressed', si);
-  if (!si) paradaActual = -1;
+  if (!si) estadoApp.paradaActual = -1;
   ajustarVista();
 }
 
@@ -107,7 +106,7 @@ function encuadrarRuta(r = rutaActual()) {
 
 // Deja la ficha lista para un contenido propio (ni zona ni monumento)
 function fichaLimpia(antetitulo, titulo) {
-  zonaAbierta = null;
+  estadoApp.zonaAbierta = null;
   olvidarMonumento();
   $('#here').hidden = true;
   $('#k').textContent = antetitulo;
@@ -138,13 +137,12 @@ const enlaceFuente = ([medio, url]) => {
 };
 
 // --- Seguimiento: «La he hecho» / «La quiero hacer» (progreso.j.rs) -------------------------------
-let rutaSeguida = null; // id de la ruta cuya ficha está abierta (sus botones de abajo la marcan)
 const todasLasRutas = () => [...RUTAS, ...RUTAS_PROVINCIA];
 const buscarRuta = id => todasLasRutas().find(r => r.id == id);
-const estadoRuta = id => ((progreso.j || {}).rs || {})[id] || '';
+const estadoRuta = id => ((estadoApp.progreso.j || {}).rs || {})[id] || '';
 const rutasHechas = () => todasLasRutas().filter(r => estadoRuta(r.id) == 'v');
 function ponerEstadoRuta(id, s) {
-  const j = (progreso.j = progreso.j || {});
+  const j = (estadoApp.progreso.j = estadoApp.progreso.j || {});
   j.rs = { ...(j.rs || {}) };
   if (s) j.rs[id] = s;
   else delete j.rs[id];
@@ -183,12 +181,11 @@ function abrirRutaPorId(id) {
 }
 function seguirRuta(id) {
   modoBotonesFicha('ruta');
-  rutaSeguida = id;
+  estadoApp.rutaSeguida = id;
   pintarBotonesFicha();
 }
 
 // --- Lista única de rutas (el botón «Rutas»): a pie por la ciudad y en coche por la provincia ---------
-let filtroRutas = 'todas'; // 'todas' | 'pie' | 'coche'
 const FILTROS_RUTAS = [
   ['todas', 'Todas'],
   ['pie', 'A pie'],
@@ -223,16 +220,16 @@ function abrirRutas() {
   );
   const filtros = crear('div', 'fl');
   FILTROS_RUTAS.forEach(([clave, texto]) => {
-    const b = crear('button', clave == filtroRutas ? 'on' : '', texto);
-    b.setAttribute('aria-pressed', clave == filtroRutas);
+    const b = crear('button', clave == estadoApp.filtroRutas ? 'on' : '', texto);
+    b.setAttribute('aria-pressed', clave == estadoApp.filtroRutas);
     b.onclick = () => {
-      filtroRutas = clave;
+      estadoApp.filtroRutas = clave;
       abrirRutas();
     };
     filtros.appendChild(b);
   });
   caja.appendChild(filtros);
-  if (filtroRutas != 'coche') {
+  if (estadoApp.filtroRutas != 'coche') {
     caja.appendChild(crear('h3', '', 'A pie, por la ciudad'));
     const lista = crear('div', 'rutas');
     RUTAS.forEach((r, k) => {
@@ -256,7 +253,7 @@ function abrirRutas() {
     });
     caja.appendChild(lista);
   }
-  if (filtroRutas != 'pie') {
+  if (estadoApp.filtroRutas != 'pie') {
     caja.appendChild(crear('h3', '', 'Por la provincia, en coche'));
     const lista = crear('div', 'rutas');
     RUTAS_PROVINCIA.forEach((r, k) =>
@@ -282,7 +279,7 @@ function abrirRutas() {
   }
   $('#ap').textContent =
     'Caminos por calles y carreteras reales de OpenStreetMap. Los tiempos son orientativos y no cuentan las paradas.';
-  fichaAlta = filtroRutas == 'coche'; // las de la provincia no usan el mapa de la capital
+  estadoApp.fichaAlta = estadoApp.filtroRutas == 'coche'; // las de la provincia no usan el mapa de la capital
   mostrarFicha();
   enlaceFicha('rutas', 'Rutas');
 }
@@ -293,7 +290,7 @@ function abrirRuta(k = rutaElegida) {
   const r = rutaActual(),
     total = metrosRuta(r),
     caja = fichaLimpia('Ruta a pie', r.nombre);
-  paradaActual = -1;
+  estadoApp.paradaActual = -1;
   caja.appendChild(crear('p', 'hab', r.resumen));
   if (r.id == 'monumental')
     caja.appendChild(
@@ -380,7 +377,7 @@ function abrirSitio(d, i) {
   }
   $('#nb').append(llegar);
   $('#ap').append('Fuente: ', enlaceFuente(s.fuente), '.');
-  visitaAbierta = { tipo: 'ru', ruta: rutaActual().id, id: d.id, n: d.n }; // para los logros (logros.js)
+  estadoApp.visitaAbierta = { tipo: 'ru', ruta: rutaActual().id, id: d.id, n: d.n }; // para los logros (logros.js)
   modoBotonesFicha('visita');
   pintarNavegacionRuta(i);
   centrarMapaEn(d.x, d.y, Math.min(vistaMapa.w, 20));
@@ -392,7 +389,7 @@ function abrirSitio(d, i) {
 function pintarNavegacionRuta(i) {
   const r = rutaActual(),
     paradas = r.paradas.map(datosParada);
-  paradaActual = i;
+  estadoApp.paradaActual = i;
   $('#k').textContent = r.nombre + ' · parada ' + (i + 1) + ' de ' + paradas.length;
   const nav = crear('div', 'navruta');
   if (i > 0) {
@@ -448,7 +445,7 @@ function empezarPorLaMasCercana() {
 
 // El botón abre la lista de rutas; si hay una en el mapa, la quita (y cierra su ficha si estaba abierta)
 $('#rt').onclick = () => {
-  if (pestana != 'map' && !esEscritorio()) cambiarPestana('map'); // en el móvil, la ruta se ve en el mapa
+  if (estadoApp.pestana != 'map' && !esEscritorio()) cambiarPestana('map'); // en el móvil, la ruta se ve en el mapa
   if (!rutaActiva) return abrirRutas();
   const fichaDeRuta = $('#sh').classList.contains('o') && hashActual().split('/')[0].startsWith('ruta');
   activarRuta(false);

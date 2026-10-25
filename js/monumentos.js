@@ -198,7 +198,7 @@ function pintarInfografia(m) {
 function abrirMonumento(id, parada) {
   const m = buscarMonumento(id),
     zona = buscarZona(m.zona);
-  zonaAbierta = null;
+  estadoApp.zonaAbierta = null;
   monumentoAbierto = id;
   MONUMENTOS.forEach(o => o.g.classList.toggle('sel', o == m));
   $('#here').hidden = $('#nac').hidden = $('#otros').hidden = true;
@@ -214,8 +214,8 @@ function abrirMonumento(id, parada) {
   pintarRelacionados(relacionadosDeMonumento(m));
   const comoParada = typeof parada == 'number';
   if (comoParada) pintarNavegacionRuta(parada);
-  else if (typeof paradaActual != 'undefined') paradaActual = -1;
-  visitaAbierta = { tipo: 'mo', id, n: m.n }; // «He estado aquí», para los logros (logros.js)
+  else if (typeof estadoApp.paradaActual != 'undefined') estadoApp.paradaActual = -1;
+  estadoApp.visitaAbierta = { tipo: 'mo', id, n: m.n }; // «He estado aquí», para los logros (logros.js)
   modoBotonesFicha('visita');
   resaltarVia(null);
   centrarMapaEn(m.x, m.y, Math.min(vistaMapa.w, 70));
@@ -272,12 +272,12 @@ const redondearMetros = d => Math.max(10, Math.round(d / 10) * 10);
 function olvidarMonumento() {
   document.querySelectorAll('#sh audio').forEach(a => a.pause()); // una grabación no sigue sonando al cambiar de ficha
   monumentoAbierto = null;
-  if (typeof visitaAbierta != 'undefined') visitaAbierta = null;
-  if (typeof rutaSeguida != 'undefined') rutaSeguida = null;
+  if (typeof estadoApp.visitaAbierta != 'undefined') estadoApp.visitaAbierta = null;
+  if (typeof estadoApp.rutaSeguida != 'undefined') estadoApp.rutaSeguida = null;
   if (typeof salirTiempo == 'function') salirTiempo(); // tiempo.js: el mapa vuelve a ser el de hoy
   if (typeof olvidarDesaparecido == 'function') olvidarDesaparecido(); // desaparecida.js: fuera los fantasmas
-  if (typeof puebloAbierto != 'undefined') puebloAbierto = null;
-  if (typeof paradaActual != 'undefined') paradaActual = -1;
+  if (typeof estadoApp.puebloAbierto != 'undefined') estadoApp.puebloAbierto = null;
+  if (typeof estadoApp.paradaActual != 'undefined') estadoApp.paradaActual = -1;
   $('#info').hidden = true;
   $('#rel').hidden = true; // «Para seguir explorando»: lo pinta cada ficha que lo lleva
   $('#nac').hidden = true; // «Nació en…» solo va en las fichas de zona (tiempo.js)

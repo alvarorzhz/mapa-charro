@@ -11,7 +11,7 @@ function textoCopia() {
       app: APP_COPIA,
       version: (document.querySelector('meta[name="version"]') || {}).content || '',
       fecha: new Date().toISOString(),
-      progreso
+      progreso: estadoApp.progreso
     },
     null,
     1
@@ -35,10 +35,10 @@ function cargarCopia(texto) {
     aviso('Ese archivo no es una copia del Mapa charro', { tipo: 'error' });
     return false;
   }
-  const antes = Object.values(progreso.z).filter(m => m == 'v').length;
-  aplicarDesdeNube(juntarProgresos(progreso, copia));
+  const antes = Object.values(estadoApp.progreso.z).filter(m => m == 'v').length;
+  aplicarDesdeNube(juntarProgresos(estadoApp.progreso, copia));
   guardar(); // y a la cuenta, si la hay
-  const ahora = Object.values(progreso.z).filter(m => m == 'v').length;
+  const ahora = Object.values(estadoApp.progreso.z).filter(m => m == 'v').length;
   aviso(
     'Copia cargada: ' +
       ahora +
