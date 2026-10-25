@@ -65,7 +65,13 @@ const CURIOSIDADES = {
   salesas: [
     'El nombre viene del monasterio de las Salesas, de la Orden de la Visitación, fundado en 1910; hoy es la parroquia de María Mediadora.',
     'Aquí estuvieron los cuarteles: el de Ingenieros General Arroquia, neoplateresco, de los años veinte, y el de Caballería Julián Sánchez «El Charro», en cuyo lugar está hoy El Corte Inglés.',
-    'Los niños jugaban a indios y vaqueros en los solares y fábricas abandonadas que había hasta la plaza de Madrid.'
+    'Los niños jugaban a indios y vaqueros en los solares y fábricas abandonadas que había hasta la plaza de Madrid.',
+    // Fuente: https://www.diocesisdesalamanca.com/noticias/una-vida-de-humildad-y-amor-a-dios-en-el-convento-salmantino-de-las-salesas/
+    'Las salesas llegaron desde Burgos el 30 de abril de 1910. Hoy son diez monjas: cuatro españolas, cuatro de Burundi, una de Kenia y una de Colombia.',
+    // Fuente: https://www.diocesisdesalamanca.com/noticias/fe-y-arte-analiza-la-obra-de-nunez-sole-en-la-parroquia-maria-mediadora/
+    'El relieve de la Visitación de la fachada de María Mediadora es del escultor zamorano Núñez Solé, que en 1963 hizo también esculturas y vidrieras para la parroquia.',
+    // Fuente: https://www.elespanol.com/castilla-y-leon/region/salamanca/20240318/barrio-salesas-tierras-indios-vaqueros-cuarteles-salamanca/839916065_0.html
+    'El cuartel de Ingenieros es de los años veinte, pero no se llamó General Arroquia hasta unas dos décadas después. Por la avenida de Federico Anaya, la que unía la ciudad vieja con la nueva, había tanta luz que se paseaba de noche.'
   ],
   garridosur: [
     'Nació con las «casas baratas» en hilera que promovieron Manuel Garrido, concejal, y Santiago Bermejo, confitero. En 1916 la prensa ya hablaba de la barriada de Garrido y Bermejo.',
@@ -92,7 +98,13 @@ const CURIOSIDADES = {
   chinchibarra: [
     'Su nombre, según los historiadores locales, podría venir del vasco. Creció alrededor del depósito de agua, inaugurado en 1945 el día de San Juan de Sahagún.',
     'Se proyectaron hasta doscientos bloques de viviendas, algunos de nueve plantas, pero apenas se levantó una decena de tres alturas.',
-    'A finales de los setenta aquí se ponían las ferias, antes de mudarse a La Aldehuela. Hoy tiene el parque Würzburg, la biblioteca Torrente Ballester y el Conservatorio Superior de Música.'
+    'A finales de los setenta aquí se ponían las ferias, antes de mudarse a La Aldehuela. Hoy tiene el parque Würzburg, la biblioteca Torrente Ballester y el Conservatorio Superior de Música.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/anos-faro-agua-senalo-norte-capital-20251018070000-nt.html
+    'El depósito lo diseñó el ingeniero Ildefonso Sánchez del Río, que tomó como modelo el que había hecho en Oviedo. Parece una fortaleza medieval, con ventanas estrechas como saeteras.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/anos-faro-agua-senalo-norte-capital-20251018070000-nt.html
+    'Las obras empezaron en 1941 y se sacaron 16.000 metros cúbicos de tierra. Se inauguró con solo la mitad hecha y no se acabó hasta 1951, con 40.000 metros cúbicos de agua.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/anos-faro-agua-senalo-norte-capital-20251018070000-nt.html
+    'Según Loren Ruano, en la campa del depósito se jugaron los primeros partidos de fútbol de Salamanca.'
   ],
   glorieta: [
     'La plaza de toros de La Glorieta la impulsaron los comerciantes a finales del siglo XIX, y a su lado estuvo, a comienzos del XX, el primer campo de fútbol de la ciudad.',
@@ -106,9 +118,18 @@ const CURIOSIDADES = {
     'Su ruedo ha visto de todo: en 1960, un rodeo benéfico de militares estadounidenses de la base de Morón, y la llegada de una contrarreloj de la Vuelta a España.'
   ],
   alamedilla: [
-    'Fue el primer parque moderno de Salamanca: el terreno se compró en 1879 y se inauguró en 1884.',
+    // Fuente: https://aytosalamanca.es/documents/d/guest/la-alamedilla-el-primer-parque-moderno-de-salamanca
+    'Fue el primer parque moderno de Salamanca: el Ayuntamiento compró el terreno el 26 de noviembre de 1879 y lo inauguró en las ferias de 1883.',
     'El nombre viene de los álamos negrillos que se plantaron en el paseo del Rollo a finales del siglo XVIII. Aún conserva un cedro del Líbano de más de 125 años.',
-    'Tiene cinco esculturas de Agustín Casillas, de 1963, como el «Rapto de Europa», y un tren de hormigón de 1961 en la zona infantil.'
+    'Tiene cinco esculturas de Agustín Casillas, de 1963, como el «Rapto de Europa», y un tren de hormigón de 1961 en la zona infantil.',
+    // Fuente: https://aytosalamanca.es/documents/d/guest/la-alamedilla-el-primer-parque-moderno-de-salamanca
+    'En las ferias de 1884 acogió una gran exposición de agricultura, ganadería e industria, y se aprovechó para celebrar la llegada del tren a la frontera con Portugal. El jurado premió al Ayuntamiento con una medalla de oro por sus jardines.',
+    // Fuente: https://aytosalamanca.es/documents/d/guest/la-alamedilla-el-primer-parque-moderno-de-salamanca
+    'En las ferias de 1889 hubo carreras de velocípedos, pero algunas se suspendieron: el público, por verlas mejor, se metía entre las bicis.',
+    // Fuente: https://aytosalamanca.es/documents/d/guest/la-alamedilla-el-primer-parque-moderno-de-salamanca
+    'Su estanque tenía tantos peces de colores que en 1897 el alcalde pidió permiso para sacar unos cuantos y venderlos.',
+    // Fuente: https://aytosalamanca.es/documents/d/guest/la-alamedilla-el-primer-parque-moderno-de-salamanca
+    'En 1898 se trajo aquí el templete de música de la Plaza Mayor, para que la banda tocase en el parque. No cuajó: en 1906 el templete volvió a la Plaza.'
   ],
   santotomas: [
     'La iglesia de Santo Tomás Cantuariense la fundaron en 1175 dos hermanos ingleses, Ricardo y Randulfo. Fue la primera fuera de Inglaterra dedicada a Tomás Becket, canonizado muy poco antes.',
@@ -440,7 +461,13 @@ const CURIOSIDADES = {
     // Fuente: https://www.ub.edu/geocrit/sn/sn-146(139).htm
     'Fue un barrio de viviendas sociales proyectado en 1943 para 400 casas. La primera piedra se puso en junio de 1945 y en 1948 había 170 viviendas.',
     // Fuente: https://www.salamancaenelayer.com/2012/11/avenida-de-portugal.html
-    'La avenida de Portugal ocupa el trazado de la antigua vía del tren a Portugal, desviada por Tejares en 1954. En 1967 el terraplén seguía en pie en la plaza del barrio Vidal.'
+    'La avenida de Portugal ocupa el trazado de la antigua vía del tren a Portugal, desviada por Tejares en 1954. En 1967 el terraplén seguía en pie en la plaza del barrio Vidal.',
+    // Fuente: https://lacronicadesalamanca.com/329048-vidal-el-barrio-multicultural/
+    'Empezó por su cuenta: en 1934 Manuel Vidal, el dueño de los terrenos, se puso a construir casas, y quienes se las compraban también. Nadie pidió licencia ni presentó planos, y el Ayuntamiento no intervino hasta 1938, tras una denuncia.',
+    // Fuente: https://lacronicadesalamanca.com/329048-vidal-el-barrio-multicultural/
+    'El grupo de casas protegidas lo firmó el arquitecto Francisco Cabrero: viviendas de 58 metros útiles para unas 3.000 personas. Su inauguración oficial fue el 4 de diciembre de 1950.',
+    // Fuente: https://lacronicadesalamanca.com/329048-vidal-el-barrio-multicultural/
+    'El barrio se levantó junto al Regato del Anís, que bajaba hasta el Tormes por la puerta de los Milagros. Lo de «anís» era pura ironía: olía fatal.'
   ],
   ciudadjardin: [
     // Fuentes: https://www.salamancahoy.es/salamanca/ciudad/ciudad-jardin-barrio-lleva-anos-sonando-calles-20230501135134-nt.html y https://www.ub.edu/geocrit/sn/sn-146(139).htm
