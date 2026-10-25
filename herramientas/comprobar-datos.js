@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
+const { sinExport } = require('./datos');
 
 const RAIZ = path.join(__dirname, '..');
 const leer = f => fs.readFileSync(path.join(RAIZ, f), 'utf8');
@@ -35,7 +36,7 @@ const datos = [
   'desaparecida'
 ];
 const codigo =
-  datos.map(d => leer('js/datos/' + d + '.js')).join('\n;\n') +
+  sinExport(datos.map(d => leer('js/datos/' + d + '.js')).join('\n;\n')) +
   '\n;({ NOMBRES_GRUPOS, ZONAS_GRANDES, ZONAS, OTROS_NOMBRES, SEMILLAS_REPARTO, MONUMENTOS, RUTAS, TRAMOS_RUTAS, PUEBLOS, CURIOSIDADES, LEYENDAS, FOTOS, DONDE_COMER,' +
   ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA, RELACIONES_ETAPA, RANGOS_ETAPA, PALABRAS_CHARRAS, FUENTES_PALABRAS, RUTAS_PROVINCIA, SALIDA_PROVINCIA, TRAMOS_PROVINCIA, CARRETERAS_PROVINCIA, HABITANTES, PARQUES, CULTURA, CATEGORIAS_CULTURA, TIPOS_TEXTO_CULTURA, DETALLES, FACHADAS, ORIENTACION_FACHADAS, DESAPARECIDOS })';
 const D = vm.runInNewContext(codigo, {});
@@ -120,7 +121,7 @@ for (const id in D.SEMILLAS_REPARTO)
 // Claves repetidas en los datos: en un objeto de JavaScript la segunda pisa a la primera sin avisar
 for (const f of datos) {
   const texto = leer('js/datos/' + f + '.js');
-  for (const [, nombre, cuerpo] of texto.matchAll(/^const (\w+) = \{\n([\s\S]*?)\n\};/gm)) {
+  for (const [, nombre, cuerpo] of texto.matchAll(/^export const (\w+) = \{\n([\s\S]*?)\n\};/gm)) {
     const claves = [...cuerpo.matchAll(/^ {2}'?([\w-]+)'?: /gm)].map(m => m[1]);
     claves
       .filter((k, i) => claves.indexOf(k) != i)
@@ -577,8 +578,20 @@ if (imagenOg) {
 
 for (const f of fs.readdirSync(path.join(RAIZ, 'js')).filter(f => f.endsWith('.js')))
   comprobar(html.includes('js/' + f + '?'), `js/${f} no está enlazado en index.html`);
+// Los datos son módulos: los importa js/datos-globales.js, con el mismo ?v=N que index.html
+const puente = leer('js/datos-globales.js');
 for (const f of fs.readdirSync(path.join(RAIZ, 'js/datos')).filter(f => f.endsWith('.js')))
-  comprobar(html.includes('js/datos/' + f + '?'), `js/datos/${f} no está enlazado en index.html`);
+  comprobar(
+    puente.includes("'./datos/" + f + '?v=' + v + "'"),
+    `js/datos/${f} no está importado en js/datos-globales.js con ?v=${v}: ejecuta node herramientas/version.js`
+  );
+for (const f of fs.readdirSync(path.join(RAIZ, 'js/datos')).filter(f => f.endsWith('.js')))
+  comprobar(
+    leer('js/datos/' + f)
+      .split('\n')
+      .every(l => !/^(const|let|var|function) /.test(l)),
+    `js/datos/${f}: lo de arriba del todo va con export const (es un módulo)`
+  );
 
 // --- Cultura y tradiciones -------------------------------------------------------------------------
 {

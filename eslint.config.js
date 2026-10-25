@@ -31,9 +31,18 @@ const apuntar = (nombre, archivo) => {
   archivoDe[nombre] = archivo;
   globalesApp[nombre] = 'writable';
 };
+// Los datos (js/datos/) y su puente (js/datos-globales.js) son módulos; el resto, scripts clásicos
+const MODULOS = ['js/datos/**/*.js', 'js/datos-globales.js'];
+const esModulo = archivo =>
+  archivo.startsWith(path.join('js', 'datos') + path.sep) || archivo == path.join('js', 'datos-globales.js');
 for (const archivo of archivosApp('js')) {
-  const arbol = espree.parse(fs.readFileSync(path.join(RAIZ, archivo), 'utf8'), { ecmaVersion: 'latest' });
-  for (const n of arbol.body) {
+  const arbol = espree.parse(fs.readFileSync(path.join(RAIZ, archivo), 'utf8'), {
+    ecmaVersion: 'latest',
+    sourceType: esModulo(archivo) ? 'module' : 'script'
+  });
+  // Lo que exporta un archivo de datos acaba en globalThis (lo pone ahí js/datos-globales.js)
+  const cuerpo = arbol.body.map(n => (n.type == 'ExportNamedDeclaration' && n.declaration) || n);
+  for (const n of cuerpo) {
     if (n.type == 'VariableDeclaration')
       n.declarations.forEach(d => d.id.type == 'Identifier' && apuntar(d.id.name, archivo));
     else if ((n.type == 'FunctionDeclaration' || n.type == 'ClassDeclaration') && n.id)
@@ -93,6 +102,10 @@ module.exports = [
         }
       ]
     }
+  },
+  {
+    files: MODULOS,
+    languageOptions: { sourceType: 'module' }
   },
   {
     files: ['sw.js'],

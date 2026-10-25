@@ -9,12 +9,13 @@
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
+const { sinExport } = require('./datos');
 const { execFileSync } = require('child_process');
 
 const RAIZ = path.join(__dirname, '..');
 const { ALFOZ, ZONAS, PROVINCIA } = vm.runInNewContext(
   ['zonas', 'provincia']
-    .map(f => fs.readFileSync(path.join(RAIZ, 'js/datos/' + f + '.js'), 'utf8'))
+    .map(f => sinExport(fs.readFileSync(path.join(RAIZ, 'js/datos/' + f + '.js'), 'utf8')))
     .join('\n;\n') + ';({ ALFOZ, ZONAS, PROVINCIA })',
   {}
 );
@@ -136,14 +137,14 @@ const salida =
   '// ' +
   fuentes.join(' · ') +
   '\n' +
-  'const LIMITES_ALFOZ=' +
+  'export const LIMITES_ALFOZ=' +
   JSON.stringify(limites) +
   ';\n' +
-  'const TERMINO_SALAMANCA=' +
+  'export const TERMINO_SALAMANCA=' +
   JSON.stringify(termino) +
   ';\n' +
   '// Municipios vecinos que asoman por el mapa: { nombre: [anillo, …] }\n' +
-  'const LIMITES_VECINOS=' +
+  'export const LIMITES_VECINOS=' +
   JSON.stringify(vecinos) +
   ';\n';
 fs.writeFileSync(path.join(RAIZ, 'js/datos/alfoz.js'), salida);

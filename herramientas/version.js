@@ -27,10 +27,16 @@ const v = Math.max(0, ...usadas) + 1;
 html = html.replace(/\?v=\d+"/g, '?v=' + v + '"');
 escribir('index.html', html);
 
+// Los datos (js/datos/) son módulos que importa js/datos-globales.js: sus imports llevan el mismo ?v=N
+const PUENTE = 'js/datos-globales.js';
+const puente = leer(PUENTE).replace(/\?v=\d+'/g, '?v=' + v + "'");
+escribir(PUENTE, puente);
+
 // 2. Lista de archivos para guardar sin conexión
 const locales = [...html.matchAll(/(?:src|href)="([^"]+)"/g)]
   .map(m => m[1])
   .filter(u => !/^(https?:|data:|#)/.test(u));
+const datos = [...puente.matchAll(/from '\.\/(datos\/[^']+)'/g)].map(m => 'js/' + m[1]);
 const carpeta = d =>
   fs
     .readdirSync(path.join(RAIZ, d))
@@ -38,13 +44,21 @@ const carpeta = d =>
     .sort()
     .map(f => d + '/' + f);
 const archivos = [
-  ...new Set(['./', 'index.html', 'manifest.webmanifest', ...locales, ...carpeta('icons'), ...carpeta('img')])
+  ...new Set([
+    './',
+    'index.html',
+    'manifest.webmanifest',
+    ...locales,
+    ...datos,
+    ...carpeta('icons'),
+    ...carpeta('img')
+  ])
 ];
 
 for (const a of archivos) {
   const f = a.split('?')[0];
   if (f != './' && !fs.existsSync(path.join(RAIZ, f)))
-    throw new Error('No existe ' + f + ' (referenciado en index.html)');
+    throw new Error('No existe ' + f + ' (referenciado en index.html o en ' + PUENTE + ')');
 }
 
 // 3. sw.js

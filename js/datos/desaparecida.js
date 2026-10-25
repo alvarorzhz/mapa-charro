@@ -4,28 +4,28 @@
 //   la, lo: un punto de OpenStreetMap de lo que hay hoy en su sitio, aproximada: true si las fuentes solo dan la zona,
 //   donde: dónde estaba y qué hay hoy, levantado y perdido: [texto, etapa de ETAPAS],
 //   textos: [[tipo de TIPOS_TEXTO_CULTURA, texto]], fuentes: [[nombre, url]], revisado: 'AAAA-MM-DD' }
-const FUENTE_GACETA_FANTASMA = [
+export const FUENTE_GACETA_FANTASMA = [
   'La Gaceta de Salamanca: la Salamanca «fantasma» (2025)',
   'https://www.lagacetadesalamanca.es/salamanca/salamanca-fantasma-seduce-visitantes-lunes-ofrece-jornada-20250518191316-nt.html'
 ];
-const FUENTE_GACETA_DESAPARECIDA = [
+export const FUENTE_GACETA_DESAPARECIDA = [
   'La Gaceta de Salamanca: la Salamanca desaparecida (2020)',
   'https://www.lagacetadesalamanca.es/salamanca/la-salamanca-desaparecida-vuelve-a-la-actualidad-NG4769816'
 ];
-const FUENTE_GACETA_CIENCIAS = [
+export const FUENTE_GACETA_CIENCIAS = [
   'La Gaceta de Salamanca: la historia oculta en el entorno de la Facultad de Ciencias (2020)',
   'https://www.lagacetadesalamanca.es/salamanca/la-historia-de-salamanca-oculta-en-el-entorno-de-la-facultad-de-ciencias-KJ5830972'
 ];
-const FUENTE_ASEDIO_FUERTES = [
+export const FUENTE_ASEDIO_FUERTES = [
   'Wikipedia: Siege of the Salamanca forts',
   'https://en.wikipedia.org/wiki/Siege_of_the_Salamanca_forts'
 ];
-const FUENTE_TRIBUNA_SAN_AGUSTIN = [
+export const FUENTE_TRIBUNA_SAN_AGUSTIN = [
   'Tribuna de Salamanca: así era San Agustín (2023)',
   'https://www.tribunasalamanca.com/noticias/319618/asi-era-san-agustin-el-gran-monasterio-perdido-de-salamanca'
 ];
 
-const DESAPARECIDOS = [
+export const DESAPARECIDOS = [
   {
     id: 'san-vicente',
     n: 'Monasterio de San Vicente',

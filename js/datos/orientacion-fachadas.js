@@ -1,6 +1,6 @@
 // Generado con `node herramientas/fachadas.js` a partir de OpenStreetMap (© colaboradores de OpenStreetMap,
 // ODbL). No editar a mano. { id de FACHADAS: [hacia dónde mira, en grados desde el norte, firma] }
-const ORIENTACION_FACHADAS = {
+export const ORIENTACION_FACHADAS = {
   "pm-real": [288,"way/78180390 node/918329229 dentro"],
   "pm-ayuntamiento": [195,"way/78180390 node/599059413 dentro"],
   "pm-sanmartin": [15,"way/78180390 node/951495676 dentro"],

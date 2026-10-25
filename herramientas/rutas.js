@@ -5,12 +5,13 @@
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
+const { sinExport } = require('./datos');
 const { execFileSync } = require('child_process');
 
 const RAIZ = path.join(__dirname, '..');
 const leer = f => fs.readFileSync(path.join(RAIZ, f), 'utf8');
 const { RUTAS, MONUMENTOS, TRAMOS_RUTAS } = vm.runInNewContext(
-  ['js/datos/monumentos.js', 'js/datos/rutas.js', 'js/datos/tramos.js'].map(leer).join('\n;\n') +
+  sinExport(['js/datos/monumentos.js', 'js/datos/rutas.js', 'js/datos/tramos.js'].map(leer).join('\n;\n')) +
     ';({ RUTAS, MONUMENTOS, TRAMOS_RUTAS })',
   {}
 );
@@ -86,7 +87,7 @@ fs.writeFileSync(
   '// Tramos de las rutas a pie: el camino por calles reales entre cada parada y la siguiente.\n' +
     '// Generado con node herramientas/rutas.js (OpenStreetMap, © colaboradores de OpenStreetMap, ODbL); no editar a mano.\n' +
     '// { idRuta: [{ de, a, m (metros), p: [[lat, lon], ...] }, ...] }\n' +
-    'const TRAMOS_RUTAS = ' +
+    'export const TRAMOS_RUTAS = ' +
     JSON.stringify(nuevos) +
     ';\n'
 );

@@ -8,7 +8,7 @@
 //   hacia: 'fuera' (fachada de un edificio) o 'dentro' (lado de una plaza cerrada, que mira a la plaza; entonces
 //     «delante» es un punto de sus soportales),
 //   fuente: [[nombre, url]] que dice cuál es la fachada }
-const FACHADAS = [
+export const FACHADAS = [
   {
     id: 'pm-real',
     monumento: 'plazamayor',

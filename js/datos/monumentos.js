@@ -4,7 +4,7 @@
 //   epoca, estilo, datos: [[etiqueta, valor]], curiosidades: [texto], foto: clave de FOTOS o [ruta, pie con autor y
 //   licencia] de Wikimedia Commons (opcional), fuente: [[nombre, url]] }
 // El orden importa: si dos pictogramas se tapan, se dibuja el que va antes.
-const MONUMENTOS = [
+export const MONUMENTOS = [
   {
     id: 'plazamayor',
     n: 'Plaza Mayor',

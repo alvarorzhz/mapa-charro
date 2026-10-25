@@ -135,7 +135,7 @@ fs.writeFileSync(
     ' ha de la capital y alrededores, de OpenStreetMap (© colaboradores de OpenStreetMap, ODbL).\n' +
     '// Generado con node herramientas/parques.js: no editar a mano.\n' +
     '// { n: nombre, ha: hectáreas, R: anillos [lat, lon, lat, lon, ...] }\n' +
-    'const PARQUES = [\n' +
+    'export const PARQUES = [\n' +
     parques.map(p => '  ' + JSON.stringify(p)).join(',\n') +
     '\n];\n'
 );
