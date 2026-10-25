@@ -3,7 +3,7 @@
 // PALABRAS_CHARRAS: { id (no cambiar: va en el progreso), p (palabra), s (significado), e (ejemplo),
 //   f (clave de la fuente), z (opcional: zonas del mapa en cuya ficha sale) }
 // Las zonas sin palabra propia muestran una de la lista (palabras.js).
-const FUENTES_PALABRAS = {
+export const FUENTES_PALABRAS = {
   elespanol: [
     'El Español (2023)',
     'https://www.elespanol.com/castilla-y-leon/region/salamanca/20231030/curiosas-expresiones-usan-salamanca-solo-entiendenlossalmantinos/804669777_0.html'
@@ -35,7 +35,7 @@ const FUENTES_PALABRAS = {
   ]
 };
 
-const PALABRAS_CHARRAS = [
+export const PALABRAS_CHARRAS = [
   // --- Casa y día a día ---
   {
     id: 'candar',

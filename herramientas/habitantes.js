@@ -6,6 +6,7 @@
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
+const { sinExport } = require('./datos');
 const { execFileSync } = require('child_process');
 
 const RAIZ = path.join(__dirname, '..');
@@ -13,7 +14,7 @@ const TABLA = 2891;
 const URL_TABLA = 'https://www.ine.es/jaxiT3/Tabla.htm?t=' + TABLA;
 
 const { PROVINCIA } = vm.runInNewContext(
-  fs.readFileSync(path.join(RAIZ, 'js/datos/provincia.js'), 'utf8') + ';({ PROVINCIA })',
+  sinExport(fs.readFileSync(path.join(RAIZ, 'js/datos/provincia.js'), 'utf8')) + ';({ PROVINCIA })',
   {}
 );
 
@@ -79,7 +80,7 @@ fs.writeFileSync(
     '// m: la cifra más reciente. serie: una cifra por año de «anios» (a 1 de enero; null si no la hay).\n' +
     '// tipos: { código: { posición en anios: tipo de dato del INE } } de las que no son definitivas.\n' +
     '// prettier-ignore\n' +
-    'const HABITANTES = {\n' +
+    'export const HABITANTES = {\n' +
     `  fecha: '1 de enero de ${anio}',\n` +
     `  fuente: ['INE, Padrón municipal (cifras oficiales)', '${URL_TABLA}'],\n` +
     '  m: ' +

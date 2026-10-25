@@ -11,7 +11,7 @@
 //   fuentes     [[medio, url]]
 //   revisado    fecha de la última revisión (AAAA-MM-DD)
 
-const DETALLES = [
+export const DETALLES = [
   {
     id: 'astronauta',
     n: 'El astronauta',

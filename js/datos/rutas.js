@@ -4,7 +4,7 @@
 //   { id, n (nombre), la, lo, dir (dirección), detalle (autor, tapa…), texto, fuente: [medio, url],
 //     cultura (opcional: id de CULTURA, para ir a su ficha de «Cultura y tradiciones») }
 // El camino entre paradas está en js/datos/tramos.js: si cambian las paradas, node herramientas/rutas.js <id>.
-const RUTAS = [
+export const RUTAS = [
   {
     id: 'monumental',
     nombre: 'Ruta monumental',

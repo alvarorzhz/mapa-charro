@@ -2,7 +2,7 @@
 // Todo el contenido lleva fuente verificable (ver «Sobre los datos» en index.html). Las claves son ids de zona.
 
 // Curiosidades: { idZona: [párrafo, ...] }. Si una zona no tiene, la ficha muestra su frase corta.
-const CURIOSIDADES = {
+export const CURIOSIDADES = {
   centro: [
     'La Plaza Mayor es barroca, obra de los Churriguera: se levantó entre 1729 y 1756. No es un cuadrado perfecto, porque sus cuatro lados miden distinto.',
     'Cada 25 de julio se coloca en lo alto la Mariseca, un toro de lata que anuncia las corridas de las ferias.',
@@ -524,7 +524,7 @@ const CURIOSIDADES = {
   ]
 };
 // Leyendas: { idZona: [párrafo, ...] }
-const LEYENDAS = {
+export const LEYENDAS = {
   centro: [
     // Fuentes: https://es.wikipedia.org/wiki/Torre_del_Clavero y https://www.terranostrum.es/turismo/torre-del-clavero-salamanca
     'Se cuenta que, para acabar con las luchas de los bandos, los Reyes Católicos mandaron desmochar las torres de los nobles. La del Clavero se libró; la de la Casa de las Conchas quedó mucho más baja.',
@@ -569,7 +569,7 @@ const LEYENDAS = {
   ]
 };
 // Fotos: { idZona: [ruta en img/, pie con autor y licencia] }. El texto hasta «. Foto» se usa como texto alternativo.
-const FOTOS = {
+export const FOTOS = {
   tejares: [
     'img/tejares.jpg',
     'Antigua estación de Tejares-Chamberí. Foto: Rodelar · CC BY-SA 4.0 · Wikimedia Commons'
@@ -774,7 +774,7 @@ const FOTOS = {
   ]
 };
 // Dónde comer: { idZona: [{ n: nombre, t: tipo de cocina, a: dirección, p: descripción, s: fuente y fecha }] }
-const DONDE_COMER = {
+export const DONDE_COMER = {
   univ: [
     {
       n: 'El Huerto de Doña Deseada',
@@ -1227,7 +1227,7 @@ const DONDE_COMER = {
   ]
 };
 // Zonas colocadas con una coordenada exacta; el resto lleva el aviso «Posición aproximada»
-const POSICION_EXACTA = new Set([
+export const POSICION_EXACTA = new Set([
   'sanvicente',
   'tenerias',
   'santotomas',

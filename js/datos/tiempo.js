@@ -11,24 +11,27 @@
 //   Romano. Faltan la segunda de Santo Tomás y la de San Juan del Alcázar, que no se han podido situar.
 //   Fuentes de las puertas: Wikipedia (lista), Salamanca paso a paso y Salamanca en el ayer (blogs de
 //   historia local), La Gaceta de Salamanca y Salamancahoy.
-const FUENTE_TURISMO_MURALLAS = [
+export const FUENTE_TURISMO_MURALLAS = [
   'Turismo de Salamanca: Centro de Interpretación de las Murallas',
   'https://salamanca-turismo.gvam.es/en/see/monuments/centro-de-interpretacion-de-las-murallas-de-salamanca'
 ];
-const FUENTE_WIKI_MURALLAS = [
+export const FUENTE_WIKI_MURALLAS = [
   'Wikipedia: Murallas de Salamanca',
   'https://es.wikipedia.org/wiki/Murallas_de_Salamanca'
 ];
-const FUENTE_WIKI_SALAMANCA = ['Wikipedia: Salamanca (historia)', 'https://es.wikipedia.org/wiki/Salamanca'];
-const FUENTE_AYER = [
+export const FUENTE_WIKI_SALAMANCA = [
+  'Wikipedia: Salamanca (historia)',
+  'https://es.wikipedia.org/wiki/Salamanca'
+];
+export const FUENTE_AYER = [
   'Salamanca en el ayer: las puertas',
   'https://www.salamancaenelayer.com/2012/11/paseo-de-las-carmelitas.html'
 ];
-const FUENTE_PASO = [
+export const FUENTE_PASO = [
   'Salamanca paso a paso: las puertas de la muralla',
   'http://salamancapasoapaso.blogspot.com/2013/01/la-muralla-iii-las-puertas.html'
 ];
-const ETAPAS = [
+export const ETAPAS = [
   [
     'Siglo IV a. C.',
     'El castro vetón',
@@ -104,7 +107,7 @@ const ETAPAS = [
 // (la de su infografía) y elementos de «Cultura y tradiciones» fechados en ella (con su fuente en su ficha).
 // Solo enlaces: los datos están en su sitio. Los pueblos de la provincia se reparten solos por los años
 // que citan sus curiosidades (pueblos.js), con RANGOS_ETAPA: [primer año, último año] de cada etapa.
-const RANGOS_ETAPA = [
+export const RANGOS_ETAPA = [
   [-1000, 0],
   [1, 899],
   [900, 1217],
@@ -113,7 +116,7 @@ const RANGOS_ETAPA = [
   [1900, 1962],
   [1963, 2100]
 ];
-const RELACIONES_ETAPA = [
+export const RELACIONES_ETAPA = [
   { monumentos: [], cultura: [] },
   { monumentos: ['puenteromano'], cultura: [] },
   { monumentos: ['catedrales', 'sanmarcos'], cultura: [] },
@@ -151,7 +154,7 @@ const RELACIONES_ETAPA = [
   },
   { monumentos: ['helmantico', 'huerto', 'aldehuela'], cultura: ['mayalde'] }
 ];
-const EPOCA_ZONA = {
+export const EPOCA_ZONA = {
   sanvicente: [0, 'Cuna de la ciudad: castro vetón en su cerro'],
   univ: [0, 'Teso de las Catedrales, donde estuvo el castro y después la ciudad romana'],
   villamayor: [0, 'Castro prerromano en el teso de San Miguel'],
@@ -287,7 +290,7 @@ const EPOCA_ZONA = {
     ['Wikipedia: Carrascal de Barregas', 'https://es.wikipedia.org/wiki/Carrascal_de_Barregas']
   ]
 };
-const MURALLA = {
+export const MURALLA = {
   anillo: [
     [40.96185, -5.67505],
     [40.96261, -5.67438],

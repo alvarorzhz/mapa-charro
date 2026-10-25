@@ -6,15 +6,14 @@
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
+const { sinExport } = require('./datos');
 const { union } = require('polygon-clipping');
 
 const RAIZ = path.join(__dirname, '..');
 const archivo = path.join(RAIZ, 'js/datos/geometria.js');
 let geometria = fs.readFileSync(archivo, 'utf8');
 const D = vm.runInNewContext(
-  fs.readFileSync(path.join(RAIZ, 'js/datos/zonas.js'), 'utf8') +
-    '\n;\n' +
-    geometria +
+  sinExport(fs.readFileSync(path.join(RAIZ, 'js/datos/zonas.js'), 'utf8') + '\n;\n' + geometria) +
     ';({ ZONAS, SEMILLAS_REPARTO, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, LINDES_OFICIALES })',
   {}
 );
@@ -77,7 +76,7 @@ for (const id of D.ZONAS_NO_OFICIALES)
 
 const limites = { ...D.LIMITES_BARRIOS, ...nuevos };
 geometria = geometria.replace(
-  /const LIMITES_BARRIOS=.*;\n/,
-  () => 'const LIMITES_BARRIOS=' + JSON.stringify(limites) + ';\n'
+  /export const LIMITES_BARRIOS=.*;\n/,
+  () => 'export const LIMITES_BARRIOS=' + JSON.stringify(limites) + ';\n'
 );
 fs.writeFileSync(archivo, geometria);

@@ -5,6 +5,7 @@
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
+const { sinExport } = require('./datos');
 
 const RAIZ = path.join(__dirname, '..');
 const DATOS = path.join(RAIZ, 'js/datos');
@@ -46,7 +47,7 @@ const esDudoso = estado => !esRoto(estado) && !(estado >= 200 && estado < 400);
 // --- Restaurantes con la valoración de hace más de un año («Gastroranking, oct. 2025») ---------------
 const MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
 function restaurantesViejos() {
-  const codigo = fs.readFileSync(path.join(DATOS, 'contenido.js'), 'utf8') + ';({ DONDE_COMER })';
+  const codigo = sinExport(fs.readFileSync(path.join(DATOS, 'contenido.js'), 'utf8')) + ';({ DONDE_COMER })';
   const { DONDE_COMER } = vm.runInNewContext(codigo, {});
   const hoy = new Date(),
     viejos = [];

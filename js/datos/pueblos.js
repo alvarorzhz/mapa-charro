@@ -3,7 +3,7 @@
 //   foto (opcional): [ruta, pie con «Foto: autor · licencia»] de Wikimedia Commons,
 //   comer: [{ n, a, p, s }], fuente: [[nombre, url]] } }. Todo con fuente verificable.
 // Los habitantes salen de habitantes.js (INE), para todos los municipios.
-const PUEBLOS = {
+export const PUEBLOS = {
   'Ciudad Rodrigo': {
     cur: [
       'Su Carnaval del Toro tiene documentos desde 1417: ya entonces se corrían toros.',

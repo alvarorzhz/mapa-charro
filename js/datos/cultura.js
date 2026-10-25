@@ -22,7 +22,7 @@
 //   fuentes     [[medio, url]]
 //   revisado    fecha de la última revisión del contenido (AAAA-MM-DD)
 
-const CATEGORIAS_CULTURA = [
+export const CATEGORIAS_CULTURA = [
   ['fiesta', 'Fiestas populares', '🎉'],
   ['tradicion', 'Tradiciones locales', '🔔'],
   ['gastronomia', 'Gastronomía tradicional', '🥖'],
@@ -32,13 +32,13 @@ const CATEGORIAS_CULTURA = [
   ['literatura', 'Literatura', '📖']
 ];
 
-const TIPOS_TEXTO_CULTURA = {
+export const TIPOS_TEXTO_CULTURA = {
   hecho: 'Documentado',
   tradicion: 'Según la tradición',
   divulgativo: 'En pocas palabras'
 };
 
-const CULTURA = [
+export const CULTURA = [
   {
     id: 'lunes-de-aguas',
     n: 'Lunes de Aguas',

@@ -6,9 +6,9 @@
 //   que salen de otras páginas) y foto [ruta en img/, pie con autor y licencia].
 // El camino por carretera, los km y los tiempos están en tramos-provincia.js, que genera
 //   node herramientas/rutas-provincia.js <id>   (hay que volver a generarlo si cambian las paradas).
-const SALIDA_PROVINCIA = { n: 'Salamanca', la: 40.965, lo: -5.6639 };
+export const SALIDA_PROVINCIA = { n: 'Salamanca', la: 40.965, lo: -5.6639 };
 
-const RUTAS_PROVINCIA = [
+export const RUTAS_PROVINCIA = [
   {
     id: 'arribes-norte',
     nombre: 'Arribes del norte: la Cabeza de Framontanos, la Ramajería y el vino',

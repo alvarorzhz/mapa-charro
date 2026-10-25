@@ -163,7 +163,7 @@ fs.writeFileSync(
   '// Autovías (t: a), carreteras nacionales (t: n) y la CL-517 (t: c) de la provincia, de OpenStreetMap (© colaboradores de\n' +
     '// OpenStreetMap, ODbL). Generado con node herramientas/carreteras-provincia.js: no editar a mano.\n' +
     '// l: líneas en incrementos de milésimas de grado [dLat, dLon, ...], como las lindes (decodificarLinde).\n' +
-    'const CARRETERAS_PROVINCIA = [\n' +
+    'export const CARRETERAS_PROVINCIA = [\n' +
     salida
       .map(
         c =>

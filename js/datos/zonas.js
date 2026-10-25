@@ -1,7 +1,7 @@
 // Zonas del mapa de la capital y su alfoz
 
 // Grupos: el número de grupo de cada zona es su posición en esta lista
-const NOMBRES_GRUPOS = [
+export const NOMBRES_GRUPOS = [
   'Centro histórico',
   'Zona norte',
   'Zona este',
@@ -13,12 +13,12 @@ const NOMBRES_GRUPOS = [
 
 // Barrios y pueblos grandes: su nombre se ve antes al alejar el mapa; los de la ciudad cuentan para el logro «Los grandes»
 // prettier-ignore
-const ZONAS_GRANDES = new Set([
+export const ZONAS_GRANDES = new Set([
   'centro', 'garridonorte', 'garridosur', 'pizarrales', 'prosperidad', 'tejares', 'vidal', 'capuchinos', 'carmelitas', 'sanjose', 'chamberi', 'villamayor', 'santamarta', 'carbajosa', 'cabrerizos', 'villares'
 ]);
 
 // Otros nombres de una zona o de partes de ella: salen en su ficha y el buscador los encuentra
-const OTROS_NOMBRES = {
+export const OTROS_NOMBRES = {
   carmelitas: ['Carmelitas-Oeste (nombre oficial)', 'Eras de Carmelitas'],
   sancristobal: ['Las Claras'],
   rollo: ['Alto del Rollo', 'Las Pajas'],
@@ -29,14 +29,14 @@ const OTROS_NOMBRES = {
 
 // Puntos de más para repartir el límite aproximado de una zona (herramientas/repartos.js): así un
 // edificio conocido cae en su zona. [lat, lon]. La app no los usa: usa los límites ya calculados.
-const SEMILLAS_REPARTO = {
+export const SEMILLAS_REPARTO = {
   garridonorte: [[40.97375, -5.65006]] // plaza de Barcelona
 };
 
 // [id, nombre, etiqueta en el mapa (| = salto de línea), grupo, latitud, longitud, frase corta]
 // El id se usa en el progreso guardado y en los enlaces (#id): no cambiarlo.
 // prettier-ignore
-const ZONAS = [
+export const ZONAS = [
   ['centro', 'Centro', 'Centro', 0, 40.9652, -5.6645, 'Plaza Mayor barroca, Mercado Central y Torre del Clavero: el corazón de la ciudad.'],
   ['univ', 'Universidad', 'Universidad', 0, 40.96132, -5.66692, 'Aquí están la Universidad, con su rana, la Casa de las Conchas, la Clerecía y las catedrales.'],
   ['sanvicente', 'San Vicente', 'San|Vicente', 0, 40.9631, -5.67168, 'Cuna de la ciudad: la aldea original nació en este cerro sobre el Tormes.'],

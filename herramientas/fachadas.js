@@ -5,11 +5,12 @@
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
+const { sinExport } = require('./datos');
 const { execFileSync } = require('child_process');
 
 const RAIZ = path.join(__dirname, '..');
 const leer = f => fs.readFileSync(path.join(RAIZ, f), 'utf8');
-const { FACHADAS } = vm.runInNewContext(leer('js/datos/fachadas.js') + ';({ FACHADAS })', {});
+const { FACHADAS } = vm.runInNewContext(sinExport(leer('js/datos/fachadas.js')) + ';({ FACHADAS })', {});
 const SALIDA = 'js/datos/orientacion-fachadas.js';
 const LADO_MINIMO = 6; // metros: los lados más cortos son esquinas o retranqueos, no fachadas
 
@@ -131,7 +132,7 @@ fs.writeFileSync(
   path.join(RAIZ, SALIDA),
   '// Generado con `node herramientas/fachadas.js` a partir de OpenStreetMap (© colaboradores de OpenStreetMap,\n' +
     '// ODbL). No editar a mano. { id de FACHADAS: [hacia dónde mira, en grados desde el norte, firma] }\n' +
-    'const ORIENTACION_FACHADAS = {\n' +
+    'export const ORIENTACION_FACHADAS = {\n' +
     lineas.join(',\n') +
     '\n};\n'
 );

@@ -6,6 +6,7 @@
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
+const { sinExport } = require('./datos');
 const { execFileSync } = require('child_process');
 
 const RAIZ = path.join(__dirname, '..');
@@ -13,7 +14,7 @@ const leer = f => fs.readFileSync(path.join(RAIZ, f), 'utf8');
 const { RUTAS_PROVINCIA, SALIDA_PROVINCIA, TRAMOS_PROVINCIA } = vm.runInNewContext(
   ['js/datos/rutas-provincia.js', 'js/datos/tramos-provincia.js']
     .filter(f => fs.existsSync(path.join(RAIZ, f)))
-    .map(leer)
+    .map(f => sinExport(leer(f)))
     .join('\n;\n') +
     ';({ RUTAS_PROVINCIA, SALIDA_PROVINCIA, TRAMOS_PROVINCIA: typeof TRAMOS_PROVINCIA == "undefined" ? {} : TRAMOS_PROVINCIA })',
   {}
@@ -87,7 +88,7 @@ fs.writeFileSync(
   '// Tramos en coche de las rutas por la provincia: de la capital a cada parada y vuelta.\n' +
     '// Generado con node herramientas/rutas-provincia.js (OpenStreetMap, © colaboradores de OpenStreetMap, ODbL); no editar a mano.\n' +
     '// { idRuta: { firma, tramos: [{ de, a, m (metros), s (segundos al volante), p: [[lat, lon], ...] }] } }\n' +
-    'const TRAMOS_PROVINCIA = ' +
+    'export const TRAMOS_PROVINCIA = ' +
     JSON.stringify(nuevos) +
     ';\n'
 );
