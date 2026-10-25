@@ -22,20 +22,30 @@ const archivosApp = dir =>
 
 // Nombres declarados arriba del todo en cada archivo de la app (const, let, var, function, class)
 const globalesApp = {};
+// Dónde se declara cada nombre: si dos archivos usan el mismo, el segundo pisaría al primero sin avisar
+const archivoDe = {};
+const repetidos = [];
+const apuntar = (nombre, archivo) => {
+  if (archivoDe[nombre] && archivoDe[nombre] != archivo)
+    repetidos.push(`${nombre} (${archivoDe[nombre]} y ${archivo})`);
+  archivoDe[nombre] = archivo;
+  globalesApp[nombre] = 'writable';
+};
 for (const archivo of archivosApp('js')) {
   const arbol = espree.parse(fs.readFileSync(path.join(RAIZ, archivo), 'utf8'), { ecmaVersion: 'latest' });
   for (const n of arbol.body) {
     if (n.type == 'VariableDeclaration')
-      n.declarations.forEach(d => d.id.type == 'Identifier' && (globalesApp[d.id.name] = 'writable'));
+      n.declarations.forEach(d => d.id.type == 'Identifier' && apuntar(d.id.name, archivo));
     else if ((n.type == 'FunctionDeclaration' || n.type == 'ClassDeclaration') && n.id)
-      globalesApp[n.id.name] = 'writable';
+      apuntar(n.id.name, archivo);
     // Un var dentro de un bloque { … } de arriba del todo también es global (mapa-fondo.js: limiteFoco)
     else if (n.type == 'BlockStatement')
       n.body
         .filter(m => m.type == 'VariableDeclaration' && m.kind == 'var')
-        .forEach(m => m.declarations.forEach(d => (globalesApp[d.id.name] = 'writable')));
+        .forEach(m => m.declarations.forEach(d => apuntar(d.id.name, archivo)));
   }
 }
+if (repetidos.length) throw new Error('Nombres declarados en dos archivos de js/: ' + repetidos.join(', '));
 
 module.exports = [
   {

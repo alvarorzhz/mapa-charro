@@ -214,9 +214,9 @@ prueba('Rutas por la provincia', async (p, url) => {
     'botones de seguimiento'
   );
   await p.click('.bt button[data-s=w]');
-  igual(await p.evaluate(() => progreso.j.rs), { 'arribes-norte': 'w' }, 'la quiere hacer');
+  igual(await p.evaluate(() => estadoApp.progreso.j.rs), { 'arribes-norte': 'w' }, 'la quiere hacer');
   await p.click('.bt button[data-s=v]');
-  igual(await p.evaluate(() => progreso.j.rs), { 'arribes-norte': 'v' }, 'la ha hecho');
+  igual(await p.evaluate(() => estadoApp.progreso.j.rs), { 'arribes-norte': 'v' }, 'la ha hecho');
   cierto(
     await p.evaluate(() => calcularLogros().some(a => a.id == 'rh1' && a.c >= a.m)),
     'logro de la primera ruta hecha'
@@ -230,13 +230,14 @@ prueba('Rutas por la provincia', async (p, url) => {
     'y cuenta para hacer todas las de la provincia'
   );
   cierto(
-    await p.evaluate(() => progreso.j.hi.some(e => e[1] == 'rh' && e[2] == 'arribes-norte')),
+    await p.evaluate(() => estadoApp.progreso.j.hi.some(e => e[1] == 'rh' && e[2] == 'arribes-norte')),
     'historial'
   );
   cierto(await p.$eval('.bt button[data-s=v]', b => b.classList.contains('on')), 'botón marcado');
   igual(
     await p.evaluate(
-      () => juntarProgresos({ z: {}, j: { rs: { 'arribes-norte': 'w', sierra: 'w' } } }, progreso).j.rs
+      () =>
+        juntarProgresos({ z: {}, j: { rs: { 'arribes-norte': 'w', sierra: 'w' } } }, estadoApp.progreso).j.rs
     ),
     { 'arribes-norte': 'v' },
     'al juntar, gana «la he hecho» y se quitan las rutas que no existen'
@@ -248,7 +249,7 @@ prueba('Rutas por la provincia', async (p, url) => {
   );
   await p.click('.tarjeta-ruta:has-text("Arribes del norte")');
   await p.click('.bt button[data-s=v]');
-  igual(await p.evaluate(() => progreso.j.rs), {}, 'pulsar otra vez la quita');
+  igual(await p.evaluate(() => estadoApp.progreso.j.rs), {}, 'pulsar otra vez la quita');
   // Las paradas: desde el mapa y con «Siguiente»; foto, cómo llegar, más fuentes y «He estado aquí»
   await p.$eval('.mapa-ruta-prov .rpn >> nth=4', g =>
     g.dispatchEvent(new MouseEvent('click', { bubbles: true }))
@@ -265,7 +266,11 @@ prueba('Rutas por la provincia', async (p, url) => {
   igual(await p.$$eval('#nb a.llegar', a => a.length), 2, 'cómo llegar en Google Maps y OpenStreetMap');
   cierto((await p.$$('#ap a')).length > 1, 'y todas sus fuentes');
   await p.click('.bt button[data-s=v]');
-  igual(await p.evaluate(() => progreso.j.r['arribes-norte']), ['cabeza-framontanos'], 'parada visitada');
+  igual(
+    await p.evaluate(() => estadoApp.progreso.j.r['arribes-norte']),
+    ['cabeza-framontanos'],
+    'parada visitada'
+  );
   cierto(
     await p.evaluate(() => calcularLogros().some(a => a.id == 'ru-arribes-norte' && a.c == 1 && a.m == 9)),
     'cuenta para su logro'
@@ -324,7 +329,7 @@ prueba(
     cierto((await texto(p, '#pgm')).includes('Estás en la capital'), 'en la capital avisa');
     await p.click('#pgm button');
     await p.waitForSelector('#sh.o');
-    igual(await p.evaluate(() => pestana), 'map', 'y lleva al mapa de la capital');
+    igual(await p.evaluate(() => estadoApp.pestana), 'map', 'y lleva al mapa de la capital');
     // Fuera de la provincia
     await p.click('#vprov');
     await p.evaluate(() =>

@@ -43,9 +43,9 @@ function ladoDeHistorial(tipo, id) {
 }
 
 function estadisticas() {
-  const z = progreso.z || {},
-    j = progreso.j || {},
-    estadoDe = m => (m.z ? z[m.z] : (progreso.p || {})[m.k]),
+  const z = estadoApp.progreso.z || {},
+    j = estadoApp.progreso.j || {},
+    estadoDe = m => (m.z ? z[m.z] : (estadoApp.progreso.p || {})[m.k]),
     barrios = zonas.filter(esBarrio),
     municipios = pueblos, // todos los de la provincia menos la capital
     visitadosMo = new Set((j.mo || []).filter(id => buscarMonumento(id))),
@@ -106,8 +106,8 @@ function estadisticas() {
       municipios: { v: municipiosV.length, total: municipios.length },
       quiero: municipios.filter(m => estadoDe(m) == 'w').length,
       pedanias: {
-        v: pedanias.filter(p => (progreso.p || {})[p.k] == 'v').length,
-        w: pedanias.filter(p => (progreso.p || {})[p.k] == 'w').length,
+        v: pedanias.filter(p => (estadoApp.progreso.p || {})[p.k] == 'v').length,
+        w: pedanias.filter(p => (estadoApp.progreso.p || {})[p.k] == 'w').length,
         total: pedanias.length
       },
       comarcas: { v: comarcas.size, total: PROVINCIA.com.length },
@@ -143,7 +143,7 @@ const TIPOS_DE_VISITA = ['z', 'p', 'mo', 'ru', 'rh', 'de'];
 // Categorías para ver qué se ha explorado más y qué está sin empezar, cada una con su propio total:
 // partes de la ciudad (barrios), comarcas (municipios sin la capital) y tipos de monumento.
 function categoriasExploradas(estadoDe, visitadosMo) {
-  const z = progreso.z || {},
+  const z = estadoApp.progreso.z || {},
     lista = [];
   GRUPOS_BARRIOS.forEach(g => {
     const del = zonas.filter(b => b.g == g),
@@ -166,7 +166,7 @@ function categoriasExploradas(estadoDe, visitadosMo) {
       v: del.filter(m => visitadosMo.has(m.id)).length,
       total: del.length,
       ver: () => {
-        filtroMonumentos = 'all';
+        estadoApp.filtroMonumentos = 'all';
         abrirMonumentos();
       }
     });

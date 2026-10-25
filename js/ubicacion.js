@@ -25,12 +25,12 @@ function zonaEnCoordenadas(la, lo) {
 function mostrarAvisoAqui(id) {
   const h = $('#here'),
     ahora = ubicacionReciente() && ubicacion.id == id,
-    conGps = (progreso.gv || []).includes(id);
+    conGps = (estadoApp.progreso.gv || []).includes(id);
   h.hidden = !(ahora || conGps);
   if (ahora) {
     h.className = 'here';
     h.textContent =
-      (progreso.z[id] == 'v'
+      (estadoApp.progreso.z[id] == 'v'
         ? 'Estás aquí ahora mismo.'
         : 'Estás aquí ahora mismo: márcalo con «He estado» y quedará pisado con GPS.') +
       (ubicacion.acc > 1500

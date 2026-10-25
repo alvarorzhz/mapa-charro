@@ -226,7 +226,7 @@ prueba('Panel de capas y leyenda', async p => {
 
 prueba('Sellos «V» y rutas sobre zonas pisadas', async p => {
   await p.evaluate(() => {
-    progreso.z.centro = 'v';
+    estadoApp.progreso.z.centro = 'v';
     todasLasZonas.forEach(pintarZona);
   });
   // De lejos no se ven los sellos; al acercar, sí
@@ -270,7 +270,9 @@ prueba('Filtros combinables del mapa', async p => {
   // Solo «Sin pisar» y solo el sur: se combinan
   await p.click('#fmap [aria-label="Zonas"] button:nth-child(1)');
   await p.click('#fmap [aria-label="Zonas"] button:nth-child(2)');
-  const sinPisarSur = await p.evaluate(() => zonas.filter(z => z.g == 4 && !progreso.z[z.id]).length);
+  const sinPisarSur = await p.evaluate(
+    () => zonas.filter(z => z.g == 4 && !estadoApp.progreso.z[z.id]).length
+  );
   await p.evaluate(() => GRUPOS_FILTRO.forEach(([g]) => g != 4 && filtrosMapa.grupos.delete(g)));
   await p.evaluate(() => aplicarFiltrosMapa());
   igual(

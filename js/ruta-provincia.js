@@ -167,7 +167,7 @@ function abrirRutaProvincia(k = rutaProvinciaAbierta) {
     '.'
   );
   seguirRuta(r.id);
-  fichaAlta = true; // lleva su propio mapa: el de la capital no hace falta
+  estadoApp.fichaAlta = true; // lleva su propio mapa: el de la capital no hace falta
   mostrarFicha();
   enlaceFicha(hashRutaProvincia(r), r.nombre);
 }
@@ -245,7 +245,7 @@ function abrirParadaProvincia(i, k = rutaProvinciaAbierta) {
   $('#ap').append('Fuente: ', enlaceFuente(p.fuente));
   (p.masFuentes || []).forEach(f => $('#ap').append(' · ', enlaceFuente(f)));
   $('#ap').append('.');
-  visitaAbierta = { tipo: 'ru', ruta: r.id, id: p.id, n: p.n }; // «He estado aquí», para los logros
+  estadoApp.visitaAbierta = { tipo: 'ru', ruta: r.id, id: p.id, n: p.n }; // «He estado aquí», para los logros
   modoBotonesFicha('visita');
   mostrarFicha();
   enlaceFicha(hashRutaProvincia(r, i), p.n);

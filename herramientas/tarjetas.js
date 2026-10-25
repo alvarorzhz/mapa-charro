@@ -103,7 +103,7 @@ function paginaZona(z, web, titulo) {
     // Capital y provincia: el título, tres cifras sacadas de los datos y la provincia entera con la capital en
     // rojo y, en un recuadro, el mapa de la capital (sin nada marcado)
     const base64 = await pagina.evaluate(() => {
-      progreso = { z: {}, p: {}, f: 0, t: 0, gv: [] }; // sin zonas marcadas (solo en memoria)
+      estadoApp.progreso = { z: {}, p: {}, f: 0, t: 0, gv: [] }; // sin zonas marcadas (solo en memoria)
       const C = COLORES_IMAGEN,
         lienzo = document.createElement('canvas');
       lienzo.width = 1200;
@@ -198,7 +198,7 @@ function paginaZona(z, web, titulo) {
         const z = zonas.find(q => q.id == id),
           C = COLORES_IMAGEN,
           lienzo = document.createElement('canvas');
-        progreso = { z: { [id]: 'v' }, p: {}, f: 0, t: 0, gv: [] }; // solo esta zona, en rojo
+        estadoApp.progreso = { z: { [id]: 'v' }, p: {}, f: 0, t: 0, gv: [] }; // solo esta zona, en rojo
         lienzo.width = 1200;
         lienzo.height = 630;
         const ctx = lienzo.getContext('2d');

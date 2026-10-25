@@ -62,7 +62,7 @@ prueba('Buscador', async p => {
   const pedania = await p.evaluate(() => pedanias[0].n);
   await p.fill('#q', pedania);
   await p.click('#sr button');
-  igual(await p.evaluate(() => pestana), 'prov', 'pedanía, en Provincia');
+  igual(await p.evaluate(() => estadoApp.pestana), 'prov', 'pedanía, en Provincia');
 });
 
 prueba('Con ratón: globo, «/» y atajos', async p => {
@@ -183,14 +183,14 @@ prueba('Monumentos', async (p, url) => {
   );
   // Visitarlo cuenta para los logros de monumentos, y se puede deshacer
   await p.click('.bt button[data-s=v]');
-  igual(await p.evaluate(() => progreso.j.mo), ['catedrales'], 'visitado');
+  igual(await p.evaluate(() => estadoApp.progreso.j.mo), ['catedrales'], 'visitado');
   cierto(
     await p.evaluate(() => calcularLogros().find(a => a.id == 'mo5').c == 1),
     'suma al logro de monumentos'
   );
   await p.click('.bt button[data-s=v]');
   await p.click('#ts button');
-  igual(await p.evaluate(() => progreso.j.mo), ['catedrales'], 'quitar se deshace');
+  igual(await p.evaluate(() => estadoApp.progreso.j.mo), ['catedrales'], 'quitar se deshace');
   await p.click('#nb button');
   igual(await p.evaluate(() => location.hash), '#univ', 'Ver el barrio');
   cierto((await p.$$('#mz button')).length >= 3, 'monumentos del barrio');

@@ -46,7 +46,7 @@ const esDeProvincia = c =>
 function pintarCulturaEnFicha(lista) {
   const caja = $('#culf');
   caja.textContent = '';
-  fichaConCultura = !!lista.length;
+  estadoApp.fichaConCultura = !!lista.length;
   if (!lista.length) return;
   caja.append('Cultura y tradiciones: ');
   lista.forEach(c => {
@@ -118,7 +118,7 @@ function irAMunicipio(m) {
   if (m.z) return abrirFicha(m.z);
   cerrarFicha();
   if (m.cap) {
-    if (pestana != 'map') cambiarPestana('map');
+    if (estadoApp.pestana != 'map') cambiarPestana('map');
     document.querySelector('.mw').scrollIntoView({ behavior: comoDesplazar(), block: 'start' });
     return;
   }
@@ -474,7 +474,7 @@ function abrirCultura() {
   pintarListaCultura(lista);
   $('#ap').textContent =
     'Cada ficha lleva sus fuentes y la fecha de su última revisión. Solo hay categorías con contenido comprobado.';
-  fichaAlta = true;
+  estadoApp.fichaAlta = true;
   mostrarFicha();
   enlaceFicha('cultura', 'Cultura y tradiciones');
 }

@@ -85,7 +85,7 @@ prueba(
     await p.waitForTimeout(300);
     igual(await texto(p, '#sv'), 'Guardado en tu cuenta (prueba@ejemplo.es)', 'entra y conecta');
     igual(
-      await p.evaluate(() => progreso.z),
+      await p.evaluate(() => estadoApp.progreso.z),
       { centro: 'v', vega: 'v' },
       'junta lo del navegador con lo de la cuenta'
     );
@@ -97,7 +97,7 @@ prueba(
     await p.click('.modal .botones button:text-is("Salir")');
     igual(await texto(p, '#sv'), 'Guardado en este navegador', 'sale');
     cierto((await texto(p, '#cuenta')).endsWith('Entrar con Google'), 'vuelve a ofrecer entrar');
-    igual(await p.evaluate(() => Object.keys(progreso.z).length), 2, 'el progreso sigue');
+    igual(await p.evaluate(() => Object.keys(estadoApp.progreso.z).length), 2, 'el progreso sigue');
     // Borrar la cuenta borra lo de la nube
     await p.click('#cuenta button');
     await p.waitForTimeout(300);
@@ -234,8 +234,8 @@ prueba(
   async p => {
     // La ficha de la zona se abre antes de que llegue la cuenta: lo de la cuenta no se puede perder
     await p.waitForTimeout(1200);
-    igual(await p.evaluate(() => progreso.z), { centro: 'v', vega: 'w' }, 'trae lo de la cuenta');
-    cierto(await p.evaluate(() => progreso.j.fl.includes('tejares')), 'y conserva la ficha leída');
+    igual(await p.evaluate(() => estadoApp.progreso.z), { centro: 'v', vega: 'w' }, 'trae lo de la cuenta');
+    cierto(await p.evaluate(() => estadoApp.progreso.j.fl.includes('tejares')), 'y conserva la ficha leída');
     igual(await p.evaluate(() => window.__guardado.z), { centro: 'v', vega: 'w' }, 'la cuenta sigue entera');
     igual(
       await p.evaluate(() => localStorage.getItem('charro-cuenta-claude')),
@@ -273,7 +273,7 @@ prueba(
     // la cuenta tiene lo de un móvil y aquí hay otra cosa más nueva. No se pierde ninguna de las dos
     await p.waitForTimeout(1500);
     igual(
-      await p.evaluate(() => Object.keys(progreso.z).sort()),
+      await p.evaluate(() => Object.keys(estadoApp.progreso.z).sort()),
       ['centro', 'vega'],
       'junta lo del navegador y lo de la cuenta'
     );
@@ -285,7 +285,7 @@ prueba(
       'el historial va envuelto para Firestore'
     );
     cierto(
-      await p.evaluate(() => progreso.j.hi.every(e => Array.isArray(e))),
+      await p.evaluate(() => estadoApp.progreso.j.hi.every(e => Array.isArray(e))),
       'y en la app sigue como siempre'
     );
     // Marcar algo nuevo también sube
@@ -349,10 +349,14 @@ prueba(
     // En un navegador nuevo se lee una ficha (solo cuenta para los logros) y luego se entra
     await p.evaluate(() => abrirFicha('vega'));
     await p.evaluate(() => cerrarFicha());
-    igual(await p.evaluate(() => progreso.t), 0, 'leer una ficha no hace la copia más nueva');
+    igual(await p.evaluate(() => estadoApp.progreso.t), 0, 'leer una ficha no hace la copia más nueva');
     await p.click('#cuenta button');
     await p.waitForTimeout(1300);
-    igual(await p.evaluate(() => progreso.z), { centro: 'v', tejares: 'w' }, 'trae lo de la cuenta');
+    igual(
+      await p.evaluate(() => estadoApp.progreso.z),
+      { centro: 'v', tejares: 'w' },
+      'trae lo de la cuenta'
+    );
     igual(await p.evaluate(() => window.__nubeGoogle.datos.z), { centro: 'v', tejares: 'w' }, 'sin pisarla');
     cierto(await p.evaluate(() => window.__nubeGoogle.datos.j.fl.includes('vega')), 'y suma la ficha leída');
   },

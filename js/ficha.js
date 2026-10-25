@@ -176,7 +176,7 @@ const TEXTOS_BOTONES = {
   ruta: ['La he hecho', 'La quiero hacer']
 };
 function modoBotonesFicha(modo) {
-  if (modo != 'ruta' && typeof rutaSeguida != 'undefined') rutaSeguida = null;
+  if (modo != 'ruta' && typeof estadoApp.rutaSeguida != 'undefined') estadoApp.rutaSeguida = null;
   document.querySelector('.bt').style.display = '';
   const textos = TEXTOS_BOTONES[modo] || ['', ''];
   // Si solo queda el botón de compartir, lleva también su texto (un icono suelto se entiende peor)
@@ -201,7 +201,9 @@ const APARTADOS_FICHA = [
 function pintarIndiceFicha() {
   const indice = $('#idx'),
     apartados = APARTADOS_FICHA.filter(([sel]) =>
-      sel == '#demo' ? fichaConDemografia : !$(sel).hidden || (sel == '#pch' && fichaConPalabra)
+      sel == '#demo'
+        ? estadoApp.fichaConDemografia
+        : !$(sel).hidden || (sel == '#pch' && estadoApp.fichaConPalabra)
     );
   indice.textContent = '';
   fichaConIndice = apartados.length > 1;
@@ -218,16 +220,6 @@ function irAApartado(sel, agrandar = true) {
   requestAnimationFrame(() => $(sel).scrollIntoView({ behavior: comoDesplazar(), block: 'start' }));
 }
 
-// La ficha lleva «Cultura y tradiciones» (cultura.js: pintarCulturaEnFicha)
-let fichaConCultura = false;
-// La ficha lleva la evolución de la población de su municipio (pueblos.js: pintarDemografia)
-let fichaConDemografia = false;
-// La ficha se abre desde «¿Qué puedo descubrir hoy?» (hoy.js): lleva el botón para volver allí
-let fichaDesdeHoy = false;
-// En el móvil, la ficha se abre alta (casi toda la pantalla): listas y paneles que no necesitan el mapa
-// de la capital a la vista (Tu Salamanca, Cultura, Dónde comer, las rutas en coche)
-let fichaAlta = false;
-
 // Dónde estaba el foco antes de abrir la ficha, para devolverlo al cerrarla
 let focoAntesDeFicha = null;
 
@@ -236,19 +228,19 @@ function mostrarFicha() {
   if (typeof juego != 'undefined' && juego.activo) salirJuego(); // abrir una ficha (p. ej. desde el buscador) deja el juego
   document.querySelector('.sb').scrollTop = 0;
   // Con la pantalla baja (móvil en horizontal, zoom al 200 %) la ficha se abre grande: si no, se leen dos líneas
-  $('#sh').classList.toggle('grande', !esEscritorio() && (innerHeight < 520 || fichaAlta));
-  fichaAlta = false;
+  $('#sh').classList.toggle('grande', !esEscritorio() && (innerHeight < 520 || estadoApp.fichaAlta));
+  estadoApp.fichaAlta = false;
   // La palabra charra y el índice solo van en las fichas de zona (los pinta abrirFicha justo antes)
-  $('#pch').hidden = !fichaConPalabra;
+  $('#pch').hidden = !estadoApp.fichaConPalabra;
   $('#idx').hidden = !fichaConIndice;
-  fichaConPalabra = fichaConIndice = false;
-  $('#volverhoy').hidden = !fichaDesdeHoy;
-  $('#culf').hidden = !fichaConCultura;
-  fichaConCultura = false;
-  $('#demo').hidden = !fichaConDemografia;
-  fichaConDemografia = false;
+  estadoApp.fichaConPalabra = fichaConIndice = false;
+  $('#volverhoy').hidden = !estadoApp.fichaDesdeHoy;
+  $('#culf').hidden = !estadoApp.fichaConCultura;
+  estadoApp.fichaConCultura = false;
+  $('#demo').hidden = !estadoApp.fichaConDemografia;
+  estadoApp.fichaConDemografia = false;
   // En el móvil, sube la página hasta el mapa (el de la provincia en su pestaña) para que se vea por encima del panel
-  const mapaVisible = { map: '.mw', prov: '#pm' }[pestana];
+  const mapaVisible = { map: '.mw', prov: '#pm' }[estadoApp.pestana];
   if (!esEscritorio() && mapaVisible && document.querySelector(mapaVisible)) {
     const arriba = document.querySelector(mapaVisible).getBoundingClientRect().top;
     if (Math.abs(arriba - 8) > 4)
@@ -264,7 +256,7 @@ function mostrarFicha() {
 
 function abrirFicha(id) {
   const z = buscarZona(id);
-  zonaAbierta = id;
+  estadoApp.zonaAbierta = id;
   olvidarMonumento();
   modoBotonesFicha('zona');
   mostrarAvisoAqui(id);
@@ -318,7 +310,7 @@ function abrirFicha(id) {
 // tramo: en una avenida, el tramo que se ha pulsado en el mapa (se encuadra ese)
 function abrirFichaVia(nombre, tramo = 0) {
   const [tipo, nombreLargo, descripcion] = INFO_VIAS[nombre];
-  zonaAbierta = null;
+  estadoApp.zonaAbierta = null;
   olvidarMonumento();
   $('#mz').hidden = true;
   $('#here').hidden = true;
@@ -348,18 +340,18 @@ function abrirFichaVia(nombre, tramo = 0) {
 function marcarZona(id, marca) {
   apuntarTarea('marca'); // medicion.js
   conAvisoDeLogros(() => {
-    progreso.gv = progreso.gv || [];
-    if (progreso.z[id] == marca) {
+    estadoApp.progreso.gv = estadoApp.progreso.gv || [];
+    if (estadoApp.progreso.z[id] == marca) {
       // Quitar una marca se puede deshacer (y con ella, si la tenía, la prueba de haberla pisado con GPS)
-      const conGpsAntes = progreso.gv.includes(id);
-      delete progreso.z[id];
+      const conGpsAntes = estadoApp.progreso.gv.includes(id);
+      delete estadoApp.progreso.z[id];
       aviso(buscarZona(id).n + ': quitada de «' + (marca == 'v' ? 'He estado' : 'Quiero ir') + '»', {
         accion: ['Deshacer', () => recuperarMarca(id, marca, conGpsAntes)]
       });
     } else {
-      progreso.z[id] = marca;
+      estadoApp.progreso.z[id] = marca;
       const conGps = ubicacionReciente() && ubicacion.id == id;
-      if (marca == 'v' && conGps && !progreso.gv.includes(id)) progreso.gv.push(id);
+      if (marca == 'v' && conGps && !estadoApp.progreso.gv.includes(id)) estadoApp.progreso.gv.push(id);
       // Con lo que queda para el logro de su zona del mapa («· 5 de 7 en Norte completo»)
       const falta = marca == 'v' ? progresoDeZona(buscarZona(id)) : '';
       aviso(
@@ -369,7 +361,7 @@ function marcarZona(id, marca) {
       );
       if (marca == 'v') animarVitor(buscarZona(id));
     }
-    if (progreso.z[id] != 'v') progreso.gv = progreso.gv.filter(k => k != id);
+    if (estadoApp.progreso.z[id] != 'v') estadoApp.progreso.gv = estadoApp.progreso.gv.filter(k => k != id);
     guardar();
     pintarZona(buscarZona(id));
     pintarBotonesFicha();
@@ -380,8 +372,8 @@ function marcarZona(id, marca) {
 
 // «Deshacer» después de quitar una marca: la deja como estaba
 function recuperarMarca(id, marca, conGps) {
-  progreso.z[id] = marca;
-  if (conGps && !progreso.gv.includes(id)) progreso.gv.push(id);
+  estadoApp.progreso.z[id] = marca;
+  if (conGps && !estadoApp.progreso.gv.includes(id)) estadoApp.progreso.gv.push(id);
   guardar();
   pintarZona(buscarZona(id));
   pintarBotonesFicha();
@@ -390,21 +382,21 @@ function recuperarMarca(id, marca, conGps) {
 }
 
 // En la ficha de un pueblo de la provincia (pueblos.js) los botones marcan el pueblo
-const fichaDePueblo = () => typeof puebloAbierto != 'undefined' && puebloAbierto;
+const fichaDePueblo = () => typeof estadoApp.puebloAbierto != 'undefined' && estadoApp.puebloAbierto;
 
-const fichaDeVisita = () => typeof visitaAbierta != 'undefined' && visitaAbierta;
+const fichaDeVisita = () => typeof estadoApp.visitaAbierta != 'undefined' && estadoApp.visitaAbierta;
 
 function pintarBotonesFicha() {
   const marca =
-    typeof rutaSeguida != 'undefined' && rutaSeguida
-      ? estadoRuta(rutaSeguida)
+    typeof estadoApp.rutaSeguida != 'undefined' && estadoApp.rutaSeguida
+      ? estadoRuta(estadoApp.rutaSeguida)
       : fichaDeVisita()
-        ? estaVisitada(visitaAbierta)
+        ? estaVisitada(estadoApp.visitaAbierta)
           ? 'v'
           : ''
         : fichaDePueblo()
-          ? estadoMunicipio(puebloAbierto)
-          : progreso.z[zonaAbierta];
+          ? estadoMunicipio(estadoApp.puebloAbierto)
+          : estadoApp.progreso.z[estadoApp.zonaAbierta];
   document.querySelectorAll('.bt button[data-s]').forEach(b => marcarInterruptor(b, marca == b.dataset.s));
 }
 
@@ -413,7 +405,7 @@ function cerrarFicha() {
     focoEnFicha = $('#sh').contains(document.activeElement) || document.activeElement == document.body;
   focoAntesDeFicha = null;
   resaltarVia(null);
-  zonaAbierta = null;
+  estadoApp.zonaAbierta = null;
   olvidarMonumento();
   $('#sh').classList.remove('o');
   $('#mn').classList.remove('o');
@@ -427,12 +419,13 @@ function cerrarFicha() {
 document.querySelectorAll('.bt button[data-s]').forEach(
   b =>
     (b.onclick = () => {
-      if (typeof rutaSeguida != 'undefined' && rutaSeguida) marcarRuta(rutaSeguida, b.dataset.s);
+      if (typeof estadoApp.rutaSeguida != 'undefined' && estadoApp.rutaSeguida)
+        marcarRuta(estadoApp.rutaSeguida, b.dataset.s);
       else if (fichaDeVisita()) marcarVisita();
       else if (fichaDePueblo()) {
-        marcarMunicipio(puebloAbierto, b.dataset.s);
+        marcarMunicipio(estadoApp.puebloAbierto, b.dataset.s);
         pintarBotonesFicha();
-      } else marcarZona(zonaAbierta, b.dataset.s);
+      } else marcarZona(estadoApp.zonaAbierta, b.dataset.s);
     })
 );
 $('#x').onclick = () => {

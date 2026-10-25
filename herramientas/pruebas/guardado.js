@@ -11,7 +11,7 @@ prueba(
     await p.press('#q', 'Enter');
     await p.click('.bt button[data-s=v]');
     await p.click('#ts button');
-    const fecha = await p.evaluate(() => progreso.j.hi.find(e => e[1] == 'z' && e[2] == 'tejares'));
+    const fecha = await p.evaluate(() => estadoApp.progreso.j.hi.find(e => e[1] == 'z' && e[2] == 'tejares'));
     igual(fecha, ['2025-03-01', 'z', 'tejares'], 'conserva la fecha en que se pisó');
   },
   {
@@ -31,9 +31,9 @@ prueba('Quitar una marca se puede deshacer', async p => {
   await p.waitForTimeout(2600); // que pase también el aviso del logro
   await p.click('.bt button[data-s=v]');
   igual(await texto(p, '#ts span'), 'Tejares: quitada de «He estado»', 'avisa al quitarla');
-  igual(await p.evaluate(() => progreso.z.tejares), undefined, 'quitada');
+  igual(await p.evaluate(() => estadoApp.progreso.z.tejares), undefined, 'quitada');
   await p.click('#ts button');
-  igual(await p.evaluate(() => progreso.z.tejares), 'v', 'y Deshacer la recupera');
+  igual(await p.evaluate(() => estadoApp.progreso.z.tejares), 'v', 'y Deshacer la recupera');
   cierto(
     await p.$eval('.bt button[data-s=v]', b => b.classList.contains('on')),
     'el botón vuelve a estar marcado'
@@ -53,11 +53,11 @@ prueba('Copia de seguridad: descargar y cargar', async p => {
   cierto(JSON.parse(copia).app == 'mapa-charro', 'la copia dice de qué app es');
   // En otro navegador (aquí: progreso vacío) se carga y se junta
   await p.evaluate(() => {
-    progreso.z = { tejares: 'w' };
+    estadoApp.progreso.z = { tejares: 'w' };
   });
   cierto(await p.evaluate(c => cargarCopia(c), copia), 'se carga');
   igual(
-    await p.evaluate(() => [progreso.z.vega, progreso.z.tejares]),
+    await p.evaluate(() => [estadoApp.progreso.z.vega, estadoApp.progreso.z.tejares]),
     ['v', 'w'],
     'junta la copia con lo que había'
   );
@@ -75,22 +75,22 @@ prueba('Copia de seguridad: descargar y cargar', async p => {
 });
 
 prueba('Guardado: primera ejecución y recarga', async p => {
-  igual(await p.evaluate(() => Object.keys(progreso.z).length), 0, 'sin nada marcado');
+  igual(await p.evaluate(() => Object.keys(estadoApp.progreso.z).length), 0, 'sin nada marcado');
   await p.evaluate(() => marcarZona('vega', 'v'));
   const g = await leerGuardado(p);
   igual(g.z, { vega: 'v' }, 'se guarda al momento en el navegador');
   cierto(g.t > 0 && typeof g.j == 'object', 'con su hora y sus datos de logros');
   await p.reload();
-  igual(await p.evaluate(() => progreso.z), { vega: 'v' }, 'y sigue ahí al recargar');
+  igual(await p.evaluate(() => estadoApp.progreso.z), { vega: 'v' }, 'y sigue ahí al recargar');
 });
 
 prueba(
   'Guardado: datos existentes, antiguos o de una versión más nueva',
   async p => {
     // Lo válido se usa; lo que no es válido se descarta; lo que esta versión no conoce se conserva
-    igual(await p.evaluate(() => progreso.z), { centro: 'v' }, 'usa lo válido');
-    igual(await p.evaluate(() => progreso.j.mo), ['catedrales'], 'sin repetir monumentos');
-    igual(await p.evaluate(() => progreso.f), 1, 'la rana');
+    igual(await p.evaluate(() => estadoApp.progreso.z), { centro: 'v' }, 'usa lo válido');
+    igual(await p.evaluate(() => estadoApp.progreso.j.mo), ['catedrales'], 'sin repetir monumentos');
+    igual(await p.evaluate(() => estadoApp.progreso.f), 1, 'la rana');
     await p.evaluate(() => marcarZona('vega', 'w'));
     const g = await leerGuardado(p);
     igual(g.z, { 'barrio-futuro': 'v', centro: 'v', vega: 'w' }, 'conserva la zona que no conoce');
@@ -154,7 +154,11 @@ prueba(
       (await texto(p, '#sv')).startsWith('No se puede guardar en este navegador'),
       'lo dice en el estado'
     );
-    igual(await p.evaluate(() => progreso.z.vega), 'v', 'y la marca sigue en la app mientras está abierta');
+    igual(
+      await p.evaluate(() => estadoApp.progreso.z.vega),
+      'v',
+      'y la marca sigue en la app mientras está abierta'
+    );
   },
   {
     antes: () => {
@@ -169,8 +173,8 @@ prueba(
 
 prueba('Guardado: marcar dos veces no duplica y no borra otros campos', async p => {
   await p.evaluate(() => {
-    progreso.j.m = 300;
-    progreso.j.rs = { monumental: 'w' };
+    estadoApp.progreso.j.m = 300;
+    estadoApp.progreso.j.rs = { monumental: 'w' };
     guardar();
     // Marcar, quitar y volver a marcar la misma zona; visitar dos veces el mismo monumento; leer dos veces
     marcarZona('vega', 'v');
@@ -194,7 +198,11 @@ prueba(
   'Sincronización: si cambian los dos lados, se juntan',
   async p => {
     await p.waitForFunction(() => window.__nube.subidas > 0, null, { timeout: 4000 });
-    igual(await p.evaluate(() => progreso.z), { centro: 'v', vega: 'v' }, 'lo de aquí y lo de la cuenta');
+    igual(
+      await p.evaluate(() => estadoApp.progreso.z),
+      { centro: 'v', vega: 'v' },
+      'lo de aquí y lo de la cuenta'
+    );
     igual(
       await p.evaluate(() => window.__nube.datos.z),
       { centro: 'v', vega: 'v', 'barrio-futuro': 'w' },
@@ -202,12 +210,12 @@ prueba(
     );
     // Llega un cambio de otro dispositivo mientras aquí hay algo sin subir: se juntan
     await p.evaluate(() => {
-      progreso.z.tejares = 'v';
-      progreso.t = Date.now();
+      estadoApp.progreso.z.tejares = 'v';
+      estadoApp.progreso.t = Date.now();
       window.__nube.avisar({ z: { centro: 'v', vega: 'v', chamberi: 'v' }, t: Date.now() + 5000, v: 1 });
     });
     igual(
-      await p.evaluate(() => Object.keys(progreso.z).sort()),
+      await p.evaluate(() => Object.keys(estadoApp.progreso.z).sort()),
       ['centro', 'chamberi', 'tejares', 'vega'],
       'no se pisa lo que aún no había subido'
     );
@@ -277,7 +285,11 @@ prueba(
     // Recargar: viene lo mismo
     await p.reload();
     await p.waitForTimeout(400);
-    igual(await p.evaluate(() => progreso.z), { tejares: 'v', vega: 'v' }, 'y tras recargar sigue todo');
+    igual(
+      await p.evaluate(() => estadoApp.progreso.z),
+      { tejares: 'v', vega: 'v' },
+      'y tras recargar sigue todo'
+    );
   },
   {
     antes: () => {
@@ -313,10 +325,10 @@ prueba('Guardado: con la app abierta en dos pestañas no se pisan', async (p, ur
   await otra.waitForTimeout(300);
   await p.evaluate(() => marcarZona('vega', 'v'));
   await otra.waitForTimeout(150);
-  igual(await otra.evaluate(() => progreso.z), { vega: 'v' }, 'la otra pestaña se entera');
+  igual(await otra.evaluate(() => estadoApp.progreso.z), { vega: 'v' }, 'la otra pestaña se entera');
   await otra.evaluate(() => marcarZona('tejares', 'v'));
   await p.waitForTimeout(150);
   igual(await leerGuardado(p).then(g => g.z), { tejares: 'v', vega: 'v' }, 'y lo de las dos queda guardado');
-  igual(await p.evaluate(() => progreso.z), { tejares: 'v', vega: 'v' }, 'también en la primera');
+  igual(await p.evaluate(() => estadoApp.progreso.z), { tejares: 'v', vega: 'v' }, 'también en la primera');
   await otra.close();
 });

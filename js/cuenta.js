@@ -295,7 +295,7 @@ function pintarCuenta(estado = cuentaWeb.estadoBoton) {
     b.textContent = 'Entrar con Google';
     b.onclick = entrarConGoogle;
     // La razón, solo cuando ya hay algo que perder
-    if (tieneProgreso(progreso)) caja.append(crear('span', '', 'Para no perder tu progreso: '));
+    if (tieneProgreso(estadoApp.progreso)) caja.append(crear('span', '', 'Para no perder tu progreso: '));
   }
   caja.append(b);
 }

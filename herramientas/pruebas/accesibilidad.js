@@ -311,14 +311,14 @@ prueba('En el móvil, Tu Salamanca y las listas que no usan el mapa se abren alt
   await p.click('#info .fila-explora');
   cierto(!(await alta()), 'al elegir un sitio, a su altura para ver su zona');
   await p.evaluate(() => {
-    filtroRutas = 'coche';
+    estadoApp.filtroRutas = 'coche';
     abrirRutas();
   });
   cierto(await alta(), 'las rutas por la provincia');
   await p.evaluate(() => abrirRutaProvincia(0));
   cierto(await alta(), 'y cada ruta en coche, con su mapa');
   await p.evaluate(() => {
-    filtroRutas = 'pie';
+    estadoApp.filtroRutas = 'pie';
     abrirRutas();
   });
   cierto(!(await alta()), 'las de a pie, con el mapa de la ciudad a la vista');

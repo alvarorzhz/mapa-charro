@@ -9,7 +9,7 @@ function contextoAviso() {
   const h = hashActual(),
     version = (document.querySelector('meta[name="version"]') || {}).content || '';
   return {
-    que: nombreFicha || 'la app en general',
+    que: estadoApp.nombreFicha || 'la app en general',
     enlace: WEB + (h ? '#' + h : ''),
     version
   };

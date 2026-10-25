@@ -76,7 +76,7 @@ function pintarEtapa(i) {
   pintarPanelTiempo(i);
   // Cada etapa tiene su enlace (#tiempo/1 … #tiempo/7); al cambiar de etapa se sustituye, sin llenar el historial
   if ($('#sh').classList.contains('o') && hashActual().split('/')[0] == 'tiempo') {
-    nombreFicha = 'Salamanca en el tiempo: ' + ETAPAS[i][1];
+    estadoApp.nombreFicha = 'Salamanca en el tiempo: ' + ETAPAS[i][1];
     ponerTitulo();
     escribirHash(hashEtapa(i), false);
   }
@@ -327,7 +327,7 @@ function pintarNacimiento(z) {
 
 // --- Abrir y salir -------------------------------------------------------------
 function abrirTiempo(i = 0) {
-  zonaAbierta = null;
+  estadoApp.zonaAbierta = null;
   olvidarMonumento();
   resaltarVia(null);
   $('#here').hidden = true;
@@ -364,6 +364,6 @@ function salirTiempo() {
 }
 
 $('#tm').onclick = () => {
-  if (pestana != 'map' && !esEscritorio()) cambiarPestana('map'); // en el móvil, las etapas se ven en el mapa
+  if (estadoApp.pestana != 'map' && !esEscritorio()) cambiarPestana('map'); // en el móvil, las etapas se ven en el mapa
   etapaTiempo >= 0 ? $('#x').click() : abrirTiempo();
 };

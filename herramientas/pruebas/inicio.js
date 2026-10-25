@@ -55,7 +55,10 @@ prueba(
     await p.waitForTimeout(600);
     cierto(!(await p.$('#paseo')) && (await fichaAbierta(p)), 'con un enlace a una ficha no sale');
     // Lo del paseo no va en el progreso
-    cierto(!(await p.evaluate(() => JSON.stringify(progreso).includes('paseo'))), 'fuera del progreso');
+    cierto(
+      !(await p.evaluate(() => JSON.stringify(estadoApp.progreso).includes('paseo'))),
+      'fuera del progreso'
+    );
   },
   { conBienvenida: true }
 );
@@ -280,7 +283,7 @@ prueba('Laboratorio: medición en el navegador, sin datos personales', async p =
   cierto(m.s[0].t.zona >= 0, 'y cuándo, la primera vez de la visita');
   cierto(m.c[0].mapa > 0, 'el tiempo hasta tener el mapa');
   cierto(!JSON.stringify(m).includes('tejares'), 'nunca qué sitio');
-  cierto(!JSON.stringify(await p.evaluate(() => progreso)).includes('"u"'), 'fuera del progreso');
+  cierto(!JSON.stringify(await p.evaluate(() => estadoApp.progreso)).includes('"u"'), 'fuera del progreso');
   // Una prueba de tarea: se cronometra y se cuentan los toques
   await p.click('#x');
   await p.click('#ayuda');

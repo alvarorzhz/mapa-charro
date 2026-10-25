@@ -52,7 +52,7 @@ prueba('Salamanca en el tiempo', async p => {
     return p.evaluate(() => getComputedStyle(zonas.find(z => z.id == 'vega').e).fill);
   };
   await p.evaluate(() => {
-    progreso.z.vega = 'v';
+    estadoApp.progreso.z.vega = 'v';
     pintarZona(zonas.find(z => z.id == 'vega'));
   });
   const rojo = await relleno();
@@ -168,7 +168,11 @@ prueba('Salir del reto a medias pregunta', async p => {
   await p.evaluate(() => cambiarPestana('list')); // en escritorio, el panel del juego tapa las pestañas
   cierto(!!(await p.$('.modal')), 'cambiar de pestaña también pregunta');
   await p.click('.modal .botones button:text-is("Salir")');
-  igual(await p.evaluate(() => [juego.activo, pestana]), [false, 'list'], 'Salir lo deja y va a la pestaña');
+  igual(
+    await p.evaluate(() => [juego.activo, estadoApp.pestana]),
+    [false, 'list'],
+    'Salir lo deja y va a la pestaña'
+  );
 });
 
 prueba('Juego «¿Dónde está?»', async p => {
@@ -230,7 +234,7 @@ prueba('Juego «¿Dónde está?»', async p => {
   }
   await p.click('#jp .botones button');
   const final = await p.evaluate(() => ({
-    j: progreso.j,
+    j: estadoApp.progreso.j,
     guardado: JSON.parse(localStorage.charro2).j,
     texto: document.querySelector('#jp h2').textContent
   }));
@@ -599,7 +603,7 @@ prueba('Detalles escondidos: pista, encontrarlo, foto, logros y guardado', async
   await p.click('#info button:has-text("enséñamelo")');
   cierto(!(await p.$eval('#ph', e => e.hidden)), '«Enséñamelo» enseña la foto');
   cierto((await texto(p, '#ap')).includes('Foto:'), 'y ya el enlace a la foto');
-  igual(await p.evaluate(() => progreso.j.de), [], 'pero no lo cuenta');
+  igual(await p.evaluate(() => estadoApp.progreso.j.de), [], 'pero no lo cuenta');
   cierto(
     !(await p.$('#info button:has-text("¡Lo he encontrado!")')),
     'y ya no deja marcarlo como encontrado sin ayuda'
@@ -611,7 +615,7 @@ prueba('Detalles escondidos: pista, encontrarlo, foto, logros y guardado', async
   await p.reload();
   await p.waitForSelector('#sh.o');
   await p.click('#info button:has-text("¡Lo he encontrado!")');
-  igual(await p.evaluate(() => progreso.j.de), ['astronauta'], 'encontrado');
+  igual(await p.evaluate(() => estadoApp.progreso.j.de), ['astronauta'], 'encontrado');
   cierto((await texto(p, '#info')).includes('Miguel Romero'), 'con su explicación');
   cierto(
     await p.$eval('#info', e => {
@@ -621,7 +625,9 @@ prueba('Detalles escondidos: pista, encontrarlo, foto, logros y guardado', async
     'la explicación va antes que la pista'
   );
   cierto(
-    await p.evaluate(() => (progreso.j.hi || []).some(([, tipo, id]) => tipo == 'de' && id == 'astronauta')),
+    await p.evaluate(() =>
+      (estadoApp.progreso.j.hi || []).some(([, tipo, id]) => tipo == 'de' && id == 'astronauta')
+    ),
     'se apunta en el historial'
   );
   cierto(
@@ -657,12 +663,12 @@ prueba('Detalles escondidos: pista, encontrarlo, foto, logros y guardado', async
     ['astronauta', 'detalle-futuro'],
     'lo desconocido se conserva'
   );
-  igual(await p.evaluate(() => progreso.j.de), ['astronauta'], 'y la app solo usa lo que conoce');
+  igual(await p.evaluate(() => estadoApp.progreso.j.de), ['astronauta'], 'y la app solo usa lo que conoce');
   // Quitar la marca
   await p.goto(url + '#detalle/astronauta');
   await p.waitForSelector('#sh.o');
   await p.click('#info button:has-text("Quitar la marca")');
-  igual(await p.evaluate(() => progreso.j.de), [], 'marca quitada');
+  igual(await p.evaluate(() => estadoApp.progreso.j.de), [], 'marca quitada');
 });
 
 prueba('Monumentos y Dónde comer, en listas', async (p, url) => {
@@ -672,7 +678,7 @@ prueba('Monumentos y Dónde comer, en listas', async (p, url) => {
   igual(await p.$$eval(monumentos, a => a.length), await p.evaluate(() => MONUMENTOS.length), 'están todos');
   cierto((await texto(p, '#irdet')).includes('Detalles escondidos'), 'y arriba, los detalles escondidos');
   await p.evaluate(() => {
-    progreso.j.mo = ['catedrales'];
+    estadoApp.progreso.j.mo = ['catedrales'];
     guardar();
   });
   await p.click('#info .fl button:nth-child(2)'); // Visitados
@@ -764,13 +770,13 @@ prueba('«¿Qué puedo descubrir hoy?»: recomendación, ir a la ficha y volver'
 prueba('«¿Qué puedo descubrir hoy?»: con todo pisado, una recomendación general', async p => {
   await p.evaluate(() => {
     todosLosLugares().forEach(l => {
-      if (l.tipo == 'z') progreso.z[l.id] = 'v';
-      else if (l.tipo == 'p') progreso.p[l.id] = 'v';
+      if (l.tipo == 'z') estadoApp.progreso.z[l.id] = 'v';
+      else if (l.tipo == 'p') estadoApp.progreso.p[l.id] = 'v';
     });
-    progreso.j.mo = MONUMENTOS.map(m => m.id);
+    estadoApp.progreso.j.mo = MONUMENTOS.map(m => m.id);
     guardar();
     // Pisado antes de hoy (si no, sería «lo has marcado hoy»)
-    progreso.j.hi = progreso.j.hi.map(([, t, id]) => ['', t, id]);
+    estadoApp.progreso.j.hi = estadoApp.progreso.j.hi.map(([, t, id]) => ['', t, id]);
     abrirHoy();
   });
   cierto(

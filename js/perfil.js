@@ -11,11 +11,12 @@ const claveHistorial = (tipo, id) => tipo + '|' + id;
 
 // Todo lo que cuenta para el historial ahora mismo: claves «tipo|id»
 function marcasActuales() {
-  const j = progreso.j || {},
+  const j = estadoApp.progreso.j || {},
     claves = [];
-  for (const id in progreso.z)
-    if (progreso.z[id] == 'v' && id != 'resto') claves.push(claveHistorial('z', id));
-  for (const k in progreso.p || {}) if (progreso.p[k] == 'v') claves.push(claveHistorial('p', k));
+  for (const id in estadoApp.progreso.z)
+    if (estadoApp.progreso.z[id] == 'v' && id != 'resto') claves.push(claveHistorial('z', id));
+  for (const k in estadoApp.progreso.p || {})
+    if (estadoApp.progreso.p[k] == 'v') claves.push(claveHistorial('p', k));
   (j.mo || []).forEach(id => claves.push(claveHistorial('mo', id)));
   for (const ruta in j.r || {}) j.r[ruta].forEach(id => claves.push(claveHistorial('ru', ruta + ':' + id)));
   for (const ruta in j.rs || {}) if (j.rs[ruta] == 'v') claves.push(claveHistorial('rh', ruta));
@@ -30,9 +31,9 @@ function marcasActuales() {
 // sin cerrar la app), vuelve con la fecha de antes y no con la de hoy. No se guarda.
 const quitadosDelHistorial = new Map();
 function anotarHistorial() {
-  progreso.j = progreso.j || {};
+  estadoApp.progreso.j = estadoApp.progreso.j || {};
   apuntarLogros(); // logros.js: que no se pierdan los ya conseguidos
-  const j = progreso.j,
+  const j = estadoApp.progreso.j,
     primeraVez = !Array.isArray(j.hi),
     actuales = new Set(marcasActuales()),
     hi = [],
@@ -109,7 +110,7 @@ function siguienteNivel(pisadas, total) {
 
 // --- Actividad: un cuadro por día de las últimas 12 semanas --------------------------------------------
 function mapaActividad() {
-  const j = progreso.j || {},
+  const j = estadoApp.progreso.j || {},
     cuenta = {};
   (j.hi || []).forEach(([f]) => f && (cuenta[f] = (cuenta[f] || 0) + 1));
   (j.h || []).forEach(f => (cuenta[f] = (cuenta[f] || 0) + 1));
@@ -179,7 +180,7 @@ const nombreUsuario = () => {
 
 // La cabecera de «Tu Salamanca» (mi-salamanca.js): nombre, nivel, zonas pisadas y el siguiente nivel
 function cabeceraPerfil() {
-  const zonasPisadas = todasLasZonas.filter(z => progreso.z[z.id] == 'v').length,
+  const zonasPisadas = todasLasZonas.filter(z => estadoApp.progreso.z[z.id] == 'v').length,
     total = todasLasZonas.length,
     hechos = calcularLogros().filter(conseguido).length,
     cuenta = cuentaDelPerfil(),
@@ -223,7 +224,7 @@ const textoCuentaPerfil = () => {
 
 // Pestaña «Actividad»: el cuadro de las últimas 12 semanas y el historial, lo más reciente primero
 function apartadosActividad() {
-  const j = progreso.j || {},
+  const j = estadoApp.progreso.j || {},
     { sv, dias } = mapaActividad(),
     conFecha = (j.hi || []).filter(e => e[0]).sort((a, b) => (a[0] < b[0] ? 1 : a[0] > b[0] ? -1 : 0)),
     sinFecha = (j.hi || []).filter(e => !e[0]).length,
@@ -269,7 +270,7 @@ function apartadosActividad() {
 
 // Pestaña «Logros»: juego y lectura
 function apartadoJuego() {
-  const j = progreso.j || {},
+  const j = estadoApp.progreso.j || {},
     racha = rachaReto();
   return crear(
     'section',

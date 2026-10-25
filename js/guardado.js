@@ -78,7 +78,7 @@ async function subirANube() {
     nube.pendiente = true;
     return;
   }
-  const datos = datosParaGuardar(progreso),
+  const datos = datosParaGuardar(estadoApp.progreso),
     json = JSON.stringify(datos);
   if (json === nube.ultimoSubido) return;
   nube.ocupada = true;
@@ -117,7 +117,7 @@ async function subirANube() {
 // cambian la hora del progreso: así, al abrir una ficha antes de conectar, esa copia casi vacía del
 // navegador no parece más nueva que la de la cuenta y no la pisa.
 const guardar = ({ uso = false } = {}) => {
-  if (!uso || nube.ref) progreso.t = Math.max(Date.now(), (progreso.t || 0) + 1);
+  if (!uso || nube.ref) estadoApp.progreso.t = Math.max(Date.now(), (estadoApp.progreso.t || 0) + 1);
   anotarHistorial(); // perfil.js: fecha de lo nuevo que se ha marcado
   guardarLocal();
   if (nube.ref) {
@@ -137,7 +137,7 @@ function avisarFalloLocal() {
 }
 
 function aplicarDesdeNube(datos) {
-  progreso = datos;
+  estadoApp.progreso = datos;
   guardarLocal();
   todasLasZonas.forEach(pintarZona);
   actualizar();
@@ -256,23 +256,23 @@ async function conectarNube(ref, textoOk, juntar = false, cuenta = '') {
   // Sin una sincronización anterior que haya salido bien en este navegador no se sabe qué lado es más
   // reciente de verdad (p. ej. si la subida fallaba): se juntan los dos, sin perder nada de ninguno
   if (enCuenta && (juntar || !base)) {
-    aplicarDesdeNube(juntarProgresos(enCuenta, progreso));
+    aplicarDesdeNube(juntarProgresos(enCuenta, estadoApp.progreso));
     subirANube();
   } else if (enCuenta) {
     nube.ultimoSubido = JSON.stringify(datosParaGuardar(enCuenta));
     // ¿Han cambiado los dos lados desde la última vez que se sincronizaron? Entonces se juntan
-    const cambioAqui = (progreso.t || 0) > base,
+    const cambioAqui = (estadoApp.progreso.t || 0) > base,
       cambioEnCuenta = (enCuenta.t || 0) > base;
     if (base && cambioAqui && cambioEnCuenta) {
-      aplicarDesdeNube(juntarProgresos(enCuenta, progreso));
+      aplicarDesdeNube(juntarProgresos(enCuenta, estadoApp.progreso));
       subirANube();
       aviso('Se han juntado tus cambios de este dispositivo con los de tu cuenta');
-    } else if ((enCuenta.t || 0) >= (progreso.t || 0)) {
+    } else if ((enCuenta.t || 0) >= (estadoApp.progreso.t || 0)) {
       aplicarDesdeNube(enCuenta);
       marcarSincronizado(enCuenta.t);
     } else subirANube();
-  } else if (tieneProgreso(progreso)) {
-    if (!progreso.t) progreso.t = Date.now();
+  } else if (tieneProgreso(estadoApp.progreso)) {
+    if (!estadoApp.progreso.t) estadoApp.progreso.t = Date.now();
     guardarLocal();
     subirANube();
   }
@@ -285,10 +285,10 @@ async function conectarNube(ref, textoOk, juntar = false, cuenta = '') {
       apartarDesconocidos(crudo);
       const nuevo = limpiarProgreso(crudo),
         base = baseSincronizada();
-      if ((nuevo.t || 0) > (progreso.t || 0)) {
-        if (!base || (progreso.t || 0) > base) {
+      if ((nuevo.t || 0) > (estadoApp.progreso.t || 0)) {
+        if (!base || (estadoApp.progreso.t || 0) > base) {
           // Aquí hay cambios que aún no han subido: se juntan con los que llegan, no se pisan
-          aplicarDesdeNube(juntarProgresos(nuevo, progreso));
+          aplicarDesdeNube(juntarProgresos(nuevo, estadoApp.progreso));
           subirANube();
         } else {
           nube.ultimoSubido = JSON.stringify(datosParaGuardar(nuevo));
@@ -373,8 +373,8 @@ addEventListener('storage', e => {
   }
   apartarDesconocidos(otro);
   otro = limpiarProgreso(otro);
-  if ((otro.t || 0) < (progreso.t || 0)) return;
-  progreso = otro;
+  if ((otro.t || 0) < (estadoApp.progreso.t || 0)) return;
+  estadoApp.progreso = otro;
   todasLasZonas.forEach(pintarZona);
   actualizar();
 });

@@ -2,7 +2,7 @@
 
 // Repinta todo lo que depende del progreso: barra y contador, rana, logros y la pestaña abierta
 function actualizar() {
-  const marcas = Object.values(progreso.z),
+  const marcas = Object.values(estadoApp.progreso.z),
     pisadas = marcas.filter(x => x == 'v').length,
     porVisitar = marcas.filter(x => x == 'w').length,
     total = todasLasZonas.length;
@@ -14,16 +14,16 @@ function actualizar() {
     total +
     ' zonas pisadas' +
     (porVisitar ? ' · ' + porVisitar + ' por visitar' : '') +
-    (progreso.f ? ' · 🐸' : '');
-  $('#cn').title = progreso.f ? 'Rana encontrada' : '';
-  $('#fr').style.opacity = progreso.f ? 1 : 0.45;
+    (estadoApp.progreso.f ? ' · 🐸' : '');
+  $('#cn').title = estadoApp.progreso.f ? 'Rana encontrada' : '';
+  $('#fr').style.opacity = estadoApp.progreso.f ? 1 : 0.45;
   try {
     pintarLogros();
     pintarFiltrosMapa();
     if (typeof refrescarEstadisticas == 'function') refrescarEstadisticas(); // mi-salamanca.js
     if (typeof pintarCuenta == 'function') pintarCuenta(); // cuenta.js: «para no perder tu progreso»
-    if (pestana == 'list') pintarLista();
-    if (pestana == 'prov') actualizarProvincia();
+    if (estadoApp.pestana == 'list') pintarLista();
+    if (estadoApp.pestana == 'prov') actualizarProvincia();
   } catch (e) {
     console.error(e);
   }
@@ -34,7 +34,7 @@ function cambiarPestana(nueva) {
   // Cambiar de pestaña deja el juego; si va a medias, antes se pregunta (juego.js)
   if (nueva != 'map' && typeof juego != 'undefined' && juego.activo)
     return pedirSalirJuego(() => cambiarPestana(nueva));
-  pestana = nueva;
+  estadoApp.pestana = nueva;
   const enMapa = nueva == 'map',
     mapaVisible = enMapa || esEscritorio();
   document.querySelector('.mw').style.display =
@@ -71,8 +71,8 @@ function pintarLista() {
   volver.onclick = () => cambiarPestana('map');
   caja.append(volver, crear('h2', 'lista-titulo', 'Las zonas de la capital'));
   caja.appendChild(
-    crearBotonesFiltro(filtroLista, clave => {
-      filtroLista = clave;
+    crearBotonesFiltro(estadoApp.filtroLista, clave => {
+      estadoApp.filtroLista = clave;
       pintarLista();
     })
   );
@@ -80,19 +80,19 @@ function pintarLista() {
   NOMBRES_GRUPOS.forEach((nombreGrupo, g) => {
     const delGrupo = todasLasZonas.filter(z => z.g == g),
       visibles = delGrupo
-        .filter(z => cumpleFiltro(filtroLista, progreso.z[z.id]))
+        .filter(z => cumpleFiltro(estadoApp.filtroLista, estadoApp.progreso.z[z.id]))
         .sort((a, b) => a.n.localeCompare(b.n, 'es'));
     if (!visibles.length) return;
     alguna = true;
-    const pisadas = delGrupo.filter(z => progreso.z[z.id] == 'v').length;
+    const pisadas = delGrupo.filter(z => estadoApp.progreso.z[z.id] == 'v').length;
     caja.appendChild(crear('div', 'lh', nombreGrupo + ' · ' + pisadas + '/' + delGrupo.length));
     visibles.forEach(z => {
       const nombre = crear('button', 'nm', z.n),
         fila = crear('div', 'lr', nombre);
       nombre.onclick = () => abrirFicha(z.id);
       ESTADOS_MARCA.forEach(([marca, texto]) => {
-        const b = crear('button', 'q' + (progreso.z[z.id] == marca ? ' on ' + marca : ''), texto);
-        b.setAttribute('aria-pressed', progreso.z[z.id] == marca);
+        const b = crear('button', 'q' + (estadoApp.progreso.z[z.id] == marca ? ' on ' + marca : ''), texto);
+        b.setAttribute('aria-pressed', estadoApp.progreso.z[z.id] == marca);
         b.setAttribute('aria-label', texto + ': ' + z.n);
         b.onclick = () => marcarZona(z.id, marca);
         fila.appendChild(b);
@@ -101,7 +101,9 @@ function pintarLista() {
     });
   });
   if (!alguna)
-    caja.appendChild(crear('p', 'mu', LISTA_VACIA[filtroLista] || 'Nada que mostrar con este filtro.'));
+    caja.appendChild(
+      crear('p', 'mu', LISTA_VACIA[estadoApp.filtroLista] || 'Nada que mostrar con este filtro.')
+    );
 }
 
 $('#vmap').onclick = () => cambiarPestana('map');
@@ -164,7 +166,7 @@ function quitarFiltrosMapa() {
 // Lleva al mapa de la capital ya filtrado (desde las estadísticas de «Mi Salamanca»), con aviso para quitarlo
 function verEnMapaFiltrado(estados, grupos, explicacion) {
   cerrarFicha();
-  if (pestana != 'map') cambiarPestana('map');
+  if (estadoApp.pestana != 'map') cambiarPestana('map');
   quitarFiltrosMapa();
   filtrosMapa.estados = new Set(estados);
   filtrosMapa.grupos = new Set(grupos);
@@ -210,7 +212,7 @@ addEventListener('resize', () => {
   ajustarVista();
 });
 matchMedia('(min-width:900px)').addEventListener('change', () => {
-  cambiarPestana(pestana);
+  cambiarPestana(estadoApp.pestana);
   ajustarVista();
 });
 // Esc cierra la ficha; + y - acercan y alejan el mapa
@@ -225,7 +227,7 @@ addEventListener('keydown', e => {
   else if (
     e.target.tagName != 'INPUT' &&
     e.target.tagName != 'TEXTAREA' &&
-    (pestana == 'map' || esEscritorio())
+    (estadoApp.pestana == 'map' || esEscritorio())
   ) {
     if (e.key == '+' || e.key == '=') zoomSuave(1.6);
     else if (e.key == '-') zoomSuave(1 / 1.6);

@@ -9,7 +9,7 @@
 //                comarca y estilo de monumento. Al añadir una ruta, una época o un estilo, su logro sale solo.
 
 // Visitas y usos guardados en progreso.j (ver estado.js)
-const datoJ = (campo, vacio) => (progreso.j && progreso.j[campo]) || vacio;
+const datoJ = (campo, vacio) => (estadoApp.progreso.j && estadoApp.progreso.j[campo]) || vacio;
 const monumentosVisitados = () => datoJ('mo', []);
 const esMonumento = m => !!m && categoriaMonumento(m) != 'ciudad';
 const paradasVisitadas = idRuta => datoJ('r', {})[idRuta] || [];
@@ -87,10 +87,10 @@ const ESTILOS_LOGRO = [
 ];
 
 function calcularLogros() {
-  const pisada = id => progreso.z[id] == 'v',
+  const pisada = id => estadoApp.progreso.z[id] == 'v',
     pisadas = todasLasZonas.filter(z => pisada(z.id)),
-    j = progreso.j || {},
-    gps = (progreso.gv || []).length,
+    j = estadoApp.progreso.j || {},
+    gps = (estadoApp.progreso.gv || []).length,
     pueblosPisados = pueblos.filter(m => estadoMunicipio(m) == 'v'),
     pedaniasPisadas = pedanias.filter(p => estadoClave(p.k) == 'v'),
     ciudad = z => z.g < 5;
@@ -144,7 +144,7 @@ function calcularLogros() {
       cat: 'deseo',
       n: 'Soñador',
       d: 'Apunta 5 sitios como «Quiero ir»',
-      c: Object.values(progreso.z).filter(x => x == 'w').length,
+      c: Object.values(estadoApp.progreso.z).filter(x => x == 'w').length,
       m: 5
     },
     {
@@ -152,7 +152,7 @@ function calcularLogros() {
       cat: 'rana',
       n: 'Rana a la vista',
       d: 'Encuentra la rana escondida en el mapa',
-      c: progreso.f ? 1 : 0,
+      c: estadoApp.progreso.f ? 1 : 0,
       m: 1
     },
     ...escalones('gps', gps, Infinity, [
@@ -315,7 +315,7 @@ function calcularLogros() {
 // Cosas hechas con la app que cuentan para los logros (en progreso.j): con valor, lo añade a esa
 // lista (fichas abiertas, etapas vistas); sin valor, suma 1 (partidas, veces que se comparte)
 function apuntarUso(campo, valor) {
-  const j = (progreso.j = progreso.j || {});
+  const j = (estadoApp.progreso.j = estadoApp.progreso.j || {});
   if (valor !== undefined && (j[campo] || []).includes(valor)) return;
   conAvisoDeLogros(() => {
     if (valor === undefined) j[campo] = (j[campo] || 0) + 1;
@@ -326,13 +326,10 @@ function apuntarUso(campo, valor) {
 }
 
 // --- Visitar un monumento o una parada propia de una ruta ---------------------------------
-// visitaAbierta: lo que muestra la ficha ahora, si se puede marcar como visitado
-//   { tipo: 'mo', id, n } o { tipo: 'ru', ruta, id, n }
-let visitaAbierta = null;
 const estaVisitada = v =>
   v.tipo == 'mo' ? monumentosVisitados().includes(v.id) : paradasVisitadas(v.ruta).includes(v.id);
 function ponerVisita(v, si) {
-  const j = (progreso.j = progreso.j || {});
+  const j = (estadoApp.progreso.j = estadoApp.progreso.j || {});
   if (v.tipo == 'mo') {
     const mo = new Set(j.mo || []);
     si ? mo.add(v.id) : mo.delete(v.id);
@@ -347,7 +344,7 @@ function ponerVisita(v, si) {
   actualizar();
   pintarBotonesFicha();
 }
-function marcarVisita(v = visitaAbierta) {
+function marcarVisita(v = estadoApp.visitaAbierta) {
   if (!v) return;
   apuntarTarea('marca'); // medicion.js
   conAvisoDeLogros(() => {
@@ -406,7 +403,7 @@ const MEDALLAS = {
 // ({ id: m }) y sigue conseguido mientras no se quite nada de lo que lo dio (apuntarLogros, al guardar)
 const conseguido = a => a.c >= a.m || (datoJ('lg', {})[a.id] > 0 && a.c >= datoJ('lg', {})[a.id]);
 function apuntarLogros() {
-  const j = progreso.j,
+  const j = estadoApp.progreso.j,
     lg = { ...(j.lg || {}) };
   calcularLogros().forEach(a => {
     if (a.c >= a.m) lg[a.id] = Math.min(lg[a.id] || a.m, a.m);
@@ -446,7 +443,7 @@ function progresoDeZona(z) {
 function pintarLogros() {
   const logros = calcularLogros(),
     hechos = logros.filter(conseguido).length,
-    pisadas = todasLasZonas.filter(z => progreso.z[z.id] == 'v').length;
+    pisadas = todasLasZonas.filter(z => estadoApp.progreso.z[z.id] == 'v').length;
   // El botón de «Lo tuyo» lleva el resumen
   $('#tsr').textContent =
     pisadas +
@@ -587,8 +584,8 @@ function conAvisoDeLogros(cambio) {
 
 // La rana escondida en una esquina del mapa
 $('#fr').onclick = () => {
-  const primeraVez = !progreso.f;
-  progreso.f = 1;
+  const primeraVez = !estadoApp.progreso.f;
+  estadoApp.progreso.f = 1;
   guardar();
   actualizar();
   aviso('¡Has encontrado la rana!', { tipo: 'logro' });

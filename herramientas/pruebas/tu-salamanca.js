@@ -53,7 +53,7 @@ prueba(
   async (p, url) => {
     // Lo que ya estaba marcado se apunta sin fecha; lo nuevo, con la de hoy
     igual(
-      await p.evaluate(() => progreso.j.hi),
+      await p.evaluate(() => estadoApp.progreso.j.hi),
       [
         ['', 'z', 'centro'],
         ['', 'lo', 'p']
@@ -62,7 +62,7 @@ prueba(
     );
     await p.evaluate(() => marcarZona('vidal', 'v'));
     igual(
-      await p.evaluate(() => progreso.j.hi.find(e => e[2] == 'vidal')[0]),
+      await p.evaluate(() => estadoApp.progreso.j.hi.find(e => e[2] == 'vidal')[0]),
       await p.evaluate(() => fechaHoy()),
       'lo nuevo, con fecha'
     );
@@ -102,11 +102,14 @@ prueba(
     });
     igual(await texto(p, '#nm'), 'Hola, Álvaro', 'saluda por el nombre');
     cierto((await texto(p, '.perfil-nombre')) == 'Álvaro Rodríguez', 'y lo pone entero');
-    cierto(!JSON.stringify(await p.evaluate(() => progreso)).includes('Álvaro'), 'sin guardarlo');
+    cierto(!JSON.stringify(await p.evaluate(() => estadoApp.progreso)).includes('Álvaro'), 'sin guardarlo');
     await p.evaluate(() => (nombreClaude = ''));
     // Quitar la marca la quita del historial
     await p.evaluate(() => marcarZona('vidal', 'v'));
-    cierto(!(await p.evaluate(() => progreso.j.hi.some(e => e[2] == 'vidal'))), 'sin la marca quitada');
+    cierto(
+      !(await p.evaluate(() => estadoApp.progreso.j.hi.some(e => e[2] == 'vidal'))),
+      'sin la marca quitada'
+    );
     // El historial se limpia y se junta sin repetir, con la fecha más antigua
     igual(
       await p.evaluate(
@@ -183,8 +186,8 @@ prueba(
 
 prueba('Imagen «Mi Salamanca»', async p => {
   await p.evaluate(() => {
-    progreso.z.centro = progreso.z.tejares = 'v';
-    progreso.z.vidal = 'w';
+    estadoApp.progreso.z.centro = estadoApp.progreso.z.tejares = 'v';
+    estadoApp.progreso.z.vidal = 'w';
     guardar();
     actualizar();
   });
@@ -216,28 +219,28 @@ prueba(
   async p => {
     const logro = id => p.evaluate(i => conseguido(calcularLogros().find(a => a.id == i)), id);
     cierto(await logro('jr3'), 'la racha de tres días sigue aunque hoy no se haya jugado');
-    igual(await p.evaluate(() => progreso.j.rm), 3, 'y se apunta la mejor racha');
+    igual(await p.evaluate(() => estadoApp.progreso.j.rm), 3, 'y se apunta la mejor racha');
     // Si la app trae más monumentos, «Guía de la ciudad» sigue conseguida; si se quita una visita, no
     const todos = await p.evaluate(() => MONUMENTOS.filter(esMonumento).map(m => m.id));
     await p.evaluate(ids => {
-      progreso.j.mo = ids;
+      estadoApp.progreso.j.mo = ids;
       guardar();
     }, todos);
     cierto(await logro('mot'), 'conseguida con todos');
-    igual(await p.evaluate(() => progreso.j.lg.mot), todos.length, 'apunta con cuántos');
-    await p.evaluate(() => (progreso.j.lg.mot = progreso.j.lg.mot - 1)); // como si antes hubiera uno menos
+    igual(await p.evaluate(() => estadoApp.progreso.j.lg.mot), todos.length, 'apunta con cuántos');
+    await p.evaluate(() => (estadoApp.progreso.j.lg.mot = estadoApp.progreso.j.lg.mot - 1)); // como si antes hubiera uno menos
     await p.evaluate(ids => {
-      progreso.j.mo = ids.slice(1);
+      estadoApp.progreso.j.mo = ids.slice(1);
       guardar();
     }, todos);
     cierto(await logro('mot'), 'con un monumento nuevo sin visitar, se mantiene');
     await p.evaluate(ids => {
-      progreso.j.mo = ids.slice(2);
+      estadoApp.progreso.j.mo = ids.slice(2);
       guardar();
     }, todos);
     cierto(!(await logro('mot')), 'quitando una visita, se pierde');
     cierto(
-      !(await p.evaluate(() => progreso.j.hi.some(e => e[1] == 'lo' && e[2] == 'mot'))),
+      !(await p.evaluate(() => estadoApp.progreso.j.hi.some(e => e[1] == 'lo' && e[2] == 'mot'))),
       'y sale del historial'
     );
     // Las estaciones, cines y demás no cuentan como monumentos
@@ -271,7 +274,7 @@ prueba('Palabras charras: tarjeta, ficha y logros', async p => {
   cierto((await p.$$('#palabra a[href^="https://"]')).length == 1, 'con su fuente');
   await p.click('#palabra .pal-otra');
   cierto((await texto(p, '#palabra .pal-def')) != antes, 'otra palabra');
-  igual(await p.evaluate(() => progreso.j.pv.length), 2, 'dos palabras vistas');
+  igual(await p.evaluate(() => estadoApp.progreso.j.pv.length), 2, 'dos palabras vistas');
   // La ficha del Centro trae la suya; una zona sin palabra propia, siempre la misma
   await p.evaluate(() => abrirFicha('centro'));
   cierto((await texto(p, '#pch')).includes('debajo del reloj'), 'palabra del Centro');
@@ -373,10 +376,10 @@ prueba('Logros: los que salen de los datos, el siguiente y su barra', async p =>
   await p.evaluate(() => (location.hash = '#ruta-murales/1'));
   await p.waitForTimeout(200);
   await p.click('.bt button[data-s=v]');
-  igual(await p.evaluate(() => progreso.j.r), { murales: ['diaspora'] }, 'parada visitada');
+  igual(await p.evaluate(() => estadoApp.progreso.j.r), { murales: ['diaspora'] }, 'parada visitada');
   // Abrir una ficha cuenta para el logro de lectura
   await p.evaluate(() => abrirFicha('tejares'));
-  cierto(await p.evaluate(() => progreso.j.fl.includes('tejares')), 'ficha leída apuntada');
+  cierto(await p.evaluate(() => estadoApp.progreso.j.fl.includes('tejares')), 'ficha leída apuntada');
   await p.evaluate(() => cerrarFicha());
   // Racha del reto del día, a partir de los días guardados
   const racha = await p.evaluate(() => {
@@ -392,7 +395,7 @@ prueba('Logros: los que salen de los datos, el siguiente y su barra', async p =>
           String(f.getDate()).padStart(2, '0')
         );
       };
-    progreso.j.h = [dia(0), dia(1), dia(2), dia(4)];
+    estadoApp.progreso.j.h = [dia(0), dia(1), dia(2), dia(4)];
     return rachaReto();
   });
   igual(racha, 3, 'racha de días seguidos');
@@ -576,11 +579,15 @@ prueba('Mi Salamanca: cambios de estado, sincronización y acceso al mapa filtra
   await p.evaluate(() => marcarZona('vega', 'v'));
   igual(await barrios(), '2', 'se actualiza al marcar');
   igual(await p.evaluate(() => estadisticas().historial.conFecha.length), 2, 'con fecha de hoy');
-  await p.evaluate(() => aplicarDesdeNube({ ...progreso, z: { ...progreso.z, tejares: 'v' } }));
+  await p.evaluate(() =>
+    aplicarDesdeNube({ ...estadoApp.progreso, z: { ...estadoApp.progreso.z, tejares: 'v' } })
+  );
   igual(await barrios(), '3', 'y al llegar cambios de la cuenta');
   // Una entrada repetida en el historial (p. ej. al juntar dos copias) no cuenta dos veces
   const antes = await p.evaluate(() => estadisticas().historial.conFecha.length);
-  await p.evaluate(() => progreso.j.hi.push([...progreso.j.hi[progreso.j.hi.length - 1]]));
+  await p.evaluate(() =>
+    estadoApp.progreso.j.hi.push([...estadoApp.progreso.j.hi[estadoApp.progreso.j.hi.length - 1]])
+  );
   igual(
     await p.evaluate(() => estadisticas().historial.conFecha.length),
     antes,
@@ -592,13 +599,17 @@ prueba('Mi Salamanca: cambios de estado, sincronización y acceso al mapa filtra
   igual(await p.evaluate(() => [...filtrosMapa.estados]), ['v'], 'mapa con solo lo pisado');
   igual(
     await p.$$eval('#zg .z:not(.fuera)', a => a.length),
-    await p.evaluate(() => zonas.filter(z => z.g < 5 && progreso.z[z.id] == 'v').length),
+    await p.evaluate(() => zonas.filter(z => z.g < 5 && estadoApp.progreso.z[z.id] == 'v').length),
     'se ven solo los barrios pisados'
   );
   await p.evaluate(() => quitarFiltrosMapa());
   // Y a la provincia, con su filtro
   await p.evaluate(() => verProvinciaFiltrada('v'));
-  igual(await p.evaluate(() => [pestana, filtroProvincia]), ['prov', 'v'], 'la provincia, con lo pisado');
+  igual(
+    await p.evaluate(() => [estadoApp.pestana, estadoApp.filtroProvincia]),
+    ['prov', 'v'],
+    'la provincia, con lo pisado'
+  );
 });
 
 prueba('Tu Salamanca: logros con medallas y objetivos', async p => {

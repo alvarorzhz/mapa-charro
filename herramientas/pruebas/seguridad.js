@@ -44,7 +44,7 @@ prueba(
 
 prueba('Seguridad: una copia demasiado grande no se lee', async p => {
   await p.evaluate(() => abrirCopia());
-  const antes = await p.evaluate(() => JSON.stringify(progreso));
+  const antes = await p.evaluate(() => JSON.stringify(estadoApp.progreso));
   await p.setInputFiles('.copia input[type=file]', {
     name: 'grande.json',
     mimeType: 'application/json',
@@ -52,5 +52,5 @@ prueba('Seguridad: una copia demasiado grande no se lee', async p => {
   });
   await p.waitForTimeout(200);
   cierto((await texto(p, '#ts')).includes('demasiado grande'), 'avisa');
-  igual(await p.evaluate(() => JSON.stringify(progreso)), antes, 'y no cambia nada');
+  igual(await p.evaluate(() => JSON.stringify(estadoApp.progreso)), antes, 'y no cambia nada');
 });

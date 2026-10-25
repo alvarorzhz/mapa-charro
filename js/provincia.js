@@ -1,11 +1,10 @@
 // Pestaña Provincia: municipios, pedanías, minimapa, comarcas y buscador
 
 // Marca de un municipio (los del alfoz que están en el mapa usan la de su zona) o de una clave
-const estadoMunicipio = m => (m.z ? progreso.z[m.z] : (progreso.p || {})[m.k]);
-const estadoClave = k => (progreso.p || {})[k];
+const estadoMunicipio = m => (m.z ? estadoApp.progreso.z[m.z] : (estadoApp.progreso.p || {})[m.k]);
+const estadoClave = k => (estadoApp.progreso.p || {})[k];
 const tienePedaniaPisada = m => m.P.some(p => estadoClave(p.k) == 'v');
 
-let filtroProvincia = 'all';
 let puebloSeleccionado = null;
 // Se construye la primera vez que se abre la pestaña:
 //   { filas: [{ botones, el, grupo }], caminos: Map(municipio -> path), comarcas: [...], filtros, botonesSeleccion, encuadrar(m) }
@@ -15,17 +14,17 @@ let vistaProvincia = null;
 function marcarEnProvincia(clave, marca, nombre) {
   apuntarTarea('marca'); // medicion.js
   conAvisoDeLogros(() => {
-    progreso.p = progreso.p || {};
-    progreso.gv = progreso.gv || [];
-    if (progreso.p[clave] == marca) {
-      const conGpsAntes = progreso.gv.includes(clave);
-      delete progreso.p[clave];
+    estadoApp.progreso.p = estadoApp.progreso.p || {};
+    estadoApp.progreso.gv = estadoApp.progreso.gv || [];
+    if (estadoApp.progreso.p[clave] == marca) {
+      const conGpsAntes = estadoApp.progreso.gv.includes(clave);
+      delete estadoApp.progreso.p[clave];
       aviso(nombre + ': quitado de «' + (marca == 'v' ? 'He estado' : 'Quiero ir') + '»', {
         accion: [
           'Deshacer',
           () => {
-            progreso.p[clave] = marca;
-            if (conGpsAntes && !progreso.gv.includes(clave)) progreso.gv.push(clave);
+            estadoApp.progreso.p[clave] = marca;
+            if (conGpsAntes && !estadoApp.progreso.gv.includes(clave)) estadoApp.progreso.gv.push(clave);
             guardar();
             actualizar();
             if (typeof pintarBotonesFicha == 'function') pintarBotonesFicha();
@@ -34,15 +33,15 @@ function marcarEnProvincia(clave, marca, nombre) {
         ]
       });
     } else {
-      progreso.p[clave] = marca;
+      estadoApp.progreso.p[clave] = marca;
       // Con GPS si estás en ese municipio (o en el municipio de esa pedanía)
       const conGps =
         ubicacionReciente() &&
         ubicacion.pid &&
         (ubicacion.pid == clave || clave.startsWith('p' + ubicacion.pid.slice(1) + ':'));
-      if (marca == 'v' && conGps && !progreso.gv.includes(clave)) progreso.gv.push(clave);
-      if (marca == 'v' && progreso.z.resto != 'v') {
-        progreso.z.resto = 'v';
+      if (marca == 'v' && conGps && !estadoApp.progreso.gv.includes(clave)) estadoApp.progreso.gv.push(clave);
+      if (marca == 'v' && estadoApp.progreso.z.resto != 'v') {
+        estadoApp.progreso.z.resto = 'v';
         pintarZona(zonaResto);
       }
       aviso(
@@ -54,7 +53,8 @@ function marcarEnProvincia(clave, marca, nombre) {
         { tipo: 'exito' }
       );
     }
-    if (progreso.p[clave] != 'v') progreso.gv = progreso.gv.filter(x => x != clave);
+    if (estadoApp.progreso.p[clave] != 'v')
+      estadoApp.progreso.gv = estadoApp.progreso.gv.filter(x => x != clave);
     guardar();
     actualizar();
   });
@@ -440,8 +440,8 @@ function construirProvincia() {
   };
   caja.appendChild(conCultura);
 
-  vistaProvincia.filtros = crearBotonesFiltro(filtroProvincia, clave => {
-    filtroProvincia = clave;
+  vistaProvincia.filtros = crearBotonesFiltro(estadoApp.filtroProvincia, clave => {
+    estadoApp.filtroProvincia = clave;
     aplicarFiltroProvincia();
   });
   caja.appendChild(vistaProvincia.filtros);
@@ -533,10 +533,10 @@ function aplicarFiltroProvincia() {
   if (!vistaProvincia) return;
   vistaProvincia.filtros
     .querySelectorAll('button')
-    .forEach(b => marcarInterruptor(b, b.dataset.f == filtroProvincia));
+    .forEach(b => marcarInterruptor(b, b.dataset.f == estadoApp.filtroProvincia));
   const gruposVisibles = new Set();
   vistaProvincia.filas.forEach(f => {
-    const ok = cumpleFiltro(filtroProvincia, f.botones._leer());
+    const ok = cumpleFiltro(estadoApp.filtroProvincia, f.botones._leer());
     f.el.hidden = !ok;
     if (ok) gruposVisibles.add(f.grupo);
   });
@@ -553,7 +553,7 @@ function aplicarFiltroProvincia() {
   vistaProvincia.comarcas.forEach(c => {
     const alguno = [...c.det.querySelectorAll('.pg')].some(g => !g.hidden);
     c.det.hidden = !alguno;
-    if (filtroProvincia != 'all' && alguno) c.det.open = true;
+    if (estadoApp.filtroProvincia != 'all' && alguno) c.det.open = true;
   });
 }
 
@@ -562,7 +562,7 @@ function actualizarProvincia() {
   if (!vistaProvincia) return;
   vistaProvincia.filas.forEach(f => pintarBotonesMarcar(f.botones));
   if (vistaProvincia.botonesSeleccion) pintarBotonesMarcar(vistaProvincia.botonesSeleccion);
-  const capitalPisada = zonas.some(z => z.g < 5 && progreso.z[z.id] == 'v');
+  const capitalPisada = zonas.some(z => z.g < 5 && estadoApp.progreso.z[z.id] == 'v');
   vistaProvincia.caminos.forEach((p, m) => {
     const marca = m.cap ? (capitalPisada ? 'v' : '') : estadoMunicipio(m);
     const color = marca == 'v' ? ' v' : marca == 'w' ? ' w' : tienePedaniaPisada(m) ? ' pv' : '';
