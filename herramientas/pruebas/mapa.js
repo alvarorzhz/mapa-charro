@@ -149,10 +149,12 @@ prueba(
       0,
       'sin nuestras avenidas ni sus nombres'
     );
+    igual(await p.$eval('#pk', e => getComputedStyle(e).display), 'none', 'ni nuestros parques');
     // Apagado: se recuerda y ya no se pide MapLibre al volver
     await p.click('#zc');
     await p.click('#frb');
     cierto(!(await p.$eval('.mw', e => e.classList.contains('fondo-real'))), 'se apaga');
+    cierto(await p.$eval('#pk', e => getComputedStyle(e).display != 'none'), 'y vuelven los parques');
     igual(await p.evaluate(() => localStorage.getItem('charro-fondo-real')), '0', 'y se recuerda');
     p.pedidasMapLibre = 0;
     await p.goto(url);
@@ -188,15 +190,13 @@ prueba('Panel de capas y leyenda', async p => {
   cierto(!(await p.$eval('#capas', e => e.hidden)), 'el botón lo abre');
   igual(await p.$eval('#zc', e => e.getAttribute('aria-expanded')), 'true', 'y lo anuncia');
   igual((await p.$$('#capas .lg span')).length, 11, 'con la leyenda dentro');
-  // Los parques, manchas verdes con su interruptor
+  // Los parques, manchas verdes sin interruptor propio: las esconden las calles reales
   igual(
     await p.$$eval('#pk path', a => a.length),
     await p.evaluate(() => PARQUES.length),
     'parques en el mapa'
   );
-  await p.click('#pkb');
-  igual(await p.$eval('#pk', e => e.style.display), 'none', 'Parques se apaga');
-  await p.click('#pkb');
+  cierto(!(await p.$('#pkb')), 'sin interruptor de parques');
   await p.click('#rb');
   igual(await p.$eval('#rd', e => e.style.display), 'none', 'Carreteras se apaga');
   igual(await p.$eval('#rb', e => e.getAttribute('aria-pressed')), 'false', 'y el interruptor lo dice');

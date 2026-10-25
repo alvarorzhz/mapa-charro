@@ -165,7 +165,8 @@ const trazoAnillo = P => 'M' + P.map(puntoTexto).join('L') + 'Z';
     limiteFoco = trazo('', 'foco');
 }
 
-// --- Parques: manchas verdes encima de las zonas (datos/parques.js) ------------------------------
+// --- Parques: manchas verdes encima de las zonas (datos/parques.js). Sin interruptor: con las calles
+// reales se esconden (estilos.css), porque ese fondo ya pinta los parques ----------------------------
 PARQUES.forEach(parque => {
   const d = parque.R.map(r => {
     const puntos = [];
@@ -174,11 +175,6 @@ PARQUES.forEach(parque => {
   }).join('');
   crearSvg('title', {}, crearSvg('path', { d, class: 'pk' }, $('#pk'))).textContent = parque.n;
 });
-$('#pkb').onclick = () => {
-  const visibles = $('#pk').style.display != 'none';
-  $('#pk').style.display = visibles ? 'none' : '';
-  marcarInterruptor($('#pkb'), !visibles);
-};
 
 // --- Río ----------------------------------------------------------------------
 
