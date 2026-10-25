@@ -1,5 +1,19 @@
 [
   {
+    "version": "2.16.1",
+    "fecha": "2026-10-25",
+    "titulo": "Más curiosidades",
+    "usuario": [
+      "Más historia de la Alamedilla: la exposición de 1884, las carreras de velocípedos, los peces de colores y el templete de música.",
+      "Más curiosidades en Vidal, Salesas y Chinchibarra.",
+      "Corregida la fecha de inauguración de la Alamedilla: fue en las ferias de 1883."
+    ],
+    "tecnico": [
+      "Contenido semanal: 13 curiosidades nuevas con fuente en alamedilla, vidal, salesas y chinchibarra (estudio municipal de la Alamedilla, La Gaceta de Salamanca, La Crónica de Salamanca, Diócesis de Salamanca y El Español).",
+      "Alamedilla: la inauguración pasa de 1884 a las ferias de 1883 y se añade fuente a la primera curiosidad."
+    ]
+  },
+  {
     "version": "2.16.0",
     "fecha": "2026-10-25",
     "titulo": "Estado en un solo sitio",
