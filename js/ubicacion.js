@@ -54,9 +54,9 @@ function dibujarPosicion(la, lo, precision) {
       cx: x,
       cy: y,
       r: Math.max(0.5, (precision / 1000) * 22),
-      fill: 'var(--auv)',
+      fill: 'var(--autovia)',
       'fill-opacity': 0.12,
-      stroke: 'var(--auv)',
+      stroke: 'var(--autovia)',
       'stroke-opacity': 0.5,
       'stroke-width': '1px',
       'vector-effect': 'non-scaling-stroke'
@@ -65,8 +65,8 @@ function dibujarPosicion(la, lo, precision) {
   );
   const m = crearSvg('g', { transform: 'translate(' + x + ' ' + y + ')' }, g);
   marcaPosicion = { m, x, y };
-  crearSvg('circle', { r: 7, fill: 'var(--auv)', class: 'mepulse' }, m);
-  crearSvg('circle', { r: 5, fill: 'var(--auv)', stroke: '#fff', 'stroke-width': 2 }, m);
+  crearSvg('circle', { r: 7, fill: 'var(--autovia)', class: 'mepulse' }, m);
+  crearSvg('circle', { r: 5, fill: 'var(--autovia)', stroke: '#fff', 'stroke-width': 2 }, m);
   ajustarVista();
 }
 

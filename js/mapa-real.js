@@ -42,7 +42,7 @@ function estiloFondoReal() {
         source: 'osm',
         'source-layer': 'landuse',
         filter: clase(['residential', 'commercial', 'industrial', 'retail']),
-        paint: { 'fill-color': color('--c3') }
+        paint: { 'fill-color': color('--zona-3') }
       },
       {
         id: 'parques',
@@ -64,7 +64,7 @@ function estiloFondoReal() {
         type: 'fill',
         source: 'osm',
         'source-layer': 'water',
-        paint: { 'fill-color': color('--riv') }
+        paint: { 'fill-color': color('--rio') }
       },
       {
         id: 'casas',
@@ -73,12 +73,12 @@ function estiloFondoReal() {
         'source-layer': 'building',
         minzoom: 14,
         paint: {
-          'fill-color': color('--c4'),
+          'fill-color': color('--zona-4'),
           'fill-opacity': ['interpolate', ['linear'], ['zoom'], 14, 0, 15, 0.9]
         }
       },
-      lineas('calles', clase(['minor', 'service', 'tertiary', 'secondary']), color('--street'), ancho(1, 6)),
-      lineas('avenidas', clase(['primary', 'trunk']), color('--street'), ancho(2, 9)),
+      lineas('calles', clase(['minor', 'service', 'tertiary', 'secondary']), color('--calle'), ancho(1, 6)),
+      lineas('avenidas', clase(['primary', 'trunk']), color('--calle'), ancho(2, 9)),
       lineas('autovias', ['==', ['get', 'class'], 'motorway'], color('--ronda'), ancho(2.5, 9)),
       {
         id: 'nombres',
@@ -92,7 +92,7 @@ function estiloFondoReal() {
           'text-font': ['Noto Sans Italic'],
           'text-size': 10
         },
-        paint: { 'text-color': color('--line'), 'text-halo-color': color('--street'), 'text-halo-width': 1 }
+        paint: { 'text-color': color('--linea'), 'text-halo-color': color('--calle'), 'text-halo-width': 1 }
       }
     ]
   };

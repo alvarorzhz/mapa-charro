@@ -56,7 +56,7 @@ prueba('Salamanca en el tiempo', async p => {
     pintarZona(zonas.find(z => z.id == 'vega'));
   });
   const rojo = await relleno();
-  igual(rojo, 'rgb(168, 34, 28)', 'marcada en rojo (--vit)');
+  igual(rojo, 'rgb(168, 34, 28)', 'marcada en rojo (--vitor)');
   await p.click('#tm');
   cierto((await relleno()) != rojo, 'las marcas de He estado se apagan');
   igual(await p.evaluate(() => location.hash), '#tiempo/1', 'enlace de la primera etapa');
