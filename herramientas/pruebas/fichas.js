@@ -172,6 +172,17 @@ prueba('Ficha sin apartados vacíos y panel del móvil', async (p, url) => {
   }
 });
 
+prueba('Los avisos no tapan la ficha', async (p, url) => {
+  await p.goto(url + '#centro');
+  await p.waitForTimeout(400);
+  await p.evaluate(() => aviso('Prueba de aviso'));
+  const { aviso: abajoAviso, techo } = await p.evaluate(() => ({
+    aviso: $('#ts').getBoundingClientRect().bottom,
+    techo: (esEscritorio() ? $('#sh .bt') : $('#sh')).getBoundingClientRect().top
+  }));
+  cierto(abajoAviso <= techo, 'el aviso queda por encima (en el móvil, de toda la ficha)');
+});
+
 prueba('Monumentos', async (p, url) => {
   await p.goto(url + '#monumento/catedrales');
   igual(await texto(p, '#nm'), 'Catedrales Nueva y Vieja', 'abre el monumento');

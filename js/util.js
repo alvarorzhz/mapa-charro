@@ -164,6 +164,21 @@ const crearSvg = (etiqueta, atributos, padre) => {
 //           mientras el ratón o el foco están encima)
 // Se acepta aviso(texto, true) como discreto, como antes.
 let temporizadorAviso, ocultarAviso;
+// Dónde se pone el aviso para no tapar nada de abajo: encima de la ficha abierta en el móvil (sobre el
+// mapa, no sobre su foto ni su texto), encima de su fila de botones en el escritorio y encima de la
+// tarjeta del primer paseo si está abajo. Devuelve el `bottom` en px, o '' para dejar el de estilos.css.
+const alturaLibreAviso = () => {
+  const techos = [],
+    visible = el => el && el.offsetHeight && el.getBoundingClientRect(),
+    ficha = $('#sh').classList.contains('o') && $('#sh'),
+    caja = innerWidth < 900 ? visible(ficha) : visible(ficha && $('#sh .bt')),
+    paseo = visible($('#paseo'));
+  if (caja && caja.top > 60) techos.push(caja.top);
+  else if (ficha && visible($('#sh .bt'))) techos.push(visible($('#sh .bt')).top);
+  if (paseo && paseo.top > innerHeight / 2) techos.push(paseo.top);
+  const arriba = Math.min(...techos.filter(y => y > 0 && y < innerHeight));
+  return arriba < innerHeight ? innerHeight - arriba + 10 + 'px' : '';
+};
 const aviso = (texto, opciones = {}) => {
   if (opciones === true) opciones = { discreto: true };
   const { tipo = 'info', discreto = false, accion = null } = opciones,
@@ -185,10 +200,7 @@ const aviso = (texto, opciones = {}) => {
     };
     t.append(b);
   }
-  // Con una ficha abierta, justo encima de su fila de botones (He estado, Quiero ir, Compartir), sin taparla
-  const pie = $('#sh').classList.contains('o') && $('#sh .bt'),
-    arriba = pie && pie.offsetHeight ? pie.getBoundingClientRect().top : 0;
-  t.style.bottom = arriba > 0 && arriba < innerHeight ? innerHeight - arriba + 10 + 'px' : '';
+  t.style.bottom = alturaLibreAviso();
   t.setAttribute('role', tipo == 'error' ? 'alert' : 'status');
   t.className = 'on ' + clase + (accion ? ' con-accion' : '');
   clearTimeout(temporizadorAviso);
