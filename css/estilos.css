@@ -4289,8 +4289,13 @@ a.llegar.principal {
 #rel:has(> .plegable) {
   margin-top: 0;
 }
-#mz:has(> .plegable) {
+#mz:has(> .plegable),
+#eat:has(> .plegable) {
   margin-top: 14px;
+}
+/* Dónde comer va justo encima: la primera línea plegada es la suya */
+#eat:has(> .plegable) ~ #mz:has(> .plegable) {
+  margin-top: 0;
 }
 .plegable,
 .plegable.rel-fila {

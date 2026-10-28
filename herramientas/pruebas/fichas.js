@@ -268,6 +268,16 @@ prueba('Fichas: para seguir explorando', async (p, url) => {
     ],
     'plegados, con cuántos hay y cuántos visitados'
   );
+  // Dónde comer, también en una línea plegada, la primera de ellas
+  igual(
+    await p.evaluate(() => [
+      $('#eat details').open,
+      $('#eat summary').textContent == 'Dónde comer' + DONDE_COMER.univ.length
+    ]),
+    [false, true],
+    'dónde comer, plegado y con cuántos sitios'
+  );
+  cierto(!(await texto(p, '#idx')).includes('Dónde comer'), 'y ya no sale en el índice de la ficha');
   await p.evaluate(() => abrirFicha('arrabal'));
   cierto((await texto(p, '#rel')).includes('Parque Elio Antonio de Nebrija'), 'sus parques');
   await p.evaluate(() => abrirFicha('garridosur'));

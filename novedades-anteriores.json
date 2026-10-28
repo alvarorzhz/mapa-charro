@@ -1,5 +1,17 @@
 [
   {
+    "version": "2.16.0",
+    "fecha": "2026-10-25",
+    "titulo": "Estado en un solo sitio",
+    "usuario": [
+      "Orden por dentro para que la app sea más fácil de cuidar; al usarla no cambia nada."
+    ],
+    "tecnico": [
+      "Las 17 variables que varios archivos cambiaban (progreso, pestaña, filtros, ficha abierta, fichaAlta…) pasan a un solo objeto, estadoApp, en estado.js. Es el primer paso para poder pasar a módulos.",
+      "ESLint falla si dos archivos de js/ declaran el mismo nombre arriba del todo (antes el segundo pisaba al primero sin avisar)."
+    ]
+  },
+  {
     "version": "2.15.4",
     "fecha": "2026-10-24",
     "titulo": "Notas más cortas",

@@ -29,17 +29,32 @@ function pintarFotoDe(foto) {
   $('#pc').textContent = foto[1];
 }
 
-// sitios: [{ n, t, a, p, s }]; lugar: para buscarlos en Google Maps. Sin sitios, el apartado no se muestra.
+// sitios: [{ n, t, a, p, s }]; lugar: para buscarlos en Google Maps. Van en una línea plegada «Dónde comer · N»,
+// como monumentos y rutas: lo principal de la ficha son las curiosidades. Sin sitios, no se muestra.
 function pintarSitiosComer(sitios, lugar) {
   const el = $('#eat');
   el.textContent = '';
-  $('#he').hidden = !(sitios && sitios.length);
   if (sitios && sitios.length) {
-    el.appendChild(
+    const contenido = crear(
+      'div',
+      'plegable-c',
       crear(
         'p',
         'mu',
         'Para cuando preguntes «¿qué hay de comer?» y no quieras oír «canguingos y patas de peces».'
+      )
+    );
+    el.appendChild(
+      crear(
+        'details',
+        'plegable',
+        crear(
+          'summary',
+          '',
+          crear('span', 'rel-t', 'Dónde comer'),
+          crear('span', 'plegable-n', String(sitios.length))
+        ),
+        contenido
       )
     );
     sitios.forEach(s => {
@@ -49,7 +64,7 @@ function pintarSitiosComer(sitios, lugar) {
         encodeURIComponent(s.n + ' ' + s.a + ' ' + lugar);
       mapa.target = '_blank';
       mapa.rel = 'noopener';
-      el.appendChild(
+      contenido.appendChild(
         crear(
           'div',
           'er',
@@ -217,7 +232,6 @@ const APARTADOS_FICHA = [
   ['#demo', 'Población'],
   ['#hc', 'Curiosidades'],
   ['#hl', 'Leyenda'],
-  ['#he', 'Dónde comer'],
   ['#pch', 'Palabra charra']
 ];
 function pintarIndiceFicha() {
@@ -240,6 +254,14 @@ function pintarIndiceFicha() {
 function irAApartado(sel, agrandar = true) {
   if (agrandar && !esEscritorio()) $('#sh').classList.add('grande');
   requestAnimationFrame(() => $(sel).scrollIntoView({ behavior: comoDesplazar(), block: 'start' }));
+}
+
+// Abre la línea plegada «Dónde comer» de la ficha abierta y lleva hasta ella (desde Explora → Dónde comer)
+function irADondeComer(agrandar = false) {
+  const fila = $('#eat .plegable');
+  if (!fila) return;
+  fila.open = true;
+  irAApartado('#eat', agrandar);
 }
 
 // Dónde estaba el foco antes de abrir la ficha, para devolverlo al cerrarla
@@ -345,7 +367,7 @@ function abrirFichaVia(nombre, tramo = 0) {
   $('#here').hidden = true;
   $('#k').textContent = tipo;
   $('#nm').textContent = nombre;
-  $('#hc').hidden = $('#hl').hidden = $('#he').hidden = $('#ph').hidden = $('#pc').hidden = true;
+  $('#hc').hidden = $('#hl').hidden = $('#ph').hidden = $('#pc').hidden = true;
   $('#eat').textContent = '';
   $('#nb').textContent = '';
   $('#ap').textContent = 'Trazado real de OpenStreetMap, simplificado.';

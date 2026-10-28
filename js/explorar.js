@@ -205,7 +205,7 @@ function abrirDondeComer() {
       b.onclick = () => {
         // La ficha del sitio, a su altura de siempre para que se vea su zona en el mapa
         x.abrir();
-        irAApartado('#he', false);
+        irADondeComer(); // ficha.js
         apuntarTarea('comer-sitio');
       };
       lista.appendChild(b);

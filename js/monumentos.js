@@ -204,7 +204,7 @@ function abrirMonumento(id, parada) {
   $('#here').hidden = $('#nac').hidden = $('#otros').hidden = true;
   $('#k').textContent = textoTipoMonumento(m) + ' · ' + zona.n;
   $('#nm').textContent = m.n;
-  $('#hc').hidden = $('#hl').hidden = $('#he').hidden = true;
+  $('#hc').hidden = $('#hl').hidden = true;
   $('#cu').textContent = $('#ri').textContent = $('#eat').textContent = '';
   $('#mz').hidden = true;
   $('#ap').textContent = '';

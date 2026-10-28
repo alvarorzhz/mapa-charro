@@ -111,7 +111,7 @@ function fichaLimpia(antetitulo, titulo) {
   $('#here').hidden = true;
   $('#k').textContent = antetitulo;
   $('#nm').textContent = titulo;
-  $('#hc').hidden = $('#hl').hidden = $('#he').hidden = $('#mz').hidden = true;
+  $('#hc').hidden = $('#hl').hidden = $('#mz').hidden = true;
   $('#cu').textContent = $('#ri').textContent = $('#eat').textContent = $('#ap').textContent = '';
   pintarFoto(null);
   const caja = $('#info');

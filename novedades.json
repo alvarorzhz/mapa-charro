@@ -1,5 +1,18 @@
 [
   {
+    "version": "2.20.0",
+    "fecha": "2026-10-28",
+    "titulo": "Barrios con más historia",
+    "usuario": [
+      "20 curiosidades nuevas en diez barrios: Barrio del Oeste, Prosperidad, Rollo, Puente Ladrillo, San José, San Isidro, Delicias, Labradores, Garrido Sur y Huerta Otea. Del perro monaguillo de Puente Ladrillo al rastro sin permiso de la plaza del Oeste.",
+      "En la ficha de cada barrio, «Dónde comer» pasa a una línea plegada con cuántos sitios hay, junto a monumentos y rutas. Tócala para verlos. Así lo primero que lees son las curiosidades y la leyenda."
+    ],
+    "tecnico": [
+      "20 curiosidades nuevas en CURIOSIDADES (contenido.js), con su fuente en comentario (La Crónica de Salamanca, La Gaceta, El Español, Wikipedia y la asociación de vecinos de Huerta Otea).",
+      "Dónde comer: pintarSitiosComer pinta un <details class=\"plegable\"> en #eat (fuera #he); irADondeComer (ficha.js) lo abre desde Explora; sale del índice de la ficha. CSS: #eat con plegable lleva el margen de arriba y #mz pierde el suyo."
+    ]
+  },
+  {
     "version": "2.19.2",
     "fecha": "2026-10-28",
     "titulo": "23 pueblos más con ficha",
@@ -120,18 +133,6 @@
     "tecnico": [
       "Contenido semanal: 13 curiosidades nuevas con fuente en alamedilla, vidal, salesas y chinchibarra (estudio municipal de la Alamedilla, La Gaceta de Salamanca, La Crónica de Salamanca, Diócesis de Salamanca y El Español).",
       "Alamedilla: la inauguración pasa de 1884 a las ferias de 1883 y se añade fuente a la primera curiosidad."
-    ]
-  },
-  {
-    "version": "2.16.0",
-    "fecha": "2026-10-25",
-    "titulo": "Estado en un solo sitio",
-    "usuario": [
-      "Orden por dentro para que la app sea más fácil de cuidar; al usarla no cambia nada."
-    ],
-    "tecnico": [
-      "Las 17 variables que varios archivos cambiaban (progreso, pestaña, filtros, ficha abierta, fichaAlta…) pasan a un solo objeto, estadoApp, en estado.js. Es el primer paso para poder pasar a módulos.",
-      "ESLint falla si dos archivos de js/ declaran el mismo nombre arriba del todo (antes el segundo pisaba al primero sin avisar)."
     ]
   }
 ]

@@ -209,6 +209,14 @@ prueba('Juego «¿Dónde está?»', async p => {
     { timeout: 3000 }
   );
   const buena = await p.evaluate(() => juego.preguntas[0].zona.id);
+  // Que se vea: la pista del día puede ser de una zona del borde (Blanco, al norte), fuera del mapa
+  // visible o, en escritorio, por encima de lo que se ve de la página
+  await p.evaluate(id => {
+    const z = zonas.find(q => q.id == id);
+    llevarZonaALaVista(z); // mapa-teclado.js
+    z.e.scrollIntoView({ block: 'center', inline: 'center' });
+  }, buena);
+  await p.waitForTimeout(400);
   const xy = await p.evaluate(id => {
     const z = zonas.find(q => q.id == id),
       m = z.e.getScreenCTM();
@@ -696,7 +704,10 @@ prueba('Monumentos y Dónde comer, en listas', async (p, url) => {
     'el filtro deja solo los de los pueblos'
   );
   await p.click('#info .fila-explora');
-  cierto(!(await p.$eval('#he', e => e.hidden)), 'abre la ficha del pueblo por «Dónde comer»');
+  cierto(
+    await p.$eval('#eat .plegable', d => d.open),
+    'abre la ficha del pueblo con «Dónde comer» desplegado'
+  );
 });
 
 prueba(

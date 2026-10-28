@@ -331,7 +331,7 @@ function abrirTiempo(i = 0) {
   olvidarMonumento();
   resaltarVia(null);
   $('#here').hidden = true;
-  $('#hc').hidden = $('#hl').hidden = $('#he').hidden = $('#mz').hidden = true;
+  $('#hc').hidden = $('#hl').hidden = $('#mz').hidden = true;
   $('#cu').textContent = $('#ri').textContent = $('#eat').textContent = $('#nb').textContent = '';
   pintarFoto(null);
   modoBotonesFicha('monumento');
