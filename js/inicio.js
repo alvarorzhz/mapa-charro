@@ -1,5 +1,5 @@
 // Arranque
-// Con el ?v= de la versión, como el resto de archivos: si no, el navegador o el modo sin conexión
+// Con su ?v= (la huella de su contenido), como el resto de archivos: si no, el navegador o el modo sin conexión
 // podían seguir enseñando las novedades de una versión anterior
 async function cargarNovedades() {
   const enlace = document.querySelector('link[href^="novedades.json"]');
@@ -76,17 +76,17 @@ async function mostrarNovedadesNuevas() {
   const botones = document.querySelectorAll('.modal .botones button');
   botones[botones.length - 1].focus({ preventScroll: true });
 }
-// Versión al pie de la página: la de package.json (1.4.0) y, entre paréntesis, el número interno ?v=
-// que sube herramientas/version.js en cada cambio (el que hace que el móvil baje los archivos nuevos).
+// Versión al pie de la página: la de package.json (1.4.0) y, entre paréntesis, el número interno que sube
+// herramientas/version.js en cada cambio (el de sw.js, que hace que el móvil baje los archivos nuevos).
 // Al pulsarla salen las novedades de cada versión (novedades.json, los puntos para el usuario).
 {
   const meta = document.querySelector('meta[name="version"]'),
-    v = (document.querySelector('script[src*="?v="]') || {}).src,
+    interna = (document.querySelector('meta[name="version-interna"]') || {}).content,
     boton = crear(
       'button',
       'enlace',
       (meta ? 'Versión ' + meta.content : '') +
-        (v ? (meta ? ' (' : 'Versión ') + v.split('?v=')[1] + (meta ? ')' : '') : '')
+        (interna ? (meta ? ' (' : 'Versión ') + interna + (meta ? ')' : '') : '')
     );
   boton.setAttribute('aria-label', boton.textContent + ': ver las novedades');
   boton.onclick = mostrarNovedades;

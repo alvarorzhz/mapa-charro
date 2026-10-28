@@ -1,4 +1,4 @@
-// Pruebas rápidas de la lógica que solo calcula (fechas, rachas, agenda, sol), sin navegador: tardan menos de
+// Pruebas rápidas de la lógica que solo calcula (fechas, rachas, agenda, sol, sw.js), sin navegador: tardan menos de
 // un segundo y van antes de las del navegador (herramientas/pruebas.js), que tardan minutos.
 // Uso, desde la raíz del repositorio:  node herramientas/pruebas-logica.js
 // Carga con vm los datos y los scripts de LOGICA en un mismo contexto, como hace el navegador con index.html,
@@ -155,18 +155,121 @@ prueba('Tu Salamanca: inicio de cada periodo', app => {
   igual(inicio('todo', hoy), null, 'siempre');
 });
 
+// --- Modo sin conexión (sw.js) --------------------------------------------------
+// El service worker, con unas cachés y una red de mentira que apuntan lo que se pide
+function cargarSw(codigo, almacen, pedidos) {
+  const escuchas = {};
+  // Como la Cache API: las direcciones, completas (relativas a la web) y de un Request, su url
+  const clave = u => new URL(u.url || String(u), 'http://web/').href,
+    sinBusqueda = u => clave(u).split('?')[0];
+  const abrir = async k => {
+    if (!almacen.has(k)) almacen.set(k, new Map());
+    const m = almacen.get(k);
+    return {
+      put: async (u, r) => m.set(clave(u), r),
+      match: async (u, o) =>
+        m.get(clave(u)) ||
+        (o && o.ignoreSearch ? [...m].find(([k]) => sinBusqueda(k) == sinBusqueda(u))?.[1] : undefined)
+    };
+  };
+  const caches = {
+    keys: async () => [...almacen.keys()],
+    open: abrir,
+    delete: async k => almacen.delete(k),
+    match: async (u, o) => {
+      for (const k of almacen.keys()) {
+        const r = await (await abrir(k)).match(u, o);
+        if (r) return r;
+      }
+    }
+  };
+  const ctx = vm.createContext({
+    self: {
+      addEventListener: (t, f) => (escuchas[t] = f),
+      skipWaiting: async () => {},
+      clients: { claim: async () => {} },
+      registration: { scope: 'http://web/' }
+    },
+    location: { origin: 'http://web' },
+    caches,
+    fetch: async u => (
+      pedidos.push(String(u)),
+      {
+        ok: true,
+        type: 'basic',
+        clone() {
+          return this;
+        }
+      }
+    ),
+    URL,
+    Request: class {
+      constructor(u) {
+        this.url = u;
+      }
+    },
+    setTimeout,
+    clearTimeout
+  });
+  vm.runInContext(codigo, ctx, { filename: 'sw.js' });
+  const esperar = async tipo => {
+    let espera;
+    escuchas[tipo]({ waitUntil: p => (espera = p) });
+    await espera;
+  };
+  return {
+    instalar: async () => (await esperar('install'), await esperar('activate')),
+    pedir: async url => {
+      let respuesta;
+      escuchas.fetch({ request: { method: 'GET', url, mode: 'no-cors' }, respondWith: r => (respuesta = r) });
+      return respuesta;
+    }
+  };
+}
+
+prueba('Sin conexión: una versión nueva solo baja lo que ha cambiado', async () => {
+  const sw = fs.readFileSync(path.join(RAIZ, 'sw.js'), 'utf8'),
+    archivos = [...sw.match(/const ARCHIVOS = \[([\s\S]*?)\];/)[1].matchAll(/'([^']+)'/g)].map(m => m[1]),
+    almacen = new Map(),
+    pedidos = [];
+  await cargarSw(sw, almacen, pedidos).instalar();
+  igual(pedidos.length, archivos.length, 'la primera vez lo baja todo');
+  // Versión siguiente en la que solo ha cambiado util.js
+  const nueva = sw
+    .replace(/const VERSION = (\d+);/, (_, n) => 'const VERSION = ' + (+n + 1) + ';')
+    .replace(/'js\/util\.js\?v=[0-9a-f]+'/, "'js/util.js?v=otra'");
+  pedidos.length = 0;
+  const otra = cargarSw(nueva, almacen, pedidos);
+  await otra.instalar();
+  igual(almacen.size, 1, 'la copia vieja se borra');
+  igual(
+    pedidos.filter(u => u.includes('?v=')),
+    ['js/util.js?v=otra'],
+    'de lo que lleva huella, solo baja lo que ha cambiado'
+  );
+  cierto(
+    pedidos.every(u => u.includes('?v=') || !/^(js|css|img)\//.test(u)),
+    'y sin huella, solo la página, el manifest y los iconos (' + pedidos.join(', ') + ')'
+  );
+  pedidos.length = 0;
+  cierto(await otra.pedir('http://web/img/tejares.jpg'), 'las fotos se piden sin ?v= y salen de la copia');
+  igual(pedidos, [], 'sin ir a la red');
+});
+
 // --- Ejecución ----------------------------------------------------------------
 const app = cargarApp();
 let fallos = 0;
-for (const { nombre, fn } of pruebas)
-  try {
-    fn(app);
-    console.log('✓ ' + nombre);
-  } catch (e) {
-    fallos++;
-    console.log('✗ ' + nombre + '\n    ' + e.message);
-  }
-console.log(
-  fallos ? `\n${fallos} prueba(s) fallida(s)` : `\nTodas las pruebas de lógica pasan (${pruebas.length}).`
-);
-process.exit(fallos ? 1 : 0);
+(async () => {
+  for (const { nombre, fn } of pruebas)
+    try {
+      await fn(app);
+      console.log('✓ ' + nombre);
+    } catch (e) {
+      fallos++;
+      console.log('✗ ' + nombre + '\n    ' + e.message);
+    }
+  console.log(
+    fallos ? `\n${fallos} prueba(s) fallida(s)` : `\nTodas las pruebas de lógica pasan (${pruebas.length}).`
+  );
+  process.exit(fallos ? 1 : 0);
+})();

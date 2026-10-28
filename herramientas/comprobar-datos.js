@@ -420,7 +420,7 @@ for (const id in D.EPOCA_ZONA) {
 
 // --- index.html y sw.js -------------------------------------------------------
 const html = leer('index.html');
-const enlazados = [...html.matchAll(/(?:src|href)="([^"#:]+?)(\?v=(\d+))?"/g)];
+const enlazados = [...html.matchAll(/(?:src|href)="([^"#:]+?)(\?v=([0-9a-f]+))?"/g)];
 enlazados.forEach(m => comprobar(existe(m[1]), `index.html enlaza ${m[1]}, que no existe`));
 // La frase de arriba cuenta lo mismo que el marcador: barrios, pueblos y el resto de la provincia
 const barrios = D.ZONAS.filter(z => z[3] < 5).length,
@@ -429,21 +429,30 @@ comprobar(
   html.includes(`class="sub">${barrios} barrios, ${pueblosMapa} pueblos y el resto de la provincia.`),
   `index.html: la frase de arriba debe decir «${barrios} barrios, ${pueblosMapa} pueblos y el resto de la provincia»`
 );
-const versiones = new Set(enlazados.filter(m => m[3]).map(m => m[3]));
-comprobar(
-  versiones.size == 1,
-  'index.html mezcla números de versión (?v=): ejecuta node herramientas/version.js'
-);
+// Cada ?v= es la huella del contenido de su archivo (herramientas/version.js): si no cuadra, el móvil
+// seguiría usando la copia vieja
+const huella = f =>
+  require('crypto')
+    .createHash('sha256')
+    .update(fs.readFileSync(path.join(RAIZ, f)))
+    .digest('hex')
+    .slice(0, 10);
+const RECUERDA_VERSION = ': ejecuta node herramientas/version.js';
+enlazados
+  .filter(m => m[3] && existe(m[1]))
+  .forEach(m =>
+    comprobar(m[3] == huella(m[1]), `index.html: ${m[1]} ha cambiado y su ?v= no` + RECUERDA_VERSION)
+  );
 const sw = leer('sw.js');
-const v = [...versiones][0];
+const v = (sw.match(/const VERSION = (\d+);/) || [])[1];
 comprobar(
-  new RegExp('const VERSION = ' + v + ';').test(sw),
-  'sw.js no tiene la versión de index.html: ejecuta node herramientas/version.js'
+  html.includes('<meta name="version-interna" content="' + v + '">'),
+  'sw.js no tiene la versión interna de index.html' + RECUERDA_VERSION
 );
 enlazados
   .filter(m => m[3])
   .forEach(m =>
-    comprobar(sw.includes("'" + m[1] + '?v=' + v + "'"), `sw.js no guarda ${m[1]} para usar sin conexión`)
+    comprobar(sw.includes("'" + m[1] + '?v=' + m[3] + "'"), `sw.js no guarda ${m[1]} para usar sin conexión`)
   );
 // Y al revés: lo que guarda sw.js tiene que existir (si falta uno solo, el service worker no se
 // instala y la web se queda sin modo sin conexión, sin ningún error a la vista), y tiene que guardar
@@ -455,9 +464,15 @@ enSw.forEach(a => {
   const f = a.split('?')[0];
   comprobar(f == './' || existe(f), `sw.js guarda ${f}, que no existe: ejecuta node herramientas/version.js`);
 });
-for (const d of ['img', 'icons'])
-  for (const f of fs.readdirSync(path.join(RAIZ, d)).filter(f => !f.startsWith('.')))
-    comprobar(enSw.has(d + '/' + f), `sw.js no guarda ${d}/${f}: ejecuta node herramientas/version.js`);
+for (const f of fs.readdirSync(path.join(RAIZ, 'icons')).filter(f => !f.startsWith('.')))
+  comprobar(enSw.has('icons/' + f), `sw.js no guarda icons/${f}` + RECUERDA_VERSION);
+// Las fotos, con la huella de su contenido (sw.js las busca sin mirar el ?v=)
+for (const f of fs.readdirSync(path.join(RAIZ, 'img')).filter(f => !f.startsWith('.')))
+  comprobar(
+    enSw.has('img/' + f + '?v=' + huella('img/' + f)),
+    `sw.js no guarda img/${f} como está ahora` + RECUERDA_VERSION
+  );
+const enSwSinHuella = new Set([...enSw].map(a => a.split('?')[0]));
 const usadasEnDatos = [
   ...Object.entries(D.FOTOS).map(([id, [ruta]]) => [ruta, 'la foto de ' + id]),
   ...JSON.parse(leer('manifest.webmanifest')).icons.map(i => [i.src, 'el manifest'])
@@ -465,7 +480,7 @@ const usadasEnDatos = [
 usadasEnDatos.forEach(([ruta, quien]) => {
   if (/^(https?:|data:)/.test(ruta)) return;
   comprobar(existe(ruta), `${quien} usa ${ruta}, que no existe`);
-  comprobar(enSw.has(ruta), `sw.js no guarda ${ruta} (${quien}) para usar sin conexión`);
+  comprobar(enSwSinHuella.has(ruta), `sw.js no guarda ${ruta} (${quien}) para usar sin conexión`);
 });
 
 // Versión visible: la de package.json, con formato 1.4.0, copiada en index.html por version.js
@@ -578,12 +593,12 @@ if (imagenOg) {
 
 for (const f of fs.readdirSync(path.join(RAIZ, 'js')).filter(f => f.endsWith('.js')))
   comprobar(html.includes('js/' + f + '?'), `js/${f} no está enlazado en index.html`);
-// Los datos son módulos: los importa js/datos-globales.js, con el mismo ?v=N que index.html
+// Los datos son módulos: los importa js/datos-globales.js, cada uno con la huella de su contenido
 const puente = leer('js/datos-globales.js');
 for (const f of fs.readdirSync(path.join(RAIZ, 'js/datos')).filter(f => f.endsWith('.js')))
   comprobar(
-    puente.includes("'./datos/" + f + '?v=' + v + "'"),
-    `js/datos/${f} no está importado en js/datos-globales.js con ?v=${v}: ejecuta node herramientas/version.js`
+    puente.includes("'./datos/" + f + '?v=' + huella('js/datos/' + f) + "'"),
+    `js/datos/${f} no está importado en js/datos-globales.js con la huella de ahora` + RECUERDA_VERSION
   );
 for (const f of fs.readdirSync(path.join(RAIZ, 'js/datos')).filter(f => f.endsWith('.js')))
   comprobar(

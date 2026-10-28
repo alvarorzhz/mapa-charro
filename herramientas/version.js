@@ -1,6 +1,7 @@
-// Prepara una versión nueva: sube ?v=N en index.html y actualiza sw.js
-// (número de versión y lista de archivos que se guardan para usar sin conexión).
+// Prepara una versión nueva: pone en index.html y js/datos-globales.js la huella (?v=) de cada archivo y
+// actualiza sw.js (número de versión y lista de archivos que se guardan para usar sin conexión).
 // Uso, desde la raíz del repositorio:  node herramientas/version.js
+const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 
@@ -8,31 +9,47 @@ const RAIZ = path.join(__dirname, '..');
 const leer = f => fs.readFileSync(path.join(RAIZ, f), 'utf8');
 const escribir = (f, s) => fs.writeFileSync(path.join(RAIZ, f), s);
 
-// 1. index.html: todas las etiquetas al número siguiente, y la versión «humana» de package.json
-//    (1.4.0: la primera cifra para cambios grandes, la segunda para funciones nuevas y la tercera para
-//    arreglos; esa se sube a mano en package.json cuando toca, este script solo la copia)
-let html = leer('index.html');
-const versionApp = JSON.parse(leer('package.json')).version;
-html = /<meta name="version" content="[^"]*">/.test(html)
-  ? html.replace(
-      /<meta name="version" content="[^"]*">/,
-      '<meta name="version" content="' + versionApp + '">'
-    )
-  : html.replace(
-      '<meta charset="utf-8">',
-      '<meta charset="utf-8"><meta name="version" content="' + versionApp + '">'
-    );
-const usadas = [...html.matchAll(/\?v=(\d+)"/g)].map(m => +m[1]);
-const v = Math.max(0, ...usadas) + 1;
-html = html.replace(/\?v=\d+"/g, '?v=' + v + '"');
-escribir('index.html', html);
+// Cada archivo de la app lleva en su dirección (?v=) una huella de su contenido: si no cambia, la dirección
+// tampoco, y el navegador y el modo sin conexión siguen usando la copia que ya tienen. Solo se baja lo que
+// ha cambiado de verdad (antes cada versión volvía a bajar todo).
+const huella = f =>
+  crypto
+    .createHash('sha256')
+    .update(fs.readFileSync(path.join(RAIZ, f)))
+    .digest('hex')
+    .slice(0, 10);
 
-// Los datos (js/datos/) son módulos que importa js/datos-globales.js: sus imports llevan el mismo ?v=N
+// El número interno (el de sw.js, que cambia la caché) sube en uno en cada versión
+let sw = leer('sw.js');
+const v = +(sw.match(/const VERSION = (\d+);/) || [0, 0])[1] + 1;
+
+// 1. Los datos (js/datos/) son módulos que importa js/datos-globales.js: cada import, con la huella de su archivo
 const PUENTE = 'js/datos-globales.js';
-const puente = leer(PUENTE).replace(/\?v=\d+'/g, '?v=' + v + "'");
+const puente = leer(PUENTE).replace(
+  /from '\.\/(datos\/[^'?]+)(\?v=[^']*)?'/g,
+  (_, f) => `from './${f}?v=${huella('js/' + f)}'`
+);
 escribir(PUENTE, puente);
 
-// 2. Lista de archivos para guardar sin conexión
+// 2. index.html: la versión «humana» de package.json (1.4.0: la primera cifra para cambios grandes, la segunda
+//    para funciones nuevas y la tercera para arreglos; se sube a mano en package.json, este script solo la
+//    copia), el número interno y la huella de cada archivo enlazado con ?v= (después del puente, que acaba
+//    de cambiar)
+let html = leer('index.html');
+const versionApp = JSON.parse(leer('package.json')).version;
+const metas =
+  '<meta name="version" content="' + versionApp + '"><meta name="version-interna" content="' + v + '">';
+html = /<meta name="version" content="[^"]*">(<meta name="version-interna" content="[^"]*">)?/.test(html)
+  ? html.replace(
+      /<meta name="version" content="[^"]*">(<meta name="version-interna" content="[^"]*">)?/,
+      metas
+    )
+  : html.replace('<meta charset="utf-8">', '<meta charset="utf-8">' + metas);
+html = html.replace(/((?:src|href)=")([^"?#:]+)\?v=[^"]*"/g, (_, antes, f) => `${antes}${f}?v=${huella(f)}"`);
+escribir('index.html', html);
+
+// Lista de archivos para guardar sin conexión. Las fotos (img/) llevan su huella solo aquí: la app las pide
+// sin ?v= y sw.js las busca sin mirarlo, pero así una foto que no cambia no se vuelve a bajar
 const locales = [...html.matchAll(/(?:src|href)="([^"]+)"/g)]
   .map(m => m[1])
   .filter(u => !/^(https?:|data:|#)/.test(u));
@@ -51,7 +68,7 @@ const archivos = [
     ...locales,
     ...datos,
     ...carpeta('icons'),
-    ...carpeta('img')
+    ...carpeta('img').map(f => f + '?v=' + huella(f))
   ])
 ];
 
@@ -62,7 +79,6 @@ for (const a of archivos) {
 }
 
 // 3. sw.js
-let sw = leer('sw.js');
 sw = sw.replace(/const VERSION = \d+;/, 'const VERSION = ' + v + ';');
 sw = sw.replace(
   /\/\/ <archivos>[\s\S]*?\/\/ <\/archivos>/,
