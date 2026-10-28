@@ -254,11 +254,9 @@ prueba(
   },
   {
     antes: () => {
-      const dia = n => {
-        const d = new Date();
-        d.setDate(d.getDate() - n);
-        return d.toLocaleDateString('sv');
-      };
+      // Días de Salamanca, como fechaHoy() y sumarDias() de util.js (aquí la app aún no se ha cargado)
+      const hoy = new Date().toLocaleDateString('sv', { timeZone: 'Europe/Madrid' }),
+        dia = n => new Date(Date.parse(hoy + 'T12:00:00Z') - n * 864e5).toISOString().slice(0, 10);
       localStorage.setItem(
         'charro2',
         JSON.stringify({ z: {}, t: 5, v: 1, j: { h: [dia(9), dia(8), dia(7), dia(2)] } })
@@ -383,18 +381,7 @@ prueba('Logros: los que salen de los datos, el siguiente y su barra', async p =>
   await p.evaluate(() => cerrarFicha());
   // Racha del reto del día, a partir de los días guardados
   const racha = await p.evaluate(() => {
-    const d = new Date(),
-      dia = n => {
-        const f = new Date(d);
-        f.setDate(d.getDate() - n);
-        return (
-          f.getFullYear() +
-          '-' +
-          String(f.getMonth() + 1).padStart(2, '0') +
-          '-' +
-          String(f.getDate()).padStart(2, '0')
-        );
-      };
+    const dia = n => sumarDias(fechaHoy(), -n);
     estadoApp.progreso.j.h = [dia(0), dia(1), dia(2), dia(4)];
     return rachaReto();
   });

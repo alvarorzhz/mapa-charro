@@ -108,17 +108,13 @@ if (soloZonas && soloZonas.some(z => !ZONAS.includes(z))) {
         await p.addInitScript(() => localStorage.setItem('charro-bienvenida', '1'));
       // «¿Qué puedo descubrir hoy?» sale sola una vez al día: se da por vista hoy salvo en sus pruebas
       if (!opciones.conHoy)
-        await p.addInitScript(() => {
-          const d = new Date();
+        await p.addInitScript(() =>
+          // El día de Salamanca, como fechaHoy() en util.js
           localStorage.setItem(
             'charro-hoy',
-            d.getFullYear() +
-              '-' +
-              String(d.getMonth() + 1).padStart(2, '0') +
-              '-' +
-              String(d.getDate()).padStart(2, '0')
-          );
-        });
+            new Date().toLocaleDateString('sv', { timeZone: 'Europe/Madrid' })
+          )
+        );
       // Las calles reales (encendidas de entrada) piden mapas a otras webs, y las novedades de una versión
       // nueva taparían la app: apagadas y vistas salvo en sus propias pruebas
       if (!opciones.conFondoReal)

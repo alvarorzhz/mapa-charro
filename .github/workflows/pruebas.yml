@@ -36,6 +36,8 @@ jobs:
         run: npx prettier --check "js/**/*.js" sw.js "herramientas/**/*.js" "css/**/*.css"
       - name: Buscar errores en el código (ESLint)
         run: npx eslint .
+      - name: Pruebas rápidas de la lógica (sin navegador)
+        run: node herramientas/pruebas-logica.js
 
   pruebas:
     name: Pruebas (${{ matrix.tamano }})
