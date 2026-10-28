@@ -1272,5 +1272,295 @@ export const PUEBLOS = {
       datos: [['Visitada', 'en 1499 por frey Nicolás de Ovando']]
     },
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Navasfr%C3%ADas']]
+  },
+  'Aldea del Obispo': {
+    cur: [
+      'Debe su apellido a Fernando II de León, que en el siglo XII se la dio como señorío al obispo de Ciudad Rodrigo; así siguió hasta el siglo XIX.',
+      'Con el Tratado de Alcañices, en 1297, León perdió el Riba-Coa y el pueblo quedó en plena frontera con Portugal.',
+      'El Real Fuerte de la Concepción se empezó el 8 de diciembre de 1663, día de la Inmaculada, y de ahí su nombre. El 20 de julio de 1810, ante la invasión de Masséna, los ingleses de Wellington lo volaron. En 2012 se restauró como hotel.'
+    ],
+    mon: {
+      n: 'Real Fuerte de la Concepción',
+      tipo: 'torre',
+      epoca: '1663; rehecho entre 1736 y 1758',
+      estilo: 'Fortaleza abaluartada',
+      datos: [
+        ['Murallas', 'de más de 51 m de largo y 9,5 m de alto'],
+        ['Patio', 'de 50 m de lado']
+      ]
+    },
+    fuente: [
+      ['Wikipedia', 'https://es.wikipedia.org/wiki/Aldea_del_Obispo'],
+      ['Wikipedia', 'https://es.wikipedia.org/wiki/Real_Fuerte_de_la_Concepción']
+    ]
+  },
+  'Castillejo de Martín Viejo': {
+    cur: [
+      'Comparte con Villar de la Yegua y Villar de Argañán los grabados de Siega Verde, hechos entre el 20.000 y el 11.000 antes de Cristo.',
+      'Fue anejo de la parroquia de Villar del Rey hasta 1718, cuando la Guerra de Sucesión dejó aquel pueblo arrasado y el cura se mudó a Castillejo. Villar del Rey quedó deshabitado del todo el 25 de abril de 1810.',
+      'Sus fiestas son San Juan ante Portam Latinam, el 6 de mayo, y la Asunción, el 15 de agosto.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Castillejo_de_Martín_Viejo']]
+  },
+  Cerralbo: {
+    cur: [
+      'En el siglo XII Fernando II de León lo puso en manos de la Orden del Temple, que lo tuvo hasta que el papa disolvió la orden en 1311.',
+      'El señorío de los Pacheco, de 1372, se convirtió en marquesado en 1533 por orden de Carlos I.',
+      'En 1920 los vecinos compraron todo el término municipal por 1.250.000 pesetas: hasta entonces las tierras eran de los marqueses de Cerralbo, a los que pagaban renta.'
+    ],
+    mon: {
+      n: 'Castillo',
+      tipo: 'torre',
+      epoca: 'Siglos XIV–XV',
+      datos: [['Lo levantaron', 'los Pacheco, señores y luego marqueses de Cerralbo']]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Cerralbo']]
+  },
+  Sobradillo: {
+    cur: [
+      'Su escudo, de 1965, lleva la cruz potenzada negra de los Templarios.',
+      'Hacia la Inmaculada, en diciembre, se celebra la capachera: se mueven en círculo capachos ardiendo que iluminan la plaza. Se recuperó en 2019, después de 65 años sin celebrarse.',
+      'A mediados del siglo XIX, según Madoz, tenía 200 casas y 1.104 habitantes.'
+    ],
+    mon: {
+      n: 'Torre del Homenaje',
+      tipo: 'torre',
+      epoca: 'Castillo del siglo XII; la torre se rehízo en el XV',
+      datos: [['Escudos', 'de los Rodríguez de Ledesma']]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Sobradillo_(Salamanca)']]
+  },
+  'El Bodón': {
+    cur: [
+      'El 25 de septiembre de 1811, en la Guerra de la Independencia, se libró aquí el combate de El Bodón entre los franceses y los aliados de Wellington.',
+      'En la lucha, la caballería francesa tomó dos cañones portugueses y el 5.º regimiento de infantería inglés los recuperó cargando contra ella. Al día siguiente Wellington no quiso pelear en Fuenteguinaldo y se retiró a Portugal.',
+      'Un monolito recuerda los 200 años del combate. En la repoblación leonesa se llamaba simplemente Bodón y dependía de Ciudad Rodrigo.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/El_Bodón']]
+  },
+  'Puerto de Béjar': {
+    cur: [
+      'En 1812 los franceses quemaron el pueblo y se llevaron la lámpara de la iglesia porque no les pagaron 14.000 reales.',
+      'Para compensarlo, los vecinos entregaron a la Iglesia un castañar de 44 castaños valorado en 6.000 reales, y desde entonces aquel paraje se llama La Lámpara.',
+      'Por su término pasa la calzada romana de la Vía de la Plata: en 2001 se excavó su pavimento original, y aún se conserva el miliario CXXXIII.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Puerto_de_Béjar']]
+  },
+  'Cespedosa de Tormes': {
+    cur: [
+      'La repobló hacia el año 1100 Raimundo de Borgoña, yerno de Alfonso VI. En 1393 Enrique III dio su señorío a Gil González Dávila.',
+      'Fue de la provincia de Ávila hasta 1833, y en lo eclesiástico siguió dependiendo de Ávila hasta 1959.',
+      'En las fiestas de la Virgen del Carrascal, el 8 de septiembre, se baila la danza de palos.'
+    ],
+    mon: {
+      n: 'Iglesia de la Exaltación de la Santa Cruz',
+      tipo: 'iglesia',
+      epoca: 'Siglo XV',
+      datos: [
+        ['Construida', 'en mampostería y granito'],
+        ['Torre', 'cuatro campanas, una unida al reloj']
+      ]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Cespedosa_de_Tormes']]
+  },
+  'Santiago de la Puebla': {
+    cur: [
+      'En su término han aparecido hachas y puntas de flecha de piedra pulimentada que podrían ser de hacia el 3000 antes de Cristo.',
+      'En 1279 Alfonso X lo donó a su hija Beatriz, y en 1282 el infante Sancho lo vendió al concejo de Alba de Tormes. En 1304 los de Alba lo saquearon.',
+      'Según la leyenda, su patrón, Santiago, había luchado en varias batallas contra los moros. Su fiesta es el 25 de julio, y la de San Jorge, el 23 de abril.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Santiago_de_la_Puebla']]
+  },
+  Galisancho: {
+    cur: [
+      'Su primera fecha documentada es el 9 de junio de 1220, cuando aparece como «Galinsancho» en un intercambio de bienes entre el obispo de Salamanca y el cabildo de la catedral.',
+      'Lo fundaron los repobladores leoneses con el nombre de «Galind Sancholo», en el cuarto de Cantalberque, tierra de Alba de Tormes.',
+      'Sus pueblos de colonización, Santa Teresa y Santa Inés, duplicaron la población: en los años noventa llegó a 785 vecinos. Su patrón es San Fernando, el 30 de mayo.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Galisancho']]
+  },
+  Robleda: {
+    cur: [
+      'Es el único pueblo de la provincia con los nombres de las calles en dos lenguas: leonés y castellano.',
+      'Cuando Fernando II de León creó la diócesis de Ciudad Rodrigo, en el siglo XII, se llamaba «Robreda».',
+      'A mediados del siglo XIX, según Madoz, tenía 1.388 habitantes. Su escudo lleva cinco piñas verdes y cinco bellotas de oro.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Robleda_(Salamanca)']]
+  },
+  Martiago: {
+    cur: [
+      'Según el filólogo Antonio Llorente Maldonado, es el único nombre de lugar de la provincia que lleva con seguridad el sufijo celtorromano «-ago».',
+      'En 1950, en unas obras de la iglesia, apareció una piedra votiva romana.',
+      'En 1848, según Madoz, tenía 180 casas, 793 habitantes y tres molinos harineros.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Martiago']]
+  },
+  Garcibuey: {
+    cur: [
+      'Cuenta la leyenda que en las Peñas las Palomas hay escondidas dos palomas de oro del tesoro de Muza y Don Rodrigo, y que la Cueva la Mora comunica con el castillo de las Quilamas.',
+      'En los años cuarenta los vecinos levantaron con su trabajo el estanque de la Palla, un depósito de riego de 3.000 m³. En los sesenta crearon la cooperativa San Andrés, que hizo y vendió vino durante 25 años.',
+      'El 5 de febrero celebra las Águedas, y el 25 de abril va en romería por San Marcos a Cepeda.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Garcibuey']]
+  },
+  'Cereceda de la Sierra': {
+    cur: [
+      'A sus vecinos los llaman «gatos»: puede venir del dicho «arreguñan las bardas» o de la Peña del Gato, junto a la entrada norte del pueblo.',
+      'Su puente Cantería, de piedra y con dos pequeños ojos, puede ser romano o medieval.',
+      'Tiene dos patrones, San Pablo, el 15 de enero, y San Marcos, el 25 de abril. En 1847 tenía 58 casas y 210 habitantes.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Cereceda_de_la_Sierra']]
+  },
+  Juzbado: {
+    cur: [
+      'Un verraco vetón hallado en su término muestra que estaba habitado al menos desde el siglo V antes de Cristo.',
+      'Lo fundó Ramiro II de León en el siglo X con el nombre de Iusvado, y en 1173 Fernando II se lo dio al obispo de Salamanca como señorío.',
+      'Desde 1985 funciona aquí la fábrica de combustible nuclear de Enusa, que abastece centrales de España y de otros países.'
+    ],
+    mon: {
+      n: 'Museo de la Falla',
+      tipo: 'museo',
+      epoca: '2013',
+      datos: [
+        ['Explica', 'una falla de más de 160 km entre España y Portugal'],
+        ['Está en', 'una antigua casa tradicional']
+      ]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Juzbado']]
+  },
+  'Almenara de Tormes': {
+    cur: [
+      'En la cueva de La Mora han aparecido piedras talladas de hace unos 300.000 años.',
+      'En 1167 Fernando II se lo dio al obispo de Salamanca. El 26 de agosto de 1315 Alfonso XI mandó derribar su castillo por los males que causaba a la comarca.',
+      'Se llama «de Tormes» desde un real decreto del 2 de julio de 1916. En una pared de la iglesia hay agujeros que parecen de bala, de cuando la saquearon los franceses.'
+    ],
+    mon: {
+      n: 'Iglesia de Nuestra Señora de la Asunción',
+      tipo: 'iglesia',
+      epoca: 'Siglo XII',
+      estilo: 'Románico',
+      datos: [
+        ['Bien de Interés Cultural', '1993'],
+        ['Lleva piedras', 'de la desaparecida iglesia de San Salvador']
+      ]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Almenara_de_Tormes']]
+  },
+  'Palencia de Negrilla': {
+    cur: [
+      'Sus repobladores llegaron de la ciudad de Palencia. El apellido viene de los negrillos, los olmos, que casi desaparecieron con la enfermedad de los años setenta y ochenta.',
+      'Según la leyenda, en una peste de la Edad Media los sanos se fueron a Palencia de Negrilla y los enfermos se quedaron en cuarentena en Negrilla de Palencia.',
+      'Fue señorío de la catedral, dependiente del obispo de Salamanca.'
+    ],
+    mon: {
+      n: 'Iglesia de la Exaltación de la Santa Cruz',
+      tipo: 'iglesia',
+      datos: [
+        ['Bien de Interés Cultural', 'desde 1969'],
+        ['La llaman', 'una de las tres «catedrales» de La Armuña']
+      ]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Palencia_de_Negrilla']]
+  },
+  'Villaverde de Guareña': {
+    cur: [
+      'En 1480 los Reyes Católicos libraron a sus vecinos de dar soldados y alojar tropas. El privilegio se firmó en Córdoba el 31 de julio de 1482 y se renovaba en cada reinado.',
+      'Según la tradición, en el siglo XVI un campesino halló un Cristo enterrado en la alquería de Sordos: los bueyes de Gomecello no lo pudieron mover, pero las vacas flacas de Villaverde sí.',
+      'Se llama «de Guareña» desde el 2 de julio de 1916, por un arroyo que va a dar al río Guareña.'
+    ],
+    mon: {
+      n: 'Iglesia de San Cornelio y San Cipriano',
+      tipo: 'iglesia',
+      epoca: 'Siglo XVI',
+      estilo: 'Gótico y renacentista',
+      datos: [
+        ['Bien de Interés Cultural', '1993'],
+        ['Tribuna', 'de 1601']
+      ]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Villaverde_de_Guareña']]
+  },
+  'Ahigal de los Aceiteros': {
+    cur: [
+      'Su nombre vendría de «la Figal», la higuera: a finales del siglo XV todavía se llamaba Figal.',
+      'Según contaban sus vecinos a Madoz, el primero que se asentó aquí fue un colmenero con su familia.',
+      'El 5 de julio de 1851 el Tribunal Supremo lo libró, con otros pueblos vecinos, de pagar el noveno a los duques de Alba. Lo celebra el 11 de mayo con la fiesta de El Noveno.'
+    ],
+    mon: {
+      n: 'Iglesia de Santa María Magdalena',
+      tipo: 'iglesia',
+      epoca: 'Siglo XVII',
+      datos: [
+        ['Retablo', 'barroco, de principios del XVIII'],
+        ['Lo hizo', 'Felipe Cervera, alumno de Churriguera']
+      ]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Ahigal_de_los_Aceiteros']]
+  },
+  'Gallegos de Argañán': {
+    cur: [
+      'Su nombre viene de la repoblación de Fernando II de León hacia 1157, con gentes traídas de Galicia.',
+      'En un contrafuerte de la iglesia, a unos 2,5 metros de altura, hay una piedra romana con un voto a Júpiter: «Vitulo, hijo de Arreino, cumplió de buen grado el voto».',
+      'El 5 de febrero, por las Águedas, es el día de las mujeres: las mayordomas del año anterior «echan» a las dos nuevas.'
+    ],
+    mon: {
+      n: 'Iglesia de Santiago Apóstol',
+      tipo: 'iglesia',
+      epoca: 'Hacia 1540',
+      estilo: 'Gótico final y renacentista',
+      datos: [['Aspecto', 'austero y fuerte, casi defensivo']]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Gallegos_de_Argañán']]
+  },
+  'Colmenar de Montemayor': {
+    cur: [
+      'Nació hacia 1227, cuando Alfonso IX creó el concejo de Montemayor del Río, del que le viene el apellido.',
+      'Una placa de 2012 recuerda al maestro Melquiades Rodríguez Tocino, secuestrado y fusilado el 8 de agosto de 1936.',
+      'El 14 de septiembre sacan en romería al Cristo de la Salud por las calles.'
+    ],
+    mon: {
+      n: 'Iglesia de Nuestra Señora de la Asunción',
+      tipo: 'iglesia',
+      epoca: 'Siglos XIII–XIV, reformada después',
+      datos: [
+        ['Alrededor', '«El Portal», cerrado por un muro de cantería'],
+        ['Retablo', 'cubierto en origen de pan de oro']
+      ]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Colmenar_de_Montemayor']]
+  },
+  Golpejas: {
+    cur: [
+      'Aparece en el fuero de Ledesma de 1161 como «Golpeyas de la Torre».',
+      'Desde los años sesenta tuvo una mina de estaño de 80 hectáreas. Cerró en 1988 y dejó un lago de unas tres hectáreas en el que no viven peces ni insectos.',
+      'Cuenta la leyenda que en la Peña de la Mora una bella mora bajaba cada mañana a peinarse al arroyo que pasa junto a una cueva. Su patrón es San Bartolomé, el 24 de agosto.'
+    ],
+    mon: {
+      n: 'Iglesia de San Nicolás de Bari',
+      tipo: 'iglesia',
+      epoca: 'Siglo XVIII',
+      datos: [
+        ['Conserva', 'dos columnas y una portada románicas'],
+        ['Retablo', 'barroco']
+      ]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Golpejas']]
+  },
+  'Saelices el Chico': {
+    cur: [
+      'Bajo restos medievales apareció una villa romana del siglo IV, con un pasillo de suelo de mosaico.',
+      'En 1169 Fernando II de León dio la aldea de «Sancti Felicis» a los monjes benedictinos de Santa Águeda, en Ciudad Rodrigo.',
+      'Enusa sacó uranio de su mina desde 1974 hasta 2001.',
+      'Se cuenta que la Peña de la Vieja, una piedra del arroyo, la tiró al agua una anciana y creció hasta dejarla cruzar.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Saelices_el_Chico']]
+  },
+  'Nava de Francia': {
+    cur: [
+      'Guarda un documento firmado por el rey en Ciudad Rodrigo el 19 de noviembre de 1213, escrito en bajo latín vulgar.',
+      'El 13 de octubre de 1296, en Tordesillas, el monasterio que era su dueño renunció al lugar a cambio de 200 maravedíes que pagó Miranda.',
+      'Cerca está el dolmen de La Morisca, con un túmulo circular de diez metros de diámetro. Sus fiestas son el 18 de agosto.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Nava_de_Francia']]
   }
 };

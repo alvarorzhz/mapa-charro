@@ -1,5 +1,17 @@
 [
   {
+    "version": "2.19.2",
+    "fecha": "2026-10-28",
+    "titulo": "23 pueblos más con ficha",
+    "usuario": [
+      "23 pueblos de la provincia estrenan ficha con sus curiosidades: Aldea del Obispo y su Real Fuerte de la Concepción, Cerralbo, Sobradillo, El Bodón, Puerto de Béjar, Juzbado, Almenara de Tormes, Palencia de Negrilla, Villaverde de Guareña, Garcibuey, Robleda y doce más.",
+      "Con leyendas como la de las palomas de oro de Garcibuey, la mora de Golpejas o el Cristo que solo movieron las vacas flacas de Villaverde de Guareña."
+    ],
+    "tecnico": [
+      "Solo contenido: 23 entradas nuevas en PUEBLOS (pueblos.js), con cur, mon cuando el artículo da datos y fuente de Wikipedia. Ya son 81 pueblos con ficha."
+    ]
+  },
+  {
     "version": "2.19.1",
     "fecha": "2026-10-28",
     "titulo": "Más curiosidades y leyendas",
@@ -120,18 +132,6 @@
     "tecnico": [
       "Las 17 variables que varios archivos cambiaban (progreso, pestaña, filtros, ficha abierta, fichaAlta…) pasan a un solo objeto, estadoApp, en estado.js. Es el primer paso para poder pasar a módulos.",
       "ESLint falla si dos archivos de js/ declaran el mismo nombre arriba del todo (antes el segundo pisaba al primero sin avisar)."
-    ]
-  },
-  {
-    "version": "2.15.4",
-    "fecha": "2026-10-24",
-    "titulo": "Notas más cortas",
-    "usuario": [
-      "Orden por dentro para que preparar novedades cueste menos; al usarla no cambia nada."
-    ],
-    "tecnico": [
-      "CLAUDE.md, de 28 KB a menos de 5 KB: reglas imprescindibles, cómo gastar poco y un mapa de qué archivo lleva qué. El detalle de cada parte pasa a docs/notas/ (publicar, pruebas, guardado, mapa, provincia, rutas, contenido, interfaz, logros-y-tu-salamanca, seguridad).",
-      ".claude/settings.json impide leer sin querer los datos voluminosos de js/datos/ (lindes, carreteras, tramos, habitantes, parques, orientación de fachadas)."
     ]
   }
 ]
