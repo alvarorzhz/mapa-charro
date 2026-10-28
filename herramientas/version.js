@@ -19,6 +19,22 @@ const huella = f =>
     .digest('hex')
     .slice(0, 10);
 
+// 0. Novedades: novedades.json se queda con las últimas NOVEDADES_RECIENTES (se baja al entrar y se guarda
+//    sin conexión); las demás pasan, la más nueva primero, a novedades-anteriores.json, que solo se pide al
+//    pulsar «Ver las anteriores»
+const NOVEDADES_RECIENTES = 10;
+const novedades = JSON.parse(leer('novedades.json'));
+if (novedades.length > NOVEDADES_RECIENTES) {
+  const anteriores = fs.existsSync(path.join(RAIZ, 'novedades-anteriores.json'))
+    ? JSON.parse(leer('novedades-anteriores.json'))
+    : [];
+  escribir(
+    'novedades-anteriores.json',
+    JSON.stringify([...novedades.slice(NOVEDADES_RECIENTES), ...anteriores], null, 2) + '\n'
+  );
+  escribir('novedades.json', JSON.stringify(novedades.slice(0, NOVEDADES_RECIENTES), null, 2) + '\n');
+}
+
 // El número interno (el de sw.js, que cambia la caché) sube en uno en cada versión
 let sw = leer('sw.js');
 const v = +(sw.match(/const VERSION = (\d+);/) || [0, 0])[1] + 1;

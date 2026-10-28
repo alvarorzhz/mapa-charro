@@ -494,13 +494,19 @@ comprobar(
   'index.html no tiene la versión de package.json: ejecuta node herramientas/version.js'
 );
 
-// Novedades: una entrada por versión, de la más nueva a la más vieja; la primera es la de package.json
+// Novedades: una entrada por versión, de la más nueva a la más vieja; la primera es la de package.json. Las
+// últimas diez van en novedades.json y las demás, siguiendo, en novedades-anteriores.json (version.js)
 {
   let novedades = [];
   try {
-    novedades = JSON.parse(leer('novedades.json'));
+    const recientes = JSON.parse(leer('novedades.json'));
+    comprobar(
+      recientes.length <= 10,
+      'novedades.json tiene más de diez versiones: ejecuta node herramientas/version.js'
+    );
+    novedades = [...recientes, ...JSON.parse(leer('novedades-anteriores.json'))];
   } catch (e) {
-    mal('novedades.json no se puede leer: ' + e.message);
+    mal('novedades.json o novedades-anteriores.json no se pueden leer: ' + e.message);
   }
   const num = v => v.split('.').map(Number),
     mayor = (a, b) => {

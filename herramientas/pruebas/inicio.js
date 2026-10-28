@@ -87,6 +87,13 @@ prueba(
     await p.click('.modal button:has-text("Ver todas")');
     await p.waitForFunction(() => document.querySelectorAll('.modal .novedades h4').length > 3);
     igual(await texto(p, '.modal h2'), 'Novedades', '«Ver todas» las enseña todas');
+    const recientes = await p.$$eval('.modal .novedades h4', a => a.length);
+    await p.click('.modal .novedades button:has-text("Ver las anteriores")');
+    await p.waitForFunction(n => document.querySelectorAll('.modal .novedades h4').length > n, recientes);
+    cierto(
+      (await p.$$eval('.modal .novedades h4', a => a.map(h => h.textContent))).some(t => t.startsWith('1.')),
+      'y las de versiones viejas, al pedirlas'
+    );
     // Por un enlace a una ficha no salen (saldrán la próxima vez)
     await p.evaluate(() => localStorage.setItem('charro-version-vista', '1.0.0'));
     await p.goto(url + '#tejares');

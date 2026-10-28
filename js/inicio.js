@@ -14,7 +14,19 @@ async function mostrarNovedades() {
     return;
   }
   escribirLocal(CLAVE_VERSION_VISTA, versionApp());
-  abrirVentana('Novedades', cajaNovedades(lista), [['Cerrar', cerrarVentana]], $('#ver button'));
+  const caja = cajaNovedades(lista),
+    anteriores = crear('button', 'enlace', 'Ver las anteriores');
+  // Las de versiones viejas van aparte (herramientas/version.js) y solo se bajan si se piden
+  anteriores.onclick = async () => {
+    try {
+      const viejas = await (await fetch('novedades-anteriores.json', { cache: 'no-cache' })).json();
+      anteriores.replaceWith(...cajaNovedades(viejas).children);
+    } catch (e) {
+      aviso('No se han podido cargar las novedades anteriores. Comprueba la conexión', { tipo: 'error' });
+    }
+  };
+  caja.append(anteriores);
+  abrirVentana('Novedades', caja, [['Cerrar', cerrarVentana]], $('#ver button'));
 }
 const cajaNovedades = lista =>
   crear(
