@@ -5,7 +5,6 @@
 // No tiene en cuenta los edificios de enfrente ni las nubes: la ficha lo dice.
 
 const SALAMANCA = [40.965, -5.664];
-const ZONA_HORARIA = 'Europe/Madrid'; // las horas, siempre las de Salamanca, aunque el móvil esté en otra
 const ALTURA_DORADA = 6; // grados: por debajo, la luz es dorada (hasta que se pone)
 const ALTURA_PUESTA = -0.833; // grados: el borde de arriba del sol toca el horizonte (con la refracción)
 const SOL_DE_FRENTE = 35, // grados entre el sol y la perpendicular de la fachada
@@ -32,18 +31,7 @@ function posicionSol(fecha, [la, lo] = SALAMANCA) {
 }
 
 // --- Días y horas de Salamanca ----------------------------------------------------------------------
-const partesEnSalamanca = (fecha, opciones) =>
-  Object.fromEntries(
-    new Intl.DateTimeFormat('en-GB', { timeZone: ZONA_HORARIA, hourCycle: 'h23', ...opciones })
-      .formatToParts(fecha)
-      .map(p => [p.type, p.value])
-  );
-// El día de Salamanca de un momento, como 'AAAA-MM-DD'
-function diaEnSalamanca(fecha = new Date()) {
-  const p = partesEnSalamanca(fecha, { year: 'numeric', month: '2-digit', day: '2-digit' });
-  return p.year + '-' + p.month + '-' + p.day;
-}
-const sumarDias = (dia, n) => new Date(Date.parse(dia + 'T12:00:00Z') + n * 864e5).toISOString().slice(0, 10);
+// (partesEnSalamanca, diaEnSalamanca y sumarDias están en util.js)
 // Minutos que Salamanca va por delante de UTC ese día (60 en invierno, 120 en verano), mirado a mediodía
 function adelantoSalamanca(dia) {
   const mediodia = new Date(dia + 'T12:00:00Z'),

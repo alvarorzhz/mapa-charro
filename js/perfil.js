@@ -73,11 +73,7 @@ function textoHistorial([, tipo, id]) {
   return '🏆 Logro: ' + (logro ? logro.n : id);
 }
 const fechaLarga = f => {
-  const t = new Date(f + 'T12:00:00').toLocaleDateString('es-ES', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long'
-  });
+  const t = textoFecha(f, { weekday: 'long', day: 'numeric', month: 'long' });
   return t.charAt(0).toUpperCase() + t.slice(1);
 };
 
@@ -115,7 +111,7 @@ function mapaActividad() {
   (j.hi || []).forEach(([f]) => f && (cuenta[f] = (cuenta[f] || 0) + 1));
   (j.h || []).forEach(f => (cuenta[f] = (cuenta[f] || 0) + 1));
   const SEMANAS = 12,
-    hoy = new Date(),
+    hoy = hoyEnSalamanca(),
     // Empieza en lunes, hace 11 semanas
     inicio = new Date(
       hoy.getFullYear(),

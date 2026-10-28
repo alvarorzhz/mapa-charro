@@ -191,12 +191,12 @@ const PERIODOS = [
   ['12m', 'Últimos 12 meses'],
   ['año', 'Este año']
 ];
-function inicioPeriodo(periodo, hoy = new Date()) {
+function inicioPeriodo(periodo, hoy = hoyEnSalamanca()) {
   if (periodo == '12m') return new Date(hoy.getFullYear(), hoy.getMonth() - 11, 1);
   if (periodo == 'año') return new Date(hoy.getFullYear(), 0, 1);
   return null;
 }
-function visitasPorMes(conFecha, periodo, hoy = new Date()) {
+function visitasPorMes(conFecha, periodo, hoy = hoyEnSalamanca()) {
   const desde = inicioPeriodo(periodo, hoy),
     claveMes = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'),
     meses = {};

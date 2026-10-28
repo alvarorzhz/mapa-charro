@@ -382,7 +382,7 @@ function abrirHoy() {
     visitados = monumentosVisitados().length,
     pueblosPisados = pueblos.filter(m => estadoMunicipio(m) == 'v').length,
     nuevo = !pisadas && !visitados && !pueblosPisados,
-    fecha = new Date().toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
+    fecha = textoFecha(fechaHoy(), { weekday: 'long', day: 'numeric', month: 'long' });
   const caja = fichaLimpia('¿Qué puedo descubrir hoy? · ' + fecha, saludo() + (nombre ? ', ' + nombre : ''));
 
   // 1. Resumen

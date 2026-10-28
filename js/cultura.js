@@ -135,8 +135,6 @@ function irAComarca(nombre) {
 }
 
 // --- Ficha de un elemento ---------------------------------------------------------------------------
-const textoFechaRevision = f =>
-  new Date(f + 'T12:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
 
 function abrirElementoCultura(id) {
   const c = elementoCultura(id);
@@ -280,7 +278,7 @@ function abrirElementoCultura(id) {
     a.rel = 'noopener';
     ap.append('. Grabación: ', a);
   }
-  ap.append('. Revisado el ' + textoFechaRevision(c.revisado) + '.');
+  ap.append('. Revisado el ' + textoFecha(c.revisado) + '.');
   mostrarFicha();
   enlaceFicha('cultura/' + c.id, c.n);
 }
@@ -311,7 +309,6 @@ function reproductorCultura(audio) {
 let filtroCulturaCat = 'todas';
 let filtroCulturaTerritorio = 'todo'; // 'todo' | 'capital' | 'provincia' | 'c<índice de comarca>'
 let busquedaCultura = '';
-const sinTildes = t => t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
 
 function cumpleFiltrosCultura(c) {
   if (filtroCulturaCat != 'todas' && c.cat != filtroCulturaCat) return false;
@@ -320,7 +317,7 @@ function cumpleFiltrosCultura(c) {
   if (t == 'provincia' && !esDeProvincia(c)) return false;
   if (t[0] == 'c' && t != 'capital' && !culturaDeComarca(+t.slice(1)).includes(c)) return false;
   if (busquedaCultura) {
-    const texto = sinTildes(
+    const texto = normalizar(
       [
         c.n,
         c.resumen,
@@ -331,7 +328,7 @@ function cumpleFiltrosCultura(c) {
       ].join(' ')
     );
     if (
-      !sinTildes(busquedaCultura)
+      !normalizar(busquedaCultura)
         .split(/\s+/)
         .every(p => texto.includes(p))
     )

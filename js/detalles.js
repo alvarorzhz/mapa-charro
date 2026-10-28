@@ -126,7 +126,7 @@ function abrirDetalle(id, repintar = false) {
     a.rel = 'noopener';
     ap.append('. Foto: ', a);
   }
-  ap.append('. Revisado el ' + textoFechaRevision(d.revisado) + '.');
+  ap.append('. Revisado el ' + textoFecha(d.revisado) + '.');
   mostrarFicha();
   if (grande) $('#sh').classList.add('grande');
   enlaceFicha('detalle/' + d.id, d.n);

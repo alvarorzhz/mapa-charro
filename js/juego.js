@@ -15,18 +15,6 @@ const juego = {
   respondida: false
 };
 
-// Fecha local AAAA-MM-DD
-const fechaHoy = () => {
-  const d = new Date();
-  return (
-    d.getFullYear() +
-    '-' +
-    String(d.getMonth() + 1).padStart(2, '0') +
-    '-' +
-    String(d.getDate()).padStart(2, '0')
-  );
-};
-
 // Números al azar repetibles a partir de una semilla (mulberry32)
 function azarConSemilla(semilla) {
   let a = semilla >>> 0;

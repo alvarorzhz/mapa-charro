@@ -69,6 +69,29 @@ const slug = s =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '');
 
+// --- Fechas ------------------------------------------------------------------
+// Los días son siempre los de Salamanca, aunque el móvil esté en otra zona horaria: el reto del día, la
+// agenda, la hora dorada y las rachas cambian de día a la vez para todos.
+const ZONA_HORARIA = 'Europe/Madrid';
+const partesEnSalamanca = (fecha, opciones) =>
+  Object.fromEntries(
+    new Intl.DateTimeFormat('en-GB', { timeZone: ZONA_HORARIA, hourCycle: 'h23', ...opciones })
+      .formatToParts(fecha)
+      .map(p => [p.type, p.value])
+  );
+// El día de Salamanca de un momento, como 'AAAA-MM-DD'
+function diaEnSalamanca(fecha = new Date()) {
+  const p = partesEnSalamanca(fecha, { year: 'numeric', month: '2-digit', day: '2-digit' });
+  return p.year + '-' + p.month + '-' + p.day;
+}
+const fechaHoy = () => diaEnSalamanca();
+// Hoy en Salamanca como Date a las 00:00 de este navegador, para contar días y meses con getDate() y compañía
+const hoyEnSalamanca = () => new Date(fechaHoy() + 'T00:00:00');
+const sumarDias = (dia, n) => new Date(Date.parse(dia + 'T12:00:00Z') + n * 864e5).toISOString().slice(0, 10);
+// Un día 'AAAA-MM-DD' en español; a mediodía, para que ninguna zona horaria lo cambie de día
+const textoFecha = (dia, opciones = { day: 'numeric', month: 'long', year: 'numeric' }) =>
+  new Date(dia + 'T12:00:00').toLocaleDateString('es-ES', opciones);
+
 // --- Ajustes de este navegador (localStorage) ---------------------------------
 // En modo privado, sin espacio o dentro de algunos visores localStorage falla: entonces se lee null y
 // lo que se escribe se pierde sin más (son comodidades; el progreso tiene su propio aviso en estado.js)

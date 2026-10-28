@@ -19,19 +19,13 @@ const rutaCompleta = r => r.paradas.every(p => paradaVisitada(r, p));
 
 // Días seguidos con el reto del día hecho, hasta hoy (o hasta ayer, si hoy aún no se ha jugado)
 function rachaReto() {
-  const dias = new Set(datoJ('h', [])),
-    d = new Date(),
-    texto = f =>
-      f.getFullYear() +
-      '-' +
-      String(f.getMonth() + 1).padStart(2, '0') +
-      '-' +
-      String(f.getDate()).padStart(2, '0');
-  if (!dias.has(texto(d))) d.setDate(d.getDate() - 1);
+  const dias = new Set(datoJ('h', []));
+  let dia = fechaHoy();
+  if (!dias.has(dia)) dia = sumarDias(dia, -1);
   let n = 0;
-  while (dias.has(texto(d))) {
+  while (dias.has(dia)) {
     n++;
-    d.setDate(d.getDate() - 1);
+    dia = sumarDias(dia, -1);
   }
   return n;
 }
@@ -42,9 +36,7 @@ function mejorRacha() {
   let mejor = 0,
     seguidos = 0;
   dias.forEach((f, i) => {
-    const antes = new Date(f + 'T12:00:00');
-    antes.setDate(antes.getDate() - 1);
-    seguidos = i && dias[i - 1] == antes.toLocaleDateString('sv') ? seguidos + 1 : 1;
+    seguidos = i && dias[i - 1] == sumarDias(f, -1) ? seguidos + 1 : 1;
     mejor = Math.max(mejor, seguidos);
   });
   return Math.max(mejor, datoJ('rm', 0), rachaReto());
@@ -60,12 +52,8 @@ const escalones = (cat, c, total, metas) =>
     .filter((a, i, l) => a.m > 0 && a.m <= total && l.findIndex(o => o.m == a.m) == i); // sin metas repetidas
 const coleccion = (id, cat, n, d, cosas, hecha) =>
   cosas.length >= 2 ? [{ id, cat, n, d, c: cosas.filter(hecha).length, m: cosas.length, col: true }] : [];
-const slugLogro = t =>
-  t
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .replace(/[^a-z0-9]+/g, '-');
+// Como slug(), pero sin quitar los guiones de los extremos: los ids de logros ya guardados dependen de ello
+const slugLogro = t => normalizar(t).replace(/[^a-z0-9]+/g, '-');
 
 // Nombre del logro de cada grupo de zonas (NOMBRES_GRUPOS); si se añade un grupo, sale «<grupo> completo»
 const LOGRO_DE_GRUPO = [

@@ -1,6 +1,4 @@
 // Arranque
-const formatoFecha = f =>
-  new Date(f + 'T12:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
 // Con el ?v= de la versión, como el resto de archivos: si no, el navegador o el modo sin conexión
 // podían seguir enseñando las novedades de una versión anterior
 async function cargarNovedades() {
@@ -27,7 +25,7 @@ const cajaNovedades = lista =>
         'section',
         '',
         crear('h4', '', n.version + ' · ' + n.titulo),
-        crear('small', '', formatoFecha(n.fecha)),
+        crear('small', '', textoFecha(n.fecha)),
         // En puntos (desde la 1.2.2); si alguna viniera como párrafo, tal cual
         Array.isArray(n.usuario)
           ? crear('ul', '', ...n.usuario.map(t => crear('li', '', t)))
