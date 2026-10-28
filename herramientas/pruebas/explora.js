@@ -1,6 +1,6 @@
 // Pruebas · «Explora»: ¿Qué puedo descubrir hoy?, Monumentos y Dónde comer, rutas a pie, Salamanca en el tiempo, Cultura, Agenda, la hora dorada, Salamanca desaparecida, detalles escondidos y el juego.
 // Se pasan desde herramientas/pruebas.js (PRUEBAS_ZONA=explora pasa solo estas).
-const { prueba, igual, cierto, texto, fichaAbierta } = require('./comun');
+const { prueba, igual, cierto, texto, fichaAbierta, llegaA } = require('./comun');
 
 prueba('Salamanca en el tiempo: cada etapa enlazada con monumentos, personajes y pueblos', async (p, url) => {
   await p.goto(url + '#tiempo/5');
@@ -95,12 +95,10 @@ prueba('Salamanca en el tiempo', async p => {
 
 prueba('Enlace a una etapa', async (p, url) => {
   await p.goto(url + '#tiempo/3');
-  await p.waitForTimeout(300);
-  igual(await texto(p, '#nm'), 'Repoblación y murallas', 'abre la etapa del enlace');
+  await llegaA(() => texto(p, '#nm'), 'Repoblación y murallas', 'abre la etapa del enlace');
   cierto(await p.$eval('#mur', e => e.style.display != 'none'), 'con la muralla');
   await p.goto(url + '#tiempo/99');
-  await p.waitForTimeout(300);
-  igual(await texto(p, '#nm'), 'El castro vetón', 'una etapa que no existe abre la primera');
+  await llegaA(() => texto(p, '#nm'), 'El castro vetón', 'una etapa que no existe abre la primera');
 });
 
 prueba('Rutas a pie', async p => {
@@ -138,8 +136,7 @@ prueba('Rutas a pie', async p => {
   cierto(await p.$eval('.ruta-monumental', e => e.style.display == 'none'), 'y no el de otra ruta');
   // Un enlace directo a una parada de otra ruta
   await p.evaluate(() => (location.hash = '#ruta-vandyck/2'));
-  await p.waitForTimeout(200);
-  igual(await texto(p, '#nm'), 'Café de Chinitas', 'enlace a una parada de Van Dyck');
+  await llegaA(() => texto(p, '#nm'), 'Café de Chinitas', 'enlace a una parada de Van Dyck');
   // Desde el buscador, un mural
   await p.click('#x');
   await p.fill('#q', 'geppetto');

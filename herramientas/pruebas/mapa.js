@@ -1,6 +1,6 @@
 // Pruebas · Mapa de la capital: carga, gestos, zoom, avenidas, calles reales de fondo, capas, filtros y «Estoy aquí».
 // Se pasan desde herramientas/pruebas.js (PRUEBAS_ZONA=mapa pasa solo estas).
-const { prueba, igual, cierto, texto, fichaAbierta, mapLibreFalso } = require('./comun');
+const { prueba, igual, cierto, texto, fichaAbierta, mapLibreFalso, llegaA } = require('./comun');
 
 prueba('Carga el mapa', async p => {
   igual(
@@ -58,44 +58,58 @@ prueba('Arrastrar y acercar el mapa', async p => {
   cierto((await p.$eval('.lim.sel', e => e.getAttribute('d'))).length > 10, 'se marca el límite de la zona');
 });
 
-prueba('Zoom suave y deslizamiento', async p => {
-  const ancho = () => p.$eval('#m', e => +e.getAttribute('viewBox').split(' ')[2]);
-  const quieto = () => p.waitForFunction(() => !enGesto && !animacionMapa, null, { timeout: 3000 });
-  const w0 = await ancho();
-  await p.click('#zi');
-  await p.waitForTimeout(90);
-  const aMedias = await ancho();
-  cierto(aMedias < w0 && aMedias > w0 / 1.6 + 0.5, 'el botón + acerca poco a poco, viéndose en directo');
-  await quieto();
-  cierto(Math.abs((await ancho()) - w0 / 1.6) < 1, 'acaba acercado 1,6 veces');
-  // Dos toques seguidos se suman
-  await p.click('#zo');
-  await p.click('#zo');
-  await quieto();
-  const maximo = await p.evaluate(() => Math.max(ANCHO_MAPA, ALTO_MAPA / proporcionMapa()));
-  cierto(Math.abs((await ancho()) - Math.min(w0 * 1.6, maximo)) < 1, 'dos «−» seguidos se suman');
-  // Un arrastre rápido sigue deslizándose después de soltar
-  const r = await p.$eval('#m', e => {
-    const b = e.getBoundingClientRect();
-    return [b.x + b.width / 2, b.y + b.height / 2];
-  });
-  await p.click('#zi');
-  await quieto();
-  const x0 = await p.$eval('#m', e => +e.getAttribute('viewBox').split(' ')[0]);
-  await p.mouse.move(r[0], r[1]);
-  await p.mouse.down();
-  for (let i = 1; i <= 5; i++) {
-    if (i > 1) await p.waitForTimeout(16);
-    await p.mouse.move(r[0] - i * 12, r[1]);
-  }
-  await p.mouse.up();
-  const xSoltar = await p.evaluate(() => vistaMapa.x);
-  await quieto();
-  const x1 = await p.$eval('#m', e => +e.getAttribute('viewBox').split(' ')[0]);
-  cierto(x1 > x0, 'el mapa ha avanzado hacia donde se arrastró');
-  cierto(x1 > xSoltar + 0.5, 'y sigue deslizándose después de soltar');
-  igual(await p.evaluate(() => animacionMapa), null, 'la animación termina');
-});
+prueba(
+  'Zoom suave y deslizamiento',
+  async p => {
+    const ancho = () => p.$eval('#m', e => +e.getAttribute('viewBox').split(' ')[2]);
+    const quieto = () => p.waitForFunction(() => !enGesto && !animacionMapa, null, { timeout: 3000 });
+    const w0 = await ancho();
+    await p.click('#zi');
+    // El primer fotograma que cambia (mirado en cada fotograma, no tras un tiempo fijo: con prisas se lo saltaría)
+    const aMedias = await p.evaluate(
+      w0 =>
+        new Promise(ok => {
+          const mirar = () => {
+            const w = +document.querySelector('#m').getAttribute('viewBox').split(' ')[2];
+            w < w0 ? ok(w) : requestAnimationFrame(mirar);
+          };
+          mirar();
+        }),
+      w0
+    );
+    cierto(aMedias < w0 && aMedias > w0 / 1.6 + 0.5, 'el botón + acerca poco a poco, viéndose en directo');
+    await quieto();
+    cierto(Math.abs((await ancho()) - w0 / 1.6) < 1, 'acaba acercado 1,6 veces');
+    // Dos toques seguidos se suman
+    await p.click('#zo');
+    await p.click('#zo');
+    await quieto();
+    const maximo = await p.evaluate(() => Math.max(ANCHO_MAPA, ALTO_MAPA / proporcionMapa()));
+    cierto(Math.abs((await ancho()) - Math.min(w0 * 1.6, maximo)) < 1, 'dos «−» seguidos se suman');
+    // Un arrastre rápido sigue deslizándose después de soltar
+    const r = await p.$eval('#m', e => {
+      const b = e.getBoundingClientRect();
+      return [b.x + b.width / 2, b.y + b.height / 2];
+    });
+    await p.click('#zi');
+    await quieto();
+    const x0 = await p.$eval('#m', e => +e.getAttribute('viewBox').split(' ')[0]);
+    await p.mouse.move(r[0], r[1]);
+    await p.mouse.down();
+    for (let i = 1; i <= 5; i++) {
+      if (i > 1) await p.waitForTimeout(16);
+      await p.mouse.move(r[0] - i * 12, r[1]);
+    }
+    await p.mouse.up();
+    const xSoltar = await p.evaluate(() => vistaMapa.x);
+    await quieto();
+    const x1 = await p.$eval('#m', e => +e.getAttribute('viewBox').split(' ')[0]);
+    cierto(x1 > x0, 'el mapa ha avanzado hacia donde se arrastró');
+    cierto(x1 > xSoltar + 0.5, 'y sigue deslizándose después de soltar');
+    igual(await p.evaluate(() => animacionMapa), null, 'la animación termina');
+  },
+  { aParte: true }
+); // mira fotogramas sueltos de una animación: con otras pruebas a la vez se los salta
 
 prueba('Nombres de avenidas solo al pulsarlas', async p => {
   const etiqueta = () => p.$eval('.ava', g => (g.style.display == 'none' ? '' : g.textContent));
@@ -117,8 +131,7 @@ prueba('Nombres de avenidas solo al pulsarlas', async p => {
     return [m.a * q.x + m.c * q.y + m.e, m.b * q.x + m.d * q.y + m.f];
   }, nombre);
   await p.mouse.click(xy[0], xy[1]);
-  await p.waitForTimeout(150);
-  igual(await texto(p, '#nm'), nombre, 'pulsar la avenida abre su ficha');
+  await llegaA(() => texto(p, '#nm'), nombre, 'pulsar la avenida abre su ficha');
   igual(await etiqueta(), 'Av. de Mirat', 'y se ve su nombre');
   await p.click('#x');
   igual(await etiqueta(), '', 'al cerrar la ficha, el nombre desaparece');
@@ -253,8 +266,7 @@ prueba(
   'Estoy aquí (GPS)',
   async p => {
     await p.click('#zl');
-    await p.waitForTimeout(400);
-    igual(await texto(p, '#nm'), 'Tejares', 'localiza la zona');
+    await llegaA(() => texto(p, '#nm'), 'Tejares', 'localiza la zona');
     cierto((await texto(p, '#here')).startsWith('Estás aquí'), 'aviso de que estás aquí');
     await p.click('.bt button[data-s=v]');
     igual(await p.evaluate(() => JSON.parse(localStorage.charro2).gv), ['tejares'], 'pisado con GPS');

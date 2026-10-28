@@ -1,6 +1,6 @@
 // Pruebas · Pestaña Provincia, fichas de pueblos, población y rutas en coche.
 // Se pasan desde herramientas/pruebas.js (PRUEBAS_ZONA=provincia pasa solo estas).
-const { prueba, igual, cierto, texto, fichaAbierta } = require('./comun');
+const { prueba, igual, cierto, texto, fichaAbierta, llegaA, hastaQue } = require('./comun');
 
 prueba('Término de Salamanca y municipios vecinos', async p => {
   cierto(
@@ -280,13 +280,11 @@ prueba('Rutas por la provincia', async (p, url) => {
   // Todas las rutas de la provincia se abren sin errores
   for (const id of await p.evaluate(() => RUTAS_PROVINCIA.map(r => r.id))) {
     await p.evaluate(h => (location.hash = h), '#ruta-' + id + '/1');
-    await p.waitForTimeout(150);
-    cierto(await fichaAbierta(p), 'abre ' + id);
+    await hastaQue(() => fichaAbierta(p), 'abre ' + id);
   }
   // Enlace directo a una parada y búsqueda
   await p.goto(url + '#ruta-arribes-norte/2');
-  await p.waitForTimeout(300);
-  igual(await texto(p, '#nm'), 'Trabanca y su mercadillo portugués', 'enlace a la parada');
+  await llegaA(() => texto(p, '#nm'), 'Trabanca y su mercadillo portugués', 'enlace a la parada');
   await p.fill('#q', 'cabeza de framontanos');
   cierto((await texto(p, '#sr')).includes('Arribes del norte'), 'el buscador la encuentra');
 });

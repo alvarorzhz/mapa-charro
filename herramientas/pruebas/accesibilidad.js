@@ -1,7 +1,7 @@
 // Pruebas · Accesibilidad y aspecto: teclado, contraste (axe), tema claro y oscuro, foco y fichas en el móvil.
 // Se pasan desde herramientas/pruebas.js (PRUEBAS_ZONA=accesibilidad pasa solo estas).
 const fs = require('fs');
-const { prueba, igual, cierto, texto, fichaAbierta } = require('./comun');
+const { prueba, igual, cierto, texto, fichaAbierta, llegaA, hastaQue, sinTransiciones } = require('./comun');
 
 // Contraste de los textos (WCAG AA) con axe, en tema claro y oscuro, en las pantallas principales
 const AXE = fs.readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8');
@@ -89,49 +89,59 @@ prueba('Mapa con teclado y lector de pantalla', async p => {
   cierto(!(await p.$('#rs')), 'sin botón de Resto de la provincia');
 });
 
-prueba('Contraste de los textos', async (p, url) => {
-  const fallos = [];
-  for (const tema of ['light', 'dark'])
-    for (const [hash, pulsar] of [
-      ['', null],
-      ['#vidal', null],
-      ['#tiempo/3', null],
-      ['', '#jug'],
-      ['#lista', null],
-      ['#provincia', null],
-      ['#pueblo/la-alberca', null],
-      ['#monumento/catedrales', null],
-      ['#rutas', null],
-      ['#ruta-arribes-norte', null],
-      ['#ruta-arribes-norte/5', null],
-      ['#tu-salamanca', null],
-      ['#hoy', null],
-      ['#tu-salamanca/logros', null],
-      ['#cultura', null],
-      ['#cultura/lunes-de-aguas', null]
-    ]) {
-      await p.emulateMedia({ colorScheme: tema });
-      await p.goto(url + 'index.html?' + tema + hash);
-      await p.waitForTimeout(250);
-      if (pulsar) await p.click(pulsar);
-      // Con una ficha abierta (fija en escritorio) y la página de detrás con scroll, axe confunde el fondo de
-      // la ficha con el de la página: se cierra Logros (que en escritorio sale abierto) y se esconde la tarjeta
-      // de la palabra charra (su contraste se mira sin ficha, en «inicio») para que no haya scroll
-      if (hash && hash != '#lista' && hash != '#provincia')
-        await p.evaluate(() => {
-          $('#palabra').style.display = 'none';
-        });
-      await p.waitForTimeout(450); // que acaben las transiciones de los paneles
-      await p.evaluate(AXE); // no con addScriptTag: la CSP de la página no deja scripts escritos dentro
-      const malos = await p.evaluate(async () =>
-        (await axe.run(document, { runOnly: ['color-contrast'] })).violations.flatMap(v =>
-          v.nodes.map(n => n.target.join(' '))
-        )
-      );
-      malos.forEach(m => fallos.push(tema + ' ' + (hash || pulsar || 'inicio') + ': ' + m));
-    }
-  igual(fallos, [], 'textos con poco contraste');
-});
+// Las pantallas van en cuatro pruebas (tema claro y oscuro, cada uno en dos mitades) para que se pasen a la vez
+const PANTALLAS_CONTRASTE = [
+  ['', null],
+  ['#vidal', null],
+  ['#tiempo/3', null],
+  ['', '#jug'],
+  ['#lista', null],
+  ['#provincia', null],
+  ['#pueblo/la-alberca', null],
+  ['#monumento/catedrales', null],
+  ['#rutas', null],
+  ['#ruta-arribes-norte', null],
+  ['#ruta-arribes-norte/5', null],
+  ['#tu-salamanca', null],
+  ['#hoy', null],
+  ['#tu-salamanca/logros', null],
+  ['#cultura', null],
+  ['#cultura/lunes-de-aguas', null]
+];
+const MITAD_CONTRASTE = PANTALLAS_CONTRASTE.length / 2;
+for (const tema of ['light', 'dark'])
+  for (const [parte, pantallas] of [
+    ['1', PANTALLAS_CONTRASTE.slice(0, MITAD_CONTRASTE)],
+    ['2', PANTALLAS_CONTRASTE.slice(MITAD_CONTRASTE)]
+  ])
+    prueba(
+      `Contraste de los textos (${tema == 'light' ? 'claro' : 'oscuro'}, ${parte} de 2)`,
+      async (p, url) => {
+        const fallos = [];
+        for (const [hash, pulsar] of pantallas) {
+          await p.emulateMedia({ colorScheme: tema });
+          await p.goto(url + 'index.html?' + tema + hash);
+          await p.waitForTimeout(250);
+          if (pulsar) await p.click(pulsar);
+          // Con una ficha abierta (fija en escritorio) y la página de detrás con scroll, axe confunde el fondo de
+          // la ficha con el de la página: se cierra Logros (que en escritorio sale abierto) y se esconde la tarjeta
+          // de la palabra charra (su contraste se mira sin ficha, en «inicio») para que no haya scroll
+          if (hash && hash != '#lista' && hash != '#provincia')
+            await p.evaluate(() => {
+              $('#palabra').style.display = 'none';
+            });
+          await sinTransiciones(p); // que acaben las transiciones de los paneles
+          await p.evaluate(AXE); // no con addScriptTag: la CSP de la página no deja scripts escritos dentro
+          const malos = await p.evaluate(async () =>
+            (await axe.run(document, { runOnly: ['color-contrast'] })).violations.flatMap(v =>
+              v.nodes.map(n => n.target.join(' '))
+            )
+          );
+          malos.forEach(m => fallos.push(tema + ' ' + (hash || pulsar || 'inicio') + ': ' + m));
+        }
+        igual(fallos, [], 'textos con poco contraste');
+      }
+    );
 
 prueba('Tema claro y oscuro', async (p, url) => {
   const tema = () => p.evaluate(() => getComputedStyle(document.body).backgroundColor);
@@ -170,9 +180,8 @@ prueba('Las fichas no se desplazan de lado', async p => {
   // Tampoco la página: nada se sale por los lados en el móvil (360 px, el más estrecho habitual)
   if (!(await p.evaluate(() => esEscritorio()))) {
     await p.setViewportSize({ width: 360, height: 760 });
-    await p.waitForTimeout(200);
-    igual(
-      await p.evaluate(() => document.documentElement.scrollWidth),
+    await llegaA(
+      () => p.evaluate(() => document.documentElement.scrollWidth),
       360,
       'la página no se sale por los lados a 360 px'
     );
@@ -230,8 +239,7 @@ prueba('Accesibilidad: estados, nombres y avisos', async p => {
   // La ficha cerrada no se alcanza con el tabulador (en el móvil estaba fuera de la pantalla pero enfocable)
   cierto(await p.$eval('#sh', e => getComputedStyle(e).visibility == 'hidden'), 'ficha cerrada, oculta');
   await p.evaluate(() => abrirFicha('centro'));
-  await p.waitForTimeout(400);
-  cierto(await p.$eval('#sh', e => getComputedStyle(e).visibility == 'visible'), 'abierta, visible');
+  await hastaQue(() => p.$eval('#sh', e => getComputedStyle(e).visibility == 'visible'), 'abierta, visible');
   // Los botones dicen su estado y, en la lista, de qué zona son
   await p.click('.bt button[data-s=v]');
   igual(
@@ -249,8 +257,9 @@ prueba('Accesibilidad: estados, nombres y avisos', async p => {
   igual(await p.$eval('#ls .fl', e => e.getAttribute('aria-label')), 'Mostrar', 'filtros con nombre');
   // «Deshacer» dura 10 s
   await p.evaluate(() => cambiarPestana('map'));
+  await p.clock.install(); // el reloj de la página, adelantado a mano en vez de esperar de verdad
   await p.evaluate(() => marcarZona('centro', 'v'));
-  await p.waitForTimeout(6000);
+  await p.clock.runFor(6000);
   cierto(await p.$eval('#ts', e => e.classList.contains('con-accion')), '«Deshacer» sigue a los 6 s');
   // El buscador anuncia cuántos resultados hay
   await p.fill('#q', 'garrido');

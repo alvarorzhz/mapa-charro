@@ -1,6 +1,6 @@
 // Pruebas · Cuentas: la de Claude y la de Google (simuladas), también desde la app del iPhone.
 // Se pasan desde herramientas/pruebas.js (PRUEBAS_ZONA=cuenta pasa solo estas).
-const { prueba, igual, cierto, texto, fichaAbierta } = require('./comun');
+const { prueba, igual, cierto, texto, fichaAbierta, llegaA } = require('./comun');
 
 // Firebase falso para entrar desde la app del iPhone: solo con la credencial que devuelve Google
 function firebaseConCredencial() {
@@ -43,14 +43,12 @@ function firebaseConCredencial() {
 prueba(
   'Guardado en la cuenta (simulada)',
   async p => {
-    await p.waitForTimeout(200);
-    igual(await texto(p, '#sv'), 'Guardado en tu cuenta', 'conecta');
+    await llegaA(() => texto(p, '#sv'), 'Guardado en tu cuenta', 'conecta');
     await p.fill('#q', 'vega');
     await p.press('#q', 'Enter');
     await p.click('.bt button[data-s=v]');
-    await p.waitForTimeout(1000);
-    igual(
-      await p.evaluate(() => window.__guardado && window.__guardado.z),
+    await llegaA(
+      () => p.evaluate(() => window.__guardado && window.__guardado.z),
       { vega: 'v' },
       'sube el progreso'
     );
@@ -82,15 +80,17 @@ prueba(
       'ofrece entrar si hay progreso'
     );
     await p.click('#cuenta button');
-    await p.waitForTimeout(300);
-    igual(await texto(p, '#sv'), 'Guardado en tu cuenta (prueba@ejemplo.es)', 'entra y conecta');
+    await llegaA(() => texto(p, '#sv'), 'Guardado en tu cuenta (prueba@ejemplo.es)', 'entra y conecta');
     igual(
       await p.evaluate(() => estadoApp.progreso.z),
       { centro: 'v', vega: 'v' },
       'junta lo del navegador con lo de la cuenta'
     );
-    await p.waitForTimeout(1000);
-    igual(await p.evaluate(() => window.__nubeGoogle.datos.z), { centro: 'v', vega: 'v' }, 'y lo sube');
+    await llegaA(
+      () => p.evaluate(() => window.__nubeGoogle.datos.z),
+      { centro: 'v', vega: 'v' },
+      'y lo sube'
+    );
     igual(await p.evaluate(() => localStorage.getItem('charro-cuenta')), 'u1', 'recuerda la cuenta');
     // Salir: el progreso se queda en el navegador
     await p.click('#cuenta button');
@@ -104,8 +104,7 @@ prueba(
     await p.click('#cuenta button');
     await p.click('.modal .botones button:text-is("Borrar mi cuenta")');
     await p.click('.modal .botones button:text-is("Borrar")');
-    await p.waitForTimeout(200);
-    igual(await p.evaluate(() => window.__nubeGoogle.datos), null, 'borra el progreso de la nube');
+    await llegaA(() => p.evaluate(() => window.__nubeGoogle.datos), null, 'borra el progreso de la nube');
     igual(await p.evaluate(() => localStorage.getItem('charro-cuenta')), null, 'y olvida la cuenta');
   },
   {
@@ -189,8 +188,7 @@ prueba(
 prueba(
   'Cuenta con Google desde la app del iPhone: vuelve de Google y entra',
   async p => {
-    await p.waitForTimeout(400);
-    igual(await texto(p, '#sv'), 'Guardado en tu cuenta (iphone@ejemplo.es)', 'entra y conecta');
+    await llegaA(() => texto(p, '#sv'), 'Guardado en tu cuenta (iphone@ejemplo.es)', 'entra y conecta');
     igual(await p.evaluate(() => location.hash), '#tejares', 'deja el enlace de antes');
     cierto(await fichaAbierta(p), 'y abre su ficha');
     igual(await p.evaluate(() => localStorage.getItem('charro-ida-google')), null, 'olvida la ida');
@@ -213,7 +211,7 @@ prueba(
 prueba(
   'Cuenta con Google desde la app del iPhone: no acepta una vuelta que no es suya',
   async p => {
-    await p.waitForTimeout(400);
+    await p.waitForTimeout(400); // lo que no tiene que pasar: no hay nada a lo que esperar
     igual(await texto(p, '#sv'), 'Guardado en este navegador', 'no entra');
     igual(await p.evaluate(() => window.__credencial), undefined, 'ni le da nada a Firebase');
     igual(await p.evaluate(() => location.hash), '', 'y limpia la dirección');
@@ -233,8 +231,11 @@ prueba(
   'Cuenta de Claude en un dispositivo nuevo con enlace a una zona',
   async p => {
     // La ficha de la zona se abre antes de que llegue la cuenta: lo de la cuenta no se puede perder
-    await p.waitForTimeout(1200);
-    igual(await p.evaluate(() => estadoApp.progreso.z), { centro: 'v', vega: 'w' }, 'trae lo de la cuenta');
+    await llegaA(
+      () => p.evaluate(() => estadoApp.progreso.z),
+      { centro: 'v', vega: 'w' },
+      'trae lo de la cuenta'
+    );
     cierto(await p.evaluate(() => estadoApp.progreso.j.fl.includes('tejares')), 'y conserva la ficha leída');
     igual(await p.evaluate(() => window.__guardado.z), { centro: 'v', vega: 'w' }, 'la cuenta sigue entera');
     igual(
@@ -271,9 +272,8 @@ prueba(
   async p => {
     // Ya se había entrado en este navegador, pero ninguna subida salió bien (no hay base sincronizada):
     // la cuenta tiene lo de un móvil y aquí hay otra cosa más nueva. No se pierde ninguna de las dos
-    await p.waitForTimeout(1500);
-    igual(
-      await p.evaluate(() => Object.keys(estadoApp.progreso.z).sort()),
+    await llegaA(
+      () => p.evaluate(() => Object.keys(estadoApp.progreso.z).sort()),
       ['centro', 'vega'],
       'junta lo del navegador y lo de la cuenta'
     );
@@ -290,8 +290,11 @@ prueba(
     );
     // Marcar algo nuevo también sube
     await p.evaluate(() => marcarZona('tejares', 'v'));
-    await p.waitForTimeout(1200);
-    igual(await p.evaluate(() => window.__nubeGoogle.datos.z.tejares), 'v', 'lo nuevo llega a la cuenta');
+    await llegaA(
+      () => p.evaluate(() => window.__nubeGoogle.datos.z.tejares),
+      'v',
+      'lo nuevo llega a la cuenta'
+    );
     igual(await texto(p, '#sv'), 'Guardado en tu cuenta (prueba@ejemplo.es)', 'sin error');
   },
   {
@@ -351,9 +354,8 @@ prueba(
     await p.evaluate(() => cerrarFicha());
     igual(await p.evaluate(() => estadoApp.progreso.t), 0, 'leer una ficha no hace la copia más nueva');
     await p.click('#cuenta button');
-    await p.waitForTimeout(1300);
-    igual(
-      await p.evaluate(() => estadoApp.progreso.z),
+    await llegaA(
+      () => p.evaluate(() => estadoApp.progreso.z),
       { centro: 'v', tejares: 'w' },
       'trae lo de la cuenta'
     );
@@ -409,15 +411,13 @@ prueba(
   'Cuenta con Google: ventanita bloqueada en el móvil',
   async p => {
     await p.click('#cuenta button');
-    await p.waitForTimeout(300);
-    igual(
-      await texto(p, '#cuenta'),
+    await llegaA(
+      () => texto(p, '#cuenta'),
       'Pulsa aquí para elegir tu cuenta de Google',
       'si el navegador bloquea la ventanita, pide otra pulsación'
     );
     await p.click('#cuenta button');
-    await p.waitForTimeout(300);
-    igual(await p.evaluate(() => window.__intentos), 2, 'y a la segunda la abre');
+    await llegaA(() => p.evaluate(() => window.__intentos), 2, 'y a la segunda la abre');
   },
   {
     antes: () => {
