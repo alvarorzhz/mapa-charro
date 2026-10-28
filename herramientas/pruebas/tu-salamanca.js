@@ -284,7 +284,7 @@ prueba('Palabras charras: tarjeta, ficha y logros', async p => {
   // Índice de la ficha: lleva a cada apartado
   igual(
     await p.$$eval('#idx button', b => b.map(x => x.textContent)),
-    ['Curiosidades', 'Dónde comer', 'Palabra charra'],
+    ['Curiosidades', 'Palabra charra'],
     'índice de la ficha de Vidal'
   );
   // En otras fichas no salen ni la palabra ni el índice

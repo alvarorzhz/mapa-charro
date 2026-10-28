@@ -62,7 +62,9 @@ export const CURIOSIDADES = {
   labradores: [
     'Su nombre viene de las tierras de labranza que había aquí. Desde 1900 fue el primer ensanche de la ciudad; ya en 1858 un plano mostraba un camino llamado Ronda de Labradores.',
     'A la avenida de Portugal la llamaban el «Broadway charro» por sus cines, bares y salas de fiesta, y en carnaval llegaban a juntarse mil disfrazados entre la calle Valencia y la avenida.',
-    'El Mercado de San Juan se proyectó en 1939, obra de Luis Gutiérrez Soto y Javier Barroso.'
+    'El Mercado de San Juan se proyectó en 1939, obra de Luis Gutiérrez Soto y Javier Barroso.',
+    // Fuente: https://es.wikipedia.org/wiki/Barrio_del_Oeste
+    'La avenida de Portugal fue vía de tren: el ramal norte se terminó en 1896 y se desmontó en 1957. Las calles se quedaron a la altura de la vía, y de ahí vienen sus desniveles.'
   ],
   salesas: [
     'El nombre viene del monasterio de las Salesas, de la Orden de la Visitación, fundado en 1910; hoy es la parroquia de María Mediadora.',
@@ -79,7 +81,9 @@ export const CURIOSIDADES = {
     'Nació con las «casas baratas» en hilera que promovieron Manuel Garrido, concejal, y Santiago Bermejo, confitero. En 1916 la prensa ya hablaba de la barriada de Garrido y Bermejo.',
     'La primera piedra de la iglesia de la Virgen de Fátima se puso en 1955 y se inauguró en 1960. En la esquina de Federico Anaya con María Auxiliadora estaba el cine Taramona.',
     // Fuente: https://salamancartvaldia.es/noticia/2023-12-10-garrido-y-bermejo-el-nacimiento-del-barrio-garrido-335932
-    'Manuel Garrido, que da nombre al barrio, fue elegido concejal en 1917 por el mismo distrito que Miguel de Unamuno, y con más votos: 318 frente a 205.'
+    'Manuel Garrido, que da nombre al barrio, fue elegido concejal en 1917 por el mismo distrito que Miguel de Unamuno, y con más votos: 318 frente a 205.',
+    // Fuente: https://www.lagacetadesalamanca.es/hemeroteca/garrido-pizarrales-vidal-procede-nombre-KTGS258615
+    'Manuel Garrido era albañil y Santiago Bermejo, confitero. En 2009 una calle del barrio pasó a llamarse de Garrido y Bermejo, en recuerdo de los dos.'
   ],
   garridonorte: [
     'Es el barrio con más vecinos de la capital: dicen que quien no gana Garrido no gana el Ayuntamiento.',
@@ -148,13 +152,17 @@ export const CURIOSIDADES = {
     'El colegio de las Esclavas, de 1905, es de piedra de Villamayor. En 1983 su huerta se convirtió en el parque Picasso, de 8.000 metros cuadrados.',
     'El depósito de aguas de Campoamor, de 1914, se derribó en 2002; en su solar está hoy el Museo del Comercio.',
     // Fuente: https://www.elespanol.com/castilla-y-leon/region/salamanca/20180318/delicias-sagrado-corazon-abastecimiento/292971627_0.html
-    'El barrio quedaba encerrado entre la vía del tren y el asilo de San Rafael: «No te podías comunicar con Garrido más que saltando la rampa de la vía», recuerda una vecina. Las casas eran de planta baja, con alcobas y jardín.'
+    'El barrio quedaba encerrado entre la vía del tren y el asilo de San Rafael: «No te podías comunicar con Garrido más que saltando la rampa de la vía», recuerda una vecina. Las casas eran de planta baja, con alcobas y jardín.',
+    // Fuente: https://lacronicadesalamanca.com/331518-el-rollo-el-barrio-con-jurisdiccion-propia/
+    'El parque Picasso se inauguró el 25 de noviembre de 1984, y entonces fue el cuarto más grande de la ciudad.'
   ],
   sanisidro: [
     'Toma el nombre de su iglesia. Creció tras la Guerra Civil con casas bajas alrededor del antiguo hospicio de San Rafael, que hoy es una residencia de mayores.',
     'Sus vecinos trabajaban en el ferrocarril y en las fábricas del Alto del Rollo. El mercado de la plaza de Trujillo se convirtió a principios de este siglo en un centro cultural.',
     // Fuente: https://www.salamancaenelayer.com/2019/11/el-asilo-de-san-rafael.html
-    'La residencia de San Rafael viene del asilo que fundó en 1874 el médico salmantino Rafael Pérez Piñuela; en 1908 se trasladó a una finca del paseo del Rollo, frente a las Esclavas.'
+    'La residencia de San Rafael viene del asilo que fundó en 1874 el médico salmantino Rafael Pérez Piñuela; en 1908 se trasladó a una finca del paseo del Rollo, frente a las Esclavas.',
+    // Fuente: https://lacronicadesalamanca.com/326020-el-barrio-humilde-que-florecio-la-prosperidad/
+    'En «La Prospe» las primeras casas eran de planta baja, con corrales de vacas, cerdos, gallinas y patos, y a veces dos o tres familias compartían vivienda. Las parcelas costaban una peseta el metro en lo más caro, y entre 60 y 80 céntimos cerca del río.'
   ],
   prosperidad: [
     'Su nombre imita al de un ensanche madrileño y recuerda a quienes llegaban de los pueblos buscando prosperar. Esteban Corral, que hizo fortuna en Argentina, parceló los terrenos y bautizó calles como México, Perú o Argentina.',
@@ -162,7 +170,12 @@ export const CURIOSIDADES = {
     // Fuente: https://www.ub.edu/geocrit/sn/sn-146(139).htm
     'Entre 1919 y 1922 se levantaron, junto al Depósito de Aguas de 1917, casas de una planta para unos 250 vecinos: fue el germen del barrio.',
     // Fuente: https://www.elespanol.com/castilla-y-leon/region/20180311/prosperidad-camino-agua-progreso/291221741_0.html
-    'La antigua prisión provincial se convirtió en el DA2, museo de arte contemporáneo, con la Capitalidad Cultural Europea de 2002.'
+    'La antigua prisión provincial se convirtió en el DA2, museo de arte contemporáneo, con la Capitalidad Cultural Europea de 2002.',
+    // Fuente: https://lacronicadesalamanca.com/326020-el-barrio-humilde-que-florecio-la-prosperidad/
+    'A la Prosperidad, San Isidro y Delicias juntas las llamaban «La Prospe». En 1915 aquí no vivía nadie: solo estaban el colegio de las Esclavas y la fábrica de harinas El Ángel.',
+    'En 1923 los vecinos pidieron agua y servicios, y en el pleno de febrero algunos concejales propusieron dejar el barrio a su suerte. En 1925 la Junta de Sanidad llegó a plantear derribar las casas.',
+    'El noviciado de los jesuitas se inauguró el 10 de octubre de 1926. En la Guerra Civil fue cuartel de Falange, hospital y oficina de recuperación de documentos, y los jesuitas no lo recuperaron entero hasta 1943.',
+    'En 1979 se propuso hacer mil viviendas en la huerta de los jesuitas. El Ayuntamiento la compró por 100 millones de pesetas y hoy es el parque de los Jesuitas: unas 60.000 personas fueron a verlo cuando se inauguró.'
   ],
   rollo: [
     'Lo parceló el mismo contratista que después creó la Prosperidad, Esteban Corral y Castro.',
@@ -172,7 +185,11 @@ export const CURIOSIDADES = {
     // Fuente: https://lacronicadesalamanca.com/331518-el-rollo-el-barrio-con-jurisdiccion-propia/
     'En 1793 se arregló como paseo el camino desde la Puerta de Toro hasta el Alto del Rollo: el Paseo del Rollo, que hoy es la avenida de los Comuneros.',
     // Fuente: https://salamancartvaldia.es/noticia/2025-12-24-memorias-del-rollo-382647
-    '«Las Pajas» era como llamaban los vecinos a la carretera de Cabrerizos, con establos, un campo de fútbol y luego una gran fábrica de zapatillas. Casi todas las familias del barrio trabajaban en la RENFE.'
+    '«Las Pajas» era como llamaban los vecinos a la carretera de Cabrerizos, con establos, un campo de fútbol y luego una gran fábrica de zapatillas. Casi todas las familias del barrio trabajaban en la RENFE.',
+    // Fuente: https://lacronicadesalamanca.com/331518-el-rollo-el-barrio-con-jurisdiccion-propia/
+    'Su avenida se ha llamado Rodríguez San Pedro desde 1906, Hermanos Pérez Almeida desde 1942 y avenida de los Comuneros desde 1980.',
+    'Esteban Corral compró los terrenos en 1918, los partió en diecisiete parcelas a unas cinco pesetas el metro cuadrado y abrió las calles Ecuador, Bolivia y Chile.',
+    'La fábrica de zapatillas Tejisa, en la calle Colombia, llegó a dar trabajo a más de mil personas. Cuando Jesús Málaga llegó a la alcaldía, taxis, ambulancias y repartidores de butano se negaban a entrar por el barro.'
   ],
   puenteladrillo: [
     'Su nombre viene del puente de ladrillo que cruza las vías del tren hacia Madrid. Hace casi 150 años lo levantaron familias de ferroviarios junto a los talleres de reparación.',
@@ -180,12 +197,21 @@ export const CURIOSIDADES = {
     // Fuente: https://www.lagacetadesalamanca.es/salamanca/el-barrio-salmantino-que-nacio-ligado-al-ferrocarril-HN7168449
     'El 18 de diciembre de 1936 diez aviones bombardearon la estación. Una bomba dirigida al puente no lo alcanzó, pero mató a tres vecinos de una casa junto a la vía.',
     // Fuente: https://www.lagacetadesalamanca.es/salamanca/el-barrio-salmantino-que-nacio-ligado-al-ferrocarril-HN7168449
-    'Muchos vecinos se despertaban con «la burra», la bocina de vapor de los talleres de Renfe. El puente se hizo hacia 1889 con ladrillo de La Cerámica Salmantina.'
+    'Muchos vecinos se despertaban con «la burra», la bocina de vapor de los talleres de Renfe. El puente se hizo hacia 1889 con ladrillo de La Cerámica Salmantina.',
+    // Fuente: https://lacronicadesalamanca.com/334730-los-dos-puentes-de-puente-ladrillo/
+    'El puente servía también para que las ovejas cruzaran las vías en la trashumancia.',
+    'El cura Heliodoro Morales levantó la parroquia en terrenos de Renfe sin licencia y dejó una deuda de cien mil pesetas. Tenía un perro que hacía de monaguillo en misa.',
+    'Unos 700 vecinos, mujeres y niños incluidos, cavaron las zanjas de sus dos primeras fuentes, la «Virgen María» y «La Misión». Al campo de fútbol lo llamaban «La Ferro».'
   ],
   carmelitas: [
     'La asociación de vecinos ZOES nació en 1977, con una cuota de 25 pesetas al mes, para pedir asfalto y agua potable.',
     'Desde 2013 su Galería Urbana llena el barrio de grafitis y murales de artistas de toda España.',
-    'Tiene más de 400 comercios, entre ellos unas 35 peluquerías, y la calle Wences Moreno es la segunda más comercial de la ciudad.'
+    'Tiene más de 400 comercios, entre ellos unas 35 peluquerías, y la calle Wences Moreno es la segunda más comercial de la ciudad.',
+    // Fuente: https://lacronicadesalamanca.com/329428-el-oeste-del-barro-a-la-vanguardia-de-salamanca/
+    'El barrio nació de un convento de Santa Teresa: las Carmelitas Descalzas, fundadas en 1571, se instalaron desde 1614 junto a la puerta de Villamayor. Entre 1901 y 1910 se levantaron aquí las primeras dieciocho casas molineras, con patio delante y huerta.',
+    // Fuente: https://es.wikipedia.org/wiki/Barrio_del_Oeste
+    'En los años setenta las calles eran de tierra, sin aceras ni alumbrado, y el agua no subía más allá del segundo piso: las tareas de casa se hacían de madrugada. La última casa con jardín de los años treinta se derribó en 2004.',
+    'Los vecinos montaron un rastro sin permiso en la plaza del Oeste, anunciado con pintadas en las tapias. Con el alcalde Jesús Málaga se legalizó, y años después se trasladó a la ribera del Tormes y luego a La Aldehuela.'
   ],
   sanbernardo: [
     'Los monjes bernardos llegaron en 1581; su convento lo destruyeron los franceses en la Guerra de la Independencia. El nombre oficial de barrio llegó en 1979.',
@@ -310,7 +336,11 @@ export const CURIOSIDADES = {
     // Fuente: https://www.elespanol.com/castilla-y-leon/region/salamanca/20220303/san-jose-barrio-obrero-surgio-reivindicacion-vecinal/653934766_0.html
     'Fue cuna del movimiento vecinal. Para tener consultorio, en la calle Manuel Parada, los vecinos hicieron colas enormes, y su asociación llegó hasta el Ministerio de Vivienda, en Madrid, para conseguir dinero contra las humedades de los pisos.',
     // Fuente: https://www.elespanol.com/castilla-y-leon/region/salamanca/20220303/san-jose-barrio-obrero-surgio-reivindicacion-vecinal/653934766_0.html
-    'La primera tienda del barrio, en la calle Manuel Parada, vendía «un poco de todo». Después llegaron la farmacia y los bares.'
+    'La primera tienda del barrio, en la calle Manuel Parada, vendía «un poco de todo». Después llegaron la farmacia y los bares.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/san-jose-san-bernardo-viaje-origenes-vivienda-20250605181332-nt.html
+    'Se levantaron más de mil viviendas frente a la silueta monumental de Salamanca, que ayudaron a que la ciudad creciera hacia el sur del río.',
+    // Fuente: https://www.elespanol.com/castilla-y-leon/region/salamanca/20220303/san-jose-barrio-obrero-surgio-reivindicacion-vecinal/653934766_0.html
+    'Josefa «Pepita» Mena, una de sus primeras inquilinas, presidió la asociación de vecinos durante décadas y llegó a concejala.'
   ],
   villamayor: [
     'De sus canteras, documentadas desde el siglo XVI, salió la piedra dorada de las catedrales, la Casa de las Conchas y la Plaza Mayor.',
@@ -509,7 +539,9 @@ export const CURIOSIDADES = {
     'En 1942 la condesa propietaria vendió la finca a su rentero, Valentín Carrasco, que la convirtió en un referente de hortalizas tempranas con invernaderos.',
     // Fuente: https://salamancartvaldia.es/noticia/2023-02-02-huerta-otea-creemos-en-el-barrio-y-apostamos-fuerte-por-el-y-por-sus-habitantes-314741
     'Fue el barrio de Salamanca que más creció en una década: pasó de 2.025 empadronados en 2012 a 2.769 en 2022.',
-    'Sus orillas del Tormes son de las que eligen los salmantinos para celebrar el Lunes de Aguas.'
+    'Sus orillas del Tormes son de las que eligen los salmantinos para celebrar el Lunes de Aguas.',
+    // Fuente: http://huertaotea.es/los-origenes-del-barrio-la-huerta-otea-centenaria/
+    'El camino a la finca ya sale en un plano de Salamanca de 1858. Fue de Agustín Maldonado y Carvajal, marqués de Castellanos, que vivía en el palacio de Tejares, y luego de los condes de Monterrón.'
   ],
   salasbajas: [
     // Fuente: https://www.salamancaenelayer.com/2020/04/riadas-inundaciones-del-tormes-y.html
