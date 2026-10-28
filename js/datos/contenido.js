@@ -46,7 +46,9 @@ export const CURIOSIDADES = {
   sancristobal: [
     'La iglesia de San Cristóbal es de 1128 y desde 1145 fue de la Orden de San Juan de Jerusalén. En 1919 se convirtió en colegio, cerró en 1960 y se restauró a partir de 1991.',
     'Bajo su ábside apareció una necrópolis con tumbas excavadas en la roca, y dentro se guarda el Cristo de los Carboneros, una talla románica.',
-    'En el convento de Santa Clara, en febrero de 1973, unos obreros que arreglaban el tejado encontraron un artesonado mudéjar de los siglos XIV y XV, oculto unos 250 años sobre la bóveda barroca. Hoy se visita por pasarelas.'
+    'En el convento de Santa Clara, en febrero de 1973, unos obreros que arreglaban el tejado encontraron un artesonado mudéjar de los siglos XIV y XV, oculto unos 250 años sobre la bóveda barroca. Hoy se visita por pasarelas.',
+    // Fuente: https://es.wikipedia.org/wiki/Iglesia_de_San_Cristóbal_(Salamanca)
+    'En la repoblación de la ciudad, desde 1102, fueron gentes venidas de Toro las que se asentaron aquí y le dieron el nombre de San Cristóbal. En 1901 a la iglesia se le hundió el techo y quedó casi en ruinas hasta las obras de 1918.'
   ],
   sanesteban: [
     'En 1527 encarcelaron aquí a Ignacio de Loyola, y Colón se alojó con los dominicos mientras buscaba apoyo para su viaje. La fachada del convento es plateresca.',
@@ -144,7 +146,9 @@ export const CURIOSIDADES = {
   delicias: [
     'Lo bautizaron los ferroviarios que vivían aquí, inspirados en el barrio madrileño de Las Delicias.',
     'El colegio de las Esclavas, de 1905, es de piedra de Villamayor. En 1983 su huerta se convirtió en el parque Picasso, de 8.000 metros cuadrados.',
-    'El depósito de aguas de Campoamor, de 1914, se derribó en 2002; en su solar está hoy el Museo del Comercio.'
+    'El depósito de aguas de Campoamor, de 1914, se derribó en 2002; en su solar está hoy el Museo del Comercio.',
+    // Fuente: https://www.elespanol.com/castilla-y-leon/region/salamanca/20180318/delicias-sagrado-corazon-abastecimiento/292971627_0.html
+    'El barrio quedaba encerrado entre la vía del tren y el asilo de San Rafael: «No te podías comunicar con Garrido más que saltando la rampa de la vía», recuerda una vecina. Las casas eran de planta baja, con alcobas y jardín.'
   ],
   sanisidro: [
     'Toma el nombre de su iglesia. Creció tras la Guerra Civil con casas bajas alrededor del antiguo hospicio de San Rafael, que hoy es una residencia de mayores.',
@@ -186,7 +190,11 @@ export const CURIOSIDADES = {
   sanbernardo: [
     'Los monjes bernardos llegaron en 1581; su convento lo destruyeron los franceses en la Guerra de la Independencia. El nombre oficial de barrio llegó en 1979.',
     'El primer bloque de viviendas, el grupo Mariano Rodríguez, es de los años cuarenta. En 1975 llegaron la estación de autobuses y el mercado.',
-    'Desde los años ochenta sus zonas verdes funcionan como un museo de esculturas al aire libre.'
+    'Desde los años ochenta sus zonas verdes funcionan como un museo de esculturas al aire libre.',
+    // Fuente: https://lacronicadesalamanca.com/330201-san-bernardo-el-barrio-de-los-mil-anos/
+    'Hasta 1979 se llamó Salas Pombo, por el gobernador civil que impulsó sus viviendas. Los pisos eran tan pequeños que, como recuerda un vecino, «solo los padres tenían cama»: los niños dormían en literas.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/el-origen-del-barrio-de-san-bernardo-del-calvario-a-la-estacion-de-autobuses-CM6925523
+    'La estación de autobuses, inaugurada el 22 de diciembre de 1975, ocupa el solar de El Calvario, el campo de fútbol que se bendijo en 1923 y que fue durante 47 años el de la UD Salamanca.'
   ],
   hospitales: [
     'Aquí están el Hospital Clínico y el Campus Miguel de Unamuno, con las facultades de Derecho, Economía y Medicina.',
@@ -200,7 +208,10 @@ export const CURIOSIDADES = {
   pizarrales: [
     'Nació a comienzos del siglo XX con casas de pizarra y sin permisos (la licencia oficial llegó en 1966). Los vecinos llevaron el agua hasta sus casas a pico y pala.',
     'En pocos años tuvo de todo: iglesia en 1916, sociedad de socorros mutuos en 1917, escuela en 1918 y depósito de agua en 1927. Bebían de fuentes como el caño Mamarón o la Cagalona.',
-    'Tuvo el cine del señor Ulpiano y un teatro en el local de la señora Victorina.'
+    'Tuvo el cine del señor Ulpiano y un teatro en el local de la señora Victorina.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/historia-pizarrales-barrio-obrero-hizo-necesidad-virtud-20240310185851-nt.html
+    'Las casas se levantaban sin permiso, en horas libres y días de fiesta: como recoge un estudio de Miguel Borrego, «las obras se hacían de noche y las multas se ponían de día». Entre 1910 y 1930 pasó de 53 a 1.427 vecinos.',
+    'Para traer el agua, en los años sesenta, unos mil vecinos abrieron por turnos una zanja de 2.200 metros desde el depósito de la Chinchibarra, y cada uno puso 1.000 pesetas. El depósito del teso de los Cañones se inauguró el 6 de octubre de 1963 con una verbena.'
   ],
   blanco: [
     'Su nombre viene de sus primeras casas de una planta, blancas como la nieve.',
@@ -304,12 +315,16 @@ export const CURIOSIDADES = {
   villamayor: [
     'De sus canteras, documentadas desde el siglo XVI, salió la piedra dorada de las catedrales, la Casa de las Conchas y la Plaza Mayor.',
     'El 1 de agosto de 1774, «el Centellazo»: un rayo cayó en la torre de la iglesia y no hubo víctimas.',
-    'En el teso de San Miguel hubo un castro prerromano. Hoy tiene unos 7.700 vecinos y desde 2017 incluye Mozodiel de Sanchiñigo.'
+    'En el teso de San Miguel hubo un castro prerromano. Hoy tiene unos 7.700 vecinos y desde 2017 incluye Mozodiel de Sanchiñigo.',
+    // Fuente: https://es.wikipedia.org/wiki/Villamayor_(Salamanca)
+    'Fue tierra de realengo hasta que Felipe III se la cedió como señorío a Juan Álvarez Maldonado. En 1850, según Madoz, tenía 87 casas, tres fuentes y 389 vecinos.'
   ],
   santamarta: [
     'Su nombre une a su patrona, Santa Marta, y el río. La primera mención escrita que se conserva es de diciembre de 1201.',
     'En 1963 Salamanca intentó anexionarla, pero no se aprobó. Hoy, con unos 15.000 vecinos, es el municipio más poblado del alfoz.',
-    'Celebra San Blas el 3 de febrero y Santa Marta el 29 de julio.'
+    'Celebra San Blas el 3 de febrero y Santa Marta el 29 de julio.',
+    // Fuente: https://es.wikipedia.org/wiki/Santa_Marta_de_Tormes
+    'En su término hay yacimientos del Paleolítico, achelenses y musterienses, y poblados del Neolítico. En 1848, según Madoz, tenía unas 30 casas y 143 vecinos.'
   ],
   cabrerizos: [
     'En el siglo XIII se llamaba «Cabrarizos». En su término, en La Flecha, está el oratorio de Fray Luis de León.',
@@ -322,12 +337,16 @@ export const CURIOSIDADES = {
   carbajosa: [
     'Aparece en 1248 como «Carvayosa la Sagrada»: el nombre viene del carbajo, un tipo de roble. La fundó Alfonso IX a comienzos del siglo XIII.',
     'Tuvo su papel en la batalla de los Arapiles, el 22 de julio de 1812.',
-    'Entre 2000 y 2011 su población creció un 271 %, y es uno de los municipios más jóvenes de la provincia. Su patrón es San Roque, el 16 de agosto.'
+    'Entre 2000 y 2011 su población creció un 271 %, y es uno de los municipios más jóvenes de la provincia. Su patrón es San Roque, el 16 de agosto.',
+    // Fuente: https://es.wikipedia.org/wiki/Carbajosa_de_la_Sagrada
+    'Su escudo es «parlante»: tres encinas por el carbajo de su nombre y, debajo, un capelo de canónigo. A mediados del siglo XIX, según Madoz, tenía unas 44 casas, una escuela y varias fuentes.'
   ],
   villares: [
     'Su nombre recuerda a la reina Berenguela, esposa de Alfonso IX, que vivió aquí: se llamaba «Villar de la Reyna».',
     'La iglesia de San Silvestre se empezó en 1619 y tiene una cúpula elíptica. Las fiestas son el 31 de diciembre, por San Silvestre.',
-    'El estadio Helmántico está en su término municipal.'
+    'El estadio Helmántico está en su término municipal.',
+    // Fuente: https://es.wikipedia.org/wiki/Villares_de_la_Reina
+    'A San Silvestre la llaman una de las tres «catedrales» de La Armuña, con las iglesias de Palencia de Negrilla y Villaverde de Guareña. Es de piedra de Villamayor, salvo la portada principal, de granito, y guarda siete retablos.'
   ],
   aldeatejada: [
     'Aparece como «Aldea Teiada» en 1186. Del 10 al 13 de noviembre de 1543, Felipe II y María Manuela de Portugal se alojaron aquí antes de su boda en Salamanca.',
