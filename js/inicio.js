@@ -1,7 +1,5 @@
 // Arranque
-const formatoFecha = f =>
-  new Date(f + 'T12:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
-// Con el ?v= de la versión, como el resto de archivos: si no, el navegador o el modo sin conexión
+// Con su ?v= (la huella de su contenido), como el resto de archivos: si no, el navegador o el modo sin conexión
 // podían seguir enseñando las novedades de una versión anterior
 async function cargarNovedades() {
   const enlace = document.querySelector('link[href^="novedades.json"]');
@@ -16,7 +14,19 @@ async function mostrarNovedades() {
     return;
   }
   escribirLocal(CLAVE_VERSION_VISTA, versionApp());
-  abrirVentana('Novedades', cajaNovedades(lista), [['Cerrar', cerrarVentana]], $('#ver button'));
+  const caja = cajaNovedades(lista),
+    anteriores = crear('button', 'enlace', 'Ver las anteriores');
+  // Las de versiones viejas van aparte (herramientas/version.js) y solo se bajan si se piden
+  anteriores.onclick = async () => {
+    try {
+      const viejas = await (await fetch('novedades-anteriores.json', { cache: 'no-cache' })).json();
+      anteriores.replaceWith(...cajaNovedades(viejas).children);
+    } catch (e) {
+      aviso('No se han podido cargar las novedades anteriores. Comprueba la conexión', { tipo: 'error' });
+    }
+  };
+  caja.append(anteriores);
+  abrirVentana('Novedades', caja, [['Cerrar', cerrarVentana]], $('#ver button'));
 }
 const cajaNovedades = lista =>
   crear(
@@ -27,7 +37,7 @@ const cajaNovedades = lista =>
         'section',
         '',
         crear('h4', '', n.version + ' · ' + n.titulo),
-        crear('small', '', formatoFecha(n.fecha)),
+        crear('small', '', textoFecha(n.fecha)),
         // En puntos (desde la 1.2.2); si alguna viniera como párrafo, tal cual
         Array.isArray(n.usuario)
           ? crear('ul', '', ...n.usuario.map(t => crear('li', '', t)))
@@ -78,17 +88,17 @@ async function mostrarNovedadesNuevas() {
   const botones = document.querySelectorAll('.modal .botones button');
   botones[botones.length - 1].focus({ preventScroll: true });
 }
-// Versión al pie de la página: la de package.json (1.4.0) y, entre paréntesis, el número interno ?v=
-// que sube herramientas/version.js en cada cambio (el que hace que el móvil baje los archivos nuevos).
+// Versión al pie de la página: la de package.json (1.4.0) y, entre paréntesis, el número interno que sube
+// herramientas/version.js en cada cambio (el de sw.js, que hace que el móvil baje los archivos nuevos).
 // Al pulsarla salen las novedades de cada versión (novedades.json, los puntos para el usuario).
 {
   const meta = document.querySelector('meta[name="version"]'),
-    v = (document.querySelector('script[src*="?v="]') || {}).src,
+    interna = (document.querySelector('meta[name="version-interna"]') || {}).content,
     boton = crear(
       'button',
       'enlace',
       (meta ? 'Versión ' + meta.content : '') +
-        (v ? (meta ? ' (' : 'Versión ') + v.split('?v=')[1] + (meta ? ')' : '') : '')
+        (interna ? (meta ? ' (' : 'Versión ') + interna + (meta ? ')' : '') : '')
     );
   boton.setAttribute('aria-label', boton.textContent + ': ver las novedades');
   boton.onclick = mostrarNovedades;

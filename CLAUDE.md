@@ -13,11 +13,11 @@ PWA en JavaScript sin framework (scripts clásicos con `defer` y ámbito global 
 - Idioma de la app y de los commits: español. Nombres en español y descriptivos; Prettier.
 - No inventes datos: curiosidades, restaurantes, leyendas y cultura llevan fuente verificable.
 - «Haz el commit» = publicarlo en la web: `npm run antes-del-commit` (si falla, no hay commit: encadena con `&&`), commit y push a la rama de trabajo, PR con squash a `main` titulado «2.x.y: …» y merge cuando GitHub Actions esté en verde. Cada cambio publicado sube la versión de `package.json` (al menos la tercera cifra) y lleva su entrada en `novedades.json` (`usuario` y `tecnico`, la más nueva primero). Detalle en `docs/notas/publicar.md`.
-- No toques a mano `?v=N` de `index.html` y `js/datos-globales.js` ni la lista de `sw.js`: lo hace `node herramientas/version.js`.
+- No toques a mano los `?v=` (huellas) de `index.html` y `js/datos-globales.js` ni la lista de `sw.js`: lo hace `node herramientas/version.js`.
 - El código tiene que funcionar dentro de Claude (`window.claude.use(...)`) y en la web (null, todo en localStorage `charro2`).
 - No cambies los campos del progreso (`z`, `p`, `gv`, `f`, `t`, `j`) ni los ids de zonas, logros, rutas o detalles: lo nuevo va dentro de `j`. Ver `docs/notas/guardado.md`.
 - Nada de `innerHTML`, `eval` ni HTML como texto: se construye con `crear()` (util.js). Ver `docs/notas/seguridad.md`.
-- Función nueva → su prueba en `herramientas/pruebas/<zona>.js`; tipo de dato nuevo → su comprobación en `herramientas/comprobar-datos.js`.
+- Función nueva → su prueba en `herramientas/pruebas-logica.js` si solo calcula, o en `herramientas/pruebas/<zona>.js` si toca la página; tipo de dato nuevo → su comprobación en `herramientas/comprobar-datos.js`.
 - `js/datos/*` solo declara constantes (`export const`; un archivo nuevo se importa en `js/datos-globales.js`); la lógica va en `js/*.js`. Usa los ayudantes de `util.js` (`crear`, `crearSvg`, `crearBotonesFiltro`, `activarGestos`).
 
 ## Dónde está cada cosa
@@ -39,7 +39,7 @@ Lógica en `js/`, datos en `js/datos/`, nota en `docs/notas/` entre paréntesis.
 - **Logros, Tu/Mi Salamanca, juego**: `logros.js`, `perfil.js`, `mi-salamanca-calculos.js` → `-piezas.js` → `mi-salamanca.js`, `imagen.js`, `juego.js` (logros-y-tu-salamanca)
 - **Palabras, avisar, medición**: `palabras.js`, `avisar.js`, `medicion.js`; datos: `palabras.js` (interfaz)
 - **Estilos y tema**: `css/estilos.css` (tema)
-- **Pruebas**: `herramientas/pruebas.js` + `herramientas/pruebas/<zona>.js` (pruebas)
+- **Pruebas**: `herramientas/pruebas-logica.js` (sin navegador), `herramientas/pruebas.js` + `herramientas/pruebas/<zona>.js` (pruebas)
 - **Comprobación y generadores**: `herramientas/comprobar-datos.js`, `herramientas/*.js` (publicar)
 
 Notas en `docs/notas/`: `publicar`, `pruebas`, `guardado`, `mapa`, `provincia`, `rutas`, `contenido`, `interfaz`, `logros-y-tu-salamanca`, `seguridad`, `tema`. Si cambias cómo funciona algo, actualiza su nota (no este archivo, salvo que cambie el mapa o una regla de arriba).

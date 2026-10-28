@@ -1,14 +1,15 @@
 {
   "name": "mapa-charro",
-  "version": "2.17.0",
+  "version": "2.18.0",
   "private": true,
   "description": "Mapa charro de Salamanca: barrios de la capital, pueblos de la provincia, rutas, curiosidades y dónde comer",
   "scripts": {
     "version-nueva": "node herramientas/version.js",
     "comprobar": "node herramientas/comprobar-datos.js",
     "pruebas": "node herramientas/pruebas.js",
-    "antes-del-commit": "node herramientas/version.js && node herramientas/comprobar-datos.js && eslint . && node herramientas/pruebas.js",
-    "formato": "prettier --write \"js/**/*.js\" sw.js \"herramientas/**/*.js\"",
+    "pruebas-logica": "node herramientas/pruebas-logica.js",
+    "antes-del-commit": "node herramientas/version.js && node herramientas/comprobar-datos.js && eslint . && node herramientas/pruebas-logica.js && node herramientas/pruebas.js",
+    "formato": "prettier --write \"js/**/*.js\" sw.js \"herramientas/**/*.js\" \"css/**/*.css\"",
     "revisar": "eslint .",
     "revisar-enlaces": "node herramientas/revisar-enlaces.js"
   },

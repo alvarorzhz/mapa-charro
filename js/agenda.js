@@ -40,7 +40,7 @@ const diasEntre = (a, b) => Math.round((inicioDelDia(b) - inicioDelDia(a)) / DIA
 
 // Todas las próximas citas a partir de hoy (incluidas las que están pasando): [{ c, desde, hasta, nota,
 // dentro (días hasta que empieza; 0 si ya ha empezado) }], ordenadas por fecha
-function proximasCitas(hoy = new Date()) {
+function proximasCitas(hoy = hoyEnSalamanca()) {
   const dia = inicioDelDia(hoy),
     citas = [];
   CULTURA.forEach(c =>
@@ -81,7 +81,7 @@ function textoFechasCita({ desde, hasta }) {
   );
 }
 const textoDentro = x =>
-  x.dentro == 0 && x.desde < inicioDelDia(new Date())
+  x.dentro == 0 && x.desde < hoyEnSalamanca()
     ? 'ya ha empezado'
     : x.dentro == 0
       ? 'hoy'
@@ -220,7 +220,7 @@ function abrirAgenda() {
     todas.onclick = () => anadirAlCalendario(citas, 'agenda-mapa-charro');
     caja.appendChild(crear('div', 'nb', todas));
   }
-  const hoy = new Date();
+  const hoy = hoyEnSalamanca();
   GRUPOS_AGENDA.forEach(([titulo, entra]) => {
     const deEste = citas.filter(x => entra(x, hoy));
     if (!deEste.length) return;

@@ -153,7 +153,7 @@ function abrirDesaparecido(id) {
   const ap = $('#ap');
   ap.textContent = 'Fuentes: ';
   d.fuentes.forEach((f, i) => ap.append(i ? ', ' : '', enlaceFuente(f)));
-  ap.append('. Revisado el ' + textoFechaRevision(d.revisado) + '.');
+  ap.append('. Revisado el ' + textoFecha(d.revisado) + '.');
   centrarMapaEn(d.x, d.y, Math.min(vistaMapa.w, 70));
   mostrarFicha();
   pintarDesaparecidos();

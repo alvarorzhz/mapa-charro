@@ -15,12 +15,38 @@ const ordenarClaves = x =>
         )
       : x;
 const igual = (a, b, que) => {
-  if (JSON.stringify(ordenarClaves(a)) !== JSON.stringify(ordenarClaves(b)))
-    throw new Error(`${que}: esperaba ${JSON.stringify(b)} y es ${JSON.stringify(a)}`);
+  if (!mismoValor(a, b)) throw new Error(`${que}: esperaba ${JSON.stringify(b)} y es ${JSON.stringify(a)}`);
 };
 const cierto = (c, que) => {
   if (!c) throw new Error(que);
 };
+// Esperas a una condición en vez de a un tiempo fijo: leer() se repite hasta que da lo esperado (o algo
+// cierto) y, si a los 5 s no lo da, falla como igual() o cierto(). Solo para lo que tiene que llegar a pasar:
+// para comprobar que algo sigue igual pasado un tiempo, el reloj de Playwright (p.clock)
+const ESPERA_MAXIMA = 5000;
+const mismoValor = (a, b) => JSON.stringify(ordenarClaves(a)) === JSON.stringify(ordenarClaves(b));
+async function repetirHasta(leer, vale) {
+  const fin = Date.now() + ESPERA_MAXIMA;
+  let valor = await leer();
+  while (!vale(valor) && Date.now() < fin) {
+    await new Promise(ok => setTimeout(ok, 50));
+    valor = await leer();
+  }
+  return valor;
+}
+// Espera a que acaben las transiciones y animaciones CSS que hay en marcha (las que no acaban nunca, no)
+const sinTransiciones = p =>
+  p.evaluate(() =>
+    Promise.all(
+      document
+        .getAnimations()
+        .filter(a => a.effect && a.effect.getComputedTiming().endTime != Infinity)
+        .map(a => a.finished.catch(() => {}))
+    )
+  );
+const llegaA = async (leer, esperado, que) =>
+  igual(await repetirHasta(leer, v => mismoValor(v, esperado)), esperado, que);
+const hastaQue = async (leer, que) => cierto(await repetirHasta(leer, Boolean), que);
 const texto = (p, s) => p.$eval(s, e => e.textContent.trim());
 const fichaAbierta = p => p.$eval('#sh', e => e.classList.contains('o'));
 
@@ -58,6 +84,9 @@ module.exports = {
   prueba,
   igual,
   cierto,
+  llegaA,
+  hastaQue,
+  sinTransiciones,
   texto,
   fichaAbierta,
   mapLibreFalso,

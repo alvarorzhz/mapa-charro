@@ -1,6 +1,6 @@
 // Pruebas · Arranque y primera vez: primer paseo, novedades, enlaces, sin conexión, los tres niveles de la página, fuentes, «Avisar de un error» y Laboratorio.
 // Se pasan desde herramientas/pruebas.js (PRUEBAS_ZONA=inicio pasa solo estas).
-const { prueba, igual, cierto, texto, fichaAbierta } = require('./comun');
+const { prueba, igual, cierto, texto, fichaAbierta, llegaA, hastaQue } = require('./comun');
 
 prueba(
   'Primer paseo la primera vez: tres pasos con lo de verdad',
@@ -87,6 +87,13 @@ prueba(
     await p.click('.modal button:has-text("Ver todas")');
     await p.waitForFunction(() => document.querySelectorAll('.modal .novedades h4').length > 3);
     igual(await texto(p, '.modal h2'), 'Novedades', '«Ver todas» las enseña todas');
+    const recientes = await p.$$eval('.modal .novedades h4', a => a.length);
+    await p.click('.modal .novedades button:has-text("Ver las anteriores")');
+    await p.waitForFunction(n => document.querySelectorAll('.modal .novedades h4').length > n, recientes);
+    cierto(
+      (await p.$$eval('.modal .novedades h4', a => a.map(h => h.textContent))).some(t => t.startsWith('1.')),
+      'y las de versiones viejas, al pedirlas'
+    );
     // Por un enlace a una ficha no salen (saldrán la próxima vez)
     await p.evaluate(() => localStorage.setItem('charro-version-vista', '1.0.0'));
     await p.goto(url + '#tejares');
@@ -116,8 +123,7 @@ prueba('Tarjeta de cada zona al compartir', async (p, url) => {
   // La página de la zona lleva su tarjeta y abre su ficha
   await p.goto(url + 'z/tejares.html');
   await p.waitForURL(/#tejares$/);
-  await p.waitForTimeout(300);
-  igual(await texto(p, '#nm'), 'Tejares', 'abre la ficha de la zona');
+  await llegaA(() => texto(p, '#nm'), 'Tejares', 'abre la ficha de la zona');
   const r = await p.request.get(url + 'z/tejares.html'),
     h = await r.text();
   cierto(/og:image" content="https:\/\/[^"]+\/z\/tejares\.jpg"/.test(h), 'con su imagen');
@@ -129,9 +135,8 @@ prueba('Tarjeta de cada zona al compartir', async (p, url) => {
     'zona'
   );
   await p.goto(url + '#monumento/catedrales');
-  await p.waitForTimeout(300);
-  igual(
-    await p.evaluate(() => urlParaCompartir()),
+  await llegaA(
+    () => p.evaluate(() => urlParaCompartir()),
     'https://alvarorzhz.github.io/mapa-charro/#monumento/catedrales',
     'otras fichas'
   );
@@ -156,8 +161,7 @@ prueba('Enlaces y botón atrás', async (p, url) => {
 
 prueba('Un enlace mal formado no rompe el arranque', async (p, url) => {
   await p.goto(url + '#%E0%A4%A');
-  await p.waitForTimeout(300);
-  cierto(await p.isVisible('#m'), 'carga el mapa');
+  await hastaQue(() => p.isVisible('#m'), 'carga el mapa');
   await p.evaluate(() => abrirFicha('centro'));
   igual(await texto(p, '#nm'), 'Centro', 'y la app funciona');
 });
@@ -174,7 +178,8 @@ prueba('Versión nueva con la app abierta: aviso para actualizar', async p => {
   cierto(!(await p.$('#nueva')), 'sin versión nueva, sin aviso');
   await p.evaluate(() => navigator.serviceWorker.dispatchEvent(new Event('controllerchange')));
   igual(await texto(p, '#nueva span'), '✨ Hay una versión nueva del mapa', 'avisa');
-  await p.waitForTimeout(2500);
+  await p.clock.install();
+  await p.clock.runFor(2500);
   cierto(!!(await p.$('#nueva')), 'y no se va solo');
   await p.click('#nueva .cerrar');
   cierto(!(await p.$('#nueva')), 'se puede cerrar');
@@ -190,7 +195,7 @@ prueba(
   'Funciona sin conexión',
   async (p, url, ctx) => {
     await p.evaluate(() => navigator.serviceWorker.ready);
-    await p.waitForTimeout(1500);
+    await p.waitForFunction(() => navigator.serviceWorker.controller); // ya guardada y al mando
     await ctx.setOffline(true);
     await p.goto(url + '#sanesteban');
     igual(await texto(p, '#nm'), 'San Esteban', 'abre una ficha sin red');
@@ -316,7 +321,7 @@ prueba(
       abrirFicha('tejares');
       marcarZona('tejares', 'v');
     });
-    await p.waitForTimeout(300);
+    await p.waitForTimeout(300); // lo que no tiene que pasar: no hay nada a lo que esperar
     igual(await p.evaluate(() => window.subidas.length), 0, 'apagado de entrada: no se sube nada');
     await p.click('#x');
     await p.click('#ayuda');

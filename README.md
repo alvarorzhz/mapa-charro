@@ -55,13 +55,14 @@ herramientas/          Generadores de datos, comprobaciones y pruebas
 
 ```
 npm ci                       # dependencias (Playwright va fijado a la 1.56.0)
-npm run antes-del-commit     # versión de archivos + comprobar datos + ESLint + pruebas en el navegador
-npx prettier --check "js/**/*.js" sw.js "herramientas/*.js"
+npm run antes-del-commit     # huellas de archivos + comprobar datos + ESLint + pruebas de lógica y en el navegador
+npx prettier --check "js/**/*.js" sw.js "herramientas/**/*.js" "css/**/*.css"
 ```
 
-- `node herramientas/version.js` sube el `?v=N` de los archivos en `index.html` y la lista de `sw.js`: hay que ejecutarlo al cambiar cualquier archivo (lo hace `antes-del-commit`).
+- `node herramientas/version.js` pone en el `?v=` de cada archivo la huella de su contenido (así el móvil solo baja lo que cambia), sube el número interno, rehace la lista de `sw.js` y archiva las novedades viejas: hay que ejecutarlo al cambiar cualquier archivo (lo hace `antes-del-commit`).
+- `herramientas/pruebas-logica.js` prueba sin navegador, en menos de un segundo, lo que solo calcula (fechas, rachas, agenda, sol, `sw.js`).
 - `herramientas/comprobar-datos.js` revisa ids, fuentes, fotos, coordenadas, rutas y que todo esté enlazado.
-- `herramientas/pruebas.js` abre la app en Chromium, en móvil y en escritorio, y prueba casi todo, incluido el contraste (axe) y el modo sin conexión. `PRUEBAS_TAMANO=movil` o `escritorio` pasa solo uno. Las pruebas están en `herramientas/pruebas/`, un archivo por zona (mapa, fichas, guardado, cuenta…); `PRUEBAS_ZONA=mapa` pasa solo esa.
+- `herramientas/pruebas.js` abre la app en Chromium, en móvil y en escritorio, y prueba casi todo, incluido el contraste (axe) y el modo sin conexión. `PRUEBAS_TAMANO=movil` o `escritorio` pasa solo uno; van varias a la vez (`PRUEBAS_HILOS`). Las pruebas están en `herramientas/pruebas/`, un archivo por zona (mapa, fichas, guardado, cuenta…); `PRUEBAS_ZONA=mapa` pasa solo esa.
 - Datos generados: `rutas.js`, `rutas-provincia.js`, `habitantes.js`, `carreteras-provincia.js`, `parques.js`, `tarjetas.js` (imágenes para compartir) e `iconos.js`. Cada uno explica al principio cómo se usa.
 
 ## Publicación

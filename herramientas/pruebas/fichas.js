@@ -1,6 +1,6 @@
 // Pruebas · Fichas de zonas y monumentos, el buscador y marcar.
 // Se pasan desde herramientas/pruebas.js (PRUEBAS_ZONA=fichas pasa solo estas).
-const { prueba, igual, cierto, texto } = require('./comun');
+const { prueba, igual, cierto, texto, hastaQue, sinTransiciones } = require('./comun');
 
 prueba('Nació en… en la ficha', async (p, url) => {
   await p.goto(url + '#labradores');
@@ -19,8 +19,7 @@ prueba('Nació en… en la ficha', async (p, url) => {
   await p.waitForTimeout(300);
   cierto((await texto(p, '#nac')).includes('aún no está documentada'), 'sin fecha, lo dice');
   await p.goto(url + '#monumento/catedrales');
-  await p.waitForTimeout(300);
-  cierto(await p.$eval('#nac', e => e.hidden), 'no sale en otras fichas');
+  await hastaQue(() => p.$eval('#nac', e => e.hidden), 'no sale en otras fichas');
 });
 
 prueba('Buscador', async p => {
@@ -174,8 +173,10 @@ prueba('Ficha sin apartados vacíos y panel del móvil', async (p, url) => {
 
 prueba('Los avisos no tapan la ficha', async (p, url) => {
   await p.goto(url + '#centro');
-  await p.waitForTimeout(400);
+  await p.waitForSelector('#sh.o');
+  await sinTransiciones(p);
   await p.evaluate(() => aviso('Prueba de aviso'));
+  await sinTransiciones(p);
   const { aviso: abajoAviso, techo } = await p.evaluate(() => ({
     aviso: $('#ts').getBoundingClientRect().bottom,
     techo: (esEscritorio() ? $('#sh .bt') : $('#sh')).getBoundingClientRect().top

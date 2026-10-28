@@ -1,6 +1,6 @@
 // Pruebas · Guardado en el navegador, sincronización, «Deshacer» y copia de seguridad.
 // Se pasan desde herramientas/pruebas.js (PRUEBAS_ZONA=guardado pasa solo estas).
-const { prueba, igual, cierto, texto } = require('./comun');
+const { prueba, igual, cierto, texto, llegaA } = require('./comun');
 
 const leerGuardado = p => p.evaluate(() => JSON.parse(localStorage.getItem('charro2')));
 
@@ -24,11 +24,12 @@ prueba(
 );
 
 prueba('Quitar una marca se puede deshacer', async p => {
+  await p.clock.install(); // el reloj de la página, adelantado a mano en vez de esperar de verdad
   await p.fill('#q', 'tejares');
   await p.press('#q', 'Enter');
   await p.click('.bt button[data-s=v]');
   cierto(await p.$eval('#ts', e => e.classList.contains('exito')), 'marcar es un aviso de éxito');
-  await p.waitForTimeout(2600); // que pase también el aviso del logro
+  await p.clock.runFor(2600); // que pase también el aviso del logro
   await p.click('.bt button[data-s=v]');
   igual(await texto(p, '#ts span'), 'Tejares: quitada de «He estado»', 'avisa al quitarla');
   igual(await p.evaluate(() => estadoApp.progreso.z.tejares), undefined, 'quitada');
@@ -280,13 +281,11 @@ prueba(
       Object.defineProperty(document, 'visibilityState', { value: 'hidden', configurable: true });
       document.dispatchEvent(new Event('visibilitychange'));
     });
-    await p.waitForTimeout(150);
-    igual(await p.evaluate(() => window.__nube.datos.z.tejares), 'v', 'sube al ocultar la página');
+    await llegaA(() => p.evaluate(() => window.__nube.datos.z.tejares), 'v', 'sube al ocultar la página');
     // Recargar: viene lo mismo
     await p.reload();
-    await p.waitForTimeout(400);
-    igual(
-      await p.evaluate(() => estadoApp.progreso.z),
+    await llegaA(
+      () => p.evaluate(() => estadoApp.progreso.z),
       { tejares: 'v', vega: 'v' },
       'y tras recargar sigue todo'
     );
@@ -324,11 +323,13 @@ prueba('Guardado: con la app abierta en dos pestañas no se pisan', async (p, ur
   await otra.goto(url);
   await otra.waitForTimeout(300);
   await p.evaluate(() => marcarZona('vega', 'v'));
-  await otra.waitForTimeout(150);
-  igual(await otra.evaluate(() => estadoApp.progreso.z), { vega: 'v' }, 'la otra pestaña se entera');
+  await llegaA(() => otra.evaluate(() => estadoApp.progreso.z), { vega: 'v' }, 'la otra pestaña se entera');
   await otra.evaluate(() => marcarZona('tejares', 'v'));
-  await p.waitForTimeout(150);
-  igual(await leerGuardado(p).then(g => g.z), { tejares: 'v', vega: 'v' }, 'y lo de las dos queda guardado');
+  await llegaA(
+    () => leerGuardado(p).then(g => g.z),
+    { tejares: 'v', vega: 'v' },
+    'y lo de las dos queda guardado'
+  );
   igual(await p.evaluate(() => estadoApp.progreso.z), { tejares: 'v', vega: 'v' }, 'también en la primera');
   await otra.close();
 });
