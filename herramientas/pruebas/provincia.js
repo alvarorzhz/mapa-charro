@@ -328,7 +328,8 @@ prueba(
     await p.click('#pgm button');
     await p.waitForSelector('#sh.o');
     igual(await p.evaluate(() => estadoApp.pestana), 'map', 'y lleva al mapa de la capital');
-    // Fuera de la provincia
+    // Fuera de la provincia (antes se cierra la ficha: en el escritorio, al subir hasta las pestañas, la tapa)
+    await p.evaluate(() => cerrarFicha());
     await p.click('#vprov');
     await p.evaluate(() =>
       alLocalizarEnProvincia({ coords: { latitude: 40.4168, longitude: -3.7038, accuracy: 20 } })
