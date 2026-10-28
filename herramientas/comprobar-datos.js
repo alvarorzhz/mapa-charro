@@ -945,6 +945,52 @@ D.RELACIONES_ETAPA.forEach((r, i) => {
     comprobar(cspApp.includes(web), `index.html: la CSP no deja cargar scripts de ${web}`);
 }
 
+// --- Tema «Piedra de Villamayor» (css/estilos.css, docs/notas/tema.md) ----------
+{
+  const css = leer('css/estilos.css'),
+    inicioReglas = css.indexOf('\nhtml{'),
+    reglas = css.slice(inicioReglas),
+    oscuroSistema = css.match(
+      /@media\(prefers-color-scheme:dark\)\{:root:not\(\[data-theme="light"\]\)\{([^}]*)\}\}/
+    ),
+    oscuroElegido = css.match(/:root\[data-theme="dark"\]\{([^}]*)\}/);
+  comprobar(
+    (css.match(/prefers-color-scheme:dark/g) || []).length == 1 && oscuroSistema && oscuroElegido,
+    'estilos.css: el modo oscuro va en un solo par de bloques (el del sistema y el elegido con el botón)'
+  );
+  if (oscuroSistema && oscuroElegido)
+    comprobar(
+      oscuroSistema[1] == oscuroElegido[1],
+      'estilos.css: los dos bloques del modo oscuro tienen que ser iguales'
+    );
+  const definidos = new Set([...css.matchAll(/(--[\w-]+):/g)].map(m => m[1]));
+  for (const f of [
+    'css/estilos.css',
+    'index.html',
+    ...fs
+      .readdirSync(path.join(RAIZ, 'js'))
+      .filter(f => f.endsWith('.js'))
+      .map(f => 'js/' + f)
+  ])
+    for (const [, token] of leer(f)
+      .matchAll(/var\((--[\w-]+)\)|color\('(--[\w-]+)'\)/g)
+      .map(m => [m[0], m[1] || m[2]]))
+      comprobar(definidos.has(token), `${f}: usa ${token}, que no está en estilos.css`);
+  const colores = reglas.match(/#[0-9a-fA-F]{3,8}\b/g) || [];
+  comprobar(
+    !colores.length,
+    `estilos.css: colores escritos a mano fuera de los temas (${[...new Set(colores)].join(', ')}): usa un token`
+  );
+  const tamanos = [...reglas.matchAll(/(?:font-size:|[^-\w]font:)[^;}]*?(?<![/\d.])(\d+(?:\.\d+)?)px/g)].map(
+    m => +m[1]
+  );
+  comprobar(
+    tamanos.every(t => t > 24),
+    `estilos.css: tamaños de letra sueltos (${[...new Set(tamanos.filter(t => t <= 24))].join(', ')} px): usa --letra-*`
+  );
+  comprobar(!/z-index:\d/.test(reglas), 'estilos.css: z-index con número suelto: usa --capa-*');
+}
+
 // --- Resultado ----------------------------------------------------------------
 avisos.forEach(a => console.log('! Aviso: ' + a));
 if (errores.length) {

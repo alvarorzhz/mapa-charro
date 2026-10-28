@@ -38,8 +38,8 @@ Lógica en `js/`, datos en `js/datos/`, nota en `docs/notas/` entre paréntesis.
 - **Detalles escondidos, hora dorada**: `detalles.js`, `hora-dorada.js`; datos: `detalles.js`, `fachadas.js`, `orientacion-fachadas.js` (contenido)
 - **Logros, Tu/Mi Salamanca, juego**: `logros.js`, `perfil.js`, `mi-salamanca-calculos.js` → `-piezas.js` → `mi-salamanca.js`, `imagen.js`, `juego.js` (logros-y-tu-salamanca)
 - **Palabras, avisar, medición**: `palabras.js`, `avisar.js`, `medicion.js`; datos: `palabras.js` (interfaz)
-- **Estilos**: `css/estilos.css`
+- **Estilos y tema**: `css/estilos.css` (tema)
 - **Pruebas**: `herramientas/pruebas.js` + `herramientas/pruebas/<zona>.js` (pruebas)
 - **Comprobación y generadores**: `herramientas/comprobar-datos.js`, `herramientas/*.js` (publicar)
 
-Notas en `docs/notas/`: `publicar`, `pruebas`, `guardado`, `mapa`, `provincia`, `rutas`, `contenido`, `interfaz`, `logros-y-tu-salamanca`, `seguridad`. Si cambias cómo funciona algo, actualiza su nota (no este archivo, salvo que cambie el mapa o una regla de arriba).
+Notas en `docs/notas/`: `publicar`, `pruebas`, `guardado`, `mapa`, `provincia`, `rutas`, `contenido`, `interfaz`, `logros-y-tu-salamanca`, `seguridad`, `tema`. Si cambias cómo funciona algo, actualiza su nota (no este archivo, salvo que cambie el mapa o una regla de arriba).

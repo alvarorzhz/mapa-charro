@@ -56,11 +56,11 @@ try {
     tramos.forEach(P => {
       const d = trazoSuave(P);
       els.push(
-        crearSvg('path', atributosTrazo(ronda ? 5 : 3.6, 'var(--line)', d, ronda ? 0.6 : 0.38), capaBorde)
+        crearSvg('path', atributosTrazo(ronda ? 5 : 3.6, 'var(--linea)', d, ronda ? 0.6 : 0.38), capaBorde)
       );
       const relleno = crearSvg(
         'path',
-        atributosTrazo(ronda ? 3.4 : 2.2, ronda ? 'var(--ronda)' : 'var(--street)', d, ronda ? 1 : 0.85),
+        atributosTrazo(ronda ? 3.4 : 2.2, ronda ? 'var(--ronda)' : 'var(--calle)', d, ronda ? 1 : 0.85),
         ronda ? capaRondas : capaAvenidas
       );
       els.push(relleno);
@@ -86,7 +86,7 @@ try {
 
   // Carreteras: a = autovía, n = nacional, c = autonómica. Primero todos los bordes y luego los
   // colores, de menor a mayor categoría, para que las autovías queden encima.
-  const COLOR = { a: 'var(--auv)', n: 'var(--nac)', c: 'var(--cl)' },
+  const COLOR = { a: 'var(--autovia)', n: 'var(--nacional)', c: 'var(--comarcal)' },
     ANCHO = { a: [6.8, 3.4], n: [4.8, 2.3], c: [4, 1.9] }, // [borde, color]
     ORDEN = ['c', 'n', 'a'];
   ORDEN.forEach(k =>
@@ -96,7 +96,7 @@ try {
         nm: nombre,
         k,
         d,
-        els: [crearSvg('path', atributosTrazo(ANCHO[k][0], 'var(--card)', d, 0.85), $('#rd'))]
+        els: [crearSvg('path', atributosTrazo(ANCHO[k][0], 'var(--tarjeta)', d, 0.85), $('#rd'))]
       });
     })
   );
@@ -116,7 +116,12 @@ NUDOS.forEach(([p, k, r]) => {
     g = crearSvg('g', {}, $('#sd'));
   crearSvg(
     'circle',
-    { r: r * 0.85, fill: 'var(--card)', stroke: k == 'a' ? 'var(--auv)' : 'var(--nac)', 'stroke-width': 1.8 },
+    {
+      r: r * 0.85,
+      fill: 'var(--tarjeta)',
+      stroke: k == 'a' ? 'var(--autovia)' : 'var(--nacional)',
+      'stroke-width': 1.8
+    },
     g
   );
   escudosEscalables.push({ g, x, y });
@@ -133,7 +138,7 @@ ESCUDOS.forEach(([nombre, k, la, lo]) => {
       width: w,
       height: 14,
       rx: 3,
-      fill: k == 'a' ? 'var(--auv)' : k == 'c' ? 'var(--cl)' : 'var(--nac)',
+      fill: k == 'a' ? 'var(--autovia)' : k == 'c' ? 'var(--comarcal)' : 'var(--nacional)',
       stroke: '#fff',
       'stroke-width': 1
     },

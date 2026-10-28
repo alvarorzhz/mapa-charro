@@ -218,8 +218,8 @@ function construirMinimapa(contenedor) {
     { id: 'ph2', width: 4, height: 4, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)' },
     crearSvg('defs', {}, sv)
   );
-  crearSvg('rect', { width: 4, height: 4, style: 'fill:var(--b)' }, trama);
-  crearSvg('rect', { width: 1.3, height: 4, style: 'fill:var(--gold);opacity:.6' }, trama);
+  crearSvg('rect', { width: 4, height: 4, style: 'fill:var(--arena)' }, trama);
+  crearSvg('rect', { width: 1.3, height: 4, style: 'fill:var(--oro);opacity:.6' }, trama);
 
   const capaMunicipios = crearSvg('g', { class: 'pmg' }, sv),
     capaComarcas = crearSvg('g', { style: 'pointer-events:none' }, sv);
@@ -298,9 +298,9 @@ function construirMinimapa(contenedor) {
         cx: x,
         cy: y,
         r: Math.max(0.3, (precision / 1000) * 0.9), // 1 km ≈ 0,9 en este lienzo
-        fill: 'var(--auv)',
+        fill: 'var(--autovia)',
         'fill-opacity': 0.15,
-        stroke: 'var(--auv)',
+        stroke: 'var(--autovia)',
         'stroke-opacity': 0.5,
         'stroke-width': '1px',
         'vector-effect': 'non-scaling-stroke'
@@ -308,8 +308,8 @@ function construirMinimapa(contenedor) {
       capaPosicion
     );
     const g = crearSvg('g', {}, capaPosicion);
-    crearSvg('circle', { r: 7, fill: 'var(--auv)', class: 'mepulse' }, g);
-    crearSvg('circle', { r: 5, fill: 'var(--auv)', stroke: '#fff', 'stroke-width': 2 }, g);
+    crearSvg('circle', { r: 7, fill: 'var(--autovia)', class: 'mepulse' }, g);
+    crearSvg('circle', { r: 5, fill: 'var(--autovia)', stroke: '#fff', 'stroke-width': 2 }, g);
     marcaPunto = { g, x, y };
     escalarPunto((0.36 * vista.w) / W);
   };

@@ -1,5 +1,36 @@
 [
   {
+    "version": "2.17.0",
+    "fecha": "2026-10-27",
+    "titulo": "El tema charro, en orden",
+    "usuario": [
+      "Orden por dentro de colores, letras y formas para que la app sea más fácil de cuidar. A la vista no cambia nada, salvo algún texto medio píxel más grande."
+    ],
+    "tecnico": [
+      "Tema «Piedra de Villamayor» documentado en docs/notas/tema.md. Tokens en español (--vitor, --oro, --tinta, --tarjeta, --linea, --zona-0…6, etc.; --p, sin uso, fuera) también en js/ e index.html.",
+      "Escalas --letra-* (27 tamaños → 15; 25 reglas de medio píxel redondeadas), --radio-* y --capa-*; colores fijos (--sobre-color, --exito, --error-*, --tiempo-*…) en tokens: ningún color suelto fuera de los temas.",
+      "El modo oscuro va en un solo par de bloques. comprobar-datos vigila que sean iguales, que cada var(--…) exista y que no haya colores, tamaños de letra ni z-index sueltos.",
+      "Comprobado con capturas en móvil y escritorio, claro y oscuro: idéntico píxel a píxel salvo los textos redondeados."
+    ]
+  },
+  {
+    "version": "2.16.4",
+    "fecha": "2026-10-27",
+    "titulo": "Avisos que no tapan y botones más fáciles de tocar",
+    "usuario": [
+      "Los avisos ya no se ponen encima de la ficha ni del primer paseo: en el móvil salen sobre el mapa, justo encima de la ficha abierta.",
+      "En el ordenador, el primer paseo va a la derecha y ya no tapa «¿Qué puedo descubrir hoy?».",
+      "En el móvil, Ayuda, «Avisar de un error», el siguiente logro y el × del paseo se tocan más fácil.",
+      "En modo oscuro se ven las murallas y las marcas de Salamanca desaparecida."
+    ],
+    "tecnico": [
+      "aviso() coloca #ts con alturaLibreAviso() (util.js): encima de #sh en el móvil, de #sh .bt en el escritorio y de #paseo si está abajo; prueba nueva en pruebas/fichas.js.",
+      "En escritorio .paseo se ancla a la derecha como la ficha y, con #sh abierta, arriba a la izquierda.",
+      "Con pointer:coarse, .ayuda-btn, .marcador .sig y .paseo .cerrar tienen un :after que lleva la zona de toque a 44 px sin cambiar el aspecto.",
+      "Token --muralla (claro y oscuro) para .mur-* y #desap, que usaban #4a3016 fijo; el texto de las puertas usa --ink y --card."
+    ]
+  },
+  {
     "version": "2.16.3",
     "fecha": "2026-10-25",
     "titulo": "Fuera el interruptor de parques",

@@ -15,8 +15,8 @@ let temporizadorTiempo = 0;
     { id: 'tnd', width: 6, height: 6, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)' },
     mapaSvg.querySelector('defs')
   );
-  crearSvg('rect', { width: 6, height: 6, style: 'fill:var(--map)' }, t);
-  crearSvg('rect', { width: 1.6, height: 6, style: 'fill:var(--ink);opacity:.28' }, t);
+  crearSvg('rect', { width: 6, height: 6, style: 'fill:var(--fondo-mapa)' }, t);
+  crearSvg('rect', { width: 1.6, height: 6, style: 'fill:var(--tinta);opacity:.28' }, t);
 }
 
 // --- Capa de la muralla -------------------------------------------------------
