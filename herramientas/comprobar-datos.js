@@ -947,8 +947,13 @@ D.RELACIONES_ETAPA.forEach((r, i) => {
 
 // --- Tema «Piedra de Villamayor» (css/estilos.css, docs/notas/tema.md) ----------
 {
-  const css = leer('css/estilos.css'),
-    inicioReglas = css.indexOf('\nhtml{'),
+  // El CSS va formateado con Prettier: se compacta (sin comentarios ni espacios de sobra) para buscar en él
+  const css = leer('css/estilos.css')
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .replace(/\s+/g, ' ')
+      .replace(/ ?([{}:;,>()]) ?/g, '$1')
+      .replace(/["']/g, '"'),
+    inicioReglas = css.indexOf('}html{'),
     reglas = css.slice(inicioReglas),
     oscuroSistema = css.match(
       /@media\(prefers-color-scheme:dark\)\{:root:not\(\[data-theme="light"\]\)\{([^}]*)\}\}/

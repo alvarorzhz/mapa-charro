@@ -8,7 +8,7 @@
     "comprobar": "node herramientas/comprobar-datos.js",
     "pruebas": "node herramientas/pruebas.js",
     "antes-del-commit": "node herramientas/version.js && node herramientas/comprobar-datos.js && eslint . && node herramientas/pruebas.js",
-    "formato": "prettier --write \"js/**/*.js\" sw.js \"herramientas/**/*.js\"",
+    "formato": "prettier --write \"js/**/*.js\" sw.js \"herramientas/**/*.js\" \"css/**/*.css\"",
     "revisar": "eslint .",
     "revisar-enlaces": "node herramientas/revisar-enlaces.js"
   },
