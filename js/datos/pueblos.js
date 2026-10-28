@@ -8,7 +8,9 @@ export const PUEBLOS = {
     cur: [
       'Su Carnaval del Toro tiene documentos desde 1417: ya entonces se corrían toros.',
       'Las murallas, empezadas por Fernando II de León en el siglo XII, miden más de dos kilómetros y conservan seis puertas.',
-      'Wellington la tomó a los franceses la noche del 19 de enero de 1812, y por ello recibió el título de duque de Ciudad Rodrigo.'
+      'Wellington la tomó a los franceses la noche del 19 de enero de 1812, y por ello recibió el título de duque de Ciudad Rodrigo.',
+      'En 1475 los Reyes Católicos le concedieron un mercado franco cada semana, para compensar los continuos asedios de la frontera. Desde 1990 lo recuerda el Martes Mayor.',
+      'En 1810 aguantó veinticuatro días el sitio de los franceses, y con ello retrasó un mes la invasión de Portugal que dirigía Masséna.'
     ],
     mon: {
       n: 'Catedral de Santa María',
@@ -40,7 +42,9 @@ export const PUEBLOS = {
     cur: [
       'En 1940 fue el primer pueblo de España declarado Conjunto Histórico-Artístico.',
       'Cada 13 de junio se bendice el marrano de San Antón, un cerdo que andará suelto por las calles y que alimentan los vecinos hasta que se rifa el 17 de enero.',
-      'El día después del 15 de agosto se representa La Loa, una comedia popular que mezcla lo religioso y lo profano.'
+      'El día después del 15 de agosto se representa La Loa, una comedia popular que mezcla lo religioso y lo profano.',
+      'Cuenta la tradición que en el siglo XV las mujeres del pueblo derrotaron a las tropas portuguesas del prior de Crato y les quitaron el pendón, que todavía se guarda en el pueblo.',
+      'En 1520, según las crónicas, los vecinos fundieron anillos y joyas de plata para acabar una campana a la que le faltaba metal para las asas.'
     ],
     mon: {
       n: 'Iglesia parroquial',
@@ -68,7 +72,9 @@ export const PUEBLOS = {
     cur: [
       'En 1691 los duques trajeron pañeros flamencos; la industria textil vivió su mejor momento en los años sesenta.',
       'En el Corpus salen los Hombres de Musgo, vecinos cubiertos de musgo que recrean la leyenda de la conquista de la villa.',
-      'La Puerta de la Traición, en su muralla medieval, está ligada a esa leyenda.'
+      'La Puerta de la Traición, en su muralla medieval, está ligada a esa leyenda.',
+      'Su plaza de toros de El Castañar, de 1711, se tiene por la más antigua de España de las que se conservan.',
+      'Cervantes dedicó la primera parte del Quijote al duque de Béjar, y Góngora dedicó a la misma casa sus Soledades.'
     ],
     mon: {
       n: 'El Bosque',
@@ -100,7 +106,9 @@ export const PUEBLOS = {
     cur: [
       'Sus batipuertas permiten cerrar la casa aunque el portón esté abierto, y servían de burladero al matar las reses.',
       'Por las regaderas, canalillos en las calles, baja el agua de los neveros de la sierra; se usaban para limpiar tras la matanza.',
-      'Su embutido se hizo famoso desde que lo probó Carlos IV tras una cacería. El conjunto histórico es Bien de Interés Cultural desde 1975.'
+      'Su embutido se hizo famoso desde que lo probó Carlos IV tras una cacería. El conjunto histórico es Bien de Interés Cultural desde 1975.',
+      'En el traje típico, el serenero de la mujer es de paño verde si está casada y amarillo si es soltera.',
+      'Ha sido plató muchas veces: en 1956 Joselito rodó aquí «El pequeño ruiseñor», y es la Calenda de la serie «Luna, el misterio de Calenda».'
     ],
     mon: {
       n: 'Iglesia de Nuestra Señora de la Asunción',
@@ -131,7 +139,9 @@ export const PUEBLOS = {
     cur: [
       'Su nombre viene del romano Bletisa; Plutarco ya menciona a sus habitantes, los bletonenses.',
       'Su puente viejo, de base románica del siglo XII, fue hasta el XIX el más alto sobre el Tormes. En 1812 las tropas de Napoleón volaron uno de sus arcos.',
-      'La fortaleza se empezó a levantar a finales del siglo XII por orden de Fernando II de León.'
+      'La fortaleza se empezó a levantar a finales del siglo XII por orden de Fernando II de León.',
+      'Hacia 1840, en un arrebato liberal, el ayuntamiento tiró al río cuatro verracos de piedra. El que se ve hoy apareció en 1957, al hacer las Escuelas.',
+      'Su mercado del Jueves de la Ascensión llegó a ser el mayor comercio de bueyes de España.'
     ],
     mon: {
       n: 'Iglesia de Santa María la Mayor',
@@ -163,7 +173,9 @@ export const PUEBLOS = {
     cur: [
       'Santa Teresa murió aquí el 4 de octubre de 1582, en el convento de la Anunciación, donde se conserva su cuerpo.',
       'El castillo de los duques de Alba se empezó hacia 1430 y fue destruido en la Guerra de la Independencia.',
-      'Su pieza de alfarería más propia es el botijo de filigrana.'
+      'Su pieza de alfarería más propia es el botijo de filigrana.',
+      'El 5 de febrero, por Santa Águeda, las mujeres casadas, «las Águedas», toman la calle en una fiesta que simboliza su rebeldía frente al poder de los hombres.',
+      'Según la tradición, las almendras garrapiñadas de Alba las empezaron a hacer las monjas del convento de la Anunciación.'
     ],
     mon: {
       n: 'Iglesia de San Juan',
@@ -195,7 +207,9 @@ export const PUEBLOS = {
     cur: [
       'Su casco antiguo es conjunto histórico-artístico desde el 8 de marzo de 1973.',
       'La muralla se empezó a principios del siglo XIII y conserva sus cuatro puertas.',
-      'La calle Derecha es la espina dorsal del pueblo.'
+      'La calle Derecha es la espina dorsal del pueblo.',
+      'La víspera de las fiestas, el 7 de septiembre, la procesión de los candiles recorre el pueblo detrás del tamborilero, el «bobo de la danza» y la «mocina del ramo». Es Fiesta de Interés Turístico Regional desde 2017.',
+      'En 1954 la duquesa de Alba, Cayetana Fitz-James Stuart, donó el castillo a la villa.'
     ],
     mon: {
       n: 'Castillo de los Zúñiga',
@@ -226,7 +240,8 @@ export const PUEBLOS = {
     cur: [
       'Una exposición en las fachadas ha «resucitado» los rostros de 388 vecinos que no emigraron en los años sesenta.',
       'Su conjunto histórico es Bien de Interés Cultural desde 1998.',
-      'Está entre los Pueblos Más Bonitos de España desde 2014.'
+      'Está entre los Pueblos Más Bonitos de España desde 2014.',
+      'El arabista Miguel Asín Palacios relacionó su nombre con una palabra árabe que viene a significar «plantío». Su escudo, de 1994, lleva un cerezo arrancado.'
     ],
     mon: {
       n: 'Iglesia de Nuestra Señora de las Nieves',
@@ -297,7 +312,9 @@ export const PUEBLOS = {
     cur: [
       'El jamón y los embutidos dan trabajo a unas 2.500 personas en 173 empresas: el 65 % de la población activa.',
       'El tren llegó en 1896 y pasó por el pueblo hasta mediados de los ochenta.',
-      'En 1920 fue el primer pueblo de la provincia con alcantarillado.'
+      'En 1920 fue el primer pueblo de la provincia con alcantarillado.',
+      'En 1909 estrenó a la vez el edificio del Reloj, sede del ayuntamiento, y la plaza de toros, y ese mismo año Alfonso XIII le dio el título de villa.',
+      'Su escudo, de 1958, lleva tres abejas de oro, cuatro ramos de encina y una iglesia arruinada.'
     ],
     mon: {
       n: 'El Torreón',
@@ -327,7 +344,9 @@ export const PUEBLOS = {
     cur: [
       'El 9 de julio de 1939 estalló en la estación un tren con explosivos, «el Polvorín»: destruyó unos mil edificios y dejó más de cien muertos.',
       'Aquí nació la Fundación Germán Sánchez Ruipérez, que abrió en 1989 su Centro de Desarrollo Sociocultural.',
-      'Sus tres plazas porticadas son conjunto histórico-artístico desde 1973.'
+      'Sus tres plazas porticadas son conjunto histórico-artístico desde 1973.',
+      'Según una leyenda, Santa Teresa pidió agua en la villa y se la negaron; sacudió su alpargata y anunció que la iglesia de San Miguel sería destruida tres veces.',
+      'El mercadillo de los jueves viene de 1375, cuando Juan I le concedió mercado semanal. Hasta el siglo XV se llamaba Peñaranda de Cantaracillo.'
     ],
     mon: {
       n: 'Iglesia de San Miguel Arcángel',
@@ -454,7 +473,9 @@ export const PUEBLOS = {
     cur: [
       'Isabel II le dio el título de villa el 10 de agosto de 1861.',
       'En 2001 recuperó el encierro a caballo, que no se celebraba desde 1951.',
-      'El 27 de diciembre es el Día de los Quintos.'
+      'El 27 de diciembre es el Día de los Quintos.',
+      'Según la leyenda, los musulmanes mutilaron a la Virgen de la Encina y ella se apareció en una encina; por eso la imagen de hoy es solo un armazón con cabeza y manos.',
+      'A su artesonado mudéjar lo llaman «el cielo de Macotera». Bajo las casas hay bodegas excavadas en la arenisca, con un hueco a la calle, la bisnera, para meter la uva.'
     ],
     mon: {
       n: 'Iglesia de Nuestra Señora del Castillo',

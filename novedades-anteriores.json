@@ -1,5 +1,17 @@
 [
   {
+    "version": "2.15.3",
+    "fecha": "2026-10-24",
+    "titulo": "Pruebas por zonas",
+    "usuario": [
+      "Orden por dentro para que la app sea más fácil de cuidar; al usarla no cambia nada."
+    ],
+    "tecnico": [
+      "herramientas/pruebas.js, de 4.000 líneas, partido en herramientas/pruebas/: un archivo por zona (inicio, mapa, fichas, provincia, explora, tu-salamanca, guardado, cuenta, accesibilidad, seguridad) y comun.js con prueba(), igual(), cierto(), texto(), fichaAbierta() y el MapLibre falso. pruebas.js sigue siendo la única entrada.",
+      "PRUEBAS_ZONA=mapa (o varias, separadas por comas) pasa solo esas zonas. ESLint y Prettier miran también herramientas/pruebas/."
+    ]
+  },
+  {
     "version": "2.15.2",
     "fecha": "2026-10-24",
     "titulo": "Más pueblos y más curiosidades",

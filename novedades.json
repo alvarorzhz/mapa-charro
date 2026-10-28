@@ -1,5 +1,17 @@
 [
   {
+    "version": "2.19.1",
+    "fecha": "2026-10-28",
+    "titulo": "Más curiosidades y leyendas",
+    "usuario": [
+      "Más curiosidades en ocho barrios y pueblos del alfoz: San Bernardo, Pizarrales, Delicias, San Cristóbal, Villares de la Reina, Santa Marta, Carbajosa y Villamayor.",
+      "Más historias en once pueblos de la provincia, con leyendas como la de Santa Teresa en Peñaranda o la de la Virgen de la Encina en Macotera: Ciudad Rodrigo, La Alberca, Béjar, Ledesma, Alba de Tormes, Candelario, Guijuelo, Peñaranda, Mogarraz, Miranda del Castañar y Macotera."
+    ],
+    "tecnico": [
+      "Solo contenido: 10 curiosidades nuevas en CURIOSIDADES (contenido.js, con su fuente en comentario) y 21 en PUEBLOS[...].cur (pueblos.js, de los artículos de Wikipedia que ya estaban en su fuente). Sin cambios de código."
+    ]
+  },
+  {
     "version": "2.19.0",
     "fecha": "2026-10-28",
     "titulo": "Fichas más limpias",
@@ -120,18 +132,6 @@
     "tecnico": [
       "CLAUDE.md, de 28 KB a menos de 5 KB: reglas imprescindibles, cómo gastar poco y un mapa de qué archivo lleva qué. El detalle de cada parte pasa a docs/notas/ (publicar, pruebas, guardado, mapa, provincia, rutas, contenido, interfaz, logros-y-tu-salamanca, seguridad).",
       ".claude/settings.json impide leer sin querer los datos voluminosos de js/datos/ (lindes, carreteras, tramos, habitantes, parques, orientación de fachadas)."
-    ]
-  },
-  {
-    "version": "2.15.3",
-    "fecha": "2026-10-24",
-    "titulo": "Pruebas por zonas",
-    "usuario": [
-      "Orden por dentro para que la app sea más fácil de cuidar; al usarla no cambia nada."
-    ],
-    "tecnico": [
-      "herramientas/pruebas.js, de 4.000 líneas, partido en herramientas/pruebas/: un archivo por zona (inicio, mapa, fichas, provincia, explora, tu-salamanca, guardado, cuenta, accesibilidad, seguridad) y comun.js con prueba(), igual(), cierto(), texto(), fichaAbierta() y el MapLibre falso. pruebas.js sigue siendo la única entrada.",
-      "PRUEBAS_ZONA=mapa (o varias, separadas por comas) pasa solo esas zonas. ESLint y Prettier miran también herramientas/pruebas/."
     ]
   }
 ]
