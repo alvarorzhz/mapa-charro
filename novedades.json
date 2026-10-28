@@ -1,5 +1,23 @@
 [
   {
+    "version": "2.18.0",
+    "fecha": "2026-10-28",
+    "titulo": "Actualizaciones más ligeras",
+    "usuario": [
+      "Cuando sale una versión nueva, el móvil solo baja lo que ha cambiado: las fotos y el resto se quedan como estaban. Menos datos y menos espera.",
+      "«Hoy» es siempre el día de Salamanca, aunque mires la app desde otro país: el reto del día, la agenda y las rachas cambian de día a la vez para todos.",
+      "En las novedades salen las de las últimas versiones; las antiguas, con «Ver las anteriores»."
+    ],
+    "tecnico": [
+      "Caché por archivo: version.js pone en cada ?v= la huella (sha256) de su contenido y sw.js copia de la caché anterior lo que no ha cambiado, fotos incluidas. El número interno va en <meta name=\"version-interna\"> y en VERSION de sw.js.",
+      "Fechas en util.js (diaEnSalamanca, fechaHoy, hoyEnSalamanca, sumarDias, textoFecha), siempre con Europe/Madrid; normalizar() en vez de tres copias para quitar tildes.",
+      "herramientas/pruebas-logica.js: pruebas sin navegador (fechas, rachas, agenda, sol, sw.js) en menos de un segundo, en antes-del-commit y en CI.",
+      "Pruebas del navegador en paralelo (PRUEBAS_HILOS) y con esperas a condición (llegaA, hastaQue, sinTransiciones, reloj de Playwright) en vez de 32 esperas fijas: las dos tallas, de 545 s a 258 s en local. El contraste, en cuatro pruebas.",
+      "CSS formateado con Prettier y comprobado en CI; comprobar-datos compacta el CSS antes de mirar el tema. Mismo CSS en el navegador, comprobado regla a regla.",
+      "novedades.json se queda con las diez últimas versiones; version.js archiva las demás en novedades-anteriores.json."
+    ]
+  },
+  {
     "version": "2.17.0",
     "fecha": "2026-10-27",
     "titulo": "El tema charro, en orden",
@@ -116,23 +134,6 @@
     "tecnico": [
       "PUEBLOS: 15 fichas nuevas (58 en total) con curiosidades y monumento, de Wikipedia; 4 ampliadas a 4 curiosidades.",
       "CURIOSIDADES: 11 nuevas en 5 zonas, con su fuente en comentario."
-    ]
-  },
-  {
-    "version": "2.15.1",
-    "fecha": "2026-10-22",
-    "titulo": "Más seguridad",
-    "usuario": [
-      "La app es más segura: solo ejecuta su propio código y el de las webs de confianza (mapas y cuenta de Google).",
-      "Los mapas de calles y la cuenta con Google se cargan comprobando que nadie los ha cambiado por el camino.",
-      "Al cargar una copia de seguridad, los archivos demasiado grandes se rechazan."
-    ],
-    "tecnico": [
-      "CSP en <meta> de index.html y privacidad.html (huella sha256 del script del tema, object-src 'none', base-uri 'self', form-action 'none') y referrer explícito; en el Artifact queda en el body y no se aplica.",
-      "SRI en MapLibre y Firebase con cargarScriptExterno (util.js).",
-      "Fuera innerHTML; ESLint prohíbe innerHTML, outerHTML, insertAdjacentHTML, document.write, eval y new Function.",
-      "Copia de seguridad: máximo 5 MB. sw.js: solo guarda respuestas buenas de la propia web; fuera la rama de Google Fonts.",
-      "GitHub Actions con permisos de solo lectura; comprobar-datos vigila la CSP y las huellas; pruebas fallan si algo incumple la CSP."
     ]
   }
 ]
