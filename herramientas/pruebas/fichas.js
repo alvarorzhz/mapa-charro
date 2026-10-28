@@ -241,6 +241,33 @@ prueba('Fichas: para seguir explorando', async (p, url) => {
   });
   cierto((await texto(p, '#rel')).includes('Ruta monumental'), 'la ruta que pasa por el barrio');
   cierto((await texto(p, '#mz')).includes('Catedrales Nueva y Vieja ✓'), 'monumento visitado marcado');
+  // En la zona van abajo, tras curiosidades, leyenda y dónde comer, en líneas plegadas con su número
+  cierto(
+    await p.evaluate(() =>
+      ['#mz', '#culf', '#rel'].every(
+        s => $('#eat').compareDocumentPosition($(s)) & Node.DOCUMENT_POSITION_FOLLOWING
+      )
+    ),
+    'monumentos, cultura y rutas, debajo de lo principal'
+  );
+  igual(
+    await p.$$eval('#mz details, #culf details, #rel details', ds =>
+      ds.map(d => [
+        d.open,
+        [...d.querySelectorAll('summary span')]
+          .map(s => s.textContent)
+          .join('|')
+          .replace(/\d+/g, 'N')
+      ])
+    ),
+    [
+      [false, 'Monumentos|N|N ✓'],
+      [false, 'Cultura y tradiciones|N'],
+      [false, 'Rutas a pie que pasan por aquí|N'],
+      [false, 'Aquí hubo|N']
+    ],
+    'plegados, con cuántos hay y cuántos visitados'
+  );
   await p.evaluate(() => abrirFicha('arrabal'));
   cierto((await texto(p, '#rel')).includes('Parque Elio Antonio de Nebrija'), 'sus parques');
   await p.evaluate(() => abrirFicha('garridosur'));
@@ -257,6 +284,12 @@ prueba('Fichas: para seguir explorando', async (p, url) => {
       'Otros pueblos cerca, en línea recta:'
     ],
     'apartados del pueblo'
+  );
+  cierto(
+    await p.evaluate(
+      () => !!($('#rel').compareDocumentPosition($('#hc')) & Node.DOCUMENT_POSITION_FOLLOWING)
+    ),
+    'en el pueblo, «Qué ver» sigue arriba'
   );
   cierto((await texto(p, '#rel')).includes('unos 90 min'), 'tiempo de visita de los datos de la ruta');
   cierto((await texto(p, '#info .peds')).includes('Las Batuecas'), 'nombres de las pedanías');

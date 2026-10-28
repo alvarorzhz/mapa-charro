@@ -1,29 +1,29 @@
 // Service worker: deja la app guardada en el móvil para que funcione sin conexión.
 // No edites VERSION ni ARCHIVOS a mano: los actualiza `node herramientas/version.js`.
-const VERSION = 236;
+const VERSION = 239;
 const CACHE = 'mapa-charro-v' + VERSION;
 // <archivos>
 const ARCHIVOS = [
   './',
   'index.html',
   'manifest.webmanifest',
-  'novedades.json?v=ffe8f4126c',
+  'novedades.json?v=a7b097d008',
   'icons/icon-180.png',
   'icons/icon-192.png',
   'fuentes/alfa-slab-one.woff2',
   'fuentes/lora.woff2',
-  'css/estilos.css?v=fbcbf008f0',
+  'css/estilos.css?v=a2cc954f2e',
   'js/util.js?v=e5c86be39e',
   'js/medicion.js?v=4da82b4f68',
   'js/datos-globales.js?v=23fd9d852e',
-  'js/estado.js?v=baac35a8c8',
+  'js/estado.js?v=edff04b66e',
   'js/guardado.js?v=f0f4e4ca28',
   'js/mapa.js?v=ff092c1482',
   'js/mapa-fondo.js?v=51114c85cb',
   'js/mapa-vias.js?v=6f2a08cfa1',
   'js/mapa-vista.js?v=10940ddde5',
-  'js/ficha.js?v=dfbc28b573',
-  'js/monumentos.js?v=313ae5b061',
+  'js/ficha.js?v=3bb33f2204',
+  'js/monumentos.js?v=e3befbdfc0',
   'js/ruta.js?v=12031d18b8',
   'js/ruta-provincia.js?v=44c50f3087',
   'js/logros.js?v=f19e745de6',
@@ -36,7 +36,7 @@ const ARCHIVOS = [
   'js/perfil.js?v=9311ccb1ef',
   'js/imagen.js?v=535085a37f',
   'js/explorar.js?v=2dab22c584',
-  'js/cultura.js?v=abb5f36015',
+  'js/cultura.js?v=9cfd245123',
   'js/agenda.js?v=fd791db272',
   'js/detalles.js?v=a773f7a301',
   'js/hora-dorada.js?v=173974d03d',

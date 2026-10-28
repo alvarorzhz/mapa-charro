@@ -292,18 +292,21 @@ function pintarMonumentosDeZona(z) {
   caja.textContent = '';
   caja.hidden = !lista.length;
   if (!lista.length) return;
-  caja.append('Monumentos: ');
-  lista.forEach(m => {
-    const visto = monumentosVisitados().includes(m.id),
-      b = crear(
-        'button',
-        'conico',
-        iconoMonumento(m.tipo, 18),
-        m.n,
-        visto ? crear('span', 'rel-hecho', ' ✓') : null
-      );
-    if (visto) b.setAttribute('aria-label', m.n + ', ya has estado');
-    b.onclick = () => abrirMonumento(m.id);
-    caja.appendChild(b);
-  });
+  const visitados = monumentosVisitados(),
+    botones = lista.map(m => {
+      const visto = visitados.includes(m.id),
+        b = crear(
+          'button',
+          'conico',
+          iconoMonumento(m.tipo, 18),
+          m.n,
+          visto ? crear('span', 'rel-hecho', ' ✓') : null
+        );
+      if (visto) b.setAttribute('aria-label', m.n + ', ya has estado');
+      b.onclick = () => abrirMonumento(m.id);
+      return b;
+    });
+  caja.appendChild(
+    filaPlegable('Monumentos', botones, lista.filter(m => visitados.includes(m.id)).length) // ficha.js
+  );
 }

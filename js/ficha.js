@@ -88,34 +88,56 @@ function pintarCercanas(z) {
 // --- Para seguir explorando: lo relacionado con la ficha, sacado de los datos que ya hay -------------
 // filas: [[título, [{ texto, detalle, icono, hecho, abrir }]]]. Las filas vacías no salen; sin «abrir», el
 // elemento es solo texto. «hecho»: ya visitado o hecho (✓, también para el lector de pantalla).
-function pintarRelacionados(filas) {
+// plegadas: cada fila es una línea que se despliega (en las fichas de zona, para que no tapen lo principal)
+function pintarRelacionados(filas, plegadas = false) {
   const caja = $('#rel');
   caja.textContent = '';
   const conAlgo = filas.filter(([, items]) => items.length);
   caja.hidden = !conAlgo.length;
   conAlgo.forEach(([titulo, items]) => {
-    const fila = crear('div', 'nb rel-fila', crear('span', 'rel-t', titulo + ':'));
-    items.forEach(it => {
-      const e = crear(
-        it.abrir ? 'button' : 'span',
-        it.abrir ? (it.icono ? 'conico' : '') : 'rel-etq',
-        it.icono || '',
-        it.texto,
-        it.detalle ? crear('small', '', ' · ' + it.detalle) : null,
-        it.hecho ? crear('span', 'rel-hecho', ' ✓') : null
-      );
-      if (it.hecho) e.title = 'Ya has estado';
-      if (it.abrir) {
-        e.onclick = it.abrir;
-        e.setAttribute(
-          'aria-label',
-          [it.texto, it.detalle, it.hecho ? 'ya has estado' : ''].filter(Boolean).join(', ')
-        );
-      }
-      fila.appendChild(e);
-    });
-    caja.appendChild(fila);
+    const elementos = items.map(elementoRelacionado);
+    caja.appendChild(
+      plegadas
+        ? filaPlegable(titulo, elementos, items.filter(it => it.hecho).length, 'rel-fila')
+        : crear('div', 'nb rel-fila', crear('span', 'rel-t', titulo + ':'), ...elementos)
+    );
   });
+}
+
+function elementoRelacionado(it) {
+  const e = crear(
+    it.abrir ? 'button' : 'span',
+    it.abrir ? (it.icono ? 'conico' : '') : 'rel-etq',
+    it.icono || '',
+    it.texto,
+    it.detalle ? crear('small', '', ' · ' + it.detalle) : null,
+    it.hecho ? crear('span', 'rel-hecho', ' ✓') : null
+  );
+  if (it.hecho) e.title = 'Ya has estado';
+  if (it.abrir) {
+    e.onclick = it.abrir;
+    e.setAttribute(
+      'aria-label',
+      [it.texto, it.detalle, it.hecho ? 'ya has estado' : ''].filter(Boolean).join(', ')
+    );
+  }
+  return e;
+}
+
+// Una línea «Título · cuántos (✓ hechos)» que se despliega para enseñar sus botones, cerrada de entrada
+function filaPlegable(titulo, elementos, hechos = 0, clase = '') {
+  return crear(
+    'details',
+    ('plegable ' + clase).trim(),
+    crear(
+      'summary',
+      '',
+      crear('span', 'rel-t', titulo),
+      crear('span', 'plegable-n', String(elementos.length)),
+      hechos ? crear('span', 'plegable-hechos', hechos + ' ✓') : null
+    ),
+    crear('div', 'nb plegable-c', ...elementos)
+  );
 }
 
 // Zona del mapa que contiene un punto, solo si cae dentro de un límite dibujado (sin aproximar por cercanía)
@@ -239,6 +261,12 @@ function mostrarFicha() {
   estadoApp.fichaConCultura = false;
   $('#demo').hidden = !estadoApp.fichaConDemografia;
   estadoApp.fichaConDemografia = false;
+  // En las fichas de zona, monumentos, cultura y lo relacionado van abajo, tras lo principal (curiosidades,
+  // leyenda y dónde comer); en las demás, arriba, donde son lo principal
+  const extras = [$('#mz'), $('#culf'), $('#rel')];
+  if (estadoApp.fichaConExtrasAbajo) $('#nb').before(...extras);
+  else $('#demo').before(...extras);
+  estadoApp.fichaConExtrasAbajo = false;
   // En el móvil, sube la página hasta el mapa (el de la provincia en su pestaña) para que se vea por encima del panel
   const mapaVisible = { map: '.mw', prov: '#pm' }[estadoApp.pestana];
   if (!esEscritorio() && mapaVisible && document.querySelector(mapaVisible)) {
@@ -269,8 +297,9 @@ function abrirFicha(id) {
   $('#otros').textContent = z.otros.length ? 'También: ' + z.otros.join(' · ') : '';
   $('#hc').hidden = false;
   pintarMonumentosDeZona(z);
-  pintarCulturaEnFicha(culturaDeZona(z));
-  pintarRelacionados(relacionadosDeZona(z));
+  pintarCulturaEnFicha(culturaDeZona(z), true);
+  pintarRelacionados(relacionadosDeZona(z), true);
+  estadoApp.fichaConExtrasAbajo = true;
   // Pueblos de alrededor: evolución de la población de su municipio (pueblos.js)
   if (municipio && typeof pintarDemografia == 'function') pintarDemografia(municipio);
   pintarCuriosidades(z);

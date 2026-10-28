@@ -275,6 +275,7 @@ const estadoApp = {
   visitaAbierta: null,
   fichaConCultura: false, // lleva «Cultura y tradiciones» (cultura.js: pintarCulturaEnFicha)
   fichaConDemografia: false, // lleva la evolución de la población de su municipio (pueblos.js: pintarDemografia)
+  fichaConExtrasAbajo: false, // monumentos, cultura y lo relacionado, abajo y plegados (fichas de zona)
   fichaDesdeHoy: false, // se abre desde «¿Qué puedo descubrir hoy?» (hoy.js): lleva el botón para volver allí
   fichaConPalabra: false, // abrirFicha la pide; mostrarFicha (ficha.js) esconde la caja en las demás fichas
   // En el móvil se abre alta (casi toda la pantalla): listas y paneles que no necesitan el mapa de la
