@@ -4282,6 +4282,83 @@ a.llegar.principal {
 .rel-fila {
   margin-top: 8px;
 }
+/* En las fichas de zona, monumentos, cultura y lo relacionado van abajo, en líneas plegadas: lo principal
+   son las curiosidades y la leyenda (ficha.js: filaPlegable) */
+#mz:has(> .plegable),
+#culf:has(> .plegable),
+#rel:has(> .plegable) {
+  margin-top: 0;
+}
+#mz:has(> .plegable) {
+  margin-top: 14px;
+}
+.plegable,
+.plegable.rel-fila {
+  margin: 0;
+  border-top: 1px solid var(--borde-suave);
+  font-size: var(--letra-chica);
+}
+.plegable > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  list-style: none;
+  font-weight: 600;
+  color: var(--tinta);
+}
+.plegable > summary::-webkit-details-marker {
+  display: none;
+}
+.plegable > summary::after {
+  content: '›';
+  margin-left: auto;
+  font-size: var(--letra-subtitulo);
+  color: var(--texto-suave);
+  transition: transform 0.15s;
+}
+.plegable[open] > summary::after {
+  transform: rotate(90deg);
+}
+.plegable .rel-t {
+  margin: 0;
+}
+.plegable-n,
+.plegable-hechos {
+  font-size: var(--letra-pequena);
+  font-weight: 400;
+  color: var(--texto-suave);
+}
+.plegable-n {
+  min-width: 20px;
+  padding: 0 6px;
+  text-align: center;
+  border: 1px solid var(--borde-suave);
+  border-radius: var(--radio-pastilla);
+}
+.plegable-hechos {
+  color: var(--vitor-texto);
+}
+.plegable-c {
+  margin: 0 0 10px;
+}
+.plegable-c button,
+.plegable-c .rel-etq {
+  margin: 4px 4px 0 0;
+  padding: 2px 10px;
+  font-size: var(--letra-pequena);
+  line-height: 1.3;
+  border-width: 1px;
+  text-align: left;
+}
+.plegable-c button.conico {
+  padding-left: 4px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .plegable > summary::after {
+    transition: none;
+  }
+}
 .bt {
   margin: 12px -18px 0;
   padding: 12px 18px 0;

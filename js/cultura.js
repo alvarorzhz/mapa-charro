@@ -43,17 +43,19 @@ const esDeProvincia = c =>
   !!(c.comarcas || []).length;
 
 // --- En las fichas de zona, pueblo y monumento: «Cultura y tradiciones» con sus botones ---------------
-function pintarCulturaEnFicha(lista) {
+// plegada: en una línea que se despliega (fichas de zona, donde va abajo; ficha.js: filaPlegable)
+function pintarCulturaEnFicha(lista, plegada = false) {
   const caja = $('#culf');
   caja.textContent = '';
   estadoApp.fichaConCultura = !!lista.length;
   if (!lista.length) return;
-  caja.append('Cultura y tradiciones: ');
-  lista.forEach(c => {
+  const botones = lista.map(c => {
     const b = crear('button', '', categoriaCultura(c.cat)[2] + ' ' + c.n);
     b.onclick = () => abrirElementoCultura(c.id);
-    caja.appendChild(b);
+    return b;
   });
+  if (plegada) caja.appendChild(filaPlegable('Cultura y tradiciones', botones));
+  else caja.append('Cultura y tradiciones: ', ...botones);
 }
 
 // --- Mapa de la provincia con los términos marcados ----------------------------------------------------

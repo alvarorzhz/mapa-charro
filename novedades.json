@@ -1,5 +1,17 @@
 [
   {
+    "version": "2.19.0",
+    "fecha": "2026-10-28",
+    "titulo": "Fichas más limpias",
+    "usuario": [
+      "En la ficha de cada lugar, las curiosidades y la leyenda salen nada más abrirla: son lo importante.",
+      "Monumentos, cultura y tradiciones, rutas y «Aquí hubo» pasan abajo, cada uno en una línea con cuántos hay. Tócala para verlos."
+    ],
+    "tecnico": [
+      "Ficha de zona: #mz, #culf y #rel se mueven antes de #nb (estadoApp.fichaConExtrasAbajo en mostrarFicha) y cada fila es un <details> plegado (filaPlegable en ficha.js) con su número y los ✓. Monumento, pueblo y ruta siguen igual."
+    ]
+  },
+  {
     "version": "2.18.0",
     "fecha": "2026-10-28",
     "titulo": "Actualizaciones más ligeras",
@@ -120,20 +132,6 @@
     "tecnico": [
       "herramientas/pruebas.js, de 4.000 líneas, partido en herramientas/pruebas/: un archivo por zona (inicio, mapa, fichas, provincia, explora, tu-salamanca, guardado, cuenta, accesibilidad, seguridad) y comun.js con prueba(), igual(), cierto(), texto(), fichaAbierta() y el MapLibre falso. pruebas.js sigue siendo la única entrada.",
       "PRUEBAS_ZONA=mapa (o varias, separadas por comas) pasa solo esas zonas. ESLint y Prettier miran también herramientas/pruebas/."
-    ]
-  },
-  {
-    "version": "2.15.2",
-    "fecha": "2026-10-24",
-    "titulo": "Más pueblos y más curiosidades",
-    "usuario": [
-      "15 pueblos nuevos con ficha: Fuenteguinaldo, Yecla de Yeltes, Villavieja de Yeltes, Cepeda, Valero, San Esteban de la Sierra, Fuenterroble de Salvatierra, Villanueva del Conde, Herguijuela de la Sierra, Alaraz, Barruecopardo, Monsagro, Calzada de Valdunciel, Salvatierra de Tormes y Navasfrías.",
-      "Más curiosidades en Montemayor del Río, San Felices de los Gallegos, Sotoserrano y Mieza.",
-      "Más curiosidades en San Esteban, San Juan, San José, Cabrerizos y Castellanos de Moriscos."
-    ],
-    "tecnico": [
-      "PUEBLOS: 15 fichas nuevas (58 en total) con curiosidades y monumento, de Wikipedia; 4 ampliadas a 4 curiosidades.",
-      "CURIOSIDADES: 11 nuevas en 5 zonas, con su fuente en comentario."
     ]
   }
 ]
