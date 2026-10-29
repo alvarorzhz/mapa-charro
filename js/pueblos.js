@@ -200,6 +200,15 @@ function botonFichaPueblo(m) {
   return b;
 }
 
+// Botón corto de cada fila de la pestaña Provincia (lista por comarcas y buscador)
+function botonFichaFila(m) {
+  if (!fichaPueblo(m) || m.cap) return null;
+  const b = crear('button', 'fichafila', '📖 Ficha');
+  b.setAttribute('aria-label', 'Ver la ficha de ' + m.n);
+  b.onclick = () => abrirPueblo(m);
+  return b;
+}
+
 // --- Evolución de la población (datos/habitantes.js: serie anual del Padrón, INE) -------------------
 // En la ficha de cada municipio: gráfico de líneas de su serie, variaciones entre años comparables
 // (mismo municipio, misma fuente y ambas cifras definitivas), máximo de la serie, tabla con todas las

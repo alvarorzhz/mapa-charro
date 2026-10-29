@@ -263,6 +263,7 @@ const estadoApp = {
   filtroLista: 'all', // filtro de la pestaña Lista (ver FILTROS)
   filtroMonumentos: 'all', // lista de Monumentos (explorar.js)
   filtroProvincia: 'all', // pestaña Provincia (provincia.js)
+  soloConFicha: false, // pestaña Provincia: solo los pueblos con ficha (provincia.js)
   filtroRutas: 'todas', // 'todas' | 'pie' | 'coche' (ruta.js)
   // Ficha abierta
   nombreFicha: '', // su nombre, para el título y «Avisar de un error» (enlaces.js)

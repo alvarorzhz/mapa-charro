@@ -1411,9 +1411,18 @@ main {
   font-size: var(--letra-media);
   opacity: 0.85;
 }
-.pr .nm small.tagf {
+/* «📖 Ficha» en cada fila de la pestaña Provincia (botonFichaFila, pueblos.js) */
+.pr .fichafila {
+  flex: none;
+  min-height: 36px;
+  padding: 4px 10px;
+  border: 1px solid var(--vitor);
+  border-radius: var(--radio-pastilla);
+  background: none;
   color: var(--vitor-texto);
   font-weight: 600;
+  font-size: var(--letra-pequena);
+  white-space: nowrap;
 }
 .psb .verficha {
   margin-top: 8px;
@@ -3790,6 +3799,13 @@ button.ms-grupo:hover {
 }
 #pm path.cul {
   fill: color-mix(in srgb, var(--vitor) 55%, var(--campo));
+}
+.ver-fichas {
+  margin: 0 0 4px;
+  width: 100%;
+}
+#pm path.fic {
+  fill: color-mix(in srgb, var(--vitor) 75%, var(--campo));
 }
 #cq {
   width: 100%;
