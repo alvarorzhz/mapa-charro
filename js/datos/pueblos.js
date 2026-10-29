@@ -265,7 +265,9 @@ export const PUEBLOS = {
     cur: [
       'Desde 1834 el cementerio está dentro de las murallas del castillo.',
       'El patio de armas, que se usaba para el ganado, acabó siendo una plaza de toros.',
-      'En el castillo está el museo de la reserva de la biosfera, sobre la flora y la fauna de la sierra.'
+      'En el castillo está el museo de la reserva de la biosfera, sobre la flora y la fauna de la sierra.',
+      'En 1225 Alfonso IX de León lo dio como señorío al obispo de Salamanca.',
+      'Una bodega del siglo XVI se ha recuperado como museo del vino. Las fiestas del Socorro son el 20 de noviembre.'
     ],
     mon: {
       n: 'Iglesia de San Martín de Tours',
@@ -290,7 +292,9 @@ export const PUEBLOS = {
   Sequeros: {
     foto: [
       'img/pueblo-sequeros.jpg',
-      'Calle de Sequeros. Foto: Luis Rogelio HM · CC BY-SA 2.0 · Wikimedia Commons'
+      'Calle de Sequeros. Foto: Luis Rogelio HM · CC BY-SA 2.0 · Wikimedia Commons',
+      'Desde 1213 fue del alfoz de Miranda del Castañar, que creó Alfonso IX de León.',
+      'El camino del Asentadero y el Bosque de los Espejos, de unos 9 km, lo une con San Martín del Castañar y Las Casas del Conde, con obras de arte por el camino.'
     ],
     cur: [
       'Fue cabeza de partido judicial hasta 1968.',
@@ -371,7 +375,9 @@ export const PUEBLOS = {
   Vitigudino: {
     foto: [
       'img/pueblo-vitigudino.jpg',
-      'Torre de la iglesia de San Nicolás de Bari. Foto: Rastrojo · CC BY-SA 4.0 · Wikimedia Commons'
+      'Torre de la iglesia de San Nicolás de Bari. Foto: Rastrojo · CC BY-SA 4.0 · Wikimedia Commons',
+      'Su nombre vendría de Alvito Godino, un hombre de la corte de Ramiro II de León en el siglo X.',
+      'Aquí nació Nicolás de Ribera «el Mozo», tesorero de Pizarro en la conquista del Perú. Por la Virgen del Socorro, el 15 de agosto, hay feria, y el 16 mercado de ganado.'
     ],
     cur: [
       'Hacia 1752, según el Catastro de Ensenada, tenía 180 vecinos y 181 casas.',
@@ -457,7 +463,9 @@ export const PUEBLOS = {
       'Linares de Riofrío. Foto: Mikelzubi · CC BY-SA 3.0 · Wikimedia Commons',
       'Su «cal morena» se usó en la argamasa de la Plaza Mayor de Salamanca.',
       'Cultiva fresas y a principios de junio celebra su fiesta de la fresa.',
-      'En tiempos de Madoz tenía cinco molinos harineros. A sus vecinos se les llama linarejos.'
+      'En tiempos de Madoz tenía cinco molinos harineros. A sus vecinos se les llama linarejos.',
+      'Madoz contaba en 1847 casi mil vecinos, cinco molinos de harina y mercado los sábados.',
+      'Su Fiesta de la Fresa es normalmente el primer fin de semana de junio.'
     ],
     cur: [
       'En 1959 todavía funcionaban 15 hornos de cal.',
@@ -499,7 +507,9 @@ export const PUEBLOS = {
     cur: [
       'En su término está la Peña de Francia, a 1.727 m.',
       'Las Cavenes son grandes zanjas de minas romanas a cielo abierto, zona arqueológica protegida desde 2006.',
-      'Antes se escribía El Cavaco, que se relaciona con «sitio donde se ha cavado».'
+      'Antes se escribía El Cavaco, que se relaciona con «sitio donde se ha cavado».',
+      'Fue de Miranda del Castañar desde 1215 hasta 1811, cuando se abolieron los señoríos.',
+      'Su fiesta mayor es el 25 de agosto, por la Degollación de San Juan Bautista; la adelantan desde el 29 para que vaya más gente. Los mozos tienen su fiesta el 26 de diciembre.'
     ],
     mon: {
       n: 'Santuario de la Peña de Francia',
@@ -924,7 +934,9 @@ export const PUEBLOS = {
   Babilafuente: {
     foto: [
       'img/pueblo-babilafuente.jpg',
-      'Plaza Mayor, ayuntamiento e iglesia. Foto: Malopez 21 · CC BY-SA 4.0 · Wikimedia Commons'
+      'Plaza Mayor, ayuntamiento e iglesia. Foto: Malopez 21 · CC BY-SA 4.0 · Wikimedia Commons',
+      'En 1523 Carlos V vendió la villa a Alonso de Acevedo y Zúñiga.',
+      'Desde 2006 tiene una planta de bioetanol. Celebra San Blas el 3 de febrero, los quintos el 1 de mayo y San Roque el 16 de agosto.'
     ],
     cur: [
       'Aparece por primera vez el 3 de mayo de 1215, cuando Sancha Gómez vendió la heredad de «Vaguilafointe» al deán de Salamanca.',
@@ -939,7 +951,9 @@ export const PUEBLOS = {
   Cantalapiedra: {
     foto: [
       'img/pueblo-cantalapiedra.jpg',
-      'Ayuntamiento de Cantalapiedra. Foto: Cruccone · CC BY 3.0 · Wikimedia Commons'
+      'Ayuntamiento de Cantalapiedra. Foto: Cruccone · CC BY 3.0 · Wikimedia Commons',
+      'Madoz contaba en 1846 ocho fábricas de tinajas.',
+      'El monasterio del Sagrado Corazón lo fundó en 1920 la madre Amparo, que había nacido en la villa.'
     ],
     cur: [
       'En 1136 el rey la donó al obispo de Salamanca. Los documentos la llaman Campum de Petra (1136) y Candelapiedra (1251) antes de Cantalapiedra (1265).',
@@ -1003,7 +1017,9 @@ export const PUEBLOS = {
     cur: [
       'En 1941 los vecinos compraron las tierras del marqués del Castelar.',
       'Es la sede de la Agrupación Europea de Cooperación Territorial Duero-Douro, que une a pueblos de los dos lados de la raya.',
-      'En el centro del pueblo se conserva una fragua de piedra y vigas de madera de más de doscientos años.'
+      'En el centro del pueblo se conserva una fragua de piedra y vigas de madera de más de doscientos años.',
+      'A la entrada desde Vitigudino tiene un parque de construcciones populares de 10 000 m².',
+      'Desde 2015 los vecinos hacen teatro con su propio grupo, TRA-CA.'
     ],
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Trabanca']]
   },
@@ -1048,7 +1064,10 @@ export const PUEBLOS = {
     cur: [
       'Desde 1209 forma parte de la Comunidad de Villa y Tierra de Béjar.',
       'En 1234 su beneficiado fue uno de los fundadores del «Cabildo de Clérigos del quarto de arriba de la tierra de Bexar».',
-      'Estuvo ligada a los Stúñiga, duques de Béjar, hasta 1833, cuando pasó a la provincia de Salamanca.'
+      'Estuvo ligada a los Stúñiga, duques de Béjar, hasta 1833, cuando pasó a la provincia de Salamanca.',
+      'En 1470 aparece escrito «El Hedrada».',
+      'Vive sobre todo de la chacina, y algunos de sus jamones llevan la denominación de Guijuelo. El primer domingo de octubre celebra la boda de la Virgen.',
+      'Aquí nació el médico y botánico Vicente Cervantes (1755–1829).'
     ],
     mon: {
       n: 'Iglesia de San Miguel Arcángel',
@@ -1172,7 +1191,8 @@ export const PUEBLOS = {
     cur: [
       'El 19 de septiembre de 1636 Felipe IV creó el marquesado de Valero para el duque de Béjar, con Valero, El Endrinal, San Miguel, Los Santos, Frades y Tornadizo.',
       'Su piscina natural en el río Quilamas, de 1985, aprovecha la presa de una central eléctrica de 1920 que daba luz también a Frades de la Sierra. Antes se llamaba «Charco el Pozo».',
-      'La batalla de Segoyuela, entre don Rodrigo y los musulmanes, está en el origen de la leyenda de la reina Quilama, que da nombre a esta sierra.'
+      'La batalla de Segoyuela, entre don Rodrigo y los musulmanes, está en el origen de la leyenda de la reina Quilama, que da nombre a esta sierra.',
+      'Su nombre podría venir de Valerio, dueño de una villa romana. Su patrón es San Valerio, el 29 de enero, y el 2 de febrero celebra las Candelas.'
     ],
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Valero_(Salamanca)']]
   },
@@ -1596,5 +1616,358 @@ export const PUEBLOS = {
       'Cerca está el dolmen de La Morisca, con un túmulo circular de diez metros de diámetro. Sus fiestas son el 18 de agosto.'
     ],
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Nava_de_Francia']]
+  },
+  Villasbuenas: {
+    cur: [
+      'En el siglo XIII se llamaba Villabonos, y así aparece en un documento de la catedral de Salamanca de 1265.',
+      'Se conserva una estela romana dedicada a Ciliborcae, una diosa prerromana de las fuentes cuyo nombre podría significar «portadora de salud».',
+      'En 1788 se descubrieron en su término cuarzos citrinos de calidad de gema. En 1806 la marquesa de Zayas regaló a la reina María Luisa dos peinetas hechas con ellos.',
+      'La mina de citrinos se explotó hasta 1907 y volvió a abrirse en 1940 con el nombre de Margarita, hasta los años sesenta.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Villasbuenas']]
+  },
+  Sorihuela: {
+    cur: [
+      'Su nombre podría significar «Soria pequeña», por los repobladores que llegaron en la segunda mitad del siglo XII.',
+      'Sus hombres lucharon en las Navas de Tolosa, en las mesnadas del obispo de Plasencia junto a Alfonso VIII.',
+      'Fue castellana, de la Tierra de Béjar, hasta que en 1425 perdió el voto en Cortes y pasó al Reino de León.',
+      'Su fiesta mayor es el Cristo de Valvanera, el 14 de septiembre. El pico de los Concejiles, en su término, llega a 1358 metros.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Sorihuela']]
+  },
+  Agallas: {
+    cur: [
+      'El Ídolo de Agallas, de la Edad del Bronce, es una figura humana tallada en pizarra de más de un metro de alto.',
+      'En 1985 apareció un ara romana del siglo I con una dedicatoria en latín.',
+      'Una piedra del pueblo lleva tallada la fecha de 1612 y una cruz que parece de la Orden de Santiago, aunque Agallas nunca fue de esa orden.',
+      'En mayo de 2010 el pleno del ayuntamiento pidió pasar a Extremadura y dejar Castilla y León.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Agallas']]
+  },
+  Bermellar: {
+    cur: [
+      'Sobre el río Huebra está el castro de Saldañuela, una fortaleza de la Edad del Hierro.',
+      'En el siglo XII Fernando II de León lo puso en manos de la Orden del Temple. Cuando el papa disolvió la orden, en 1311, pasó al obispo de Ciudad Rodrigo.',
+      'Su término está dentro del parque natural de Arribes del Duero, con cigüeña negra, alimoche y águila perdicera.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Bermellar']]
+  },
+  'Cerezal de Peñahorcada': {
+    cur: [
+      'Su apellido viene de dos peñascos casi inaccesibles que forman una «horcada». El teso de Peñahorcada mide 836 metros.',
+      'Fue de la Orden de Santiago desde el siglo XII hasta 1873, cuando pasó a la diócesis de Ciudad Rodrigo.',
+      'Madoz contaba en 1847 un pueblo partido en dos barrios por un arroyo que se cruzaba por cinco puentecillos de piedra.',
+      'Su fiesta es San Marcos, el 25 de abril.'
+    ],
+    mon: {
+      n: 'Iglesia de San Marcos',
+      tipo: 'iglesia',
+      epoca: 'Origen gótico',
+      estilo: 'De influencia neoclásica',
+      datos: [
+        ['Conserva', 'el arco gótico de la portada'],
+        ['Retablo', 'siglo XVIII'],
+        ['Cruz repujada', 'siglo XVI']
+      ]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Cerezal_de_Pe%C3%B1ahorcada']]
+  },
+  Gajates: {
+    cur: [
+      'Se fundó con la repoblación de Ramiro II de León, en el siglo X. En el XIII se escribía «Gayates».',
+      'En 1196 su pedanía, Galleguillos, entonces «Galegos de Alfaraz», fue saqueada por tropas castellanas: la frontera estaba muy cerca.',
+      'Quedan restos de El Palacio, un palacio fortaleza del siglo XII.'
+    ],
+    mon: {
+      n: 'Iglesia del Salvador',
+      tipo: 'iglesia',
+      epoca: 'Siglo XIII',
+      estilo: 'Románico-mudéjar',
+      datos: [
+        ['Ábside', 'siete paños entre ocho bandas'],
+        ['Dentro', 'la tumba renacentista de Pedro Aponte (siglo XVI)']
+      ]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Gajates']]
+  },
+  Rágama: {
+    cur: [
+      'Fue de la Comunidad de Villa y Tierra de Arévalo desde la repoblación de los siglos XI y XII hasta 1833, cuando pasó a Salamanca.',
+      'Aquí nació en 1464 Francisco de Carvajal, conquistador en México y Perú al que llamaron «el demonio de los Andes». Murió ejecutado en 1548.',
+      'A la salida hacia Peñaranda está El Humilladero: una cruz de granito con el Cristo delante y la Virgen detrás, bajo un pórtico de cuatro pilares.'
+    ],
+    mon: {
+      n: 'Iglesia del Salvador',
+      tipo: 'iglesia',
+      estilo: 'Románico-mudéjar',
+      datos: [['Dentro', 'un artesonado policromado']]
+    },
+    fuente: [
+      ['Wikipedia', 'https://es.wikipedia.org/wiki/R%C3%A1gama'],
+      ['Wikipedia: Francisco de Carvajal', 'https://es.wikipedia.org/wiki/Francisco_de_Carvajal']
+    ]
+  },
+  Retortillo: {
+    cur: [
+      'Su balneario aprovecha un manantial que brota en el mismo lecho del río Yeltes a 48,5 °C, con unos 212 litros por minuto. Sus aguas se declararon de utilidad pública el 14 de julio de 1905.',
+      'Los romanos ya lo usaban: se halló un ara dedicada a las aguas del Yeltes, «Aquis Eletesibus».',
+      'En 1561 Felipe II dejó a Juan Solís levantar una casa fuerte. En 1840 se usaron sus piedras para el frontón y la torre del reloj.',
+      'La honda de su escudo recuerda a los guerrilleros de don Julián Sánchez, «el Charro», en la guerra de la Independencia.'
+    ],
+    mon: {
+      n: 'Puente sobre el Yeltes',
+      tipo: 'puente',
+      epoca: 'Considerado romano',
+      datos: [['Un solo arco', 'apoyado en dos rocas del cauce']]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Retortillo_(Salamanca)']]
+  },
+  'Sancti-Spíritus': {
+    cur: [
+      'Con 141,90 km² es el tercer municipio más grande de la provincia.',
+      'El abrigo de Camaces, un asentamiento neolítico, es bien de interés cultural desde 1983.',
+      'Al retirarse en la guerra de la Independencia, los franceses quemaron el pueblo, con la iglesia y el ayuntamiento y sus archivos.',
+      'Su escudo es una paloma de plata en vuelo sobre azul. La fiesta mayor es la infraoctava del Corpus.'
+    ],
+    mon: {
+      n: 'Iglesia Vieja',
+      tipo: 'iglesia',
+      epoca: 'Hacia 1475',
+      datos: [
+        ['Planta', 'de salón'],
+        ['Hallazgo', 'un arco de herradura, al restaurarla en los años 2000']
+      ]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Sancti-Sp%C3%ADritus_(Salamanca)']]
+  },
+  'Martín de Yeltes': {
+    cur: [
+      'Se llamó Martín del Río hasta 1910, cuando tomó el nombre del río Yeltes. Un real decreto de 1916 lo confirmó.',
+      'En el siglo XIX era lugar de paso de pastores, carruajes y caballerías que subían de Extremadura a León, con posadas y ventorros.',
+      'En 1902 absorbió el término de Campocerrado, que en 1900 tenía 162 vecinos, tras un desahucio que hizo la Guardia Civil.',
+      'Sus fiestas son San Antonio, el 13 de junio, y San Martín, el 11 de noviembre.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Mart%C3%ADn_de_Yeltes']]
+  },
+  Villasrubias: {
+    cur: [
+      'En 1191 Alfonso IX de León lo donó a la Orden de Santiago.',
+      'Su torre de las campanas era en 1700 una torre de defensa que también servía de horca. Los arcos se le añadieron hacia 1945.',
+      'En la dehesa de Jaque hay una piedra con doce eslabones de cadena grabados: de ahí la leyenda del «tesoro de Jaque».',
+      'La víspera de San Ceferino, su patrón, el 26 de agosto, se planta en la plaza el mejor pino del pinar. En Carnaval los quintos matan el gallo.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Villasrubias']]
+  },
+  'Frades de la Sierra': {
+    cur: [
+      'Aquí nació en 1870 el poeta José María Gabriel y Galán. Su casa natal se puede visitar.',
+      'Alfonso X le dio franquicias y título de lealtad porque sus hijos le ayudaron a conquistar el reino de Murcia.',
+      'Hasta el 2 de julio de 1916 se llamaba solo Frades.',
+      'Madoz contaba en 1847 lobos abundantes en la sierra y telares que tejían sayal, una tela basta.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Frades_de_la_Sierra']]
+  },
+  'Santibáñez de la Sierra': {
+    cur: [
+      'Una inscripción de la antigua ermita de San Juan recuerda su fundación en el año 583.',
+      'Por aquí pasaba una calzada romana que se partía en dos: hacia Coria y hacia las minas de oro de Las Cavenes, en El Cabaco.',
+      'Las fiestas de San Agustín van del 26 al 29 de agosto, y el 29 es el Día del Toro. El 1 de noviembre se hace la Calbochada, con castañas asadas.'
+    ],
+    mon: {
+      n: 'Puente romano de Puentes de Alagón',
+      tipo: 'puente',
+      epoca: 'Siglo I a. C.',
+      datos: [
+        ['Sobre', 'el río Alagón'],
+        ['Es', 'uno de los más antiguos de la Península']
+      ]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Santib%C3%A1%C3%B1ez_de_la_Sierra']]
+  },
+  Topas: {
+    cur: [
+      'El 12 de abril de 1136 Alfonso VII donó «Thopas» al obispado de Salamanca.',
+      'Felipe II la vendió en 1583 a Nicolás de Grimaldo, y el 8 de noviembre de 1586 el concejo compró su propia villa por 3000 ducados.',
+      'En el castillo se alojó Fernando el Católico en 1475, camino de la batalla de Toro. Se llama «del Buen Amor» por el obispo Alonso de Fonseca y su amante, Teresa de las Cuevas, que vivían juntos en él.',
+      'Su fiesta es San Antonio de Padua, el 13 de junio.'
+    ],
+    mon: {
+      n: 'Castillo del Buen Amor',
+      tipo: 'torre',
+      epoca: 'Siglo XV',
+      estilo: 'Castillo reformado como palacio renacentista',
+      datos: [
+        ['Monumento', 'desde 1931'],
+        ['Hoy', 'hotel, desde 2003']
+      ]
+    },
+    fuente: [
+      ['Wikipedia', 'https://es.wikipedia.org/wiki/Topas'],
+      ['Wikipedia: Castillo del Buen Amor', 'https://es.wikipedia.org/wiki/Castillo_del_Buen_Amor']
+    ]
+  },
+  'La Zarza de Pumareda': {
+    cur: [
+      'Antes se llamaba «Sarça de Conosapo». El «Pumareda» podría venir de un reparto de tierras del siglo XV con un licenciado de ese apellido.',
+      'Entre los siglos XVI y XVIII fue anejo de Aldeadávila, y hasta el XIX dependió del conde de Ledesma.',
+      'Su torreón del reloj es de 1921.'
+    ],
+    mon: {
+      n: 'Puente de Santo Domingo',
+      tipo: 'puente',
+      epoca: 'Siglos XVII–XVIII',
+      datos: [['También', 'puente Robledo o puente Grande']]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/La_Zarza_de_Pumareda']]
+  },
+  'Encinasola de los Comendadores': {
+    cur: [
+      'En su pedanía de Picones está el castro del Picón de la Mora, de la Segunda Edad del Hierro.',
+      'En el siglo XIII se escribía «Erzinasola». En 1185 se cerró el pleito con Zamora y pasó para siempre a la diócesis de Salamanca.',
+      'En 1901, 104 vecinos compraron todo el término a los señores de Guadramiro por 475 000 pesetas.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Encinasola_de_los_Comendadores']]
+  },
+  'Zorita de la Frontera': {
+    cur: [
+      'Su apellido viene de los siglos XII y XIII, cuando estaba en la frontera entre León y Castilla. «Zorita» podría venir del árabe y significar «paloma azul».',
+      'En la Edad Media se escribía «Çurita», y en un mapa de 1700 aparece como «Corita».',
+      'Su escudo, aprobado en 2008, lleva un león rojo y un pino de oro arrancado.'
+    ],
+    mon: {
+      n: 'Iglesia de San Miguel Arcángel',
+      tipo: 'iglesia',
+      epoca: 'Siglos XV–XVI',
+      datos: [
+        ['Nave central', 'artesonado mudéjar del siglo XV'],
+        ['A los pies', 'tribuna plateresca de madera'],
+        ['Retablo mayor', 'churrigueresco']
+      ]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Zorita_de_la_Frontera']]
+  },
+  Montejo: {
+    cur: [
+      'Lo atraviesa el embalse de Santa Teresa, que recoge las aguas del Tormes.',
+      'Aquí nacieron los hermanos Rodríguez Laso: Simón fue rector del Colegio de España en Bolonia desde 1788 hasta su muerte en 1821.',
+      'La fuente de los hermanos Rodríguez Laso, «el caño», es de 1799.',
+      'Celebra San Blas el 3 de febrero y San Antonio el 13 de junio.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Montejo_(Salamanca)']]
+  },
+  Gomecello: {
+    cur: [
+      'Su nombre viene de Gómez Tello, a quien los reyes de León encargaron repoblar la zona. En el siglo XIII se escribía «Gomeçello».',
+      'Su estación de tren abrió en 1877 con la línea de Salamanca a Medina del Campo.',
+      'Desde 2007 trata aquí los residuos de toda la provincia. Sus dos silos de cereal se ven a muchos kilómetros.',
+      'Sus fiestas son el penúltimo fin de semana de agosto, por la Virgen de la Esperanza.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Gomecello']]
+  },
+  Espeja: {
+    cur: [
+      'Aparece por primera vez en 1376, en un documento del archivo de Ciudad Rodrigo.',
+      'En 1626 se vendió como villa de señorío, y en 1685 el hijo del comprador fue nombrado marqués de Espeja.',
+      'En 1812 murió aquí luchando contra los franceses el general británico Henry Mackinnon, y lo enterraron con honores en la plaza de la iglesia.',
+      'Su patrón es San Lino, el 23 de septiembre. El escudo lleva tres columnas de oro, la del medio caída.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Espeja']]
+  },
+  'Paradinas de San Juan': {
+    cur: [
+      'Se documenta en 1113, cuando la reina Urraca la donó a la Orden de San Juan, de la que toma el apellido.',
+      'En 1183 se trataron aquí las paces entre Fernando II de León y Alfonso VIII de Castilla. En 1197 los castellanos tomaron la villa y su castillo.',
+      'Aquí nació en 1395 Alonso de Paradinas, obispo de Ciudad Rodrigo y copista del Libro de buen amor: su copia está en la Universidad de Salamanca.',
+      'Su romería del Hinojal es el último fin de semana de agosto; el pozo del agua milagrosa de la ermita se tenía por bueno contra las viruelas.'
+    ],
+    mon: {
+      n: 'Iglesia de San Pedro Apóstol',
+      tipo: 'iglesia',
+      estilo: 'Románico-mudéjar',
+      datos: [
+        ['Naves', 'tres'],
+        ['Portada', 'de piedra, con dos arquivoltas']
+      ]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Paradinas_de_San_Juan']]
+  },
+  Puertas: {
+    cur: [
+      'En 1265 se llamaba Sancta María de Cabeça de Porcas.',
+      'El 13 de mayo de 1597 se juzgó a su cura, Gonzalo Pérez, por decir misa demasiado temprano y jugar a la pelota en las calles. Lo amonestaron y pagó las costas.',
+      'Vive de las vacas moruchas y charolesas, y en 2025 tenía 66 vecinos.'
+    ],
+    mon: {
+      n: 'Iglesia de Santa Marina',
+      tipo: 'iglesia',
+      epoca: 'Siglos XVI–XVII',
+      datos: [
+        ['Hecha', 'quizá con sillares de un templo románico'],
+        ['Espadaña', 'maciza, de dos vanos']
+      ]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Puertas_(Salamanca)']]
+  },
+  'Guijo de Ávila': {
+    cur: [
+      'Su apellido viene de Ávila: tras la repoblación del siglo XII quedó ligado a esa tierra.',
+      'En el siglo XV, cuando la Tierra de Béjar pasó a León, quedó como el pedazo de Castilla más al oeste, rodeado de tierras leonesas por tres de sus cuatro lados.',
+      'Tiene un aula de energías renovables con su propia estación meteorológica.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Guijo_de_%C3%81vila']]
+  },
+  'Valverde de Valdelacasa': {
+    cur: [
+      'Fue pueblo de frontera: el límite entre León y Castilla iba por la Vía de la Plata.',
+      'En 1209 entró en la Comunidad de Villa y Tierra de Béjar, y en 1396 pasó con ella a los Zúñiga.',
+      'Tiene un monumento al peregrino, por el Camino de Santiago de la Vía de la Plata.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Valverde_de_Valdelacasa']]
+  },
+  'Mancera de Abajo': {
+    cur: [
+      'Fue villa del señorío del marqués de Malpica y la cabeza de las siete villas que lo formaban.',
+      'Madoz contaba en 1848 un palacio del marqués ya inhabitable y las ruinas de un convento de los Mínimos.',
+      'Hasta el siglo XV fue de la Tierra de Ávila; después pasó a la jurisdicción de Salamanca.'
+    ],
+    mon: {
+      n: 'Palacio de los Marqueses de Mancera',
+      tipo: 'palacio',
+      datos: [['Señorío', 'del marqués de Malpica']]
+    },
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Mancera_de_Abajo']]
+  },
+  'Villar de Ciervo': {
+    cur: [
+      'Su nombre podría venir de los muchos ciervos que había cuando se fundó, entre los siglos XII y XIII.',
+      'A mediados del siglo XIX tenía 957 vecinos y 240 casas, según Madoz.',
+      'Su patrón es San Agustín, con fiesta el 28 de agosto.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Villar_de_Ciervo']]
+  },
+  Larrodrigo: {
+    cur: [
+      'En el siglo XIII se llamaba Pela Rodrigo, en el XV Felarrodrigo y en el censo de 1842 La Rodrigo.',
+      'Por él pasaba la calzada de Alba de Tormes a Valladolid.',
+      'Su escudo junta un verraco, una encina y una cruz de la Orden de San Juan.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Larrodrigo']]
+  },
+  'Tarazona de Guareña': {
+    cur: [
+      'En el siglo XIII se escribía «Taraçona»: quizá la poblaron gentes de Tarazona, en Aragón.',
+      'Tomó el apellido del río Guareña el 2 de julio de 1916.',
+      'Por San Miguel, el 29 de septiembre, hay encierros por el campo, con jinetes que llevan los toros hasta la plaza, y peñas que invitan a los forasteros.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Tarazona_de_Guare%C3%B1a']]
+  },
+  Huerta: {
+    cur: [
+      'Su nombre aparece hacia 1163, en el testamento de don Vela, canónigo de la catedral de Salamanca.',
+      'Pedro Maldonado Pimentel, nieto del dueño de la heredad de Huerta, fue ejecutado en 1522 por luchar con los comuneros.',
+      'En el siglo XVI vivió de sus aceñas, molinos de harina del Tormes; la Aceña de Huerta sigue en pie. La riada de San Policarpo, en 1626, la destruyó casi por completo.',
+      'Su calle de los Mesones recuerda las posadas del camino de Salamanca a Madrid. Su patrón es San Bartolomé, el 24 de agosto.'
+    ],
+    fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Huerta_(Salamanca)']]
   }
 };

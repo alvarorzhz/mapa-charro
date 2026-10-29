@@ -103,6 +103,21 @@ prueba('Ficha de pueblo', async (p, url) => {
   igual(await p.evaluate(() => JSON.parse(localStorage.charro2).p), { m37010: 'w' }, 'marca el pueblo');
 });
 
+prueba('La ficha del pueblo se abre desde su fila de la provincia', async p => {
+  await p.click('#vprov');
+  const conFicha = await p.evaluate(() => Object.keys(PUEBLOS).length);
+  await p.click('.ver-fichas');
+  igual(
+    await p.$$eval('#pcl .pg:not([hidden])', a => a.length),
+    conFicha,
+    'el botón deja en la lista solo los pueblos con ficha'
+  );
+  igual(await p.$$eval('#pm path.fic', a => a.length), conFicha, 'y los marca en el minimapa');
+  await p.fill('#pq', 'alberca');
+  await p.click('#prs .fichafila');
+  igual(await texto(p, '#nm'), 'La Alberca', 'el buscador de la provincia abre la ficha');
+});
+
 prueba('Evolución de la población en la ficha del municipio', async (p, url) => {
   await p.goto(url + '#pueblo/la-alberca');
   cierto(await p.$eval('#demo', e => !e.hidden), 'sale en la ficha del pueblo');

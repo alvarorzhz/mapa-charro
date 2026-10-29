@@ -1,5 +1,16 @@
 [
   {
+    "version": "2.16.3",
+    "fecha": "2026-10-25",
+    "titulo": "Fuera el interruptor de parques",
+    "usuario": [
+      "El panel de capas ya no tiene el botón «Parques»: con las calles reales los parques ya salen en el fondo. Si apagas las calles reales o no cargan, las manchas verdes siguen ahí."
+    ],
+    "tecnico": [
+      "Quitados el botón #pkb y su manejador de mapa-fondo.js. La capa #pk se sigue dibujando y estilos.css la esconde con .mw.fondo-real; las pruebas lo comprueban al encender y apagar el fondo real. parques.js se queda: lo usan la capa y la ficha de zona."
+    ]
+  },
+  {
     "version": "2.16.2",
     "fecha": "2026-10-25",
     "titulo": "Datos como módulos",

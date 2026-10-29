@@ -1,5 +1,19 @@
 [
   {
+    "version": "2.21.0",
+    "fecha": "2026-10-29",
+    "titulo": "110 pueblos con ficha, y más fáciles de abrir",
+    "usuario": [
+      "29 pueblos nuevos con ficha (ya son 110): Villasbuenas, Sorihuela, Agallas, Bermellar, Cerezal de Peñahorcada, Gajates, Rágama, Retortillo, Sancti-Spíritus, Martín de Yeltes, Villasrubias, Frades de la Sierra, Santibáñez de la Sierra, Topas, La Zarza de Pumareda, Encinasola de los Comendadores, Zorita de la Frontera, Montejo, Gomecello, Espeja, Paradinas de San Juan, Puertas, Guijo de Ávila, Valverde de Valdelacasa, Mancera de Abajo, Villar de Ciervo, Larrodrigo, Tarazona de Guareña y Huerta. Hay de todo: el balneario romano de Retortillo, el castillo del Buen Amor en Topas, la casa natal de Gabriel y Galán en Frades o el cura de Puertas al que juzgaron en 1597 por jugar a la pelota.",
+      "Más curiosidades en diez fichas que tenían solo tres: Vitigudino, Sequeros, Babilafuente, Trabanca, Ledrada, Valero, Cantalapiedra, San Martín del Castañar, Linares de Riofrío y El Cabaco.",
+      "En la pestaña Provincia, cada pueblo con ficha tiene su botón «📖 Ficha» en la lista y en el buscador: se abre de un toque, sin pasar por el mapa. El nuevo botón «📖 Pueblos con ficha» los marca en el minimapa y deja la lista solo con ellos."
+    ],
+    "tecnico": [
+      "pueblos.js (datos): 29 entradas nuevas y curiosidades añadidas en diez, todas de su artículo de Wikipedia (Rágama y Topas, también los de Francisco de Carvajal y el castillo del Buen Amor).",
+      "botonFichaFila (pueblos.js) en las filas de construirComarcas y buscarEnProvincia; estadoApp.soloConFicha filtra en aplicarFiltroProvincia (filas con conFicha) y pinta la clase fic en el minimapa. Sustituye la etiqueta «con ficha». Prueba nueva en herramientas/pruebas/provincia.js."
+    ]
+  },
+  {
     "version": "2.20.2",
     "fecha": "2026-10-29",
     "titulo": "Fichas de barrio sin repeticiones",
@@ -121,17 +135,6 @@
       "En escritorio .paseo se ancla a la derecha como la ficha y, con #sh abierta, arriba a la izquierda.",
       "Con pointer:coarse, .ayuda-btn, .marcador .sig y .paseo .cerrar tienen un :after que lleva la zona de toque a 44 px sin cambiar el aspecto.",
       "Token --muralla (claro y oscuro) para .mur-* y #desap, que usaban #4a3016 fijo; el texto de las puertas usa --ink y --card."
-    ]
-  },
-  {
-    "version": "2.16.3",
-    "fecha": "2026-10-25",
-    "titulo": "Fuera el interruptor de parques",
-    "usuario": [
-      "El panel de capas ya no tiene el botón «Parques»: con las calles reales los parques ya salen en el fondo. Si apagas las calles reales o no cargan, las manchas verdes siguen ahí."
-    ],
-    "tecnico": [
-      "Quitados el botón #pkb y su manejador de mapa-fondo.js. La capa #pk se sigue dibujando y estilos.css la esconde con .mw.fondo-real; las pruebas lo comprueban al encender y apagar el fondo real. parques.js se queda: lo usan la capa y la ficha de zona."
     ]
   }
 ]

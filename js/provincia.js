@@ -385,10 +385,12 @@ function construirComarcas(contenedor) {
       if (m.cap) fila.appendChild(crear('small', 'mu', 'la capital: se marca por barrios en el mapa'));
       else {
         if (m.z) nombreBoton.appendChild(crear('small', 'tagm', 'en el mapa'));
-        if (PUEBLOS[m.n]) nombreBoton.appendChild(crear('small', 'tagm tagf', 'con ficha'));
+        // La ficha se abre desde la misma fila, sin pasar por el minimapa (pueblos.js)
+        const ficha = botonFichaFila(m);
+        if (ficha) fila.appendChild(ficha);
         const botones = botonesMunicipio(m);
         fila.appendChild(botones);
-        vistaProvincia.filas.push({ botones, el: fila, grupo });
+        vistaProvincia.filas.push({ botones, el: fila, grupo, conFicha: !!ficha });
       }
       grupo.appendChild(fila);
       m.P.forEach(p => {
@@ -439,6 +441,20 @@ function construirProvincia() {
     marcarPueblosConCultura(si);
   };
   caja.appendChild(conCultura);
+
+  // Solo los pueblos con ficha: se marcan en el minimapa y la lista se queda solo con ellos
+  const conFicha = crear(
+    'button',
+    'capa ver-fichas',
+    '📖 Pueblos con ficha (' + Object.keys(PUEBLOS).length + ')'
+  );
+  marcarInterruptor(conFicha, estadoApp.soloConFicha);
+  conFicha.onclick = () => {
+    estadoApp.soloConFicha = !estadoApp.soloConFicha;
+    marcarInterruptor(conFicha, estadoApp.soloConFicha);
+    aplicarFiltroProvincia();
+  };
+  caja.appendChild(conFicha);
 
   vistaProvincia.filtros = crearBotonesFiltro(estadoApp.filtroProvincia, clave => {
     estadoApp.filtroProvincia = clave;
@@ -536,7 +552,8 @@ function aplicarFiltroProvincia() {
     .forEach(b => marcarInterruptor(b, b.dataset.f == estadoApp.filtroProvincia));
   const gruposVisibles = new Set();
   vistaProvincia.filas.forEach(f => {
-    const ok = cumpleFiltro(estadoApp.filtroProvincia, f.botones._leer());
+    const ok =
+      cumpleFiltro(estadoApp.filtroProvincia, f.botones._leer()) && (!estadoApp.soloConFicha || f.conFicha);
     f.el.hidden = !ok;
     if (ok) gruposVisibles.add(f.grupo);
   });
@@ -553,8 +570,11 @@ function aplicarFiltroProvincia() {
   vistaProvincia.comarcas.forEach(c => {
     const alguno = [...c.det.querySelectorAll('.pg')].some(g => !g.hidden);
     c.det.hidden = !alguno;
-    if (estadoApp.filtroProvincia != 'all' && alguno) c.det.open = true;
+    if ((estadoApp.filtroProvincia != 'all' || estadoApp.soloConFicha) && alguno) c.det.open = true;
   });
+  vistaProvincia.caminos.forEach((p, m) =>
+    p.classList.toggle('fic', estadoApp.soloConFicha && !!PUEBLOS[m.n])
+  );
 }
 
 // Repinta botones, colores del minimapa, contadores y filtros
@@ -621,6 +641,8 @@ function buscarEnProvincia() {
       ),
       fila = crear('div', 'pr sr2', nombre);
     nombre.onclick = () => seleccionarPueblo(h.m, true);
+    const ficha = h.p ? null : botonFichaFila(h.m);
+    if (ficha) fila.appendChild(ficha);
     if (h.p || !h.m.cap) {
       const botones = h.p ? botonesPedania(h.p) : botonesMunicipio(h.m);
       pintarBotonesMarcar(botones);
