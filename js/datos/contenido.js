@@ -22,7 +22,9 @@ export const CURIOSIDADES = {
   sancti: [
     'Fue parroquia desde 1190 y convento desde 1268, fundado por Martín Alfonso, hijo de Alfonso IX, y su esposa María Méndez; los dos están enterrados dentro.',
     'Lo llevaban las comendadoras de la Orden de Santiago, que acogían a las mujeres de los caballeros salmantinos mientras ellos estaban en la guerra.',
-    'Guarda el Cristo de los Milagros, del siglo XIV, y un artesonado mudéjar en el coro.'
+    'Guarda el Cristo de los Milagros, del siglo XIV, y un artesonado mudéjar en el coro.',
+    // Fuente: https://www.turismocastillayleon.com/es/patrimonio-cultura/iglesias-ermitas/iglesia-sancti-spiritus
+    'En la portada plateresca hay dos medallones con bustos de un hombre y una mujer, seguramente los fundadores, con sus escudos a los lados.'
   ],
   sanjuan: [
     'La iglesia de San Juan de Barbalos es de 1150 y la levantaron los caballeros de la Orden del Hospital de San Juan de Jerusalén. «Barbalos» era el pueblo donde la orden tenía sus tierras.',
@@ -278,12 +280,17 @@ export const CURIOSIDADES = {
   arrabal: [
     'Su iglesia vieja, de la Santísima Trinidad, es románica del siglo XII. Se dejó de usar en los años cincuenta y ha vuelto a abrirse al culto.',
     'El Puente Romano, que perdió varios arcos en la riada de 1626, se reparó en tiempos de Felipe IV. Junto a él está el verraco de piedra de los vetones.',
-    'En la Edad Media aquí se guardaba el ganado de la ciudad y pasaban los peregrinos de la Vía de la Plata.'
+    'En la Edad Media aquí se guardaba el ganado de la ciudad y pasaban los peregrinos de la Vía de la Plata.',
+    // Fuente: https://es.wikipedia.org/wiki/Puente_romano_de_Salamanca
+    'Bajo el empedrado del Puente Romano, a unos 50 cm, siguen las losas de la calzada romana original.',
+    'El 21 de julio de 1812, la víspera de la batalla de los Arapiles, las tropas de Wellington tomaron el puente.'
   ],
   tejares: [
     'Fue un pueblo independiente hasta 1963. Aparece en un documento de Alfonso VII de 1148 y vivía de sus tejas, ladrillos y aguas medicinales.',
     'El palacio de verano de los marqueses de Castellanos, del siglo XVIII, es hoy un centro de educación vial.',
-    'En la octava de Pentecostés se celebra la romería de la Virgen de la Salud, con alfarería, garrapiñadas y chanfaina.'
+    'En la octava de Pentecostés se celebra la romería de la Virgen de la Salud, con alfarería, garrapiñadas y chanfaina.',
+    // Fuente: https://es.wikipedia.org/wiki/Tejares
+    'Sus aguas sulfurosas, minero-medicinales, tuvieron fama. Su aceña molió grano, después dio electricidad y hoy es vivienda.'
   ],
   alambres: [
     'Su nombre viene de las alambradas de los corrales de ganado que había junto al Teso de la Feria y el Cordel de Merinas.',
@@ -606,11 +613,16 @@ export const LEYENDAS = {
   ],
   arrabal: [
     'El Lazarillo y el verraco: en el primer capítulo de la novela, el ciego manda al niño acercar la oreja al toro de piedra del Puente Romano y le golpea la cabeza contra él.',
-    'La víspera de Pentecostés, la romería de la Virgen de la Encarnación sale de aquí; una semana después le toca a la Virgen de la Salud, en Tejares.'
+    'La víspera de Pentecostés, la romería de la Virgen de la Encarnación sale de aquí; una semana después le toca a la Virgen de la Salud, en Tejares.',
+    // Fuente: https://es.wikipedia.org/wiki/Puente_romano_de_Salamanca
+    'La creencia popular decía que el puente lo levantó Hércules y que Trajano lo reconstruyó.',
+    'Se cuenta que un pastor dio con los restos del puente antiguo al ver a un toro rascarse contra un árbol en la orilla. Por eso el escudo de la ciudad lleva el puente, el toro y el árbol.'
   ],
   tejares: [
     'Lunes de Aguas: según la tradición, en Cuaresma las mujeres de la mancebía eran desterradas a Tejares; el lunes tras la Pascua los estudiantes cruzaban a recibirlas y merendaban hornazo. Así nació la fiesta.',
-    'El Lazarillo dice que nació «dentro del río Tormes», en una aceña de Tejares donde trabajaba su padre.'
+    'El Lazarillo dice que nació «dentro del río Tormes», en una aceña de Tejares donde trabajaba su padre.',
+    // Fuente: https://es.wikipedia.org/wiki/Tejares
+    'Según la tradición, la Virgen de la Salud apareció en una gruta junto al puente de la Salud.'
   ],
   sanesteban: [
     'La Cueva de Salamanca: en la cripta de la antigua iglesia de San Cebrián, el diablo enseñaba magia a grupos de siete alumnos durante siete años, y uno debía quedarse a su servicio. El marqués de Villena escapó, pero perdió su sombra.'

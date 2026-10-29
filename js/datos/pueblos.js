@@ -398,7 +398,13 @@ export const PUEBLOS = {
     cur: [
       'Su presa, con unos 2.400 GWh al año, es la de mayor producción eléctrica de España.',
       'El cañón del Duero en los Arribes supera los 100 km: uno de los mayores de la península.',
-      'En la presa se rodó Doctor Zhivago (1965), y en las galerías de la central, La cabina (1972).'
+      'En la presa se rodó Doctor Zhivago (1965), y en las galerías de la central, La cabina (1972).',
+      'Desde las visitas de Unamuno, entre 1894 y 1902, se la conoce como «el corazón de Las Arribes».',
+      'En 1590, por decreto de Felipe II, se asentaron aquí 23 familias moriscas.',
+      'La Bufa de San Antón es la única mascarada de invierno que queda en la provincia.',
+      'El convento de La Verde se fundó en 1270. En él se lee: «Entre la vida y la muerte no hay espacio ninguno».',
+      'Cuenta la tradición que Santa Marina, perseguida por los musulmanes, pidió a una peña que se abriera para esconderse; allí se levantó después un altar.',
+      'Del Picón de Felipe se cuentan dos historias: que un vecino se arrojó desde él por amor a una novia portuguesa, o que quería derribar la roca para cruzar el Duero a Portugal.'
     ],
     mon: {
       n: 'Presa de Aldeadávila',
@@ -448,7 +454,10 @@ export const PUEBLOS = {
   'Linares de Riofrío': {
     foto: [
       'img/pueblo-linares.jpg',
-      'Linares de Riofrío. Foto: Mikelzubi · CC BY-SA 3.0 · Wikimedia Commons'
+      'Linares de Riofrío. Foto: Mikelzubi · CC BY-SA 3.0 · Wikimedia Commons',
+      'Su «cal morena» se usó en la argamasa de la Plaza Mayor de Salamanca.',
+      'Cultiva fresas y a principios de junio celebra su fiesta de la fresa.',
+      'En tiempos de Madoz tenía cinco molinos harineros. A sus vecinos se les llama linarejos.'
     ],
     cur: [
       'En 1959 todavía funcionaban 15 hornos de cal.',
@@ -545,7 +554,10 @@ export const PUEBLOS = {
     cur: [
       'Forma parte del Parque Natural de Arribes del Duero, declarado en 2002.',
       'Hay restos vetones en los castros de Moncalvo y de la Escala.',
-      'Sus fiestas, con toros, son por San Juan, el 24 de junio.'
+      'Sus fiestas, con toros, son por San Juan, el 24 de junio.',
+      'Su nombre viene de «Finoiosa», el lugar de los hinojos.',
+      'El baile de la bandera recuerda cómo el pueblo se libró de su señorío en el siglo XV; a principios de agosto se celebra la fiesta de El Feudal.',
+      'A principios de mayo tiene feria del queso, y el 24 de diciembre los quintos encienden una hoguera.'
     ],
     mon: {
       n: 'Ermita del Santísimo Cristo de la Misericordia',
@@ -604,7 +616,11 @@ export const PUEBLOS = {
     cur: [
       'Su presa sobre el Duero se hizo entre 1950 y 1956.',
       'El poblado que se levantó para los trabajadores quedó abandonado y hoy es un complejo turístico.',
-      'Desde 2017 tiene la ruta de las Lavanderas, que acaba en el antiguo lavadero, hoy jardín botánico.'
+      'Desde 2017 tiene la ruta de las Lavanderas, que acaba en el antiguo lavadero, hoy jardín botánico.',
+      'A finales del siglo XII Alfonso IX la entregó a la Orden de Santiago, y perteneció al obispado de León de Santiago hasta 1873.',
+      'En el censo de 1842 aparece como «Sahucelle».',
+      'Su iglesia parroquial guarda una Inmaculada de Pedro de Mena.',
+      'Por San Lorenzo, su patrón, el 10 de agosto, se baila el paleo.'
     ],
     mon: {
       n: 'Presa de Saucelle',
@@ -737,7 +753,9 @@ export const PUEBLOS = {
   'Fuentes de Oñoro': {
     foto: [
       'img/pueblo-fuentes.jpg',
-      'Estación de Fuentes de Oñoro. Foto: Antero Pires · CC BY-SA 2.0 · Wikimedia Commons'
+      'Estación de Fuentes de Oñoro. Foto: Antero Pires · CC BY-SA 2.0 · Wikimedia Commons',
+      'Su escudo, de 1955, lleva una cruz de Santa Bárbara, un león, un castillo por la victoria sobre Napoleón y tres árboles donde, según se cuenta, fusilaron a enemigos.',
+      'Es el principal paso fronterizo entre España y Portugal y tuvo una aduana importante.'
     ],
     cur: [
       'Del 3 al 5 de mayo de 1811, Wellington frenó aquí al mariscal Masséna, que intentaba socorrer a la guarnición francesa cercada en Almeida.',
@@ -875,7 +893,10 @@ export const PUEBLOS = {
   Villoria: {
     foto: [
       'img/pueblo-villoria.jpg',
-      'Ayuntamiento de Villoria. Foto: Villavillavilla123456 · CC BY-SA 4.0 · Wikimedia Commons'
+      'Ayuntamiento de Villoria. Foto: Villavillavilla123456 · CC BY-SA 4.0 · Wikimedia Commons',
+      'Su nombre podría venir del latín «Villa Aurea», villa de oro, o de una propietaria llamada Oria.',
+      'En junio de 1812 los franceses le prendieron fuego, según recoge Madoz.',
+      'Su iglesia de San Pedro, de los siglos XIII al XV, conserva el ábside románico y es Bien de Interés Cultural desde 1993.'
     ],
     cur: [
       'Fue cabeza del cuarto de Villoria, una de las divisiones de la tierra de Salamanca en el Reino de León.',
@@ -990,7 +1011,10 @@ export const PUEBLOS = {
     cur: [
       'En 1192 Alfonso IX de León donó Vilvestre y su término al arzobispado de Santiago.',
       'Se fortificó entre la segunda mitad del siglo XII y comienzos del XIII para defender la frontera con Portugal. Su castillo quedó en ruinas en la guerra de Restauración portuguesa (1640–1668).',
-      'Celebra a la Virgen del Castillo el 17 de mayo y sus fiestas de toros el penúltimo fin de semana de agosto.'
+      'Celebra a la Virgen del Castillo el 17 de mayo y sus fiestas de toros el penúltimo fin de semana de agosto.',
+      'En 1481 Isabel la Católica mandó ejecutar a Pedro de Miranda, señal de que aquí vivía una comunidad judía importante.',
+      'Su escudo lleva un olivo por sus olivares, bandas azules por el Duero y la cruz de Santiago por su pasado compostelano.',
+      'En el censo de 1940 aparece como «Silvestre». En 1850 tenía 1.272 habitantes; en 2025, 374.'
     ],
     mon: {
       n: 'Iglesia de Nuestra Señora de la Asunción',
@@ -1005,7 +1029,11 @@ export const PUEBLOS = {
     cur: [
       'El Tratado de Alcañices, de 1297, llevó la raya al Águeda y convirtió en frontera el paso entre La Fregeneda y Barca de Alba.',
       'En 1811, en la Guerra de la Independencia, Wellington puso aquí su cuartel.',
-      'El tren de La Fuente de San Esteban a Barca de Alba abrió en 1887 y cerró en 1985. Para cruzar los arribes del Águeda hicieron falta 20 túneles y 12 puentes; desde 2019 se puede recorrer a pie: es el Camino de Hierro.'
+      'El tren de La Fuente de San Esteban a Barca de Alba abrió en 1887 y cerró en 1985. Para cruzar los arribes del Águeda hicieron falta 20 túneles y 12 puentes; desde 2019 se puede recorrer a pie: es el Camino de Hierro.',
+      'En los documentos antiguos aparece como «La Frexeneda», que viene de «La Fresneda», bosque de fresnos.',
+      'El muelle de Vega Terrón, a 133 metros, es el punto más bajo de Castilla y León.',
+      'En el arroyo de las Almas, junto a la unión del Águeda y el Duero, hay al menos 600 grabados rupestres, algunos del Paleolítico Superior.',
+      'Fernando II de León la cedió en el siglo XII a la Orden del Temple. Las tropas portuguesas la saquearon en 1664 y 1707.'
     ],
     mon: {
       n: 'Iglesia parroquial',
@@ -1033,7 +1061,10 @@ export const PUEBLOS = {
   Monleón: {
     foto: [
       'img/pueblo-monleon.jpg',
-      'Castillo de Monleón. Foto: Hovallef · CC BY-SA 4.0 · Wikimedia Commons'
+      'Castillo de Monleón. Foto: Hovallef · CC BY-SA 4.0 · Wikimedia Commons',
+      'El alcalde Rodrigo Maldonado fue apresado por Fernando el Católico por acuñar moneda sin permiso; su mujer resistió en el castillo hasta rendirse, y se les perdonó la vida.',
+      'El romance «Los mozos de Monleón», recogido por Dámaso Ledesma en 1907, lo arregló García Lorca para canto y piano y lo grabó con La Argentinita.',
+      'Por San Blas, el 3 de febrero, se bendicen las gargantillas, y por San Jorge, el 23 de abril, el santo sube a las eras a bendecir los campos.'
     ],
     cur: [
       'En 1199 Alfonso IX lo hizo villa con concejo propio; en 1248 Fernando III se lo quitó y lo sumó al de Salamanca.',
@@ -1054,11 +1085,14 @@ export const PUEBLOS = {
   'Puente del Congosto': {
     foto: [
       'img/pueblo-congosto.jpg',
-      'Castillo y puente viejo de Puente del Congosto. Foto: David Perez · CC BY 3.0 · Wikimedia Commons'
+      'Castillo y puente viejo de Puente del Congosto. Foto: David Perez · CC BY 3.0 · Wikimedia Commons',
+      'En 1539 Carlos V dio la villa al duque de Alba para ayudar a pagar sus campañas contra los otomanos.',
+      'Pedro de la Gasca, que pacificó el Perú para Carlos V, se crio en su castillo; lo recuerda una placa en la muralla.',
+      'Su verraco vetón está en la plaza de los Dados, frente al Ayuntamiento. A sus vecinos se les llama chapuceros.'
     ],
     cur: [
       'Enrique III lo donó a Gil González Dávila el 2 de noviembre de 1393.',
-      'Isabel la Católica estaba en su castillo en 1497 cuando le llegó la noticia de la muerte de su hijo.',
+      'Según la tradición, Isabel la Católica estaba en su castillo en 1497 cuando supo de la muerte de su hijo; el historiador Carlos Sánchez cree que quienes se alojaron fueron Margarita de Austria y la infanta Isabel.',
       'Su puente sobre el Tormes es probablemente de los siglos XII o XIII y guardaba el camino de Ávila a Ciudad Rodrigo. En 1809 las tropas francesas ocuparon el castillo durante dos años.'
     ],
     mon: {
