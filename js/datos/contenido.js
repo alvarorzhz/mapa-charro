@@ -168,7 +168,7 @@ export const CURIOSIDADES = {
   ],
   prosperidad: [
     'Su nombre imita al de un ensanche madrileño y recuerda a quienes llegaban de los pueblos buscando prosperar. Esteban Corral, que hizo fortuna en Argentina, parceló los terrenos y bautizó calles como México, Perú o Argentina.',
-    'Nació a principios del siglo XX en Cuatro Caminos, entre huertas que bajaban hasta el río. Sus vecinos trabajaban en la fábrica de fertilizantes Mirat, el ferrocarril, curtidurías e imprentas.',
+    'Está en Cuatro Caminos, donde las huertas bajaban hasta el río. Sus primeros vecinos trabajaban en la fábrica de fertilizantes Mirat, el ferrocarril, curtidurías e imprentas.',
     // Fuente: https://www.ub.edu/geocrit/sn/sn-146(139).htm
     'Entre 1919 y 1922 se levantaron, junto al Depósito de Aguas de 1917, casas de una planta para unos 250 vecinos: fue el germen del barrio.',
     // Fuente: https://www.elespanol.com/castilla-y-leon/region/20180311/prosperidad-camino-agua-progreso/291221741_0.html
@@ -180,29 +180,27 @@ export const CURIOSIDADES = {
     'En 1979 se propuso hacer mil viviendas en la huerta de los jesuitas. El Ayuntamiento la compró por 100 millones de pesetas y hoy es el parque de los Jesuitas: unas 60.000 personas fueron a verlo cuando se inauguró.'
   ],
   rollo: [
-    'Lo parceló el mismo contratista que después creó la Prosperidad, Esteban Corral y Castro.',
     'Aquí está el Museo del Comercio y la Industria, con la antigua marca de la fábrica Mirat en su fachada.',
     // Fuente: https://lacronicadesalamanca.com/331518-el-rollo-el-barrio-con-jurisdiccion-propia/
     'El nombre viene del rollo de justicia, la columna de piedra que marcaba la jurisdicción de la ciudad. Al levantar la Plaza Mayor se trasladó aquí, y el sitio pasó a llamarse Alto del Rollo.',
     // Fuente: https://lacronicadesalamanca.com/331518-el-rollo-el-barrio-con-jurisdiccion-propia/
-    'En 1793 se arregló como paseo el camino desde la Puerta de Toro hasta el Alto del Rollo: el Paseo del Rollo, que hoy es la avenida de los Comuneros.',
+    'En 1793 se arregló como paseo el camino desde la Puerta de Toro hasta el Alto del Rollo: el Paseo del Rollo. La avenida se llamó Rodríguez San Pedro desde 1906, Hermanos Pérez Almeida desde 1942 y avenida de los Comuneros desde 1980.',
     // Fuente: https://salamancartvaldia.es/noticia/2025-12-24-memorias-del-rollo-382647
-    '«Las Pajas» era como llamaban los vecinos a la carretera de Cabrerizos, con establos, un campo de fútbol y luego una gran fábrica de zapatillas. Casi todas las familias del barrio trabajaban en la RENFE.',
+    '«Las Pajas» era como llamaban los vecinos a la carretera de Cabrerizos, con establos y un campo de fútbol. Casi todas las familias del barrio trabajaban en la RENFE.',
     // Fuente: https://lacronicadesalamanca.com/331518-el-rollo-el-barrio-con-jurisdiccion-propia/
-    'Su avenida se ha llamado Rodríguez San Pedro desde 1906, Hermanos Pérez Almeida desde 1942 y avenida de los Comuneros desde 1980.',
-    'Esteban Corral compró los terrenos en 1918, los partió en diecisiete parcelas a unas cinco pesetas el metro cuadrado y abrió las calles Ecuador, Bolivia y Chile.',
+    'Esteban Corral y Castro, el mismo que después parceló la Prosperidad, compró los terrenos en 1918, los partió en diecisiete parcelas a unas cinco pesetas el metro cuadrado y abrió las calles Ecuador, Bolivia y Chile.',
     'La fábrica de zapatillas Tejisa, en la calle Colombia, llegó a dar trabajo a más de mil personas. Cuando Jesús Málaga llegó a la alcaldía, taxis, ambulancias y repartidores de butano se negaban a entrar por el barro.'
   ],
   puenteladrillo: [
-    'Su nombre viene del puente de ladrillo que cruza las vías del tren hacia Madrid. Hace casi 150 años lo levantaron familias de ferroviarios junto a los talleres de reparación.',
-    'La iglesia de la Asunción la construyeron los vecinos sin licencia municipal. El alcantarillado y el agua corriente no llegaron hasta los años setenta, y el primer supermercado, en 1993.',
+    'Su nombre viene del puente de ladrillo que cruza las vías del tren hacia Madrid. El barrio lo levantaron familias de ferroviarios junto a los talleres de reparación.',
+    'El alcantarillado y el agua corriente no llegaron hasta los años setenta, y el primer supermercado, en 1993.',
     // Fuente: https://www.lagacetadesalamanca.es/salamanca/el-barrio-salmantino-que-nacio-ligado-al-ferrocarril-HN7168449
     'El 18 de diciembre de 1936 diez aviones bombardearon la estación. Una bomba dirigida al puente no lo alcanzó, pero mató a tres vecinos de una casa junto a la vía.',
     // Fuente: https://www.lagacetadesalamanca.es/salamanca/el-barrio-salmantino-que-nacio-ligado-al-ferrocarril-HN7168449
     'Muchos vecinos se despertaban con «la burra», la bocina de vapor de los talleres de Renfe. El puente se hizo hacia 1889 con ladrillo de La Cerámica Salmantina.',
     // Fuente: https://lacronicadesalamanca.com/334730-los-dos-puentes-de-puente-ladrillo/
     'El puente servía también para que las ovejas cruzaran las vías en la trashumancia.',
-    'El cura Heliodoro Morales levantó la parroquia en terrenos de Renfe sin licencia y dejó una deuda de cien mil pesetas. Tenía un perro que hacía de monaguillo en misa.',
+    'El cura Heliodoro Morales levantó con los vecinos la iglesia de la Asunción en terrenos de Renfe, sin licencia, y dejó una deuda de cien mil pesetas. Tenía un perro que hacía de monaguillo en misa.',
     'Unos 700 vecinos, mujeres y niños incluidos, cavaron las zanjas de sus dos primeras fuentes, la «Virgen María» y «La Misión». Al campo de fútbol lo llamaban «La Ferro».'
   ],
   carmelitas: [
@@ -257,15 +255,12 @@ export const CURIOSIDADES = {
   ],
   capuchinos: [
     'Antes se llamaba La Charca-Capuchinos, por una pequeña poza que había aquí, entre los caminos de Toro y Zamora.',
-    'Creció desde 1989 con el hipermercado Pryca, el actual Carrefour, y casi todas sus fachadas son de piedra de Villamayor.',
     // Fuente: https://www.lagacetadesalamanca.es/hemeroteca/capuchinos-tenia-calles-barro-carrefour-OTGS256484
-    'El Pryca abrió el 26 de octubre de 1989 con más de 8.000 m² y 266 trabajadores. Su nombre juntaba las palabras «precio» y «calidad».',
+    'Creció alrededor del hipermercado Pryca, hoy Carrefour, que abrió el 26 de octubre de 1989 con más de 8.000 m² y 266 trabajadores; su nombre juntaba «precio» y «calidad». Casi todas sus fachadas son de piedra de Villamayor.',
     // Fuente: https://www.lagacetadesalamanca.es/hemeroteca/capuchinos-tenia-calles-barro-carrefour-OTGS256484
     'Antes de los bloques había casas bajas, calles de barro, la fuente del Cántaro y la vaquería Balta, adonde se iba a por leche. Las calles nuevas tomaron nombres de pueblos de Castilla y León.',
     // Fuente: https://www.diocesisdesalamanca.com/noticias/25-aniversario-de-la-parroquia-nuestra-senora-de-lourdes/
     'Su iglesia, en la calle Riaño, es la única de la diócesis dedicada a la Virgen de Lourdes. Es octogonal, y bajo su primera piedra, de 1997, se enterró una urna con monedas y los periódicos del día.',
-    // Fuente: https://www.lagacetadesalamanca.es/hemeroteca/capuchinos-tenia-calles-barro-carrefour-OTGS256484
-    'A principios de los noventa, sus fiestas, con cabezudos, charangas y orquestas, salían adelante con solo 75.000 pesetas.',
     // Fuente: https://www.elespanol.com/castilla-y-leon/region/salamanca/20211119/barrio-capuchinos-salamanca-piedra-dorada-expansion-urbana/627687731_0.html
     'Fue campo de juego de los niños de Blanco y Pizarrales, y hoy acoge el instituto García Bernalt, que se quedó pequeño en El Rollo.'
   ],
@@ -317,11 +312,7 @@ export const CURIOSIDADES = {
     // Fuente: https://noticiascyl.elespanol.com/t/1751829/vistahermosa-mirador-salamanca-barrio-dormitorio
     'El pueblo vivió años de esplendor gracias a la fábrica de un empresario catalán, con cine a diario, biblioteca y regalos de Reyes para los hijos de los obreros.',
     // Fuente: https://www.lagacetadesalamanca.es/salamanca/el-poblado-de-vistahermosa-una-decada-despues-de-su-desalojo-ED2140745
-    'Al sur estaba el poblado de una granja, con iglesia, Correos y escuela. Sus últimas casas se derribaron el 28 de mayo de 2013; solo quedó en pie la iglesia.',
-    // Fuente: https://www.lagacetadesalamanca.es/salamanca/gran-riada-chamberi-vecinos-atrincheran-horas-capilla-20240120202822-nt.html
-    'La tormenta del Corpus de 1976 empezó con más fuerza aquí, y el agua bajó hasta Los Alambres convirtiendo su calle Mayor en un río.',
-    // Fuente: https://www.elespanol.com/castilla-y-leon/region/salamanca/20250226/barrio-vistahermosa-salamanca-moderna-plaza-alegre-colorida-pedian-vecinos/927157515_0.html
-    'Tras años de pedirla, en 2025 el Ayuntamiento proyectó la plaza que querían los vecinos: 7.500 m² en tres terrazas, con grada para 300 personas y circuito de pump track.'
+    'Al sur estaba el poblado de una granja, con iglesia, Correos y escuela. Sus últimas casas se derribaron el 28 de mayo de 2013; solo quedó en pie la iglesia.'
   ],
   vega: [
     'Su nombre honra a la Virgen de la Vega, patrona de Salamanca. Se inauguró el 7 de mayo de 1954 con unas 650 viviendas sociales.',
@@ -409,10 +400,8 @@ export const CURIOSIDADES = {
     // Fuente: https://es.wikipedia.org/wiki/Carrascal_de_Barregas
     'Su término está partido en cinco islas separadas por tierras de los municipios vecinos.',
     'En su término está el antiguo Sanatorio Antituberculoso de los Montalvos, impulsado por el doctor Filiberto Villalobos: primera piedra en 1935 y 13 años de obras. Se anunció como el mayor de España y hoy es el Hospital de los Montalvos.',
-    // Fuente: https://salamancamedica.es/el-hospital-de-los-montalvos/
-    'El sanatorio lo proyectó Rafael Bergamín, que se exilió en Venezuela tras la guerra. Lo terminó Genaro de No, y al final tuvo 601 camas.',
-    // Fuente: https://www.lagacetadesalamanca.es/salamanca/el-gobierno-eliminara-los-carteles-en-la-n-620-que-anuncian-el-hospital-martinez-anido-CN8384127
-    'Abrió en 1948 con el nombre del militar Martínez Anido. Se llama Los Montalvos desde 2001, aunque en 2021 dos señales de la N-620 aún conservaban el nombre antiguo.',
+    // Fuentes: https://salamancamedica.es/el-hospital-de-los-montalvos/ y https://www.lagacetadesalamanca.es/salamanca/el-gobierno-eliminara-los-carteles-en-la-n-620-que-anuncian-el-hospital-martinez-anido-CN8384127
+    'El sanatorio lo proyectó Rafael Bergamín, que se exilió en Venezuela tras la guerra. Lo terminó Genaro de No, y al final tuvo 601 camas. Abrió en 1948 con el nombre del militar Martínez Anido, y se llama Los Montalvos desde 2001.',
     // Fuente: https://carrascaldebarregas.com/historia-del-municipio/
     'El sanatorio tuvo cementerio propio: entre 1950 y 1985 se enterró allí a 1.071 personas. Su fachada luce la cruz de Lorena, símbolo de la lucha contra la tuberculosis.'
   ],
@@ -461,17 +450,14 @@ export const CURIOSIDADES = {
   ],
   carmen: [
     'Nació para sacar de las chabolas a vecinos de Pizarrales: en 1948 el Ayuntamiento creó el Patronato Benéfico Nuestra Señora del Carmen y en 1950 entregó las primeras casas, unifamiliares, del arquitecto Fernando Población.',
-    'Se hizo en tres fases, de 118, 230 y 222 viviendas. La segunda estuvo sin servicios mínimos hasta los años sesenta.',
     // Fuente: https://es.wikipedia.org/wiki/El_Carmen_(Salamanca)
     'Tiene dos mitades con nombre propio: el Carmen Blanco, de casas adosadas, y el Carmen Rojo, de bloques de ladrillo visto.',
     // Fuente: https://www.consejosocialbarriospbc.es/barrio-el-carmen/
-    'Las 118 primeras casas las levantaron sus futuros vecinos con sus manos: ese trabajo contó como el 10 % del coste; el Ayuntamiento puso el 30 % y el Instituto Nacional de la Vivienda, el 60 %.',
+    'Se hizo en tres fases, de 118, 230 y 222 viviendas. Las 118 primeras casas las levantaron sus futuros vecinos con sus manos: ese trabajo contó como el 10 % del coste; el Ayuntamiento puso el 30 % y el Instituto Nacional de la Vivienda, el 60 %.',
     // Fuente: https://www.consejosocialbarriospbc.es/barrio-el-carmen/
-    'En la segunda fase, la Obra Sindical del Hogar convirtió las 230 viviendas previstas en 452 «miniviviendas» de peores materiales.',
+    'En la segunda fase, la Obra Sindical del Hogar convirtió las 230 viviendas previstas en 452 «miniviviendas» de peores materiales, que estuvieron sin servicios mínimos hasta los años sesenta.',
     // Fuente: https://www.consejosocialbarriospbc.es/barrio-el-carmen/
-    'Como faltaban escuelas para tanto niño, el Movimiento Social Cristiano levantó dos detrás del Carmen Rojo.',
-    // Fuente: https://es.wikipedia.org/wiki/El_Carmen_(Salamanca)
-    'También son del Carmen los ocho «bloques de Nicar», entre la calle Linares y la avenida de Portugal.'
+    'Como faltaban escuelas para tanto niño, el Movimiento Social Cristiano levantó dos detrás del Carmen Rojo.'
   ],
   chamberi: [
     'Nació a principios del siglo XX dentro del término de Tejares, con casas levantadas a mano en solares que vendía un hombre apodado «el zamorano». En 1969 ya dependía de Salamanca.',
@@ -576,9 +562,7 @@ export const CURIOSIDADES = {
     // Fuente: https://salamancartvaldia.es/noticia/2025-11-06-el-montalvo-i-compromiso-servicios-y-reivindicaciones-para-seguir-avanzando-378910
     'Pasa por ser el polígono más antiguo de la provincia, y lo gestionan a medias los ayuntamientos de Salamanca y Carbajosa de la Sagrada.',
     // Fuente: https://poligonoelmontalvo.com/quienes-somos/
-    'Sus empresarios se organizaron pronto: su asociación se fundó el 27 de abril de 1972.',
-    // Fuente: https://es.wikipedia.org/wiki/L%C3%ADnea_12_(Salamanca_de_Transportes)
-    'La línea 12 del autobús urbano nació en 2003 entre Barrio Blanco y San José, y en 2006 se alargó hasta El Montalvo II.'
+    'Sus empresarios se organizaron pronto: su asociación se fundó el 27 de abril de 1972.'
   ]
 };
 // Leyendas: { idZona: [párrafo, ...] }

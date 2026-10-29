@@ -1,5 +1,17 @@
 [
   {
+    "version": "2.20.2",
+    "fecha": "2026-10-29",
+    "titulo": "Fichas de barrio sin repeticiones",
+    "usuario": [
+      "Repasamos los barrios con más curiosidades y juntamos las que contaban lo mismo dos veces: Esteban Corral y la avenida en El Rollo, la iglesia y el puente en Puente Ladrillo, el Pryca en Capuchinos, las fases de obra en El Carmen y el sanatorio en Carrascal.",
+      "Quitamos cinco datos menores o que se iban a quedar viejos: el presupuesto de las fiestas de Capuchinos, las señales antiguas de la N-620, la plaza proyectada en Vistahermosa, la línea 12 del bus en Los Montalvos y los bloques de Nicar. La tormenta del Corpus de 1976 se queda en Los Alambres y Chamberí."
+    ],
+    "tecnico": [
+      "contenido.js: curiosidades fusionadas o quitadas en rollo, puenteladrillo, prosperidad, carmen, capuchinos, carrascal, vistahermosa y montalvos. Las que se juntan conservan sus fuentes (en Carrascal, «// Fuentes: … y …»)."
+    ]
+  },
+  {
     "version": "2.20.1",
     "fecha": "2026-10-29",
     "titulo": "Más leyendas del Arrabal y más pueblos de las Arribes",
@@ -120,19 +132,6 @@
     ],
     "tecnico": [
       "Quitados el botón #pkb y su manejador de mapa-fondo.js. La capa #pk se sigue dibujando y estilos.css la esconde con .mw.fondo-real; las pruebas lo comprueban al encender y apagar el fondo real. parques.js se queda: lo usan la capa y la ficha de zona."
-    ]
-  },
-  {
-    "version": "2.16.2",
-    "fecha": "2026-10-25",
-    "titulo": "Datos como módulos",
-    "usuario": [
-      "Orden por dentro para que la app sea más fácil de cuidar; al usarla no cambia nada."
-    ],
-    "tecnico": [
-      "Los 23 archivos de js/datos/ son módulos (export const). Los importa js/datos-globales.js, que los deja en globalThis para el resto de la app; los scripts clásicos llevan defer para ejecutarse detrás, en el mismo orden.",
-      "version.js pone el ?v=N también en los imports del puente y mete los datos en la lista de sw.js; comprobar-datos vigila que cada archivo de datos esté importado con la versión buena y declare con export const.",
-      "Las herramientas leen los datos con sinExport (herramientas/datos.js) y los generadores escriben export const. ESLint trata los datos como módulos y sigue avisando de nombres repetidos."
     ]
   }
 ]

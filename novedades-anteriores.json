@@ -1,5 +1,18 @@
 [
   {
+    "version": "2.16.2",
+    "fecha": "2026-10-25",
+    "titulo": "Datos como módulos",
+    "usuario": [
+      "Orden por dentro para que la app sea más fácil de cuidar; al usarla no cambia nada."
+    ],
+    "tecnico": [
+      "Los 23 archivos de js/datos/ son módulos (export const). Los importa js/datos-globales.js, que los deja en globalThis para el resto de la app; los scripts clásicos llevan defer para ejecutarse detrás, en el mismo orden.",
+      "version.js pone el ?v=N también en los imports del puente y mete los datos en la lista de sw.js; comprobar-datos vigila que cada archivo de datos esté importado con la versión buena y declare con export const.",
+      "Las herramientas leen los datos con sinExport (herramientas/datos.js) y los generadores escriben export const. ESLint trata los datos como módulos y sigue avisando de nombres repetidos."
+    ]
+  },
+  {
     "version": "2.16.1",
     "fecha": "2026-10-25",
     "titulo": "Más curiosidades",
