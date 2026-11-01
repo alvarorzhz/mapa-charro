@@ -15,8 +15,16 @@ export const CURIOSIDADES = {
     'La Casa de las Conchas lleva más de 300 conchas en su fachada, y sus sótanos sirvieron de cárcel para estudiantes castigados.'
   ],
   sanvicente: [
-    'Es la cuna de la ciudad: en este cerro sobre el Tormes se asentaron los vetones, y su castro fue el que asedió Aníbal en el 220 antes de Cristo.',
-    'Debe su nombre al antiguo convento benedictino de San Vicente. En la Guerra de la Independencia los franceses lo usaron de cuartel, quedó en ruinas y la zona pasó a llamarse Barrio de los Caídos.',
+    // Fuente: https://es.wikipedia.org/wiki/Parque_Arqueol%C3%B3gico_del_Cerro_de_San_Vicente_(Salamanca)
+    'Es la cuna de la ciudad: aquí nació en el siglo VII antes de Cristo el primer poblado estable. Hacia el siglo IV casi todos se mudaron al teso de las Catedrales, donde levantaron el castro de Salmantica.',
+    // Fuente: https://es.wikipedia.org/wiki/Parque_Arqueol%C3%B3gico_del_Cerro_de_San_Vicente_(Salamanca)
+    'En las excavaciones de 2021 apareció un amuleto de la diosa egipcia Hathor, junto a otras piezas egipcias y fenicias: ya llegaban aquí cosas del otro lado del Mediterráneo.',
+    // Fuente: https://salamanca.es/en/see/monuments/laderas-del-cerro-de-san-vicente
+    'Sobre las ruinas del monasterio surgió a finales del siglo XIX el barrio de Los Milagros. En 1949, al hacer el Colegio Mayor de Guadalupe, aparecieron los primeros restos de la Edad del Hierro.',
+    // Fuente: https://salamanca.es/en/see/monuments/laderas-del-cerro-de-san-vicente
+    'Sus laderas fueron huerta hasta los años ochenta. Desde 2022 son un parque botánico con almendros, membrillos, huertos urbanos y una noria con su alberca.',
+    // Fuente: https://es.wikipedia.org/wiki/Parque_Arqueol%C3%B3gico_del_Cerro_de_San_Vicente_(Salamanca)
+    'Debe su nombre al monasterio benedictino de San Vicente, la primera fundación monástica de la ciudad. Los franceses lo hicieron fortín en 1809 y quedó destruido en el sitio de 1812.',
     'Aquí están el Colegio del Arzobispo Fonseca, del siglo XVI, y el Palacio de Congresos de 1992, levantado donde estuvo el antiguo «barrio chino». Junto a él hay una estatua del cantaor Rafael Farina, de Agustín Casillas.'
   ],
   sancti: [
@@ -446,7 +454,11 @@ export const CURIOSIDADES = {
     // Fuente: https://www.elespanol.com/castilla-y-leon/region/salamanca/20211126/arrabal-transcurre-historia-literaria-salamanca/629437869_0.html
     'El Parador de Turismo ocupa el antiguo espacio cercado del Teso, donde las reses esperaban a ser vendidas o sacrificadas.',
     // Fuente: https://www.lagacetadesalamanca.es/hemeroteca/teso-feria-AEGS184224
-    'Enrique IV concedió a Salamanca la feria de septiembre en 1467; en junio se celebraba otra, la del Teso o de San Juan.'
+    'Enrique IV concedió a Salamanca la feria de septiembre en 1467; en junio se celebraba otra, la del Teso o de San Juan.',
+    // Fuente: https://salamancartvaldia.es/noticia/2020-02-17-el-teso-de-la-feria-antiguo-escaparate-ganadero-37316
+    'Ya lo citaba Covarrubias en 1611: «un campo en Salamanca, de la otra parte de la puente, donde se hace la feria famosa». Según él, se llamaba así porque nunca se ara y está «tiesso».',
+    // Fuente: https://salamancartvaldia.es/noticia/2020-02-17-el-teso-de-la-feria-antiguo-escaparate-ganadero-37316
+    '«Teso» es una palabra muy leonesa: una loma que se alza unas decenas de metros. Desde aquí se ven de frente el teso de las Catedrales y, a los lados, los de San Vicente y San Cristóbal.'
   ],
   carmen: [
     'Nació para sacar de las chabolas a vecinos de Pizarrales: en 1948 el Ayuntamiento creó el Patronato Benéfico Nuestra Señora del Carmen y en 1950 entregó las primeras casas, unifamiliares, del arquitecto Fernando Población.',
@@ -486,7 +498,11 @@ export const CURIOSIDADES = {
     // Fuente: https://www.salamanca24horas.com/local/salamanca-suma-nuevo-balcon-urbano-inauguracion-mirador-tormes
     'En la calle Diego Pisador se abrió en 2026 un mirador de la Ruta de los Miradores, con la vista de la ciudad que sale en muchas postales.',
     // Fuente: https://es.wikipedia.org/wiki/Diego_Pisador
-    'Esa calle recuerda a Diego Pisador, vihuelista nacido en Salamanca hacia 1510 que publicó en 1552 un Libro de música de vihuela dedicado a Felipe II.'
+    'Esa calle recuerda a Diego Pisador, vihuelista nacido en Salamanca hacia 1510 que publicó en 1552 un Libro de música de vihuela dedicado a Felipe II.',
+    // Fuente: https://salamancartvaldia.es/noticia/2020-10-25-el-matadero-municipal-en-la-margen-izquierda-del-rio-tormes-19208
+    'En 1891 se abrió en esta orilla del Tormes el Matadero Municipal. Con él se acabó la costumbre de hacer las matanzas en plena calle.',
+    // Fuente: https://www.salamancaenelayer.com/2026/06/la-evolucion-del-barrio-san-jose.html
+    'Antes de llamarse El Tormes fue el «barrio del Matadero»: sus casas crecieron alrededor del matadero desde los años veinte. El barrio actual nació en 1981.'
   ],
   alcaldes: [
     // Fuente: https://avlosalcaldes.org/quienes-somos/
@@ -562,7 +578,11 @@ export const CURIOSIDADES = {
     // Fuente: https://salamancartvaldia.es/noticia/2025-11-06-el-montalvo-i-compromiso-servicios-y-reivindicaciones-para-seguir-avanzando-378910
     'Pasa por ser el polígono más antiguo de la provincia, y lo gestionan a medias los ayuntamientos de Salamanca y Carbajosa de la Sagrada.',
     // Fuente: https://poligonoelmontalvo.com/quienes-somos/
-    'Sus empresarios se organizaron pronto: su asociación se fundó el 27 de abril de 1972.'
+    'Sus empresarios se organizaron pronto: su asociación se fundó el 27 de abril de 1972.',
+    // Fuente: https://salamancartvaldia.es/noticia/2025-11-06-salamanca-un-tablero-industrial-con-una-treintena-de-poligonos-379716
+    'Hoy tiene tres fases, Montalvo I, II y III, con más de 135 hectáreas y más de 600 empresas, sobre todo de logística, fábricas, comercio y servicios.',
+    // Fuente: https://noticiassalamanca.com/cultura/escultura-poligono-industrial-el-montalvo-ii/
+    'El Montalvo II lo inauguró Juan José Lucas, presidente de la Junta, el 13 de noviembre de 1991. Lo recuerda una escultura de piedra colocada en 1993.'
   ]
 };
 // Leyendas: { idZona: [párrafo, ...] }
