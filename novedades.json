@@ -1,5 +1,20 @@
 [
   {
+    "version": "2.21.1",
+    "fecha": "2026-11-01",
+    "titulo": "Más curiosidades en cuatro barrios",
+    "usuario": [
+      "San Vicente: el primer poblado del siglo VII antes de Cristo, el amuleto egipcio de Hathor hallado en 2021, el barrio de Los Milagros y el parque botánico de las laderas.",
+      "Teso de la Feria: lo que contaba Covarrubias del sitio y qué quiere decir «teso».",
+      "El Tormes: el Matadero de 1891 y el antiguo «barrio del Matadero».",
+      "El Montalvo: sus tres fases, sus más de 600 empresas y la inauguración del Montalvo II en 1991.",
+      "Corregido: el castro que asedió Aníbal no estaba en San Vicente; para entonces sus vecinos ya se habían mudado al teso de las Catedrales."
+    ],
+    "tecnico": [
+      "contenido.js: curiosidades nuevas en sanvicente (+4), teso (+2), tormes (+2) y montalvos (+2), con su fuente. En sanvicente se corrige la de Aníbal y la del «Barrio de los Caídos», que no tenían fuente, con Wikipedia y salamanca.es."
+    ]
+  },
+  {
     "version": "2.21.0",
     "fecha": "2026-10-29",
     "titulo": "110 pueblos con ficha, y más fáciles de abrir",
@@ -118,23 +133,6 @@
       "Escalas --letra-* (27 tamaños → 15; 25 reglas de medio píxel redondeadas), --radio-* y --capa-*; colores fijos (--sobre-color, --exito, --error-*, --tiempo-*…) en tokens: ningún color suelto fuera de los temas.",
       "El modo oscuro va en un solo par de bloques. comprobar-datos vigila que sean iguales, que cada var(--…) exista y que no haya colores, tamaños de letra ni z-index sueltos.",
       "Comprobado con capturas en móvil y escritorio, claro y oscuro: idéntico píxel a píxel salvo los textos redondeados."
-    ]
-  },
-  {
-    "version": "2.16.4",
-    "fecha": "2026-10-27",
-    "titulo": "Avisos que no tapan y botones más fáciles de tocar",
-    "usuario": [
-      "Los avisos ya no se ponen encima de la ficha ni del primer paseo: en el móvil salen sobre el mapa, justo encima de la ficha abierta.",
-      "En el ordenador, el primer paseo va a la derecha y ya no tapa «¿Qué puedo descubrir hoy?».",
-      "En el móvil, Ayuda, «Avisar de un error», el siguiente logro y el × del paseo se tocan más fácil.",
-      "En modo oscuro se ven las murallas y las marcas de Salamanca desaparecida."
-    ],
-    "tecnico": [
-      "aviso() coloca #ts con alturaLibreAviso() (util.js): encima de #sh en el móvil, de #sh .bt en el escritorio y de #paseo si está abajo; prueba nueva en pruebas/fichas.js.",
-      "En escritorio .paseo se ancla a la derecha como la ficha y, con #sh abierta, arriba a la izquierda.",
-      "Con pointer:coarse, .ayuda-btn, .marcador .sig y .paseo .cerrar tienen un :after que lleva la zona de toque a 44 px sin cambiar el aspecto.",
-      "Token --muralla (claro y oscuro) para .mur-* y #desap, que usaban #4a3016 fijo; el texto de las puertas usa --ink y --card."
     ]
   }
 ]
