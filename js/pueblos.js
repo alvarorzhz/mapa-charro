@@ -337,11 +337,128 @@ function pintarDemografia(m) {
       (HABITANTES.anios.includes(1997) ? '' : 'El INE no publicó cifras a 1 de enero de 1997.')
   );
   caja.appendChild(fuente);
+  pintarCensos(m, caja);
+}
+
+// --- Población en los Censos desde 1842 (datos/censos.js: INE, Alteraciones de los municipios) ----------
+// La población de derecho de cada censo en un gráfico; las de hecho y de derecho en una tabla, y las notas
+// del INE sobre cambios de nombre y de término. Solo las cifras que da el INE: nada se estima ni se compara
+// entre censos, porque el término no siempre es el mismo.
+function censosDe(m) {
+  if (typeof CENSOS == 'undefined' || !CENSOS.derecho[m.ine]) return [];
+  return CENSOS.anios
+    .map((anio, i) => ({ anio, derecho: CENSOS.derecho[m.ine][i], hecho: CENSOS.hecho[m.ine][i] }))
+    .filter(c => c.derecho != null || c.hecho != null);
+}
+
+// Nota del INE para la ficha: sin los códigos de municipio y con los censos a los que se refiere
+function textoNotaCenso([texto, anios]) {
+  const limpio = texto.replace(/\b\d{5,6} \(([^)]+)\)/g, '$1');
+  if (!anios.length) return limpio;
+  return (
+    limpio + ' (' + (anios.length == 1 ? 'censo de ' : 'censos de ') + listaConY(anios.map(String)) + ')'
+  );
+}
+const listaConY = l => (l.length < 2 ? l.join('') : l.slice(0, -1).join(', ') + ' y ' + l[l.length - 1]);
+
+function pintarCensos(m, caja) {
+  const censos = censosDe(m),
+    puntos = censos.filter(c => c.derecho != null).map(c => ({ anio: c.anio, n: c.derecho, oficial: true }));
+  if (!censos.length) return;
+  const notas = CENSOS.notas[m.ine] || [],
+    soloHecho = censos.filter(c => c.derecho == null).map(c => String(c.anio));
+  caja.appendChild(crear('h3', '', 'Desde ' + censos[0].anio + ': los censos'));
+  caja.appendChild(
+    crear(
+      'p',
+      'demo-sub',
+      'Población de derecho (los vecinos que tenían allí su residencia) en cada censo del INE' +
+        (puntos.length ? ', de ' + puntos[0].anio + ' a ' + puntos[puntos.length - 1].anio : '') +
+        ', con el término que tenía el municipio en cada uno.' +
+        (soloHecho.length
+          ? ' En ' +
+            listaConY(soloHecho) +
+            ' el INE solo da la de hecho (los presentes el día del censo): está en la tabla.'
+          : '')
+    )
+  );
+  if (puntos.length >= 2)
+    caja.appendChild(
+      graficoHabitantes(m, puntos, {
+        marcas: [1900, 1950, 2000],
+        titulo: 'Población de derecho en los censos'
+      })
+    );
+  if (puntos.length >= 2) {
+    const maximo = puntos.reduce((a, p) => (p.n > a.n ? p : a), puntos[0]);
+    caja.appendChild(
+      crear(
+        'div',
+        'datos demo-datos',
+        crear(
+          'div',
+          'dato',
+          crear('small', '', 'Máximo en los censos'),
+          crear('b', '', conMiles(maximo.n) + ' (' + maximo.anio + ')')
+        )
+      )
+    );
+  }
+  if (notas.length) {
+    const lista = crear('ul');
+    notas.forEach(n => lista.appendChild(crear('li', '', textoNotaCenso(n))));
+    caja.appendChild(
+      crear(
+        'details',
+        'demo-cifras',
+        crear('summary', '', 'Cambios de nombre y de término según el INE'),
+        lista
+      )
+    );
+  }
+  const tabla = crear('table', 'demo-tabla');
+  tabla.appendChild(
+    crear(
+      'thead',
+      '',
+      crear('tr', '', crear('th', '', 'Censo'), crear('th', '', 'De derecho'), crear('th', '', 'De hecho'))
+    )
+  );
+  const cuerpo = crear('tbody'),
+    cifra = n => (n == null ? '—' : conMiles(n));
+  [...censos]
+    .reverse()
+    .forEach(c =>
+      cuerpo.appendChild(
+        crear(
+          'tr',
+          '',
+          crear('td', '', String(c.anio)),
+          crear('td', '', cifra(c.derecho)),
+          crear('td', '', cifra(c.hecho))
+        )
+      )
+    );
+  tabla.appendChild(cuerpo);
+  caja.appendChild(crear('details', 'demo-cifras', crear('summary', '', 'Todos los censos'), tabla));
+
+  const fuente = crear('p', 'fte demo-fte', 'Fuente: ');
+  const a = crear('a', '', CENSOS.fuente[0]);
+  a.href = CENSOS.fuente[1];
+  a.target = '_blank';
+  a.rel = 'noopener';
+  fuente.append(
+    a,
+    '. Una raya es que el INE no da esa cifra. En 2001 la población es la residente, equivalente a la de derecho.'
+  );
+  caja.appendChild(fuente);
 }
 
 // Gráfico de líneas de la serie: años en proporción (el hueco de 1997 se ve), eje desde 0, el valor
 // del primer y el último año escritos, y al pasar o tocar, el año y la cifra
-function graficoHabitantes(m, puntos) {
+// opciones: marcas (años del eje entre el primero y el último) y titulo (el principio de su descripción)
+function graficoHabitantes(m, puntos, opciones = {}) {
+  const { marcas = [2000, 2010, 2020], titulo = 'Evolución de la población' } = opciones;
   const W = 320,
     H = 150,
     izq = 40,
@@ -362,7 +479,8 @@ function graficoHabitantes(m, puntos) {
     class: 'demo-graf',
     role: 'img',
     'aria-label':
-      'Evolución de la población de ' +
+      titulo +
+      ' de ' +
       m.n +
       ': ' +
       conMiles(primero.n) +
@@ -380,8 +498,8 @@ function graficoHabitantes(m, puntos) {
     crearSvg('text', { x: izq - 6, y: y(v) + 3.5, class: 'demo-eje', 'text-anchor': 'end' }, sv).textContent =
       conMiles(v);
   }
-  // Años del eje: el primero, el último y las décadas en medio
-  const anios = [a0, ...[2000, 2010, 2020].filter(a => a - a0 > 3 && a1 - a > 3), a1];
+  // Años del eje: el primero, el último y las marcas en medio (en el Padrón, las décadas)
+  const anios = [a0, ...marcas.filter(a => (a - a0) / (a1 - a0) > 0.1 && (a1 - a) / (a1 - a0) > 0.1), a1];
   anios.forEach(a => {
     crearSvg('text', { x: x(a), y: H - 6, class: 'demo-eje', 'text-anchor': 'middle' }, sv).textContent = a;
   });

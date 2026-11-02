@@ -1,5 +1,19 @@
 [
   {
+    "version": "2.23.0",
+    "fecha": "2026-11-02",
+    "titulo": "La población de cada pueblo desde 1842",
+    "usuario": [
+      "La ficha de cada pueblo enseña ahora sus habitantes en todos los censos del INE desde 1842, con un gráfico, el máximo de la serie y la tabla con la población de derecho y la de hecho.",
+      "También dice, según el INE, cuándo cambió el pueblo de nombre o de término (por ejemplo, al juntarse con otro municipio), porque entonces las cifras no son del mismo territorio.",
+      "Solo cifras oficiales del INE: si en un censo no hay dato, sale una raya; nada se calcula ni se estima."
+    ],
+    "tecnico": [
+      "herramientas/censos.js genera js/datos/censos.js (CENSOS) de «Alteraciones de los municipios en los Censos de Población desde 1842» del INE (una página por municipio, por código): población de hecho y de derecho de los 19 censos (1842–2021) y las notas del INE con los censos de su llamada. Quita las columnas repetidas del INE (dos de 1857 o de 1910) si tienen las mismas cifras.",
+      "pintarCensos (pueblos.js), debajo de la evolución del Padrón en #demo: gráfico de la población de derecho (graficoHabitantes admite marcas y título), máximo, notas (textoNotaCenso, sin los códigos) y tabla plegada. Comprobación en comprobar-datos y prueba en pruebas/provincia.js. Sin CSS nuevo."
+    ]
+  },
+  {
     "version": "2.22.0",
     "fecha": "2026-11-02",
     "titulo": "Rutas con dificultad, desnivel y escaleras",
@@ -116,18 +130,6 @@
     ],
     "tecnico": [
       "Solo contenido: 10 curiosidades nuevas en CURIOSIDADES (contenido.js, con su fuente en comentario) y 21 en PUEBLOS[...].cur (pueblos.js, de los artículos de Wikipedia que ya estaban en su fuente). Sin cambios de código."
-    ]
-  },
-  {
-    "version": "2.19.0",
-    "fecha": "2026-10-28",
-    "titulo": "Fichas más limpias",
-    "usuario": [
-      "En la ficha de cada lugar, las curiosidades y la leyenda salen nada más abrirla: son lo importante.",
-      "Monumentos, cultura y tradiciones, rutas y «Aquí hubo» pasan abajo, cada uno en una línea con cuántos hay. Tócala para verlos."
-    ],
-    "tecnico": [
-      "Ficha de zona: #mz, #culf y #rel se mueven antes de #nb (estadoApp.fichaConExtrasAbajo en mostrarFicha) y cada fila es un <details> plegado (filaPlegable en ficha.js) con su número y los ✓. Monumento, pueblo y ruta siguen igual."
     ]
   }
 ]

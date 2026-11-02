@@ -1,5 +1,17 @@
 [
   {
+    "version": "2.19.0",
+    "fecha": "2026-10-28",
+    "titulo": "Fichas más limpias",
+    "usuario": [
+      "En la ficha de cada lugar, las curiosidades y la leyenda salen nada más abrirla: son lo importante.",
+      "Monumentos, cultura y tradiciones, rutas y «Aquí hubo» pasan abajo, cada uno en una línea con cuántos hay. Tócala para verlos."
+    ],
+    "tecnico": [
+      "Ficha de zona: #mz, #culf y #rel se mueven antes de #nb (estadoApp.fichaConExtrasAbajo en mostrarFicha) y cada fila es un <details> plegado (filaPlegable en ficha.js) con su número y los ✓. Monumento, pueblo y ruta siguen igual."
+    ]
+  },
+  {
     "version": "2.18.0",
     "fecha": "2026-10-28",
     "titulo": "Actualizaciones más ligeras",
