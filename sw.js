@@ -1,13 +1,13 @@
 // Service worker: deja la app guardada en el móvil para que funcione sin conexión.
 // No edites VERSION ni ARCHIVOS a mano: los actualiza `node herramientas/version.js`.
-const VERSION = 255;
+const VERSION = 256;
 const CACHE = 'mapa-charro-v' + VERSION;
 // <archivos>
 const ARCHIVOS = [
   './',
   'index.html',
   'manifest.webmanifest',
-  'novedades.json?v=76b5dee178',
+  'novedades.json?v=0a0479c64a',
   'icons/icon-180.png',
   'icons/icon-192.png',
   'fuentes/alfa-slab-one.woff2',
@@ -15,7 +15,7 @@ const ARCHIVOS = [
   'css/estilos.css?v=39357978a3',
   'js/util.js?v=e5c86be39e',
   'js/medicion.js?v=4da82b4f68',
-  'js/datos-globales.js?v=d4b3a56ca5',
+  'js/datos-globales.js?v=da8f217da2',
   'js/estado.js?v=3e2cb46ff4',
   'js/guardado.js?v=f0f4e4ca28',
   'js/mapa.js?v=ff092c1482',
@@ -33,7 +33,7 @@ const ARCHIVOS = [
   'js/ubicacion.js?v=f7ee88537d',
   'js/mapa-real.js?v=9a9d591a02',
   'js/provincia.js?v=5c211e93d6',
-  'js/pueblos.js?v=990988b833',
+  'js/pueblos.js?v=5c322f20ec',
   'js/perfil.js?v=9311ccb1ef',
   'js/imagen.js?v=535085a37f',
   'js/explorar.js?v=955eb9eb7d',
@@ -66,6 +66,7 @@ const ARCHIVOS = [
   'js/datos/tramos.js?v=7743d34b2b',
   'js/datos/perfil-rutas.js?v=1917ddb511',
   'js/datos/habitantes.js?v=784dd5e707',
+  'js/datos/censos.js?v=6f25b26d66',
   'js/datos/pueblos.js?v=0c407d1235',
   'js/datos/cultura.js?v=d468671a05',
   'js/datos/detalles.js?v=2570fdde20',

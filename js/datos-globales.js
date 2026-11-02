@@ -11,6 +11,7 @@ import * as rutas from './datos/rutas.js?v=809a14cd59';
 import * as tramos from './datos/tramos.js?v=7743d34b2b';
 import * as perfilRutas from './datos/perfil-rutas.js?v=1917ddb511';
 import * as habitantes from './datos/habitantes.js?v=784dd5e707';
+import * as censos from './datos/censos.js?v=6f25b26d66';
 import * as pueblos from './datos/pueblos.js?v=0c407d1235';
 import * as cultura from './datos/cultura.js?v=d468671a05';
 import * as detalles from './datos/detalles.js?v=2570fdde20';
@@ -38,6 +39,7 @@ Object.assign(
   tramos,
   perfilRutas,
   habitantes,
+  censos,
   pueblos,
   cultura,
   detalles,

@@ -27,6 +27,7 @@ const datos = [
   'provincia',
   'carreteras-provincia',
   'habitantes',
+  'censos',
   'parques',
   'firebase',
   'palabras',
@@ -39,7 +40,7 @@ const datos = [
 const codigo =
   sinExport(datos.map(d => leer('js/datos/' + d + '.js')).join('\n;\n')) +
   '\n;({ NOMBRES_GRUPOS, ZONAS_GRANDES, ZONAS, OTROS_NOMBRES, SEMILLAS_REPARTO, MONUMENTOS, RUTAS, TRAMOS_RUTAS, PERFIL_RUTAS, PUEBLOS, CURIOSIDADES, LEYENDAS, FOTOS, DONDE_COMER,' +
-  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA, RELACIONES_ETAPA, RANGOS_ETAPA, PALABRAS_CHARRAS, FUENTES_PALABRAS, RUTAS_PROVINCIA, SALIDA_PROVINCIA, TRAMOS_PROVINCIA, CARRETERAS_PROVINCIA, HABITANTES, PARQUES, CULTURA, CATEGORIAS_CULTURA, TIPOS_TEXTO_CULTURA, DETALLES, FACHADAS, ORIENTACION_FACHADAS, DESAPARECIDOS })';
+  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA, RELACIONES_ETAPA, RANGOS_ETAPA, PALABRAS_CHARRAS, FUENTES_PALABRAS, RUTAS_PROVINCIA, SALIDA_PROVINCIA, TRAMOS_PROVINCIA, CARRETERAS_PROVINCIA, HABITANTES, CENSOS, PARQUES, CULTURA, CATEGORIAS_CULTURA, TIPOS_TEXTO_CULTURA, DETALLES, FACHADAS, ORIENTACION_FACHADAS, DESAPARECIDOS })';
 const D = vm.runInNewContext(codigo, {});
 
 const WEB_PUBLICA = 'https://alvarorzhz.github.io/mapa-charro/';
@@ -289,6 +290,43 @@ comprobar(/^\d+ de \w+ de \d{4}$/.test(D.HABITANTES.fecha), 'Habitantes: fecha r
   Object.entries(tipos).forEach(([ine, t]) =>
     Object.keys(t).forEach(i =>
       comprobar(serie[ine] && serie[ine][i] != null, `Habitantes: tipo de dato sin cifra (${ine}, ${i})`)
+    )
+  );
+}
+
+// --- Población en los Censos desde 1842 (los genera herramientas/censos.js) -------------------------------
+// Años en orden, de derecho y de hecho una cifra entera o null por censo, todos los municipios con alguna
+// cifra, y notas [texto, [censos que existen]]
+{
+  const { anios, derecho, hecho, notas, fuente } = D.CENSOS;
+  comprobar(
+    Array.isArray(anios) &&
+      anios.length > 1 &&
+      anios.every((a, i) => Number.isInteger(a) && (!i || a > anios[i - 1])),
+    'Censos: años raros'
+  );
+  comprobar(
+    Array.isArray(fuente) && /^https:\/\/www\.ine\.es\//.test(fuente[1]),
+    'Censos: sin fuente del INE'
+  );
+  const serieBien = s =>
+    Array.isArray(s) &&
+    s.length == anios.length &&
+    s.every(n => n === null || (Number.isInteger(n) && n >= 0));
+  D.PROVINCIA.m.forEach(m =>
+    comprobar(
+      serieBien(derecho[m.ine]) && serieBien(hecho[m.ine]) && derecho[m.ine].some(n => n != null),
+      `Censos: serie rara de ${m.n}; ejecuta node herramientas/censos.js`
+    )
+  );
+  Object.entries(notas).forEach(([ine, lista]) =>
+    comprobar(
+      derecho[ine] &&
+        lista.every(
+          ([t, a]) =>
+            typeof t == 'string' && t.length > 5 && Array.isArray(a) && a.every(x => anios.includes(x))
+        ),
+      `Censos: notas raras de ${ine}`
     )
   );
 }
@@ -563,7 +601,7 @@ comprobar(
 {
   const medidasJpg = b => {
     // Busca el marcador SOF del JPG, donde van el alto y el ancho
-    for (let i = 2; i < b.length - 9;) {
+    for (let i = 2; i < b.length - 9; ) {
       if (b[i] != 0xff) return null;
       const m = b[i + 1],
         largo = b.readUInt16BE(i + 2);

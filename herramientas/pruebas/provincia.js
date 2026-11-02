@@ -132,8 +132,12 @@ prueba('Evolución de la población en la ficha del municipio', async (p, url) =
       a1: a[a.length - 1]
     };
   });
-  igual(await p.$$eval('#demo .demo-tabla tbody tr', f => f.length), datos.n, 'una fila por año con cifra');
-  cierto((await p.$$('#demo svg.demo-graf')).length == 1, 'con su gráfico');
+  igual(
+    await p.$$eval('#demo .demo-tabla', t => t[0].querySelectorAll('tbody tr').length),
+    datos.n,
+    'una fila por año con cifra'
+  );
+  cierto((await p.$$('#demo svg.demo-graf')).length >= 1, 'con su gráfico');
   // La variación desde el primer año, calculada de las cifras
   const dif = datos.ultimo - datos.primero,
     esperado =
@@ -171,6 +175,36 @@ prueba('Evolución de la población en la ficha del municipio', async (p, url) =
     await p.$eval('#demo .demo-guia-anio', t => t.textContent),
     String(datos.a1),
     'el último año, al final'
+  );
+  // Los censos desde 1842: un segundo gráfico, una fila por censo con cifra, las notas del INE sin códigos
+  const censos = await p.evaluate(() => ({
+    n: CENSOS.anios.filter((a, i) => CENSOS.derecho['37010'][i] != null || CENSOS.hecho['37010'][i] != null)
+      .length,
+    notas: (CENSOS.notas['37010'] || []).length
+  }));
+  cierto(censos.n > 10, 'La Alberca tiene censos');
+  igual(await p.$$eval('#demo svg.demo-graf', g => g.length), 2, 'gráfico del Padrón y de los censos');
+  igual(
+    await p.$$eval('#demo .demo-tabla', t => t[1].querySelectorAll('tbody tr').length),
+    censos.n,
+    'una fila por censo con cifra'
+  );
+  igual(await p.$$eval('#demo details li', l => l.length), censos.notas, 'las notas del INE');
+  cierto((await texto(p, '#demo')).includes('Alteraciones de los municipios'), 'con la fuente de los censos');
+  igual(
+    await p.evaluate(() =>
+      textoNotaCenso([
+        'Entre el Censo de 1981 y el anterior, crece porque incorpora a 37111 (Corporario)',
+        []
+      ])
+    ),
+    'Entre el Censo de 1981 y el anterior, crece porque incorpora a Corporario',
+    'las notas sin códigos'
+  );
+  igual(
+    await p.evaluate(() => textoNotaCenso(['En estos Censos se denominaba Alameda, La', [1857, 1860, 1877]])),
+    'En estos Censos se denominaba Alameda, La (censos de 1857, 1860 y 1877)',
+    'con los censos a los que se refiere'
   );
   // Pueblos de alrededor del mapa de la capital: también; barrios y otras fichas: no
   await p.goto(url + '#villamayor');
