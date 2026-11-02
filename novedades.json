@@ -1,5 +1,18 @@
 [
   {
+    "version": "2.21.2",
+    "fecha": "2026-11-02",
+    "titulo": "Orden de los scripts, documentado y vigilado",
+    "usuario": [
+      "Por dentro: una comprobación nueva evita que la app deje de abrirse por cargar sus piezas en mal orden al ampliarla."
+    ],
+    "tecnico": [
+      "herramientas/dependencias.js: lee los scripts de index.html en su orden y, con eslint-scope, separa lo que cada uno usa al cargarse (código suelto, funciones llamadas en el momento aunque sean de otro archivo, callbacks de forEach/map/filter…) de lo que usa después; falla si algo se usa al cargarse antes de su archivo (lo protegido con typeof no cuenta).",
+      "docs/notas/dependencias.md, generada: reglas para ampliar y tabla de cada script con lo que necesita ya cargado, lo que usa después y cuántos lo usan.",
+      "Va en antes-del-commit (rehace la nota) y en GitHub Actions con --comprobar (falla si la nota no está al día); prueba en pruebas-logica.js con estado.js movido detrás de mapa.js."
+    ]
+  },
+  {
     "version": "2.21.1",
     "fecha": "2026-11-01",
     "titulo": "Más curiosidades en cuatro barrios",
@@ -119,20 +132,6 @@
       "Pruebas del navegador en paralelo (PRUEBAS_HILOS) y con esperas a condición (llegaA, hastaQue, sinTransiciones, reloj de Playwright) en vez de 32 esperas fijas: las dos tallas, de 545 s a 258 s en local. El contraste, en cuatro pruebas.",
       "CSS formateado con Prettier y comprobado en CI; comprobar-datos compacta el CSS antes de mirar el tema. Mismo CSS en el navegador, comprobado regla a regla.",
       "novedades.json se queda con las diez últimas versiones; version.js archiva las demás en novedades-anteriores.json."
-    ]
-  },
-  {
-    "version": "2.17.0",
-    "fecha": "2026-10-27",
-    "titulo": "El tema charro, en orden",
-    "usuario": [
-      "Orden por dentro de colores, letras y formas para que la app sea más fácil de cuidar. A la vista no cambia nada, salvo algún texto medio píxel más grande."
-    ],
-    "tecnico": [
-      "Tema «Piedra de Villamayor» documentado en docs/notas/tema.md. Tokens en español (--vitor, --oro, --tinta, --tarjeta, --linea, --zona-0…6, etc.; --p, sin uso, fuera) también en js/ e index.html.",
-      "Escalas --letra-* (27 tamaños → 15; 25 reglas de medio píxel redondeadas), --radio-* y --capa-*; colores fijos (--sobre-color, --exito, --error-*, --tiempo-*…) en tokens: ningún color suelto fuera de los temas.",
-      "El modo oscuro va en un solo par de bloques. comprobar-datos vigila que sean iguales, que cada var(--…) exista y que no haya colores, tamaños de letra ni z-index sueltos.",
-      "Comprobado con capturas en móvil y escritorio, claro y oscuro: idéntico píxel a píxel salvo los textos redondeados."
     ]
   }
 ]

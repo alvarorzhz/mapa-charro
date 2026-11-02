@@ -256,6 +256,23 @@ prueba('Sin conexión: una versión nueva solo baja lo que ha cambiado', async (
   igual(pedidos, [], 'sin ir a la red');
 });
 
+// --- Orden de carga de los scripts (herramientas/dependencias.js) ---------------
+prueba('Orden de scripts: el de index.html vale y uno cambiado de sitio se detecta', () => {
+  const { calcular } = require('./dependencias');
+  const html = fs.readFileSync(path.join(RAIZ, 'index.html'), 'utf8');
+  igual(calcular(html).problemas, [], 'index.html, tal cual');
+  // estado.js crea estadoApp, que mapa.js usa al cargarse: si va detrás, la app no arranca
+  const roto =
+    html.replace(/<script defer src="js\/estado\.js[^>]*><\/script>/, '') +
+    '<script defer src="js/estado.js"></script>';
+  cierto(
+    calcular(roto).problemas.some(p => p.startsWith('js/mapa.js usa al cargarse «estadoApp» (js/estado.js')),
+    'mapa.js antes que estado.js'
+  );
+  // Lo que va dentro de «if (typeof X …)» no cuenta: mapa.js mira si mapa-fondo.js ya está
+  cierto(!calcular(html).problemas.some(p => p.includes('limiteSeleccion')), 'typeof protege');
+});
+
 // --- Ejecución ----------------------------------------------------------------
 const app = cargarApp();
 let fallos = 0;
