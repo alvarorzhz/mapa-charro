@@ -1,6 +1,6 @@
 // Service worker: deja la app guardada en el móvil para que funcione sin conexión.
 // No edites VERSION ni ARCHIVOS a mano: los actualiza `node herramientas/version.js`.
-const VERSION = 252;
+const VERSION = 253;
 const CACHE = 'mapa-charro-v' + VERSION;
 // <archivos>
 const ARCHIVOS = [
@@ -15,7 +15,7 @@ const ARCHIVOS = [
   'css/estilos.css?v=39357978a3',
   'js/util.js?v=e5c86be39e',
   'js/medicion.js?v=4da82b4f68',
-  'js/datos-globales.js?v=d65dfe4035',
+  'js/datos-globales.js?v=d4b3a56ca5',
   'js/estado.js?v=3e2cb46ff4',
   'js/guardado.js?v=f0f4e4ca28',
   'js/mapa.js?v=ff092c1482',
@@ -24,8 +24,9 @@ const ARCHIVOS = [
   'js/mapa-vista.js?v=10940ddde5',
   'js/ficha.js?v=2a90998dfe',
   'js/monumentos.js?v=d911c317c7',
-  'js/ruta.js?v=c1f9689108',
-  'js/ruta-provincia.js?v=44c50f3087',
+  'js/ruta-contexto.js?v=f67897773e',
+  'js/ruta.js?v=856405fa2d',
+  'js/ruta-provincia.js?v=1dba6cedc7',
   'js/logros.js?v=f19e745de6',
   'js/palabras.js?v=aaf06869cb',
   'js/vistas.js?v=25de770b92',
@@ -63,6 +64,7 @@ const ARCHIVOS = [
   'js/datos/tramos-provincia.js?v=6362361a74',
   'js/datos/rutas.js?v=809a14cd59',
   'js/datos/tramos.js?v=7743d34b2b',
+  'js/datos/perfil-rutas.js?v=1917ddb511',
   'js/datos/habitantes.js?v=784dd5e707',
   'js/datos/pueblos.js?v=0c407d1235',
   'js/datos/cultura.js?v=d468671a05',

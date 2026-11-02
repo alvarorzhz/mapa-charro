@@ -14,6 +14,7 @@ const RAIZ = path.join(__dirname, '..');
 const LOGICA = [
   'js/util.js',
   'js/estado.js',
+  'js/ruta-contexto.js',
   'js/logros.js',
   'js/agenda.js',
   'js/hora-dorada.js',
@@ -90,6 +91,51 @@ prueba('Textos: sin tildes y en minúsculas, y slugs', app => {
   igual(app('normalizar')('Ávila, PEÑARANDA y Güeña'), 'avila, penaranda y guena', 'normalizar');
   igual(app('slug')('  ¡La Plaza Mayor! '), 'la-plaza-mayor', 'slug quita los guiones de los extremos');
   igual(app('slugLogro')('Plaza Mayor!'), 'plaza-mayor-', 'slugLogro los deja (ids ya guardados)');
+});
+
+// --- Contexto de las rutas (ruta-contexto.js) ---------------------------
+prueba('Rutas: dificultad por distancia y subida, solo si hay perfil', app => {
+  const dificultad = app('dificultadRuta');
+  igual(dificultad(2500, { sube: 25 }), 'Fácil', 'corta y llana');
+  igual(dificultad(2500, { sube: 60 }), 'Moderada', 'corta pero con cuesta');
+  igual(dificultad(5000, { sube: 20 }), 'Moderada', 'llana pero larga');
+  igual(dificultad(8000, { sube: 20 }), 'Exigente', 'más de 6 km');
+  igual(dificultad(2000, null), null, 'sin perfil, no se dice');
+  igual(app('textoDesnivel')({ sube: 25, baja: 62 }), '↗ 25 m · ↘ 62 m', 'desnivel');
+});
+
+prueba('Rutas: circular si acaba donde empieza, y escaleras por tramo', app => {
+  const recorrido = app('textoRecorrido'),
+    T = [
+      {
+        de: 'a',
+        a: 'b',
+        m: 500,
+        p: [
+          [40.965, -5.664],
+          [40.962, -5.664]
+        ]
+      },
+      {
+        de: 'b',
+        a: 'c',
+        m: 500,
+        p: [
+          [40.962, -5.664],
+          [40.9655, -5.6642]
+        ]
+      }
+    ];
+  igual(recorrido(T), 'Circular', 'acaba a unos 60 m del inicio');
+  T[1].p[1] = [40.962, -5.67];
+  igual(recorrido(T), 'De ida: acaba a 600 m del inicio', 'acaba lejos');
+  igual(recorrido([]), null, 'sin tramos, no se dice');
+  const perfil = { escaleras: ['b>c'] };
+  cierto(app('tieneEscaleras')(perfil, { de: 'b', a: 'c' }), 'el tramo con escaleras');
+  cierto(!app('tieneEscaleras')(perfil, { de: 'a', a: 'b' }), 'y el que no');
+  cierto(!app('tieneEscaleras')(null, { de: 'b', a: 'c' }), 'sin perfil, sin escaleras');
+  for (const r of app('RUTAS_PROVINCIA'))
+    cierto(app('esCircularProvincia')(r), r.id + ': sale y vuelve a la capital');
 });
 
 // --- Rachas del reto del día (logros.js) ----------------------------------------

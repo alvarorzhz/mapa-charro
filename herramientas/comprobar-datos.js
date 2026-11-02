@@ -15,6 +15,7 @@ const datos = [
   'monumentos',
   'rutas',
   'tramos',
+  'perfil-rutas',
   'rutas-provincia',
   'tramos-provincia',
   'pueblos',
@@ -37,7 +38,7 @@ const datos = [
 ];
 const codigo =
   sinExport(datos.map(d => leer('js/datos/' + d + '.js')).join('\n;\n')) +
-  '\n;({ NOMBRES_GRUPOS, ZONAS_GRANDES, ZONAS, OTROS_NOMBRES, SEMILLAS_REPARTO, MONUMENTOS, RUTAS, TRAMOS_RUTAS, PUEBLOS, CURIOSIDADES, LEYENDAS, FOTOS, DONDE_COMER,' +
+  '\n;({ NOMBRES_GRUPOS, ZONAS_GRANDES, ZONAS, OTROS_NOMBRES, SEMILLAS_REPARTO, MONUMENTOS, RUTAS, TRAMOS_RUTAS, PERFIL_RUTAS, PUEBLOS, CURIOSIDADES, LEYENDAS, FOTOS, DONDE_COMER,' +
   ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA, RELACIONES_ETAPA, RANGOS_ETAPA, PALABRAS_CHARRAS, FUENTES_PALABRAS, RUTAS_PROVINCIA, SALIDA_PROVINCIA, TRAMOS_PROVINCIA, CARRETERAS_PROVINCIA, HABITANTES, PARQUES, CULTURA, CATEGORIAS_CULTURA, TIPOS_TEXTO_CULTURA, DETALLES, FACHADAS, ORIENTACION_FACHADAS, DESAPARECIDOS })';
 const D = vm.runInNewContext(codigo, {});
 
@@ -210,8 +211,27 @@ D.RUTAS.forEach(r => {
     `Ruta ${r.id}: los tramos no unen las paradas en orden (node herramientas/rutas.js ${r.id})`
   );
   T.forEach((t, i) => comprobar(t.m > 0 && t.p.length >= 2, `Ruta ${r.id}: el tramo ${i + 1} está vacío`));
+  // El perfil (desnivel y escaleras) tiene que ser de estos tramos
+  const perfil = D.PERFIL_RUTAS[r.id];
+  comprobar(
+    perfil && perfil.firma.join() == T.map(t => t.de + '>' + t.a + ':' + t.m).join(),
+    `Ruta ${r.id}: el perfil no es de estos tramos (node herramientas/perfil-rutas.js ${r.id})`
+  );
+  if (perfil) {
+    comprobar(
+      [perfil.sube, perfil.baja, perfil.alta].every(n => Number.isInteger(n) && n >= 0),
+      `Ruta ${r.id}: el perfil tiene un desnivel que no es un número de metros`
+    );
+    perfil.escaleras.forEach(e =>
+      comprobar(
+        T.some(t => t.de + '>' + t.a == e),
+        `Ruta ${r.id}: el perfil marca escaleras en «${e}», que no es un tramo de la ruta`
+      )
+    );
+  }
 });
 for (const id in D.TRAMOS_RUTAS) comprobar(idsRuta.has(id), `TRAMOS_RUTAS: «${id}» no es una ruta`);
+for (const id in D.PERFIL_RUTAS) comprobar(idsRuta.has(id), `PERFIL_RUTAS: «${id}» no es una ruta`);
 
 // --- Rutas por la provincia (en coche) -----------------------------------------------
 const enlaceValido = f => Array.isArray(f) && f[0] && /^https:\/\//.test(f[1] || '');
@@ -543,7 +563,7 @@ comprobar(
 {
   const medidasJpg = b => {
     // Busca el marcador SOF del JPG, donde van el alto y el ancho
-    for (let i = 2; i < b.length - 9;) {
+    for (let i = 2; i < b.length - 9; ) {
       if (b[i] != 0xff) return null;
       const m = b[i + 1],
         largo = b.readUInt16BE(i + 2);

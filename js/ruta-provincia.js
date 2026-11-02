@@ -128,12 +128,15 @@ function abrirRutaProvincia(k = rutaProvinciaAbierta) {
     caja = fichaLimpia('Ruta en coche · ' + r.tema, r.icono + ' ' + r.nombre);
   caja.appendChild(crear('p', 'hab', r.resumen));
   caja.appendChild(
-    cajaDatos([
-      ['Duración', DURACIONES[r.duracion]],
-      ['Distancia', kmProvincia(r) + ' km'],
-      ['Al volante', 'unas ' + textoTiempo(redondear5(minutosVolante(r)))],
-      ['Visitas', 'unas ' + textoTiempo(redondear5(minutosVisitas(r)))]
-    ])
+    cajaDatos(
+      [
+        ['Duración', DURACIONES[r.duracion]],
+        ['Distancia', kmProvincia(r) + ' km'],
+        ['Al volante', 'unas ' + textoTiempo(redondear5(minutosVolante(r)))],
+        ['Visitas', 'unas ' + textoTiempo(redondear5(minutosVisitas(r)))],
+        ['Recorrido', esCircularProvincia(r) ? 'Circular, desde ' + SALIDA_PROVINCIA.n : null]
+      ].filter(([, valor]) => valor)
+    )
   );
   caja.appendChild(mapaRutaProvincia(r));
   if (r.epoca)

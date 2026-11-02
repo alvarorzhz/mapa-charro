@@ -11,7 +11,6 @@ const rutaActual = () => RUTAS[rutaElegida];
 const tramosDe = r => TRAMOS_RUTAS[r.id] || [];
 const metrosRuta = (r = rutaActual()) => tramosDe(r).reduce((s, t) => s + t.m, 0);
 const minutosA = m => Math.max(1, Math.round((m / 1000 / VELOCIDAD_A_PIE) * 60));
-const textoDistancia = m => (m < 1000 ? m + ' m' : (m / 1000).toFixed(1).replace('.', ',') + ' km');
 const textoTiempo = min => (min < 60 ? min + ' min' : Math.floor(min / 60) + ' h ' + (min % 60) + ' min');
 const hashRuta = (r = rutaActual()) => (r.id == 'monumental' ? 'ruta' : 'ruta-' + r.id);
 const hashParada = (i, r = rutaActual()) => hashRuta(r) + '/' + (i + 1);
@@ -245,7 +244,9 @@ function abrirRutas() {
             textoDistancia(m) +
             ' · ' +
             textoTiempo(minutosA(m)) +
-            ' andando',
+            ' andando' +
+            (perfilDe(r) ? ' · ' + dificultadRuta(m, perfilDe(r)).toLowerCase() : '') +
+            (perfilDe(r) && perfilDe(r).escaleras.length ? ' · con escaleras' : ''),
           r.resumen,
           () => abrirRuta(k)
         )
@@ -269,7 +270,8 @@ function abrirRutas() {
             r.paradas.length +
             ' paradas · ' +
             kmProvincia(r) +
-            ' km',
+            ' km' +
+            (esCircularProvincia(r) ? ' · circular' : ''),
           r.resumen,
           () => abrirRutaProvincia(k)
         )
@@ -284,6 +286,23 @@ function abrirRutas() {
   enlaceFicha('rutas', 'Rutas');
 }
 
+// «Accesibilidad: …» con los tramos que tienen escaleras (por nombre de parada) o sin ellas
+function textoAccesibilidad(r, perfil) {
+  const nombre = id => datosParada(r.paradas.find(p => (typeof p == 'string' ? p : p.id) == id)).n;
+  const conEscaleras = tramosDe(r).filter(t => tieneEscaleras(perfil, t));
+  if (!conEscaleras.length)
+    return 'Accesibilidad: OpenStreetMap no marca escaleras en el camino. El suelo (adoquín, losas) no está comprobado.';
+  return (
+    'Accesibilidad: hay escaleras ' +
+    (conEscaleras.length == 1 ? 'en el tramo ' : 'en los tramos ') +
+    conEscaleras
+      .map(t => 'de ' + nombre(t.de) + ' a ' + nombre(t.a))
+      .join(', ')
+      .replace(/, (?=[^,]*$)/, ' y ') +
+    '; con silla de ruedas o carrito, mejor buscar otro camino ahí.'
+  );
+}
+
 // --- Resumen de una ruta --------------------------------------------------------------
 function abrirRuta(k = rutaElegida) {
   activarRuta(true, k);
@@ -296,13 +315,20 @@ function abrirRuta(k = rutaElegida) {
     caja.appendChild(
       crear('p', 'mu', 'Para empezar, queda donde siempre: en el Toscano o debajo del reloj.')
     );
+  const perfil = perfilDe(r);
   caja.appendChild(
-    cajaDatos([
-      ['Distancia', textoDistancia(total)],
-      ['Andando', textoTiempo(minutosA(total))],
-      ['Paradas', String(r.paradas.length)]
-    ])
+    cajaDatos(
+      [
+        ['Distancia', textoDistancia(total)],
+        ['Andando', textoTiempo(minutosA(total))],
+        ['Paradas', String(r.paradas.length)],
+        ['Dificultad', dificultadRuta(total, perfil)],
+        ['Desnivel', textoDesnivel(perfil)],
+        ['Recorrido', textoRecorrido(tramosDe(r))]
+      ].filter(([, valor]) => valor)
+    )
   );
+  if (perfil) caja.appendChild(crear('p', 'mu', textoAccesibilidad(r, perfil)));
   const lista = crear('ol', 'paradas');
   r.paradas.forEach((p, i) => {
     const d = datosParada(p),
@@ -312,7 +338,15 @@ function abrirRuta(k = rutaElegida) {
         '',
         d.monumento ? iconoMonumento(d.monumento.tipo, 22) : null,
         crear('span', '', d.n),
-        tramo ? crear('small', '', textoDistancia(tramo.m) + ' hasta la siguiente') : null
+        tramo
+          ? crear(
+              'small',
+              '',
+              textoDistancia(tramo.m) +
+                ' hasta la siguiente' +
+                (tieneEscaleras(perfil, tramo) ? ' · con escaleras' : '')
+            )
+          : null
       );
     b.onclick = () => abrirParada(i);
     lista.appendChild(crear('li', '', b));
@@ -322,6 +356,10 @@ function abrirRuta(k = rutaElegida) {
   ap.append(
     'Camino por calles reales de OpenStreetMap. El tiempo es andando sin prisa, sin contar las paradas.'
   );
+  if (perfil)
+    ap.append(
+      ' Desnivel con el modelo de elevación EU-DEM de 25 m (Copernicus), aproximado; escaleras según OpenStreetMap. Dificultad por distancia y subida: fácil hasta 3 km y 30 m, moderada hasta 6 km y 100 m.'
+    );
   if (r.fuente) ap.append(' Fuente: ', enlaceFuente(r.fuente), '.');
   const empezar = crear('button', 'principal', 'Empezar la ruta');
   empezar.onclick = () => abrirParada(0);
@@ -402,7 +440,15 @@ function pintarNavegacionRuta(i) {
       sig = crear(
         'button',
         'principal',
-        'Siguiente: ' + paradas[i + 1].n + ' (' + textoDistancia(t.m) + ', ' + minutosA(t.m) + ' min) →'
+        'Siguiente: ' +
+          paradas[i + 1].n +
+          ' (' +
+          textoDistancia(t.m) +
+          ', ' +
+          minutosA(t.m) +
+          ' min' +
+          (tieneEscaleras(perfilDe(r), t) ? ', con escaleras' : '') +
+          ') →'
       );
     sig.onclick = () => abrirParada(i + 1);
     nav.appendChild(sig);
