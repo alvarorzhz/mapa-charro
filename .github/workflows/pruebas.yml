@@ -32,6 +32,8 @@ jobs:
       - run: npm ci --no-audit --no-fund
       - name: Comprobar los datos
         run: node herramientas/comprobar-datos.js
+      - name: Comprobar el orden de los scripts
+        run: node herramientas/dependencias.js --comprobar
       - name: Comprobar el formato
         run: npx prettier --check "js/**/*.js" sw.js "herramientas/**/*.js" "css/**/*.css"
       - name: Buscar errores en el código (ESLint)

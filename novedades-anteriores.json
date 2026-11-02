@@ -1,5 +1,19 @@
 [
   {
+    "version": "2.17.0",
+    "fecha": "2026-10-27",
+    "titulo": "El tema charro, en orden",
+    "usuario": [
+      "Orden por dentro de colores, letras y formas para que la app sea más fácil de cuidar. A la vista no cambia nada, salvo algún texto medio píxel más grande."
+    ],
+    "tecnico": [
+      "Tema «Piedra de Villamayor» documentado en docs/notas/tema.md. Tokens en español (--vitor, --oro, --tinta, --tarjeta, --linea, --zona-0…6, etc.; --p, sin uso, fuera) también en js/ e index.html.",
+      "Escalas --letra-* (27 tamaños → 15; 25 reglas de medio píxel redondeadas), --radio-* y --capa-*; colores fijos (--sobre-color, --exito, --error-*, --tiempo-*…) en tokens: ningún color suelto fuera de los temas.",
+      "El modo oscuro va en un solo par de bloques. comprobar-datos vigila que sean iguales, que cada var(--…) exista y que no haya colores, tamaños de letra ni z-index sueltos.",
+      "Comprobado con capturas en móvil y escritorio, claro y oscuro: idéntico píxel a píxel salvo los textos redondeados."
+    ]
+  },
+  {
     "version": "2.16.4",
     "fecha": "2026-10-27",
     "titulo": "Avisos que no tapan y botones más fáciles de tocar",

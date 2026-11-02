@@ -1,6 +1,6 @@
 # Mapa charro — notas para Claude
 
-PWA en JavaScript sin framework (scripts clásicos con `defer` y ámbito global compartido, en el orden de `index.html`; los datos son módulos que `js/datos-globales.js` deja en `globalThis`). Se publica igual en GitHub Pages y en un Artifact de Claude.
+PWA en JavaScript sin framework (scripts clásicos con `defer` y ámbito global compartido, en el orden de `index.html`, ver `docs/notas/dependencias.md`; los datos son módulos que `js/datos-globales.js` deja en `globalThis`). Se publica igual en GitHub Pages y en un Artifact de Claude.
 
 ## Para gastar poco
 
@@ -42,4 +42,4 @@ Lógica en `js/`, datos en `js/datos/`, nota en `docs/notas/` entre paréntesis.
 - **Pruebas**: `herramientas/pruebas-logica.js` (sin navegador), `herramientas/pruebas.js` + `herramientas/pruebas/<zona>.js` (pruebas)
 - **Comprobación y generadores**: `herramientas/comprobar-datos.js`, `herramientas/*.js` (publicar)
 
-Notas en `docs/notas/`: `publicar`, `pruebas`, `guardado`, `mapa`, `provincia`, `rutas`, `contenido`, `interfaz`, `logros-y-tu-salamanca`, `seguridad`, `tema`. Si cambias cómo funciona algo, actualiza su nota (no este archivo, salvo que cambie el mapa o una regla de arriba).
+Notas en `docs/notas/`: `publicar`, `pruebas`, `guardado`, `mapa`, `provincia`, `rutas`, `contenido`, `interfaz`, `logros-y-tu-salamanca`, `seguridad`, `tema`, `dependencias` (generada). Si cambias cómo funciona algo, actualiza su nota (no este archivo, salvo que cambie el mapa o una regla de arriba).
