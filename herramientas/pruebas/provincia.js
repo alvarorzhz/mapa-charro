@@ -209,6 +209,10 @@ prueba('Rutas por la provincia', async (p, url) => {
   await p.click('.tarjeta-ruta:has-text("Arribes del norte")');
   igual(await p.evaluate(() => location.hash), '#ruta-arribes-norte', 'abre la ruta');
   cierto(await p.isVisible('.mapa-ruta-prov'), 'con su mapa');
+  cierto(
+    (await p.$eval('#info', e => e.innerText)).includes('Circular, desde Salamanca'),
+    'sale y vuelve a la capital'
+  );
   igual(await p.$$eval('.mapa-ruta-prov .rpn', a => a.length), 8, 'nueve paradas en ocho marcadores');
   igual(await texto(p, '.mapa-ruta-prov .rpn.varias text'), '8–9', 'los dos miradores de la presa, juntos');
   const datos = await texto(p, '#info .datos');

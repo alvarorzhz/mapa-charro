@@ -9,6 +9,7 @@ import * as rutasProvincia from './datos/rutas-provincia.js?v=35e5630e8b';
 import * as tramosProvincia from './datos/tramos-provincia.js?v=6362361a74';
 import * as rutas from './datos/rutas.js?v=809a14cd59';
 import * as tramos from './datos/tramos.js?v=7743d34b2b';
+import * as perfilRutas from './datos/perfil-rutas.js?v=1917ddb511';
 import * as habitantes from './datos/habitantes.js?v=784dd5e707';
 import * as pueblos from './datos/pueblos.js?v=0c407d1235';
 import * as cultura from './datos/cultura.js?v=d468671a05';
@@ -35,6 +36,7 @@ Object.assign(
   tramosProvincia,
   rutas,
   tramos,
+  perfilRutas,
   habitantes,
   pueblos,
   cultura,

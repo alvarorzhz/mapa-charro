@@ -260,6 +260,13 @@ prueba('Sellos «V» y rutas sobre zonas pisadas', async p => {
   igual(await p.$eval('.z.v', e => getComputedStyle(e).fillOpacity), '0.35', 'zonas pisadas aclaradas');
   cierto(await p.$eval('#sg', e => getComputedStyle(e).display == 'none'), 'sin sellos con la ruta');
   cierto((await p.$$('.ruta-monumental .rt-borde')).length > 0, 'borde blanco de la ruta');
+  // Contexto de la ruta: dificultad, desnivel, si es circular y dónde hay escaleras (perfil-rutas.js)
+  const ficha = await p.$eval('#info', e => e.innerText);
+  cierto(/Dificultad\s*Fácil/i.test(ficha), 'dificultad');
+  cierto(/Desnivel\s*↗ \d+ m · ↘ \d+ m/i.test(ficha), 'desnivel');
+  cierto(/Recorrido\s*De ida: acaba a/i.test(ficha), 'no es circular');
+  cierto(ficha.includes('Accesibilidad: hay escaleras en los tramos'), 'escaleras');
+  cierto(ficha.includes('con escaleras'), 'y en el tramo que las tiene');
 });
 
 prueba(

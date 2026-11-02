@@ -1,5 +1,19 @@
 [
   {
+    "version": "2.22.0",
+    "fecha": "2026-11-02",
+    "titulo": "Rutas con dificultad, desnivel y escaleras",
+    "usuario": [
+      "Cada ruta a pie dice ahora su dificultad, cuánto se sube y se baja, si es circular o dónde acaba, y si hay escaleras por el camino (y en qué tramos), para saber si se puede hacer con silla de ruedas o carrito.",
+      "En la lista de rutas se ve de un vistazo cuáles son fáciles y cuáles llevan escaleras; las de la provincia en coche indican que salen y vuelven a Salamanca.",
+      "Todo sale de datos reales: alturas del modelo EU-DEM de Copernicus y escaleras de OpenStreetMap. Si falta un dato, no se muestra."
+    ],
+    "tecnico": [
+      "herramientas/perfil-rutas.js genera js/datos/perfil-rutas.js (PERFIL_RUTAS): subida y bajada con EU-DEM 25 m vía OpenTopoData (un punto cada 25 m, umbral de 3 m) y tramos con highway=steps (nodos del enrutador a pie de OSM cruzados con la API 0.6). Lleva la firma de los tramos; comprobar-datos avisa si no coincide.",
+      "js/ruta-contexto.js (nuevo, antes de ruta.js): dificultadRuta, textoDesnivel, textoRecorrido, tieneEscaleras y esCircularProvincia, con pruebas en pruebas-logica.js y en pruebas/mapa.js y provincia.js. textoDistancia pasa de ruta.js a este archivo."
+    ]
+  },
+  {
     "version": "2.21.2",
     "fecha": "2026-11-02",
     "titulo": "Orden de los scripts, documentado y vigilado",
@@ -114,24 +128,6 @@
     ],
     "tecnico": [
       "Ficha de zona: #mz, #culf y #rel se mueven antes de #nb (estadoApp.fichaConExtrasAbajo en mostrarFicha) y cada fila es un <details> plegado (filaPlegable en ficha.js) con su número y los ✓. Monumento, pueblo y ruta siguen igual."
-    ]
-  },
-  {
-    "version": "2.18.0",
-    "fecha": "2026-10-28",
-    "titulo": "Actualizaciones más ligeras",
-    "usuario": [
-      "Cuando sale una versión nueva, el móvil solo baja lo que ha cambiado: las fotos y el resto se quedan como estaban. Menos datos y menos espera.",
-      "«Hoy» es siempre el día de Salamanca, aunque mires la app desde otro país: el reto del día, la agenda y las rachas cambian de día a la vez para todos.",
-      "En las novedades salen las de las últimas versiones; las antiguas, con «Ver las anteriores»."
-    ],
-    "tecnico": [
-      "Caché por archivo: version.js pone en cada ?v= la huella (sha256) de su contenido y sw.js copia de la caché anterior lo que no ha cambiado, fotos incluidas. El número interno va en <meta name=\"version-interna\"> y en VERSION de sw.js.",
-      "Fechas en util.js (diaEnSalamanca, fechaHoy, hoyEnSalamanca, sumarDias, textoFecha), siempre con Europe/Madrid; normalizar() en vez de tres copias para quitar tildes.",
-      "herramientas/pruebas-logica.js: pruebas sin navegador (fechas, rachas, agenda, sol, sw.js) en menos de un segundo, en antes-del-commit y en CI.",
-      "Pruebas del navegador en paralelo (PRUEBAS_HILOS) y con esperas a condición (llegaA, hastaQue, sinTransiciones, reloj de Playwright) en vez de 32 esperas fijas: las dos tallas, de 545 s a 258 s en local. El contraste, en cuatro pruebas.",
-      "CSS formateado con Prettier y comprobado en CI; comprobar-datos compacta el CSS antes de mirar el tema. Mismo CSS en el navegador, comprobado regla a regla.",
-      "novedades.json se queda con las diez últimas versiones; version.js archiva las demás en novedades-anteriores.json."
     ]
   }
 ]
