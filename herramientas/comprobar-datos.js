@@ -601,7 +601,7 @@ comprobar(
 {
   const medidasJpg = b => {
     // Busca el marcador SOF del JPG, donde van el alto y el ancho
-    for (let i = 2; i < b.length - 9; ) {
+    for (let i = 2; i < b.length - 9;) {
       if (b[i] != 0xff) return null;
       const m = b[i + 1],
         largo = b.readUInt16BE(i + 2);
