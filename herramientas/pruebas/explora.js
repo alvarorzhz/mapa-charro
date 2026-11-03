@@ -90,7 +90,7 @@ prueba('Salamanca en el tiempo', async p => {
     ),
     'al cerrar, el mapa vuelve a ser el de hoy'
   );
-  igual(await relleno(), rojo, 'y las marcas vuelven');
+  await llegaA(relleno, rojo, 'y las marcas vuelven'); // el relleno vuelve con su transición
 });
 
 prueba('Enlace a una etapa', async (p, url) => {
