@@ -40,7 +40,10 @@ const sinTransiciones = p =>
     Promise.all(
       document
         .getAnimations()
-        .filter(a => a.effect && a.effect.getComputedTiming().endTime != Infinity)
+        // Las ligadas al desplazamiento (el título que encoge) no acaban nunca solas: no se esperan
+        .filter(
+          a => a.effect && a.timeline == document.timeline && a.effect.getComputedTiming().endTime != Infinity
+        )
         .map(a => a.finished.catch(() => {}))
     )
   );
@@ -49,6 +52,11 @@ const llegaA = async (leer, esperado, que) =>
 const hastaQue = async (leer, que) => cierto(await repetirHasta(leer, Boolean), que);
 const texto = (p, s) => p.$eval(s, e => e.textContent.trim());
 const fichaAbierta = p => p.$eval('#sh', e => e.classList.contains('o'));
+// Los botones de pestaña cambian con View Transitions (conTransicion, util.js): el cambio llega un fotograma después
+const pulsarPestana = async (p, s) => {
+  await p.click(s);
+  await p.evaluate(() => transicionActual && transicionActual.updateCallbackDone);
+};
 
 // MapLibre falso (sin red): apunta el encuadre que le pide la app y cuántas veces se pide
 const MAPLIBRE_FALSO = `window.maplibregl = { Map: class {
@@ -89,6 +97,7 @@ module.exports = {
   sinTransiciones,
   texto,
   fichaAbierta,
+  pulsarPestana,
   mapLibreFalso,
   servirMapLibreFalso
 };

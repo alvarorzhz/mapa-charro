@@ -290,9 +290,11 @@ function empezarJuego(diario) {
   $('#mn').classList.add('o');
   // En el móvil, que el mapa quede arriba, a la vista
   if (!esEscritorio()) {
-    const arriba = document.querySelector('.mw').getBoundingClientRect().top;
-    if (Math.abs(arriba - 8) > 4)
-      window.scrollTo({ top: window.scrollY + arriba - 8, behavior: comoDesplazar() });
+    // Con la barra de estado translúcida (app instalada en el iPhone), bajo la hora, no detrás
+    const hueco = 8 + (parseFloat(getComputedStyle(document.documentElement).paddingTop) || 0),
+      arriba = document.querySelector('.mw').getBoundingClientRect().top;
+    if (Math.abs(arriba - hueco) > 4)
+      window.scrollTo({ top: window.scrollY + arriba - hueco, behavior: comoDesplazar() });
   }
 }
 

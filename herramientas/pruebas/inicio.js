@@ -1,6 +1,6 @@
 // Pruebas · Arranque y primera vez: primer paseo, novedades, enlaces, sin conexión, los tres niveles de la página, fuentes, «Avisar de un error» y Laboratorio.
 // Se pasan desde herramientas/pruebas.js (PRUEBAS_ZONA=inicio pasa solo estas).
-const { prueba, igual, cierto, texto, fichaAbierta, llegaA, hastaQue } = require('./comun');
+const { prueba, igual, cierto, texto, fichaAbierta, llegaA, hastaQue, pulsarPestana } = require('./comun');
 
 prueba(
   'Primer paseo la primera vez: tres pasos con lo de verdad',
@@ -149,7 +149,7 @@ prueba('Enlaces y botón atrás', async (p, url) => {
   cierto(await fichaAbierta(p), 'abre la zona cercana');
   await p.click('#x');
   cierto(!(await fichaAbierta(p)), 'la × cierra');
-  await p.click('#vlist');
+  await pulsarPestana(p, '#vlist');
   await p.click('#ls .lr .nm');
   await p.goBack();
   await p.waitForTimeout(100);
@@ -229,6 +229,33 @@ prueba('Tres niveles: lo principal, «Explora» y «Lo tuyo»', async p => {
   }
   for (const id of ['#perfil', '#sv']) cierto(await p.$('#tuyo ' + id), id + ' en «Lo tuyo»');
   cierto(await p.isVisible('#error'), '«Avisar de un error» a la vista arriba');
+});
+
+prueba('Tema elegido con el botón: la barra del navegador toma su piedra', async p => {
+  const colores = () => p.$$eval('meta[name="theme-color"]', ms => ms.map(m => m.content));
+  igual((await colores()).length, 2, 'un color de barra por tema del sistema');
+  await p.click('#ver .tema');
+  const fondo = await p.evaluate(() =>
+    getComputedStyle(document.documentElement).getPropertyValue('--fondo').trim()
+  );
+  for (const c of await colores()) igual(c, fondo, 'la barra va del fondo del tema elegido');
+});
+
+prueba('Cambio de pestaña con View Transitions, y sin ellas con menos movimiento', async p => {
+  // Con transición, el cambio llega igual (un momento después)
+  await p.evaluate(() => (window.transiciones = 0));
+  await p.evaluate(() => {
+    const original = document.startViewTransition.bind(document);
+    document.startViewTransition = f => (window.transiciones++, original(f));
+  });
+  await pulsarPestana(p, '#vprov');
+  await hastaQue(() => p.isVisible('#pv'), 'la provincia, tras la transición');
+  igual(await p.evaluate(() => window.transiciones), 1, 'una transición al cambiar de pestaña');
+  // Con menos movimiento, sin transición y en el acto
+  await p.emulateMedia({ reducedMotion: 'reduce' });
+  await p.evaluate(() => conTransicion(() => cambiarPestana('map')));
+  cierto(await p.isVisible('.mw'), 'el mapa, sin esperar');
+  igual(await p.evaluate(() => window.transiciones), 1, 'sin transición nueva');
 });
 
 prueba('Avisar de un error', async p => {

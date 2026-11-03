@@ -268,7 +268,8 @@ function irADondeComer(agrandar = false) {
 let focoAntesDeFicha = null;
 
 function mostrarFicha() {
-  if (!$('#sh').classList.contains('o')) focoAntesDeFicha = document.activeElement;
+  const yaAbierta = $('#sh').classList.contains('o');
+  if (!yaAbierta) focoAntesDeFicha = document.activeElement;
   if (typeof juego != 'undefined' && juego.activo) salirJuego(); // abrir una ficha (p. ej. desde el buscador) deja el juego
   document.querySelector('.sb').scrollTop = 0;
   // Con la pantalla baja (móvil en horizontal, zoom al 200 %) la ficha se abre grande: si no, se leen dos líneas
@@ -292,11 +293,27 @@ function mostrarFicha() {
   // En el móvil, sube la página hasta el mapa (el de la provincia en su pestaña) para que se vea por encima del panel
   const mapaVisible = { map: '.mw', prov: '#pm' }[estadoApp.pestana];
   if (!esEscritorio() && mapaVisible && document.querySelector(mapaVisible)) {
-    const arriba = document.querySelector(mapaVisible).getBoundingClientRect().top;
-    if (Math.abs(arriba - 8) > 4)
-      window.scrollTo({ top: window.scrollY + arriba - 8, behavior: comoDesplazar() });
+    // Con la barra de estado translúcida (app instalada en el iPhone), el mapa queda bajo la hora, no detrás
+    const hueco = 8 + (parseFloat(getComputedStyle(document.documentElement).paddingTop) || 0),
+      arriba = document.querySelector(mapaVisible).getBoundingClientRect().top;
+    if (Math.abs(arriba - hueco) > 4)
+      window.scrollTo({ top: window.scrollY + arriba - hueco, behavior: comoDesplazar() });
   }
   ajustarVista();
+  // De una ficha a otra sin cerrar, lo nuevo entra suave (al abrirla, ya sube la hoja con su muelle)
+  if (yaAbierta && !movimientoReducido())
+    [$('#k'), $('#nm'), document.querySelector('.sb')].forEach(e =>
+      e.animate(
+        [
+          { opacity: 0, transform: 'translateY(8px)' },
+          { opacity: 1, transform: 'none' }
+        ],
+        {
+          duration: 350,
+          easing: 'cubic-bezier(0.32, 0.72, 0, 1)'
+        }
+      )
+    );
   $('#sh').classList.add('o');
   $('#mn').classList.add('o');
   todasLasZonas.forEach(pintarZona);

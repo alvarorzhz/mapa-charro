@@ -111,6 +111,13 @@ const CLAVE_TEMA = 'charro-tema';
 const temaActual = () =>
   document.documentElement.dataset.theme ||
   (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+// La barra del navegador va del color de la piedra del tema; index.html trae uno por tema del sistema, y si se
+// ha elegido tema con el botón, los dos toman el fondo de ese tema
+const pintarColorBarra = () => {
+  if (!document.documentElement.dataset.theme) return;
+  const fondo = getComputedStyle(document.documentElement).getPropertyValue('--fondo').trim();
+  document.querySelectorAll('meta[name="theme-color"]').forEach(m => (m.content = fondo));
+};
 {
   const boton = crear('button', 'enlace tema');
   const pintar = () => {
@@ -123,6 +130,7 @@ const temaActual = () =>
     document.documentElement.dataset.theme = nuevo;
     escribirLocal(CLAVE_TEMA, nuevo);
     pintar();
+    pintarColorBarra();
     repintarFondoReal();
   };
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
@@ -130,6 +138,7 @@ const temaActual = () =>
     repintarFondoReal();
   });
   pintar();
+  pintarColorBarra();
   $('#ver').append(' · ', boton);
 }
 // Privacidad (qué se guarda con la cuenta de Google); dentro de Claude no hay esa cuenta
