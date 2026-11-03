@@ -1,19 +1,19 @@
 // Service worker: deja la app guardada en el móvil para que funcione sin conexión.
 // No edites VERSION ni ARCHIVOS a mano: los actualiza `node herramientas/version.js`.
-const VERSION = 256;
+const VERSION = 257;
 const CACHE = 'mapa-charro-v' + VERSION;
 // <archivos>
 const ARCHIVOS = [
   './',
   'index.html',
   'manifest.webmanifest',
-  'novedades.json?v=0a0479c64a',
+  'novedades.json?v=a5a420b672',
   'icons/icon-180.png',
   'icons/icon-192.png',
   'fuentes/alfa-slab-one.woff2',
   'fuentes/lora.woff2',
-  'css/estilos.css?v=39357978a3',
-  'js/util.js?v=e5c86be39e',
+  'css/estilos.css?v=815a8cd648',
+  'js/util.js?v=fba9dacc16',
   'js/medicion.js?v=4da82b4f68',
   'js/datos-globales.js?v=da8f217da2',
   'js/estado.js?v=3e2cb46ff4',
@@ -22,14 +22,14 @@ const ARCHIVOS = [
   'js/mapa-fondo.js?v=51114c85cb',
   'js/mapa-vias.js?v=6f2a08cfa1',
   'js/mapa-vista.js?v=10940ddde5',
-  'js/ficha.js?v=2a90998dfe',
+  'js/ficha.js?v=52de5c53ab',
   'js/monumentos.js?v=d911c317c7',
   'js/ruta-contexto.js?v=f67897773e',
   'js/ruta.js?v=856405fa2d',
   'js/ruta-provincia.js?v=1dba6cedc7',
   'js/logros.js?v=f19e745de6',
   'js/palabras.js?v=aaf06869cb',
-  'js/vistas.js?v=25de770b92',
+  'js/vistas.js?v=c4c908c523',
   'js/ubicacion.js?v=f7ee88537d',
   'js/mapa-real.js?v=9a9d591a02',
   'js/provincia.js?v=5c211e93d6',
@@ -46,7 +46,7 @@ const ARCHIVOS = [
   'js/mi-salamanca-calculos.js?v=d81423862b',
   'js/mi-salamanca-piezas.js?v=3fb6b7f883',
   'js/mi-salamanca.js?v=c155f2b9f6',
-  'js/juego.js?v=2416129615',
+  'js/juego.js?v=6b3eae9be7',
   'js/mapa-teclado.js?v=f81b0634d9',
   'js/escritorio.js?v=4275af6af1',
   'js/bienvenida.js?v=0d15c4607f',
@@ -56,7 +56,7 @@ const ARCHIVOS = [
   'js/buscador.js?v=208e29d964',
   'js/enlaces.js?v=72a75b7c5b',
   'js/cuenta.js?v=bc6ea470b9',
-  'js/inicio.js?v=decb4e72e6',
+  'js/inicio.js?v=e953985fee',
   'js/avisar.js?v=45bc2af670',
   'js/datos/zonas.js?v=93312c76ad',
   'js/datos/monumentos.js?v=685b27a0c9',

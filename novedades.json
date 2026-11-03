@@ -1,5 +1,24 @@
 [
   {
+    "version": "2.24.0",
+    "fecha": "2026-11-03",
+    "titulo": "Un acabado más de iPhone",
+    "usuario": [
+      "Los botones que flotan sobre el mapa, la ficha, el buscador y el aviso de logro son ahora de cristal: dejan ver el mapa difuminado por detrás.",
+      "Los paneles y botones se mueven con un pequeño muelle, y lo que pulsas se encoge un poco al tocarlo.",
+      "Al bajar por la página, el título «Mapa charro» se hace pequeño y se queda arriba.",
+      "El tema oscuro es más oscuro y cálido, con capas que se aclaran cuanto más arriba están.",
+      "En el iPhone, con la app instalada, el mapa pasa por debajo de la hora y la batería, y la barra del navegador toma el color de la piedra."
+    ],
+    "tecnico": [
+      "Tokens nuevos en estilos.css: --material, --material-denso, --material-canto, --material-filtro, --barra-estado, --muelle, --muelle-tiempo, --rebote y --capa-titulo; apartado «Acabado iOS» al final y nota en docs/notas/tema.md. Los bordes de 2 px se quedan.",
+      "Oscuro: --fondo #14110b, --tarjeta #221c13 y --superficie-elevada #2e2619.",
+      "Título que encoge con animation-timeline: scroll() (mejora progresiva, alto fijo para no mover la página); body::before pone la franja bajo la barra de estado black-translucent; mostrarFicha y el juego dejan el mapa bajo esa franja.",
+      "conTransicion() (util.js) usa View Transitions en los botones de pestaña; mostrarFicha anima el contenido al pasar de una ficha a otra; pintarColorBarra() (inicio.js) iguala los theme-color al tema elegido.",
+      "Pruebas: pulsarPestana() en comun.js espera a la transición y sinTransiciones no espera las animaciones ligadas al desplazamiento; nuevas pruebas del color de barra y de las transiciones."
+    ]
+  },
+  {
     "version": "2.23.0",
     "fecha": "2026-11-02",
     "titulo": "La población de cada pueblo desde 1842",
@@ -118,18 +137,6 @@
     ],
     "tecnico": [
       "Solo contenido: 23 entradas nuevas en PUEBLOS (pueblos.js), con cur, mon cuando el artículo da datos y fuente de Wikipedia. Ya son 81 pueblos con ficha."
-    ]
-  },
-  {
-    "version": "2.19.1",
-    "fecha": "2026-10-28",
-    "titulo": "Más curiosidades y leyendas",
-    "usuario": [
-      "Más curiosidades en ocho barrios y pueblos del alfoz: San Bernardo, Pizarrales, Delicias, San Cristóbal, Villares de la Reina, Santa Marta, Carbajosa y Villamayor.",
-      "Más historias en once pueblos de la provincia, con leyendas como la de Santa Teresa en Peñaranda o la de la Virgen de la Encina en Macotera: Ciudad Rodrigo, La Alberca, Béjar, Ledesma, Alba de Tormes, Candelario, Guijuelo, Peñaranda, Mogarraz, Miranda del Castañar y Macotera."
-    ],
-    "tecnico": [
-      "Solo contenido: 10 curiosidades nuevas en CURIOSIDADES (contenido.js, con su fuente en comentario) y 21 en PUEBLOS[...].cur (pueblos.js, de los artículos de Wikipedia que ya estaban en su fuente). Sin cambios de código."
     ]
   }
 ]

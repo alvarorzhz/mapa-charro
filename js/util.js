@@ -130,6 +130,14 @@ const esEscritorio = () => matchMedia('(min-width:900px)').matches;
 // La persona ha pedido menos animaciones en su sistema: los saltos de vista y desplazamientos van sin animar
 const movimientoReducido = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 const comoDesplazar = () => (movimientoReducido() ? 'auto' : 'smooth');
+// Hace un cambio de pantalla con View Transitions (lo nuevo entra con muelle, ver estilos.css) donde el navegador
+// las tiene y no se ha pedido menos movimiento; si no, el cambio va tal cual. Con transición, el cambio llega un
+// fotograma después: transicionActual.updateCallbackDone dice cuándo (lo esperan las pruebas)
+let transicionActual = null;
+const conTransicion = cambio => {
+  if (!document.startViewTransition || movimientoReducido()) return cambio();
+  transicionActual = document.startViewTransition(cambio);
+};
 
 // Alto/ancho del mapa en pantalla
 // Tamaño del mapa en pantalla, guardado para no forzar al navegador a medirlo en cada zoom

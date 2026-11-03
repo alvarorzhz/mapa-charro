@@ -1,6 +1,6 @@
 // Pruebas · Pestaña Provincia, fichas de pueblos, población y rutas en coche.
 // Se pasan desde herramientas/pruebas.js (PRUEBAS_ZONA=provincia pasa solo estas).
-const { prueba, igual, cierto, texto, fichaAbierta, llegaA, hastaQue } = require('./comun');
+const { prueba, igual, cierto, texto, fichaAbierta, llegaA, hastaQue, pulsarPestana } = require('./comun');
 
 prueba('Término de Salamanca y municipios vecinos', async p => {
   cierto(
@@ -27,7 +27,7 @@ prueba('Término de Salamanca y municipios vecinos', async p => {
 prueba('Lista y provincia', async p => {
   // Dos pestañas, Capital y Provincia; la lista de zonas se abre con un botón del mapa
   igual(await p.$$eval('.seg button', a => a.map(b => b.textContent)), ['Capital', 'Provincia'], 'pestañas');
-  await p.click('#vlist');
+  await pulsarPestana(p, '#vlist');
   igual(await p.evaluate(() => location.hash), '#lista', 'enlace a la lista');
   cierto(await p.$eval('#vmap', b => b.classList.contains('on')), 'la lista es parte de la capital');
   igual(
@@ -35,9 +35,9 @@ prueba('Lista y provincia', async p => {
     await p.evaluate(() => todasLasZonas.length),
     'filas de la lista'
   );
-  await p.click('#ls .volver-mapa');
+  await pulsarPestana(p, '#ls .volver-mapa');
   cierto(await p.$eval('#ls', e => e.style.display == 'none'), 'se cierra la lista');
-  await p.click('#vprov');
+  await pulsarPestana(p, '#vprov');
   igual(await p.$$eval('#pm path.pmm', a => a.length), 362, 'municipios en el minimapa');
   igual(
     (await p.$$eval('#pm .pmv-e text', a => a.map(t => t.textContent))).sort(),
@@ -104,7 +104,7 @@ prueba('Ficha de pueblo', async (p, url) => {
 });
 
 prueba('La ficha del pueblo se abre desde su fila de la provincia', async p => {
-  await p.click('#vprov');
+  await pulsarPestana(p, '#vprov');
   const conFicha = await p.evaluate(() => Object.keys(PUEBLOS).length);
   await p.click('.ver-fichas');
   igual(
@@ -216,7 +216,7 @@ prueba('Evolución de la población en la ficha del municipio', async (p, url) =
 });
 
 prueba('La ficha del pueblo deja ver el mapa de la provincia', async p => {
-  await p.click('#vprov');
+  await pulsarPestana(p, '#vprov');
   await p.evaluate(() => abrirPueblo(PROVINCIA.m.find(m => m.n == 'Ledesma')));
   await p.waitForTimeout(600);
   const [mapa, ficha] = await p.evaluate(() =>
@@ -347,7 +347,7 @@ prueba('Ficha de «Resto de la provincia»', async p => {
   cierto(await fichaAbierta(p), 'se abre');
   igual(await texto(p, '#nm'), 'Resto de la provincia', 'con su nombre');
   await p.evaluate(() => cerrarFicha());
-  await p.click('#vlist');
+  await pulsarPestana(p, '#vlist');
   await p.click('.lr .nm:text-is("Resto de la provincia")');
   cierto(await fichaAbierta(p), 'también desde la Lista');
 });
@@ -355,7 +355,7 @@ prueba('Ficha de «Resto de la provincia»', async p => {
 prueba(
   'Provincia: «Estoy aquí» en el minimapa',
   async p => {
-    await p.click('#vprov');
+    await pulsarPestana(p, '#vprov');
     await p.click('.pmw .pzl');
     await p.waitForFunction(() => puebloSeleccionado && puebloSeleccionado.n == 'La Alberca');
     cierto(
@@ -383,7 +383,7 @@ prueba(
     igual(await p.evaluate(() => estadoApp.pestana), 'map', 'y lleva al mapa de la capital');
     // Fuera de la provincia (antes se cierra la ficha: en el escritorio, al subir hasta las pestañas, la tapa)
     await p.evaluate(() => cerrarFicha());
-    await p.click('#vprov');
+    await pulsarPestana(p, '#vprov');
     await p.evaluate(() =>
       alLocalizarEnProvincia({ coords: { latitude: 40.4168, longitude: -3.7038, accuracy: 20 } })
     );

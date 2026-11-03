@@ -20,9 +20,16 @@
   --superficie-2: color-mix(in srgb, var(--arena) 42%, var(--tarjeta));
   --texto-suave: color-mix(in srgb, var(--tinta) 76%, var(--tarjeta));
   --sombra-tarjeta:
-    0 1px 2px color-mix(in srgb, var(--sombra-mapa) 40%, transparent), 0 6px 16px -10px var(--sombra-mapa);
+    0 1px 2px color-mix(in srgb, var(--sombra-mapa) 30%, transparent), 0 10px 24px -16px var(--sombra-mapa);
   --sombra-flotante:
-    0 2px 6px color-mix(in srgb, var(--sombra-mapa) 45%, transparent), 0 18px 40px -18px var(--sombra-mapa);
+    0 1px 3px color-mix(in srgb, var(--sombra-mapa) 35%, transparent), 0 20px 44px -20px var(--sombra-mapa);
+  /* Cristal de iOS: lo que flota deja ver el mapa difuminado detrás, con un canto claro de 0,5 px */
+  --material: color-mix(in srgb, var(--superficie-elevada) 72%, transparent);
+  --material-canto: rgb(255 255 255 / 0.55);
+  /* La ficha lleva más cristal que los botones: encima va texto largo y tiene que leerse bien */
+  --material-denso: color-mix(in srgb, var(--superficie-elevada) 86%, transparent);
+  /* Franja bajo la hora y la batería (app instalada): un poco oscura en claro, que el reloj va en blanco */
+  --barra-estado: color-mix(in srgb, var(--tinta) 32%, transparent);
   --vitor-texto: #a8221c;
   --oro-texto: #5e3e08;
   --campo: #d9cc9f;
@@ -64,7 +71,7 @@
     --oro-texto: #e0b050;
     --campo: #463f2e;
     --vecino: #342d21;
-    --fondo: #1d1810;
+    --fondo: #14110b;
     --fondo-mapa: #211a10;
     --tinta: #ecdcae;
     --arena: #6a5733;
@@ -72,7 +79,7 @@
     --oro: #e0b050;
     --linea: #b8985a;
     --rio: #4a7385;
-    --tarjeta: #2f2719;
+    --tarjeta: #221c13;
     --autovia: #6aa6ff;
     --nacional: #f08a3c;
     --calle: #8d7c56;
@@ -92,8 +99,10 @@
     --lim-suave: #a3895b;
     --sombra-mapa: rgb(0 0 0 / 0.55);
     --muralla: #d9bd82;
-    --superficie-elevada: #382f20;
+    --superficie-elevada: #2e2619;
     --superficie-2: color-mix(in srgb, var(--arena) 22%, var(--tarjeta));
+    --material-canto: rgb(255 255 255 / 0.1);
+    --barra-estado: var(--material);
   }
 }
 :root[data-theme='dark'] {
@@ -101,7 +110,7 @@
   --oro-texto: #e0b050;
   --campo: #463f2e;
   --vecino: #342d21;
-  --fondo: #1d1810;
+  --fondo: #14110b;
   --fondo-mapa: #211a10;
   --tinta: #ecdcae;
   --arena: #6a5733;
@@ -109,7 +118,7 @@
   --oro: #e0b050;
   --linea: #b8985a;
   --rio: #4a7385;
-  --tarjeta: #2f2719;
+  --tarjeta: #221c13;
   --autovia: #6aa6ff;
   --nacional: #f08a3c;
   --calle: #8d7c56;
@@ -129,8 +138,10 @@
   --lim-suave: #a3895b;
   --sombra-mapa: rgb(0 0 0 / 0.55);
   --muralla: #d9bd82;
-  --superficie-elevada: #382f20;
+  --superficie-elevada: #2e2619;
   --superficie-2: color-mix(in srgb, var(--arena) 22%, var(--tarjeta));
+  --material-canto: rgb(255 255 255 / 0.1);
+  --barra-estado: var(--material);
 }
 /* Colores que no cambian con el tema (texto sobre color, avisos, Salamanca en el tiempo, actividad) */
 :root {
@@ -185,6 +196,12 @@
   --capa-aviso: 40;
   --capa-flotante: 45;
   --capa-ventana: 50;
+  --capa-titulo: 8;
+  /* Acabado iOS (docs/notas/tema.md): cristal y muelle */
+  --material-filtro: blur(24px) saturate(170%);
+  --muelle: cubic-bezier(0.32, 0.72, 0, 1);
+  --muelle-tiempo: 0.45s;
+  --rebote: linear(0, 0.2 8%, 0.62 20%, 1.04 36%, 1.08 46%, 1.02 60%, 0.995 74%, 1);
 }
 html {
   scroll-padding-top: env(safe-area-inset-top, 0px);
@@ -231,7 +248,7 @@ h1 {
   height: 100%;
   width: 0;
   background: var(--vitor);
-  transition: width 0.4s;
+  transition: width 0.6s var(--muelle);
 }
 #cn {
   font-size: var(--letra-media);
@@ -696,7 +713,7 @@ summary:focus-visible {
   border-radius: var(--radio-panel-grande) var(--radio-panel-grande) 0 0;
   padding: 14px 18px calc(16px + env(safe-area-inset-bottom, 0px));
   transform: translateY(110%);
-  transition: transform 0.3s;
+  transition: transform var(--muelle-tiempo) var(--muelle);
   max-width: 520px;
   margin: 0 auto;
   box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.25);
@@ -1154,8 +1171,8 @@ main {
     transform: translateX(calc(100% + 120px));
     visibility: hidden;
     transition:
-      transform 0.3s,
-      visibility 0s 0.3s;
+      transform var(--muelle-tiempo) var(--muelle),
+      visibility 0s var(--muelle-tiempo);
     display: flex;
     flex-direction: column;
     box-shadow: -6px 0 24px rgba(0, 0, 0, 0.22);
@@ -1163,7 +1180,7 @@ main {
   .sh.o {
     transform: none;
     visibility: visible;
-    transition: transform 0.3s;
+    transition: transform var(--muelle-tiempo) var(--muelle);
   }
   .sh .sb {
     flex: 1;
@@ -1506,8 +1523,8 @@ main {
     flex-direction: column;
     max-height: 46vh;
     transition:
-      transform 0.3s,
-      max-height 0.25s;
+      transform var(--muelle-tiempo) var(--muelle),
+      max-height var(--muelle-tiempo) var(--muelle);
   }
   .sh.grande {
     max-height: 88vh;
@@ -2120,7 +2137,7 @@ body.tiempo .dt.v {
   }
 }
 #ts.on {
-  animation: aviso 0.35s cubic-bezier(0.2, 1.6, 0.4, 1);
+  animation: aviso 0.5s var(--rebote);
 }
 @keyframes aviso {
   0% {
@@ -2351,7 +2368,7 @@ body.tiempo .dt.v {
   display: block;
   height: 100%;
   background: var(--vitor);
-  transition: width 0.4s;
+  transition: width 0.6s var(--muelle);
 }
 
 .sig {
@@ -3088,15 +3105,15 @@ a.llegar.principal {
   .sh {
     visibility: hidden;
     transition:
-      transform 0.3s,
-      max-height 0.25s,
-      visibility 0s 0.3s;
+      transform var(--muelle-tiempo) var(--muelle),
+      max-height var(--muelle-tiempo) var(--muelle),
+      visibility 0s var(--muelle-tiempo);
   }
   .sh.o {
     visibility: visible;
     transition:
-      transform 0.3s,
-      max-height 0.25s;
+      transform var(--muelle-tiempo) var(--muelle),
+      max-height var(--muelle-tiempo) var(--muelle);
   }
   .asa {
     flex-shrink: 0;
@@ -4336,7 +4353,7 @@ a.llegar.principal {
   margin-left: auto;
   font-size: var(--letra-subtitulo);
   color: var(--texto-suave);
-  transition: transform 0.15s;
+  transition: transform 0.3s var(--muelle);
 }
 .plegable[open] > summary::after {
   transform: rotate(90deg);
@@ -5754,5 +5771,179 @@ html.con-ventana body {
     content: '';
     position: absolute;
     inset: -6px 0;
+  }
+}
+
+/* --- Acabado iOS (docs/notas/tema.md) ------------------------------------------------------------
+   La piedra, el vítor, los pictogramas y los bordes siguen siendo la identidad; esto cambia cómo se siente:
+   cristal en lo que flota, tacto al pulsar y movimiento con muelle */
+
+/* Cristal: el mapa se ve difuminado detrás de lo que flota encima */
+.ir-lista,
+.zb,
+.capas,
+.globo,
+.ayuda-mapa,
+.leyenda-mini,
+#ts,
+#ts.discreto,
+#nueva,
+.sr,
+.sh,
+.idx {
+  background: var(--material);
+  -webkit-backdrop-filter: var(--material-filtro);
+  backdrop-filter: var(--material-filtro);
+}
+.ir-lista,
+.zb,
+.capas,
+.globo,
+.ayuda-mapa,
+#ts,
+#ts.discreto,
+#nueva,
+.sr {
+  box-shadow:
+    inset 0 0 0 0.5px var(--material-canto),
+    var(--sombra-flotante);
+}
+.leyenda-mini {
+  box-shadow: inset 0 0 0 0.5px var(--material-canto);
+}
+.sh {
+  background: var(--material-denso);
+  box-shadow:
+    inset 0 0.5px 0 var(--material-canto),
+    var(--sombra-flotante);
+}
+.zb {
+  border-radius: var(--radio-caja);
+}
+.zb button,
+.zb button:hover {
+  background: transparent;
+}
+.idx {
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+/* El aviso de logro ya no es una pastilla roja: cristal con el texto en vítor */
+#ts {
+  color: var(--vitor-texto);
+}
+#ts.discreto {
+  color: var(--tinta);
+}
+/* Franja bajo la hora y la batería: con la barra de estado translúcida, lo de debajo pasa por detrás */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--capa-aviso);
+  height: env(safe-area-inset-top, 0px);
+  background: var(--barra-estado);
+  -webkit-backdrop-filter: var(--material-filtro);
+  backdrop-filter: var(--material-filtro);
+  pointer-events: none;
+}
+
+/* Tacto: sin destello gris ni retraso al tocar, y lo pulsable se encoge un poco */
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+button,
+a,
+summary,
+label,
+[role='button'] {
+  touch-action: manipulation;
+}
+:where(button, .boton-enlace, a.llegar, .gbtn, .fila-explora, summary) {
+  transition: scale 0.25s var(--muelle);
+}
+:where(button, .boton-enlace, a.llegar, .gbtn, .fila-explora, summary):active:not(:disabled) {
+  scale: 0.97;
+}
+
+/* Título grande que se encoge al desplazar (móvil, donde el navegador sabe animar con el desplazamiento) */
+@supports (animation-timeline: scroll()) {
+  @media (max-width: 899px) {
+    main {
+      container-type: inline-size;
+    }
+    main > h1 {
+      position: sticky;
+      top: calc(env(safe-area-inset-top, 0px) + 6px);
+      z-index: var(--capa-titulo);
+      /* Alto fijo: la letra encoge sin mover lo de debajo (si no, lo que sube la página se queda corto) */
+      line-height: 27px;
+      animation: titulo-encoge linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 72px;
+    }
+    main > h1::before {
+      content: '';
+      position: absolute;
+      top: -12px;
+      bottom: -6px;
+      left: -14px;
+      width: calc(100cqw + 28px);
+      z-index: -1;
+      pointer-events: none; /* deja pulsar «?» y «Avisar de un error», que van debajo */
+      background: var(--material);
+      -webkit-backdrop-filter: var(--material-filtro);
+      backdrop-filter: var(--material-filtro);
+      box-shadow: 0 0.5px 0 var(--borde-suave);
+      opacity: 0;
+      animation: titulo-fondo linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 36px 72px;
+    }
+    /* Con la ficha abierta, el mapa sube arriba del todo: el título se va con la página */
+    main.o > h1 {
+      position: relative;
+    }
+  }
+}
+@keyframes titulo-encoge {
+  to {
+    font-size: var(--letra-destacada);
+    transform: none;
+  }
+}
+@keyframes titulo-fondo {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Cambio de pestaña (View Transitions, conTransicion en util.js): lo nuevo entra subiendo con muelle */
+::view-transition-old(root) {
+  animation: 0.2s ease-out both vista-sale;
+}
+::view-transition-new(root) {
+  animation: var(--muelle-tiempo) var(--muelle) both vista-entra;
+}
+@keyframes vista-sale {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes vista-entra {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :where(button, .boton-enlace, a.llegar, .gbtn, .fila-explora, summary):active:not(:disabled) {
+    scale: none;
+  }
+  main > h1 {
+    position: static;
   }
 }

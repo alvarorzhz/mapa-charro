@@ -1,5 +1,17 @@
 [
   {
+    "version": "2.19.1",
+    "fecha": "2026-10-28",
+    "titulo": "Más curiosidades y leyendas",
+    "usuario": [
+      "Más curiosidades en ocho barrios y pueblos del alfoz: San Bernardo, Pizarrales, Delicias, San Cristóbal, Villares de la Reina, Santa Marta, Carbajosa y Villamayor.",
+      "Más historias en once pueblos de la provincia, con leyendas como la de Santa Teresa en Peñaranda o la de la Virgen de la Encina en Macotera: Ciudad Rodrigo, La Alberca, Béjar, Ledesma, Alba de Tormes, Candelario, Guijuelo, Peñaranda, Mogarraz, Miranda del Castañar y Macotera."
+    ],
+    "tecnico": [
+      "Solo contenido: 10 curiosidades nuevas en CURIOSIDADES (contenido.js, con su fuente en comentario) y 21 en PUEBLOS[...].cur (pueblos.js, de los artículos de Wikipedia que ya estaban en su fuente). Sin cambios de código."
+    ]
+  },
+  {
     "version": "2.19.0",
     "fecha": "2026-10-28",
     "titulo": "Fichas más limpias",

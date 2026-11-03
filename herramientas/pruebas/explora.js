@@ -1,6 +1,6 @@
 // Pruebas · «Explora»: ¿Qué puedo descubrir hoy?, Monumentos y Dónde comer, rutas a pie, Salamanca en el tiempo, Cultura, Agenda, la hora dorada, Salamanca desaparecida, detalles escondidos y el juego.
 // Se pasan desde herramientas/pruebas.js (PRUEBAS_ZONA=explora pasa solo estas).
-const { prueba, igual, cierto, texto, fichaAbierta, llegaA } = require('./comun');
+const { prueba, igual, cierto, texto, fichaAbierta, llegaA, pulsarPestana } = require('./comun');
 
 prueba('Salamanca en el tiempo: cada etapa enlazada con monumentos, personajes y pueblos', async (p, url) => {
   await p.goto(url + '#tiempo/5');
@@ -90,7 +90,7 @@ prueba('Salamanca en el tiempo', async p => {
     ),
     'al cerrar, el mapa vuelve a ser el de hoy'
   );
-  igual(await relleno(), rojo, 'y las marcas vuelven');
+  await llegaA(relleno, rojo, 'y las marcas vuelven'); // el relleno vuelve con su transición
 });
 
 prueba('Enlace a una etapa', async (p, url) => {
@@ -385,7 +385,7 @@ prueba('Cultura y tradiciones: ficha, mapa sin puntos inventados y enlaces con e
   await p.evaluate(() => abrirFicha('tejares'));
   cierto(!(await p.isVisible('#culf')), 'y no en las que no tienen nada');
   await p.click('#x');
-  await p.click('#vprov');
+  await pulsarPestana(p, '#vprov');
   await p.evaluate(() =>
     seleccionarPueblo(
       PROVINCIA.m.find(m => m.n == 'Béjar'),

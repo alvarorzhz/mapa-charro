@@ -68,7 +68,7 @@ function pintarLista() {
   const caja = $('#ls'),
     volver = crear('button', 'volver-mapa', esEscritorio() ? '× Cerrar la lista' : '← Volver al mapa');
   caja.textContent = '';
-  volver.onclick = () => cambiarPestana('map');
+  volver.onclick = () => conTransicion(() => cambiarPestana('map'));
   caja.append(volver, crear('h2', 'lista-titulo', 'Las zonas de la capital'));
   caja.appendChild(
     crearBotonesFiltro(estadoApp.filtroLista, clave => {
@@ -106,9 +106,9 @@ function pintarLista() {
     );
 }
 
-$('#vmap').onclick = () => cambiarPestana('map');
-$('#vprov').onclick = () => cambiarPestana('prov');
-$('#vlist').onclick = () => cambiarPestana('list');
+$('#vmap').onclick = () => conTransicion(() => cambiarPestana('map'));
+$('#vprov').onclick = () => conTransicion(() => cambiarPestana('prov'));
+$('#vlist').onclick = () => conTransicion(() => cambiarPestana('list'));
 
 // --- Filtros del mapa (en el panel de capas): estado de la zona, parte de la ciudad y monumentos ---
 // Se combinan: p. ej. «Sin pisar» + «Sur» deja a la vista las zonas del sur que faltan.
