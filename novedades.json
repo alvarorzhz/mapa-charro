@@ -1,5 +1,20 @@
 [
   {
+    "version": "2.24.1",
+    "fecha": "2026-11-08",
+    "titulo": "Más curiosidades",
+    "usuario": [
+      "Garrido Norte: la «Operación Asfalto» de 1982 y la asociación Navega.",
+      "Estación: la primera estación de 1877, a la que la prensa llamó «barracón asqueroso e inmundo», y la fuente de Martín Chirino.",
+      "Hospital: el derribo del viejo Clínico en 2023 y los 22 edificios del Campus Unamuno.",
+      "Los Alcaldes: su única línea de autobús, el colectivo Uniendo Barrios y una fecha corregida de su asociación vecinal."
+    ],
+    "tecnico": [
+      "js/datos/contenido.js: 8 curiosidades nuevas con fuente en garridonorte, estacion, hospitales y alcaldes.",
+      "alcaldes: la asociación vecinal no «nació» en julio de 2025 (es la fecha de su registro); ya actuaba en 2022 con Román García al frente (SALAMANCArtv)."
+    ]
+  },
+  {
     "version": "2.24.0",
     "fecha": "2026-11-03",
     "titulo": "Un acabado más de iPhone",
@@ -125,18 +140,6 @@
     "tecnico": [
       "20 curiosidades nuevas en CURIOSIDADES (contenido.js), con su fuente en comentario (La Crónica de Salamanca, La Gaceta, El Español, Wikipedia y la asociación de vecinos de Huerta Otea).",
       "Dónde comer: pintarSitiosComer pinta un <details class=\"plegable\"> en #eat (fuera #he); irADondeComer (ficha.js) lo abre desde Explora; sale del índice de la ficha. CSS: #eat con plegable lleva el margen de arriba y #mz pierde el suyo."
-    ]
-  },
-  {
-    "version": "2.19.2",
-    "fecha": "2026-10-28",
-    "titulo": "23 pueblos más con ficha",
-    "usuario": [
-      "23 pueblos de la provincia estrenan ficha con sus curiosidades: Aldea del Obispo y su Real Fuerte de la Concepción, Cerralbo, Sobradillo, El Bodón, Puerto de Béjar, Juzbado, Almenara de Tormes, Palencia de Negrilla, Villaverde de Guareña, Garcibuey, Robleda y doce más.",
-      "Con leyendas como la de las palomas de oro de Garcibuey, la mora de Golpejas o el Cristo que solo movieron las vacas flacas de Villaverde de Guareña."
-    ],
-    "tecnico": [
-      "Solo contenido: 23 entradas nuevas en PUEBLOS (pueblos.js), con cur, mon cuando el artículo da datos y fuente de Wikipedia. Ya son 81 pueblos con ficha."
     ]
   }
 ]

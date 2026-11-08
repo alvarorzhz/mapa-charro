@@ -100,7 +100,11 @@ export const CURIOSIDADES = {
     'Nació a finales del siglo XIX, con la llegada del tren. El parque Garrido se inauguró el 7 de diciembre de 1974.',
     'El Multiusos Sánchez Paraíso se construyó para la Capitalidad Cultural Europea de 2002, y la mezquita de la plaza García Lorca ocupa la antigua tienda El Manolo.',
     // Fuente: https://www.elespanol.com/castilla-y-leon/region/salamanca/20211209/garrido-norte-crisol-razas-culturas-ciudad-salamanca/633437537_0.html
-    'En la inauguración de la plaza de Barcelona, diseñada por Antonio Fernández Alba, el alcalde barcelonés Pasqual Maragall empezó su discurso con «¡Queridos ciudadanos de Málaga!».'
+    'En la inauguración de la plaza de Barcelona, diseñada por Antonio Fernández Alba, el alcalde barcelonés Pasqual Maragall empezó su discurso con «¡Queridos ciudadanos de Málaga!».',
+    // Fuente: https://www.elespanol.com/castilla-y-leon/region/salamanca/20211209/garrido-norte-crisol-razas-culturas-ciudad-salamanca/633437537_0.html
+    'A mediados de los ochenta la mayoría de sus calles seguían sin asfaltar. La «Operación Asfalto» de octubre de 1982 urbanizó 120 calles y asfaltó otras 180 en toda la ciudad.',
+    // Fuente: https://salamancartvaldia.es/not/181874/populoso-moderno-barrio-garrido-norte/
+    'Su asociación de vecinos, Navega, nació en 1982 y tiene su sede en el antiguo colegio de San Mateo. La fiesta del barrio es el 25 de julio.'
   ],
   estacion: [
     'Nació junto a la estación para las familias del ferrocarril. El tren llegó a Salamanca a finales del siglo XIX y con él creció todo Garrido.',
@@ -109,7 +113,11 @@ export const CURIOSIDADES = {
     // Fuente: https://www.salamancaenelayer.com/2012/09/la-estacion-de-ferrocarril.html
     'La vieja estación se derribó en 1970 y la nueva se inauguró en 1973. En 2001 se levantó Vialia, que une estación y centro comercial.',
     // Fuente: https://www.lagacetadesalamanca.es/salamanca/asi-se-transformo-el-paseo-de-la-estacion-vida-e-industria-en-torno-al-tren-CH6382994
-    'El paseo de la Estación se llamó también avenida de Canals y del General Mola. A su alrededor hubo fábricas de chocolate, galletas, hielo o gaseosa que repartían sus productos en tren.'
+    'El paseo de la Estación se llamó también avenida de Canals y del General Mola. A su alrededor hubo fábricas de chocolate, galletas, hielo o gaseosa que repartían sus productos en tren.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/las-tres-versiones-de-la-estacion-del-ferrocarril-de-salamanca-BG6383056
+    'La primera estación, de 1877, la proyectó el ingeniero Pelayo Clairac, con un cocherón para cuatro locomotoras. Pronto se quedó pequeña: la prensa la llamó «barracón asqueroso e inmundo».',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/las-tres-versiones-de-la-estacion-del-ferrocarril-de-salamanca-BG6383056
+    'Delante de la estación de los años setenta había una plazuela con árboles, bancos y una fuente con una obra de Martín Chirino. La escultura se fue luego a Valladolid y acabó en Madrid.'
   ],
   chinchibarra: [
     'Su nombre, según los historiadores locales, podría venir del vasco. Creció alrededor del depósito de agua, inaugurado en 1945 el día de San Juan de Sahagún.',
@@ -237,7 +245,11 @@ export const CURIOSIDADES = {
     // Fuente: https://www.casareal.es/ES/Actividades/Paginas/actividades_actividades_detalle.aspx?data=15593
     'El rey Felipe VI inauguró el nuevo Hospital Universitario el 17 de enero de 2023. Tiene 863 camas y 25 quirófanos.',
     // Fuente: https://www.lagacetadesalamanca.es/salamanca/el-campus-unamuno-un-ejemplo-de-la-arquitectura-contemporanea-CG9899433
-    'El primer edificio del Campus Unamuno fue la Facultad de Farmacia, inaugurada en 1980 y obra de los arquitectos Julio Cano Lasso e Ignacio Mendaro.'
+    'El primer edificio del Campus Unamuno fue la Facultad de Farmacia, inaugurada en 1980 y obra de los arquitectos Julio Cano Lasso e Ignacio Mendaro.',
+    // Fuente: https://www.diariodecastillayleon.es/castilla-y-leon/230413/10466/desaparece-antiguo-hospital-clinico-universitario-salamanca-asi-sido-derribo.html
+    'El viejo Clínico, de hasta siete plantas, se derribó tras casi 50 años. Desapareció del todo el 11 de abril de 2023, y en su solar irá el edificio de consultas del nuevo hospital.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/el-campus-unamuno-un-ejemplo-de-la-arquitectura-contemporanea-CG9899433
+    'El Campus Unamuno tiene 22 edificios. El último gran edificio que se levantó es el Dioscórides, de los arquitectos Luis Ferreira y Eduardo Dorado.'
   ],
   pizarrales: [
     'Nació a comienzos del siglo XX con casas de pizarra y sin permisos (la licencia oficial llegó en 1966). Los vecinos llevaron el agua hasta sus casas a pico y pala.',
@@ -506,7 +518,12 @@ export const CURIOSIDADES = {
   ],
   alcaldes: [
     // Fuente: https://avlosalcaldes.org/quienes-somos/
-    'Es uno de los barrios más jóvenes de la ciudad: su asociación vecinal nació en julio de 2025 y celebró sus primeras fiestas del 2 al 5 de julio de 2026.',
+    // Fuente: https://salamancartvaldia.es/noticia/2022-07-02-nada-avanza-en-el-barrio-los-alcaldes-299683
+    'Es uno de los barrios más jóvenes de la ciudad. Sus vecinos ya reclamaban mejoras con Román García al frente en 2022; la asociación vecinal quedó registrada el 7 de julio de 2025 y celebró sus primeras fiestas del 2 al 5 de julio de 2026.',
+    // Fuente: https://salamancartvaldia.es/noticia/2022-07-02-nada-avanza-en-el-barrio-los-alcaldes-299683
+    'Mezcla grandes bloques de pisos y chalés. En 2022 solo entraba en el barrio una línea de autobús, la 5.',
+    // Fuente: https://www.salamancahoy.es/salamanca/ciudad/barrio-trastormesino-quiere-coches-circulen-despacio-pasen-20240818201444-nt.html
+    'Sus vecinos se unieron a los de Buenos Aires, Chamberí, Tejares y Vistahermosa en el colectivo Uniendo Barrios. Llevan más de veinte años pidiendo que la línea 8 pare en la plaza de Los Alcaldes.',
     // Fuente: https://www.lagacetadesalamanca.es/salamanca/la-selva-del-parque-de-los-alcaldes-ED13015188
     'En 2008 el Ayuntamiento cedió al Ministerio de Cultura un solar de 6.000 m² del barrio para ampliar el Centro Documental de la Memoria Histórica.',
     // Fuente: https://www.lagacetadesalamanca.es/salamanca/barrio-alcaldes-busca-nuevos-residentes-20230717172626-nt.html
