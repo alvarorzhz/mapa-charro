@@ -27,6 +27,7 @@ import * as parques from './datos/parques.js?v=e6e84b7308';
 import * as carreterasProvincia from './datos/carreteras-provincia.js?v=887eb19856';
 import * as provincia from './datos/provincia.js?v=92d7bcff39';
 import * as datosFirebase from './datos/firebase.js?v=dace485241';
+import * as fiestas from './datos/fiestas.js?v=dbf7617b39';
 import * as palabras from './datos/palabras.js?v=507b85b1cf';
 
 Object.assign(
@@ -55,5 +56,6 @@ Object.assign(
   carreterasProvincia,
   provincia,
   datosFirebase,
-  palabras
+  palabras,
+  fiestas
 );

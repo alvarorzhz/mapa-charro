@@ -35,6 +35,8 @@
   --campo: #d9cc9f;
   --vecino: #cab588;
   --fondo: #d8b97a;
+  --fiesta-nieve: #8fb3d9;
+  --fiesta-luz: #f2c46d;
   --fondo-mapa: #bc9f6f;
   --tinta: #35240f;
   --arena: #ecdcae;
@@ -72,6 +74,8 @@
     --campo: #463f2e;
     --vecino: #342d21;
     --fondo: #14110b;
+    --fiesta-nieve: #fff;
+    --fiesta-luz: #f2c46d;
     --fondo-mapa: #211a10;
     --tinta: #ecdcae;
     --arena: #6a5733;
@@ -111,6 +115,8 @@
   --campo: #463f2e;
   --vecino: #342d21;
   --fondo: #14110b;
+  --fiesta-nieve: #fff;
+  --fiesta-luz: #f2c46d;
   --fondo-mapa: #211a10;
   --tinta: #ecdcae;
   --arena: #6a5733;
@@ -196,6 +202,7 @@
   --capa-aviso: 40;
   --capa-flotante: 45;
   --capa-ventana: 50;
+  --capa-fiesta: 55;
   --capa-titulo: 8;
   /* Acabado iOS (docs/notas/tema.md): cristal y muelle */
   --material-filtro: blur(24px) saturate(170%);
@@ -4953,6 +4960,185 @@ a.llegar.principal {
   padding: 4px 10px;
   border-color: var(--linea);
 }
+/* Días especiales (fiestas.js): el aviso de arriba y las piezas que caen por encima de todo sin recibir toques */
+#fiesta {
+  position: fixed;
+  z-index: var(--capa-flotante);
+  top: calc(env(safe-area-inset-top, 0px) + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  box-sizing: border-box;
+  padding: 6px;
+  border-radius: 22px;
+  background: var(--tarjeta);
+  color: var(--tinta);
+  border: 2px solid var(--vitor);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  font:
+    var(--letra-media) / 1.35 Lora,
+    serif;
+  animation: fiesta-entra var(--muelle-tiempo, 0.5s) var(--muelle, ease-out);
+}
+#fiesta .texto {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+#fiesta button {
+  flex: none;
+  min-width: 36px;
+  min-height: 36px;
+  border-radius: var(--radio-pastilla);
+  border: 2px solid var(--linea);
+  background: transparent;
+  color: var(--tinta);
+  font:
+    600 var(--letra-media) Lora,
+    serif;
+  cursor: pointer;
+}
+#fiesta .icono {
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+#fiesta .icono:disabled {
+  cursor: default;
+}
+#fiesta .mas {
+  padding: 4px 12px;
+  border-color: var(--vitor);
+}
+@keyframes fiesta-entra {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -16px);
+  }
+}
+.fiesta-capa {
+  /* Cada pieza trae los suyos (fiestas.js): estos son los de partida */
+  --x: 50vw;
+  --y: 30vh;
+  --deriva: 0;
+  --retraso: 0s;
+  --duracion: 5s;
+  --giro: 0deg;
+  --tam: 1;
+  position: fixed;
+  inset: 0;
+  z-index: var(--capa-fiesta);
+  overflow: hidden;
+  pointer-events: none;
+}
+.fiesta-capa .pieza {
+  position: absolute;
+  left: var(--x);
+  font-size: calc(1.5rem * var(--tam));
+  line-height: 1;
+  opacity: 0;
+  animation: var(--duracion) var(--retraso) linear forwards;
+  will-change: transform;
+}
+/* Sin emoji: papelitos de colores (confeti) o chispas redondas (luces) */
+.fiesta-capa .pieza:empty {
+  width: calc(9px * var(--tam));
+  height: calc(14px * var(--tam));
+  border-radius: 2px;
+}
+.fiesta-capa.subir .pieza:empty {
+  width: calc(8px * var(--tam));
+  height: calc(8px * var(--tam));
+  border-radius: 50%;
+  box-shadow: 0 0 10px 3px currentColor;
+  color: var(--fiesta-luz);
+}
+.fiesta-capa.caer .pieza {
+  top: -2rem;
+  animation-name: fiesta-cae;
+}
+.fiesta-capa.subir .pieza {
+  bottom: -2rem;
+  animation-name: fiesta-sube;
+}
+/* La nieve, blanca en el tema oscuro y azulada en el claro para que se vea sobre la piedra (--fiesta-nieve) */
+.fiesta-capa.claro .pieza {
+  color: var(--fiesta-nieve);
+  text-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+}
+@keyframes fiesta-cae {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(0);
+  }
+  8% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--deriva), calc(100vh + 4rem)) rotate(var(--giro));
+  }
+}
+@keyframes fiesta-sube {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.6);
+  }
+  15% {
+    opacity: 0.9;
+  }
+  80% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--deriva), -70vh) scale(1);
+  }
+}
+.fiesta-capa .fuego {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+}
+.fiesta-capa .chispa {
+  --angulo: 0deg;
+  --lejos: 90px;
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  margin: -3px;
+  border-radius: 50%;
+  opacity: 0;
+  animation: fiesta-estalla 1.6s var(--retraso) ease-out forwards;
+  will-change: transform;
+}
+@keyframes fiesta-estalla {
+  0% {
+    opacity: 1;
+    transform: rotate(var(--angulo)) translateX(0) scale(1);
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--angulo)) translateX(var(--lejos)) translateY(24px) scale(0.4);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fiesta-capa {
+    display: none;
+  }
+  #fiesta {
+    animation: none;
+  }
+}
 .modal .caja {
   display: flex;
   flex-direction: column;
@@ -5788,6 +5974,7 @@ html.con-ventana body {
 #ts,
 #ts.discreto,
 #nueva,
+#fiesta,
 .sr,
 .sh,
 .idx {

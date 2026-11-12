@@ -31,6 +31,7 @@ const datos = [
   'parques',
   'firebase',
   'palabras',
+  'fiestas',
   'cultura',
   'detalles',
   'fachadas',
@@ -40,7 +41,7 @@ const datos = [
 const codigo =
   sinExport(datos.map(d => leer('js/datos/' + d + '.js')).join('\n;\n')) +
   '\n;({ NOMBRES_GRUPOS, ZONAS_GRANDES, ZONAS, OTROS_NOMBRES, SEMILLAS_REPARTO, MONUMENTOS, RUTAS, TRAMOS_RUTAS, PERFIL_RUTAS, PUEBLOS, CURIOSIDADES, LEYENDAS, FOTOS, DONDE_COMER,' +
-  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA, RELACIONES_ETAPA, RANGOS_ETAPA, PALABRAS_CHARRAS, FUENTES_PALABRAS, RUTAS_PROVINCIA, SALIDA_PROVINCIA, TRAMOS_PROVINCIA, CARRETERAS_PROVINCIA, HABITANTES, CENSOS, PARQUES, CULTURA, CATEGORIAS_CULTURA, TIPOS_TEXTO_CULTURA, DETALLES, FACHADAS, ORIENTACION_FACHADAS, DESAPARECIDOS })';
+  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA, RELACIONES_ETAPA, RANGOS_ETAPA, PALABRAS_CHARRAS, FUENTES_PALABRAS, DIAS_ESPECIALES, ESTACIONES, RUTAS_PROVINCIA, SALIDA_PROVINCIA, TRAMOS_PROVINCIA, CARRETERAS_PROVINCIA, HABITANTES, CENSOS, PARQUES, CULTURA, CATEGORIAS_CULTURA, TIPOS_TEXTO_CULTURA, DETALLES, FACHADAS, ORIENTACION_FACHADAS, DESAPARECIDOS })';
 const D = vm.runInNewContext(codigo, {});
 
 const WEB_PUBLICA = 'https://alvarorzhz.github.io/mapa-charro/';
@@ -941,6 +942,39 @@ for (const f of fs.readdirSync(path.join(RAIZ, 'js/datos')).filter(f => f.endsWi
         `${que}: la foto necesita el enlace a su página en Commons`
       );
     }
+  });
+}
+
+// --- Días especiales (fiestas.js) -------------------------------------------------------------------
+{
+  // Las animaciones están en la lógica (ANIMACIONES_FIESTA de js/fiestas.js): se leen sus nombres
+  const bloque = /const ANIMACIONES_FIESTA = \{([\s\S]*?)\n\};/.exec(leer('js/fiestas.js')),
+    animaciones = new Set(bloque ? [...bloque[1].matchAll(/^ {2}([a-z]+):/gm)].map(m => m[1]) : []),
+    fecha = /^(\d{2}-\d{2}|P[+-]\d+)$/,
+    vistos = new Set();
+  comprobar(animaciones.size, 'js/fiestas.js: no se encuentra ANIMACIONES_FIESTA');
+  D.DIAS_ESPECIALES.forEach(f => {
+    const que = `Día especial «${f.id}»`;
+    comprobar(/^[a-z0-9-]+$/.test(f.id || '') && !vistos.has(f.id), `${que}: id vacío, raro o repetido`);
+    vistos.add(f.id);
+    for (const campo of ['n', 'icono', 'texto'])
+      comprobar(typeof f[campo] == 'string' && f[campo].trim(), `${que}: falta «${campo}»`);
+    comprobar(fecha.test(f.desde || ''), `${que}: «desde» tiene que ser MM-DD o P+N`);
+    comprobar(!f.hasta || fecha.test(f.hasta), `${que}: «hasta» tiene que ser MM-DD o P+N`);
+    comprobar(animaciones.has(f.anim), `${que}: la animación «${f.anim}» no existe`);
+    comprobar(
+      !f.cultura || D.CULTURA.some(c => c.id == f.cultura),
+      `${que}: «${f.cultura}» no está en CULTURA`
+    );
+    (f.fuentes || []).forEach(([medio, url]) =>
+      comprobar(medio && /^https:\/\//.test(url || ''), `${que}: fuente sin medio o sin https`)
+    );
+  });
+  comprobar(D.ESTACIONES.length == 4, 'ESTACIONES: tienen que ser cuatro');
+  D.ESTACIONES.forEach(([id, n, anim, icono]) => {
+    comprobar(id && n && icono && !vistos.has(id), `Estación «${id}»: incompleta o con id repetido`);
+    vistos.add(id);
+    comprobar(animaciones.has(anim), `Estación «${id}»: la animación «${anim}» no existe`);
   });
 }
 

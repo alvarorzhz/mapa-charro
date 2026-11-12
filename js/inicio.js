@@ -141,6 +141,8 @@ const pintarColorBarra = () => {
   pintarColorBarra();
   $('#ver').append(' · ', boton);
 }
+// Las animaciones de los días especiales (fiestas.js), que se pueden apagar
+$('#ver').append(' · ', botonFiestas());
 // Privacidad (qué se guarda con la cuenta de Google); dentro de Claude no hay esa cuenta
 if (!EN_MARCO) {
   const enlace = crear('a', '', 'Privacidad');
@@ -235,3 +237,5 @@ if (tocaBienvenida()) {
   setTimeout(() => empezarPaseo(), 300);
 } else if (tocaNovedades()) setTimeout(() => mostrarNovedadesNuevas(), 300);
 else if (tocaHoy()) setTimeout(() => abrirHoy(), 300);
+// Días especiales (fiestas.js): Navidad, Semana Santa, cambios de estación…, con su animación
+setTimeout(() => iniciarFiestas(), 600);
