@@ -17,6 +17,7 @@ const LOGICA = [
   'js/ruta-contexto.js',
   'js/logros.js',
   'js/agenda.js',
+  'js/fiestas.js',
   'js/hora-dorada.js',
   'js/mi-salamanca-calculos.js'
 ];
@@ -177,6 +178,34 @@ prueba('Agenda: próximas citas ordenadas y sin ninguna ya pasada', app => {
     citas.every(x => x.dentro == Math.max(0, app('diasEntre')(hoy, x.desde))),
     'los días que faltan cuadran con la fecha'
   );
+});
+
+// --- Días especiales (fiestas.js) -------------------------------------------------
+prueba('Días especiales: equinoccios y solsticios a su hora', app => {
+  const momento = app('momentoEstacion'),
+    // Hora UTC publicada (Observatorio Astronómico Nacional / USNO) de 2026
+    esperadas = ['2026-03-20T14:46Z', '2026-06-21T08:24Z', '2026-09-23T00:05Z', '2026-12-21T20:50Z'];
+  esperadas.forEach((t, i) => {
+    const error = Math.abs(momento(2026, i) - new Date(t)) / 6e4;
+    cierto(error < 3, `estación ${i}: ${momento(2026, i).toISOString()} (se esperaba ${t})`);
+  });
+});
+
+prueba('Días especiales: fijos, desde la Pascua y cambios de estación', app => {
+  const de = d => (app('diaEspecial')(d) || {}).id;
+  igual(de('2026-12-24'), 'navidad', 'Nochebuena');
+  igual(de('2026-12-25'), 'navidad', 'Navidad');
+  igual(de('2027-01-06'), 'reyes', 'Reyes');
+  igual(de('2026-04-13'), 'lunes-de-aguas', 'Lunes de Aguas de 2026');
+  igual(de('2026-03-29'), 'semana-santa', 'Domingo de Ramos');
+  igual(de('2026-04-05'), 'semana-santa', 'Domingo de Resurrección');
+  igual(de('2026-02-15'), 'carnaval', 'Carnaval de 2026');
+  igual(de('2026-06-12'), 'san-juan-de-sahagun', 'San Juan de Sahagún');
+  igual(de('2026-03-20'), 'primavera', 'equinoccio de marzo');
+  igual(de('2026-09-23'), 'otono', 'equinoccio de septiembre (pasada la medianoche en Salamanca)');
+  igual(de('2026-12-21'), 'invierno', 'solsticio de diciembre');
+  igual(de('2026-11-12'), undefined, 'un día cualquiera');
+  cierto(/hacia las 15:4[5-7],/.test(app('diaEspecial')('2026-03-20').texto), 'con la hora de Salamanca');
 });
 
 // --- Sol (hora-dorada.js) -------------------------------------------------------

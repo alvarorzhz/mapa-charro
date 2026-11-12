@@ -258,6 +258,54 @@ prueba('Cambio de pestaña con View Transitions, y sin ellas con menos movimient
   igual(await p.evaluate(() => window.transiciones), 1, 'sin transición nueva');
 });
 
+prueba(
+  'Días especiales: aviso con animación, que se cierra y se puede apagar',
+  async (p, url) => {
+    // Con ?fiesta= sale cualquier día: el aviso arriba y las piezas, que no reciben toques
+    await p.goto(url + '?fiesta=navidad');
+    await p.waitForSelector('#fiesta');
+    cierto((await texto(p, '#fiesta')).includes('Navidad'), 'el aviso de Navidad');
+    cierto((await p.$$('#fiesta-capa .pieza')).length > 10, 'cae la nieve');
+    igual(await p.$eval('#fiesta-capa', e => getComputedStyle(e).pointerEvents), 'none', 'sin tapar nada');
+    igual(
+      await p.$eval('#fiesta-capa', e => e.getAttribute('aria-hidden')),
+      'true',
+      'y callada para el lector'
+    );
+    await p.click('#fiesta .cerrar');
+    cierto(!(await p.$('#fiesta')) && !(await p.$('#fiesta-capa')), '× quita el aviso y la animación');
+    // Con «Saber más», a su ficha de Cultura
+    await p.goto(url + '?fiesta=lunes-de-aguas');
+    await p.click('#fiesta .mas');
+    await hastaQue(async () => (await texto(p, '#nm')) == 'Lunes de Aguas', 'abre su ficha');
+    // Con menos movimiento, solo el aviso
+    await p.emulateMedia({ reducedMotion: 'reduce' });
+    await p.goto(url + '?fiesta=nochevieja');
+    await p.waitForSelector('#fiesta');
+    cierto(!(await p.$('#fiesta-capa')), 'sin piezas con menos movimiento');
+    await p.emulateMedia({ reducedMotion: 'no-preference' });
+    // El de hoy sale una vez al día, y nunca si se ha apagado desde el pie
+    await p.goto(url);
+    await p.evaluate(() => {
+      window.diaEspecial = () => DIAS_ESPECIALES[0];
+      iniciarFiestas();
+    });
+    cierto(await p.isVisible('#fiesta'), 'un día especial, sale solo');
+    await p.click('#fiesta .cerrar');
+    await p.evaluate(() => iniciarFiestas());
+    cierto(!(await p.$('#fiesta')), 'y no vuelve ese día');
+    await p.evaluate(() => localStorage.setItem('charro-fiesta', ''));
+    await p.click('#ver button:has-text("Quitar animaciones de fiesta")');
+    await p.evaluate(() => iniciarFiestas());
+    cierto(!(await p.$('#fiesta')), 'apagadas desde el pie, no sale');
+    cierto(
+      await p.isVisible('#ver button:has-text("Poner animaciones de fiesta")'),
+      'y se pueden volver a poner'
+    );
+  },
+  { conFiestas: true }
+);
+
 prueba('Avisar de un error', async p => {
   await p.evaluate(() => abrirFicha('vega'));
   await p.click('#errf');

@@ -108,6 +108,8 @@ async function pasarPrueba(navegador, url, [ancho, alto], { fn, opciones }) {
     await p.addInitScript(() => {
       if (!localStorage.getItem('charro-version-vista')) localStorage.setItem('charro-version-vista', '999');
     });
+  // Un día especial (fiestas.js) pondría su aviso arriba: apagados salvo en su prueba
+  if (!opciones.conFiestas) await p.addInitScript(() => localStorage.setItem('charro-fiestas', '0'));
   if (opciones.antes) await p.addInitScript(opciones.antes);
   if (opciones.rutas) await opciones.rutas(p);
   try {

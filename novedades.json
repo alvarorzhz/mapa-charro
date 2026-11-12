@@ -1,5 +1,20 @@
 [
   {
+    "version": "2.25.0",
+    "fecha": "2026-11-12",
+    "titulo": "Animaciones en días especiales",
+    "usuario": [
+      "En los días especiales, al abrir el mapa cae una pequeña animación y sale un aviso arriba: nieve en Navidad, fuegos artificiales en Nochevieja, Año Nuevo y la Virgen de la Vega, estrellas en Reyes, confeti en Carnaval y San Juan de Sahagún, luces en Semana Santa, agua y flores el Lunes de Aguas y la Mariseca el 25 de julio.",
+      "También el primer día de cada estación (flores, sol, hojas o nieve), con la hora del equinoccio o del solsticio en Salamanca.",
+      "Sale una vez al día y el aviso se cierra con ×. Si prefieres no verlas, al pie está «Quitar animaciones de fiesta»; con «menos movimiento» en el móvil solo sale el aviso."
+    ],
+    "tecnico": [
+      "js/fiestas.js y js/datos/fiestas.js (DIAS_ESPECIALES, ESTACIONES): fechas fijas o desde la Pascua (fechaDeAgenda) y equinoccios y solsticios con Meeus cap. 27 (momentoEstacion). Animaciones con CSS (caer, subir, estallar) en #fiesta-capa, sin pointer-events y aria-hidden; aviso #fiesta con ×, «Saber más» y cierre solo a los 15 s.",
+      "localStorage: charro-fiesta (día e id del último visto) y charro-fiestas = '0' (apagadas desde el pie). ?fiesta=<id> lo enseña cualquier día.",
+      "Pruebas: lógica (fechas y hora de las estaciones de 2026) y navegador (aviso, Saber más, menos movimiento, una vez al día y apagado); en el resto van apagadas salvo { conFiestas: true }. comprobar-datos revisa los días especiales."
+    ]
+  },
+  {
     "version": "2.24.1",
     "fecha": "2026-11-08",
     "titulo": "Más curiosidades",
@@ -127,19 +142,6 @@
     "tecnico": [
       "4 curiosidades y 3 leyendas nuevas en contenido.js (arrabal, tejares, sancti), con su fuente en comentario (Wikipedia y Turismo de Castilla y León).",
       "34 curiosidades nuevas en PUEBLOS (pueblos.js), de los artículos de Wikipedia que ya citaba cada pueblo; corregida la de Isabel la Católica en Puente del Congosto."
-    ]
-  },
-  {
-    "version": "2.20.0",
-    "fecha": "2026-10-28",
-    "titulo": "Barrios con más historia",
-    "usuario": [
-      "20 curiosidades nuevas en diez barrios: Barrio del Oeste, Prosperidad, Rollo, Puente Ladrillo, San José, San Isidro, Delicias, Labradores, Garrido Sur y Huerta Otea. Del perro monaguillo de Puente Ladrillo al rastro sin permiso de la plaza del Oeste.",
-      "En la ficha de cada barrio, «Dónde comer» pasa a una línea plegada con cuántos sitios hay, junto a monumentos y rutas. Tócala para verlos. Así lo primero que lees son las curiosidades y la leyenda."
-    ],
-    "tecnico": [
-      "20 curiosidades nuevas en CURIOSIDADES (contenido.js), con su fuente en comentario (La Crónica de Salamanca, La Gaceta, El Español, Wikipedia y la asociación de vecinos de Huerta Otea).",
-      "Dónde comer: pintarSitiosComer pinta un <details class=\"plegable\"> en #eat (fuera #he); irADondeComer (ficha.js) lo abre desde Explora; sale del índice de la ficha. CSS: #eat con plegable lleva el margen de arriba y #mz pierde el suyo."
     ]
   }
 ]
