@@ -9,7 +9,8 @@
       "Marín: los pisos nuevos de 2026 y la Ruta del Tejares Histórico por sus corredores verdes."
     ],
     "tecnico": [
-      "js/datos/contenido.js: 7 curiosidades nuevas con fuente en tenerias (3), vistahermosa (2) y marin (2)."
+      "js/datos/contenido.js: 7 curiosidades nuevas con fuente en tenerias (3), vistahermosa (2) y marin (2).",
+      "Prueba «Salamanca en el tiempo» (pruebas/explora.js): espera a que el relleno de la zona cambie (hasta 3 s) en vez de 400 ms fijos, que fallaban a veces en GitHub Actions con el ordenador cargado."
     ]
   },
   {
