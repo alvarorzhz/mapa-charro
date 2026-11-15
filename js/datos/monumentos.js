@@ -552,6 +552,381 @@ export const MONUMENTOS = [
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Puente_de_Enrique_Estevan']]
   },
   {
+    id: 'sanmartin',
+    n: 'Iglesia de San Martín',
+    tipo: 'iglesia',
+    la: 40.9644,
+    lo: -5.66448,
+    zona: 'centro',
+    epoca: 'Siglo XII',
+    estilo: 'Románico',
+    datos: [
+      ['Planta', 'tres naves'],
+      ['Portada oculta', 'hasta 1958'],
+      ['Coro', 'siglo XVI, de Juan de Álava']
+    ],
+    curiosidades: [
+      'Su plaza fue la Plaza Mayor de Salamanca desde finales del siglo XV: con unos 26.000 m², cuatro veces la actual, llegó a considerarse la más grande de España.',
+      'La portada principal quedó tapada a finales del siglo XVII por la capilla del Carmen, de José de Churriguera, y no volvió a verse hasta 1958; una de sus seis arquivoltas lleva un calendario agrícola.',
+      'Después de la Catedral Vieja, es el templo románico más importante de la ciudad. Desde su espadaña se ve la Rúa con la Clerecía y la Catedral Nueva al fondo.'
+    ],
+    foto: [
+      'img/mon-sanmartin.jpg',
+      'Una portada románica de San Martín. Foto: Zarateman · CC0 · Wikimedia Commons'
+    ],
+    fuente: [
+      ['Turismo de Salamanca', 'https://salamanca.es/que-ver/monumentos/iglesia-de-san-martin-de-tours']
+    ]
+  },
+  {
+    id: 'casa-unamuno',
+    n: 'Casa-Museo de Unamuno',
+    tipo: 'museo',
+    la: 40.96119,
+    lo: -5.66739,
+    zona: 'univ',
+    epoca: 'Museo desde 1953',
+    datos: [
+      ['Unamuno vivió aquí', '1900–1914'],
+      ['Su biblioteca', 'más de 6.000 libros'],
+      ['Es de', 'la Universidad de Salamanca']
+    ],
+    curiosidades: [
+      'Era la Casa Rectoral: la Universidad se la ofreció a Unamuno al nombrarlo rector en 1900, y vivió en ella con su mujer, Concha Lizárraga, y sus hijos hasta que lo destituyeron en 1914.',
+      'Su primera directora fue Felisa, hija de Unamuno. Los muebles, libros y objetos de la familia se trajeron de su casa de la calle Bordadores.'
+    ],
+    foto: [
+      'img/mon-unamuno.jpg',
+      'La biblioteca de Unamuno. Foto: لا روسا · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
+    fuente: [['Turismo de Salamanca', 'https://salamanca.es/que-ver/museo/casa-museo-unamuno']]
+  },
+  {
+    id: 'museo-salamanca',
+    n: 'Museo de Salamanca',
+    tipo: 'museo',
+    la: 40.96193,
+    lo: -5.66823,
+    zona: 'univ',
+    epoca: 'Palacio del siglo XVI · museo desde 1848',
+    datos: [
+      ['Abrió', '1848: el más antiguo de la ciudad'],
+      ['En este palacio', 'desde 1948'],
+      ['Secciones', 'arqueología, bellas artes y etnología']
+    ],
+    curiosidades: [
+      'El palacio es la Casa de los Doctores de la Reina o de los Álvarez Abarca; el Estado lo compró en 1946 para el museo.',
+      'Guarda verracos vetones, miliarios romanos de la Vía de la Plata y un artesonado del siglo XIV que vino del convento de las Dueñas.'
+    ],
+    foto: [
+      'img/mon-museo-salamanca.jpg',
+      'Casa de los Abarca, sede del museo. Foto: Zarateman · CC0 · Wikimedia Commons'
+    ],
+    fuente: [['Turismo de Salamanca', 'https://salamanca.es/que-ver/museo/museo-de-salamanca-bellas-artes']]
+  },
+  {
+    id: 'santa-clara',
+    n: 'Convento de Santa Clara',
+    tipo: 'iglesia',
+    la: 40.96179,
+    lo: -5.66016,
+    zona: 'sancristobal',
+    epoca: 'Desde el siglo XIII',
+    datos: [
+      ['Hoy es', 'Museo de Pintura Medieval'],
+      ['Escudos del artesonado', 'cerca de 150'],
+      ['Pinturas y techumbre', 'descubiertas en los años 70']
+    ],
+    curiosidades: [
+      'Es el monasterio femenino más antiguo que se conserva en Salamanca: nació en la primera mitad del siglo XIII como un beaterio de mujeres nobles.',
+      'Las pinturas del coro bajo pasaron siglos bajo capas de cal, y la techumbre original apareció escondida sobre la bóveda barroca de la iglesia.'
+    ],
+    foto: ['img/mon-santa-clara.jpg', 'Convento de Santa Clara. Foto: Zarateman · CC0 · Wikimedia Commons'],
+    fuente: [['Turismo de Salamanca', 'https://salamanca.es/que-ver/museo/museo-conventual-de-santa-clara']]
+  },
+  {
+    id: 'purisima',
+    n: 'Iglesia de la Purísima',
+    tipo: 'iglesia',
+    la: 40.96474,
+    lo: -5.66728,
+    zona: 'ursulas',
+    epoca: 'Desde 1636',
+    estilo: 'Barroco de gusto napolitano',
+    datos: [
+      ['Fundador', 'VI conde de Monterrey, virrey de Nápoles'],
+      ['Arquitecto', 'Bartolomeo Pichiatti'],
+      ['Retablo mayor', 'la Inmaculada de Ribera (1635)']
+    ],
+    curiosidades: [
+      'Según se cuenta, el conde la mandó levantar para cumplir una promesa tras salvarse de una erupción del Vesubio; otras versiones hablan de una grave enfermedad.',
+      'Además de Ribera, tiene cuadros de Guido Reni, Lanfranco y Stanzione, y una pintura del altar mayor se atribuye a Rubens o a su taller.'
+    ],
+    foto: [
+      'img/mon-purisima.jpg',
+      'Iglesia de la Purísima. Foto: Cruccone · CC BY-SA 3.0 es · Wikimedia Commons'
+    ],
+    fuente: [['Turismo de Salamanca', 'https://salamanca.es/que-ver/monumentos/iglesia-de-la-purisima']]
+  },
+  {
+    id: 'veracruz',
+    n: 'Iglesia de la Vera Cruz',
+    tipo: 'iglesia',
+    la: 40.96624,
+    lo: -5.6677,
+    zona: 'ursulas',
+    epoca: 'Siglo XVI · interior del XVIII',
+    estilo: 'Barroco por dentro',
+    datos: [
+      ['Proyecto', 'Rodrigo Gil de Hontañón'],
+      ['Retablo', 'Joaquín de Churriguera'],
+      ['Inmaculada', 'de Gregorio Fernández']
+    ],
+    curiosidades: [
+      'Es la única cofradía de Salamanca con templo propio, y hasta principios del siglo XX fue la única que organizaba las procesiones de Semana Santa.',
+      'Cuenta la leyenda que la Dolorosa de Felipe del Corral vino en procesión desde Madrid, parando en cada pueblo del camino hasta que su capilla estuvo terminada.'
+    ],
+    foto: [
+      'img/mon-veracruz.jpg',
+      'Interior de la Vera Cruz. Foto: Zarateman · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
+    fuente: [['Turismo de Salamanca', 'https://salamanca.es/que-ver/monumentos/iglesia-de-la-vera-cruz']]
+  },
+  {
+    id: 'automocion',
+    n: 'Museo de Historia de la Automoción',
+    tipo: 'museo',
+    la: 40.95806,
+    lo: -5.66688,
+    zona: 'tenerias',
+    epoca: 'Abierto en 2002',
+    datos: [
+      ['Vehículos', 'más de 200, unos 140 expuestos'],
+      ['Superficie', '4.286 m² en tres plantas'],
+      ['La joya', 'un Hispano-Suiza de 1930']
+    ],
+    curiosidades: [
+      'Su Hispano-Suiza de 1930 fue el primer automóvil declarado Bien de Interés Cultural en España.',
+      'Tiene el Cadillac Fleetwood 75 de Franco, un Fórmula 1 que pilotó Fernando Alonso y el Jaguar de Camilo José Cela.',
+      'Ocupa el edificio de la primera fábrica de electricidad que tuvo Salamanca, frente a la Casa Lis.'
+    ],
+    foto: ['img/mon-automocion.jpg', 'Entrada del museo. Foto: Hovallef · CC BY-SA 4.0 · Wikimedia Commons'],
+    fuente: [
+      ['Turismo de Salamanca', 'https://salamanca.es/que-ver/museo/museo-de-historia-de-la-automocion'],
+      ['Wikipedia', 'https://es.wikipedia.org/wiki/Museo_de_Historia_de_la_Automoci%C3%B3n_de_Salamanca']
+    ]
+  },
+  {
+    id: 'museo-taurino',
+    n: 'Museo Taurino',
+    tipo: 'toros',
+    la: 40.96564,
+    lo: -5.66358,
+    zona: 'centro',
+    epoca: 'Abierto en 1993',
+    datos: [
+      ['Inaugurado', '29 de diciembre de 1993'],
+      ['Lo creó', 'la Federación de Peñas Taurinas «Helmántica»'],
+      ['Salas', 'siete']
+    ],
+    curiosidades: [
+      'Tiene salas dedicadas a los toreros salmantinos, sobre todo a Santiago Martín «El Viti», El Niño de la Capea y Julio Robles.',
+      'Casi todo lo expuesto son donaciones y cesiones de ganaderos, toreros y aficionados de Salamanca.'
+    ],
+    fuente: [
+      ['Turismo de Salamanca', 'https://salamanca.es/que-ver/museo/museo-taurino-de-salamanca'],
+      ['Museo Taurino: historia', 'https://salamanca.es/museo-taurino/historia']
+    ]
+  },
+  {
+    id: 'da2',
+    n: 'DA2, Domus Artium 2002',
+    tipo: 'museo',
+    la: 40.95901,
+    lo: -5.65215,
+    zona: 'prosperidad',
+    epoca: 'Abierto en 2002 · edificio de 1930',
+    estilo: 'Arte contemporáneo',
+    datos: [
+      ['Abrió', 'con la Capital Europea de la Cultura de 2002'],
+      ['Edificio', 'la antigua cárcel provincial'],
+      ['Reforma', 'Horacio Fernández del Castillo']
+    ],
+    curiosidades: [
+      'Ocupa la antigua prisión provincial, de 1930: la reforma juega con su pasado de cárcel y ganó el Premio Regional de Restauración.',
+      'Además de su colección propia, guarda la de la Fundación Coca-Cola España.'
+    ],
+    foto: ['img/mon-da2.jpg', 'Fachada del DA2. Foto: AlbertRA · CC BY-SA 4.0 · Wikimedia Commons'],
+    fuente: [['Turismo de Salamanca', 'https://salamanca.es/que-ver/museo/da2-domus-artium-2002']]
+  },
+  {
+    id: 'museo-comercio',
+    n: 'Museo del Comercio y la Industria',
+    tipo: 'museo',
+    la: 40.9651,
+    lo: -5.65413,
+    zona: 'delicias',
+    epoca: 'En un aljibe de 1870',
+    datos: [
+      ['Edificio', 'el primer aljibe de la ciudad'],
+      ['Lo impulsaron', 'el Ayuntamiento y la Cámara de Comercio']
+    ],
+    curiosidades: [
+      'Ocupa el primer aljibe de Salamanca, un depósito de agua de ladrillo macizo levantado en 1870.',
+      'Cuenta las sagas de comerciantes que trajeron la modernidad (Gombau, Mirat, Moneo…) y, con «Los Sonidos del Ayer», la radio desde su nacimiento hasta los años setenta.'
+    ],
+    foto: ['img/mon-comercio.jpg', 'El antiguo aljibe, hoy museo. Foto: Zarateman · CC0 · Wikimedia Commons'],
+    fuente: [
+      [
+        'Turismo de Salamanca',
+        'https://salamanca.es/que-ver/museo/museo-del-comercio-y-de-la-industria-de-salamanca'
+      ]
+    ]
+  },
+  {
+    id: 'logia',
+    n: 'Logia masónica y Archivo de la Guerra Civil',
+    tipo: 'museo',
+    la: 40.95958,
+    lo: -5.66718,
+    zona: 'univ',
+    epoca: 'Edificio del siglo XVIII · archivo desde 1999',
+    estilo: 'Barroco',
+    datos: [
+      ['Arquitecto', 'Joaquín de Churriguera'],
+      ['Fue', 'casa de niños expósitos y Colegio de San Ambrosio'],
+      ['Documentos', 'de 1936 a 1978']
+    ],
+    curiosidades: [
+      'Durante la Guerra Civil alojó a la Guardia Mora de Franco y después guardó la documentación incautada al bando republicano.',
+      'Su exposición tiene salas dedicadas a la masonería, con documentos y símbolos originales.'
+    ],
+    foto: [
+      'img/mon-logia.jpg',
+      'Antiguo Colegio de San Ambrosio. Foto: PMRMaeyaert · CC BY-SA 3.0 · Wikimedia Commons'
+    ],
+    fuente: [
+      [
+        'Turismo de Salamanca',
+        'https://salamanca.es/que-ver/museo/centro-documental-de-la-memoria-historica-logia-masonica'
+      ]
+    ]
+  },
+  {
+    id: 'filmoteca',
+    n: 'Filmoteca de Castilla y León',
+    tipo: 'museo',
+    la: 40.96444,
+    lo: -5.66148,
+    zona: 'sancristobal',
+    epoca: 'Casa del siglo XVII',
+    datos: [
+      ['Edificio', 'Casa de las Viejas o Colegio de la Caridad'],
+      ['Fundador', 'Bartolomé Caballero Torquemada'],
+      ['Colección', 'mucha, donada por Basilio Martín Patino']
+    ],
+    curiosidades: [
+      'Fue asilo de viudas durante siglos y, desde la posguerra hasta los años 70, también fábrica de hielo.',
+      'Antes de ser filmoteca fue sede de la Fundación Salamanca, que impulsó la Capital Europea de la Cultura de 2002.'
+    ],
+    foto: [
+      'img/mon-filmoteca.jpg',
+      'Casa de las Viejas. Foto: Emilio J. Rodríguez Posada · CC BY-SA 2.0 · Wikimedia Commons'
+    ],
+    fuente: [['Turismo de Salamanca', 'https://salamanca.es/que-ver/museo/filmoteca-de-castilla-y-leon']]
+  },
+  {
+    id: 'monumenta',
+    n: 'Monumenta Salmanticae',
+    tipo: 'museo',
+    la: 40.96002,
+    lo: -5.66842,
+    zona: 'univ',
+    epoca: 'Abierto en 2010',
+    datos: [
+      ['Edificio', 'la antigua iglesia de San Millán'],
+      ['En el centro', 'una gran maqueta de la ciudad histórica']
+    ],
+    curiosidades: [
+      'Sobre una gran maqueta se proyectan luz, sonido e imágenes que cuentan cómo cambió Salamanca hasta ser Ciudad Patrimonio de la Humanidad.',
+      'Tiene pantallas para explorar más de un centenar de monumentos, juegos de escape, realidad virtual y visitas teatralizadas.'
+    ],
+    foto: [
+      'img/mon-monumenta.jpg',
+      'Antigua iglesia de San Millán. Foto: Zarateman · CC0 · Wikimedia Commons'
+    ],
+    fuente: [['Turismo de Salamanca', 'https://salamanca.es/que-ver/monumentos/monumenta-salmanticae']]
+  },
+  {
+    id: 'santa-maria-vega',
+    n: 'Monasterio de Santa María de la Vega',
+    tipo: 'iglesia',
+    la: 40.95795,
+    lo: -5.6636,
+    zona: 'fontana',
+    epoca: 'Desde el siglo XII',
+    estilo: 'Románico, renacentista y barroco',
+    datos: [
+      ['Arquería románica', 'cinco arcos'],
+      ['Claustro', 'siglo XVIII, de Andrés García de Quiñones']
+    ],
+    curiosidades: [
+      'De aquí viene la Virgen de la Vega, patrona de Salamanca, que hoy está en la Catedral Vieja.',
+      'Tras la riada de 1236 hubo que rehacer el monasterio. Sus restos están hoy dentro de la Fundación Rodríguez Fabrés, cuya granja escuela inauguró Alfonso XIII en 1914.'
+    ],
+    foto: 'fontana',
+    fuente: [
+      ['Turismo de Salamanca', 'https://salamanca.es/que-ver/monumentos/monasterio-de-la-virgen-de-la-vega']
+    ]
+  },
+  {
+    id: 'botanico',
+    n: 'Parque Arqueológico del Botánico',
+    tipo: 'roca',
+    la: 40.9617,
+    lo: -5.67006,
+    zona: 'univ',
+    epoca: 'Del siglo IV a. C. al Siglo de Oro',
+    datos: [
+      ['Restos de', 'Colegio Mayor de Cuenca y convento de San Agustín'],
+      ['Antes fue', 'las pistas de atletismo de la Universidad']
+    ],
+    curiosidades: [
+      'Las obras de una biblioteca universitaria sacaron a la luz el Colegio de Cuenca y el convento de San Agustín, donde profesó fray Luis de León.',
+      'En las visitas guiadas, unas gafas de realidad virtual enseñan cómo eran esos edificios antes de su destrucción en el siglo XIX.'
+    ],
+    foto: [
+      'img/mon-botanico.jpg',
+      'Restos excavados en el Botánico. Foto: FLAVIVSAETIVS · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
+    fuente: [
+      ['Turismo de Salamanca', 'https://salamanca.es/que-ver/monumentos/parque-arqueologico-del-botanico']
+    ]
+  },
+  {
+    id: 'cerro-sanvicente',
+    n: 'Museo del Cerro de San Vicente',
+    tipo: 'museo',
+    la: 40.96191,
+    lo: -5.67323,
+    zona: 'sanvicente',
+    epoca: 'Exposición de 2025 · edificio de 2001',
+    datos: [
+      ['Debajo', 'un poblado de la primera Edad del Hierro'],
+      ['Sobre', 'el claustro del convento de San Vicente'],
+      ['Exposición', '«Salamanca invisible»']
+    ],
+    curiosidades: [
+      'Unas pasarelas dejan ver desde arriba restos de casas del primer poblado de la Edad del Hierro, el origen de la ciudad.',
+      'Bodegas, suelos y muros del antiguo convento benedictino forman parte del recorrido.'
+    ],
+    foto: [
+      'img/mon-cerro.jpg',
+      'Restos de una casa de la Edad del Hierro en el cerro. Foto: Danisd75 · CC BY-SA 3.0 · Wikimedia Commons'
+    ],
+    fuente: [['Turismo de Salamanca', 'https://salamanca.es/que-ver/museo/museo-del-cerro-de-san-vicente']]
+  },
+  {
     id: 'estacion-tren',
     n: 'Estación de tren',
     tipo: 'estacion',

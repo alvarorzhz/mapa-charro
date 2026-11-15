@@ -13,6 +13,7 @@ const existe = f => fs.existsSync(path.join(RAIZ, f));
 const datos = [
   'zonas',
   'monumentos',
+  'visitas',
   'rutas',
   'tramos',
   'perfil-rutas',
@@ -40,7 +41,7 @@ const datos = [
 ];
 const codigo =
   sinExport(datos.map(d => leer('js/datos/' + d + '.js')).join('\n;\n')) +
-  '\n;({ NOMBRES_GRUPOS, ZONAS_GRANDES, ZONAS, OTROS_NOMBRES, SEMILLAS_REPARTO, MONUMENTOS, RUTAS, TRAMOS_RUTAS, PERFIL_RUTAS, PUEBLOS, CURIOSIDADES, LEYENDAS, FOTOS, DONDE_COMER,' +
+  '\n;({ NOMBRES_GRUPOS, ZONAS_GRANDES, ZONAS, OTROS_NOMBRES, SEMILLAS_REPARTO, MONUMENTOS, VISITAS, FUENTE_VISITAS, RUTAS, TRAMOS_RUTAS, PERFIL_RUTAS, PUEBLOS, CURIOSIDADES, LEYENDAS, FOTOS, DONDE_COMER,' +
   ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA, RELACIONES_ETAPA, RANGOS_ETAPA, PALABRAS_CHARRAS, FUENTES_PALABRAS, DIAS_ESPECIALES, ESTACIONES, RUTAS_PROVINCIA, SALIDA_PROVINCIA, TRAMOS_PROVINCIA, CARRETERAS_PROVINCIA, HABITANTES, CENSOS, PARQUES, CULTURA, CATEGORIAS_CULTURA, TIPOS_TEXTO_CULTURA, DETALLES, FACHADAS, ORIENTACION_FACHADAS, DESAPARECIDOS })';
 const D = vm.runInNewContext(codigo, {});
 
@@ -177,6 +178,32 @@ D.MONUMENTOS.forEach(m => {
     );
   } else if (m.foto) comprobar(D.FOTOS[m.foto], `Monumento ${m.id}: la foto «${m.foto}» no está en FOTOS`);
 });
+
+// --- Visitas: horario y precio de los monumentos (datos/visitas.js) ------------------
+const fv = D.FUENTE_VISITAS;
+comprobar(
+  /^https:\/\//.test(fv.url) &&
+    /^https:\/\//.test(fv.pdf) &&
+    fv.vigente &&
+    /^\d{4}-\d{2}-\d{2}$/.test(fv.revisado),
+  'FUENTE_VISITAS: le falta url, pdf, vigente o revisado (AAAA-MM-DD)'
+);
+const parejas = l => Array.isArray(l) && l.length && l.every(x => x.length == 2 && x[0] && x[1]);
+const CAMPOS_VISITA = new Set(['libre', 'cerrado', 'horario', 'precio', 'gratis', 'nota', 'web']);
+for (const id in D.VISITAS) {
+  const v = D.VISITAS[id],
+    que = `Visita de ${id}`;
+  comprobar(idsMonumento.has(id), `${que}: no hay monumento con ese id`);
+  Object.keys(v).forEach(k => comprobar(CAMPOS_VISITA.has(k), `${que}: campo desconocido «${k}»`));
+  if (v.libre) {
+    comprobar(Object.keys(v).length == 1, `${que}: un espacio libre no lleva más datos`);
+    continue;
+  }
+  comprobar(v.horario || v.cerrado || v.nota, `${que}: sin horario, ni «cerrado», ni nota`);
+  if (v.horario) comprobar(parejas(v.horario), `${que}: el horario va como [[días, horas]]`);
+  if (v.precio) comprobar(parejas(v.precio), `${que}: el precio va como [[quién, cuánto]]`);
+  if (v.web) comprobar(/^https:\/\//.test(v.web), `${que}: la web debe ser https`);
+}
 
 // --- Rutas a pie --------------------------------------------------------------
 const idsRuta = new Set();
