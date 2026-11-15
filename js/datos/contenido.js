@@ -668,6 +668,40 @@ export const LEYENDAS = {
 };
 // Fotos: { idZona: [ruta en img/, pie con autor y licencia] }. El texto hasta «. Foto» se usa como texto alternativo.
 export const FOTOS = {
+  vidal: [
+    'img/vidal.jpg',
+    'Biblioteca municipal del barrio Vidal. Foto: Biblioteca Torrente Ballester · CC BY-SA 3.0 · Wikimedia Commons'
+  ],
+  // Ortofoto PNOA (WMS https://www.ign.es/wms-inspire/pnoa-ma): no hay fotos libres del barrio en Commons (nov. 2026)
+  capuchinos: [
+    'img/capuchinos.jpg',
+    'Vista aérea del barrio, con su límite marcado. Foto: PNOA © Instituto Geográfico Nacional · CC BY 4.0 · scne.es'
+  ],
+  // Ortofoto PNOA (WMS https://www.ign.es/wms-inspire/pnoa-ma): no hay fotos libres del barrio en Commons (nov. 2026)
+  huertaotea: [
+    'img/huertaotea.jpg',
+    'Vista aérea del barrio, con su límite marcado. Foto: PNOA © Instituto Geográfico Nacional · CC BY 4.0 · scne.es'
+  ],
+  // Ortofoto PNOA (WMS https://www.ign.es/wms-inspire/pnoa-ma): no hay fotos libres del barrio en Commons (nov. 2026)
+  buenosaires: [
+    'img/buenosaires.jpg',
+    'Vista aérea del barrio, con su límite marcado. Foto: PNOA © Instituto Geográfico Nacional · CC BY 4.0 · scne.es'
+  ],
+  // Ortofoto PNOA (WMS https://www.ign.es/wms-inspire/pnoa-ma): no hay fotos libres del barrio en Commons (nov. 2026)
+  vega: [
+    'img/vega.jpg',
+    'Vista aérea del barrio, con su límite marcado. Foto: PNOA © Instituto Geográfico Nacional · CC BY 4.0 · scne.es'
+  ],
+  // Ortofoto PNOA (WMS https://www.ign.es/wms-inspire/pnoa-ma): no hay fotos libres del barrio en Commons (nov. 2026)
+  marin: [
+    'img/marin.jpg',
+    'Vista aérea del barrio, con su límite marcado. Foto: PNOA © Instituto Geográfico Nacional · CC BY 4.0 · scne.es'
+  ],
+  // Ortofoto PNOA (WMS https://www.ign.es/wms-inspire/pnoa-ma): no hay fotos libres del barrio en Commons (nov. 2026)
+  alcaldes: [
+    'img/alcaldes.jpg',
+    'Vista aérea del barrio, con su límite marcado. Foto: PNOA © Instituto Geográfico Nacional · CC BY 4.0 · scne.es'
+  ],
   tejares: [
     'img/tejares.jpg',
     'Antigua estación de Tejares-Chamberí. Foto: Rodelar · CC BY-SA 4.0 · Wikimedia Commons'
