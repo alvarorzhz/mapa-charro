@@ -46,19 +46,29 @@ prueba('Ruta «Personajes en bronce»: cada estatua con su personaje', async (p,
 
 prueba('Salamanca en el tiempo', async p => {
   // Una zona marcada como «He estado»: en este modo no se ve la marca y al salir vuelve
-  // (el color cambia con una transición de 0,25 s: se espera a que acabe)
-  const relleno = async () => {
-    await p.waitForTimeout(400);
+  // (el color cambia con una transición de 0,25 s: con el ordenador cargado puede tardar
+  // más, así que se espera, hasta 3 s, a que el relleno sea o deje de ser el color dado)
+  const relleno = async ({ es, noEs } = {}) => {
+    await p
+      .waitForFunction(
+        ({ es, noEs }) => {
+          const c = getComputedStyle(zonas.find(z => z.id == 'vega').e).fill;
+          return es ? c == es : c != noEs;
+        },
+        { es, noEs },
+        { timeout: 3000 }
+      )
+      .catch(() => {});
     return p.evaluate(() => getComputedStyle(zonas.find(z => z.id == 'vega').e).fill);
   };
   await p.evaluate(() => {
     estadoApp.progreso.z.vega = 'v';
     pintarZona(zonas.find(z => z.id == 'vega'));
   });
-  const rojo = await relleno();
+  const rojo = await relleno({ es: 'rgb(168, 34, 28)' });
   igual(rojo, 'rgb(168, 34, 28)', 'marcada en rojo (--vitor)');
   await p.click('#tm');
-  cierto((await relleno()) != rojo, 'las marcas de He estado se apagan');
+  cierto((await relleno({ noEs: rojo })) != rojo, 'las marcas de He estado se apagan');
   igual(await p.evaluate(() => location.hash), '#tiempo/1', 'enlace de la primera etapa');
   igual(await texto(p, '#nm'), 'El castro vetón', 'empieza por la primera etapa');
   const estado = id => p.evaluate(id => 'ep-' + zonas.find(z => z.id == id).e.dataset.ep, id);

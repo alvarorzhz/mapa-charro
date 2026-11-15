@@ -1,5 +1,19 @@
 [
   {
+    "version": "2.20.1",
+    "fecha": "2026-10-29",
+    "titulo": "Más leyendas del Arrabal y más pueblos de las Arribes",
+    "usuario": [
+      "El Arrabal estrena dos leyendas del Puente Romano (Hércules y el toro del escudo) y dos curiosidades; Tejares, la Virgen de la Salud en su gruta y sus aguas sulfurosas; Sancti Spíritus, los medallones de su portada.",
+      "34 curiosidades nuevas en diez pueblos: Aldeadávila, Hinojosa de Duero, Saucelle, Linares de Riofrío, Villoria, Vilvestre, La Fregeneda, Monleón, Puente del Congosto y Fuentes de Oñoro. Del romance de los mozos de Monleón que arregló Lorca al punto más bajo de Castilla y León.",
+      "En Puente del Congosto, lo de Isabel la Católica y la muerte de su hijo se cuenta ahora como tradición, porque los historiadores lo discuten."
+    ],
+    "tecnico": [
+      "4 curiosidades y 3 leyendas nuevas en contenido.js (arrabal, tejares, sancti), con su fuente en comentario (Wikipedia y Turismo de Castilla y León).",
+      "34 curiosidades nuevas en PUEBLOS (pueblos.js), de los artículos de Wikipedia que ya citaba cada pueblo; corregida la de Isabel la Católica en Puente del Congosto."
+    ]
+  },
+  {
     "version": "2.20.0",
     "fecha": "2026-10-28",
     "titulo": "Barrios con más historia",
