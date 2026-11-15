@@ -43,7 +43,13 @@ export const CURIOSIDADES = {
   tenerias: [
     'Su nombre viene de las tenerías, los talleres donde se curtían las pieles junto al río. Antes se le llamó barrio de Santiago.',
     'La iglesia de Santiago, junto al Puente Romano, la fundaron los mozárabes a mediados del siglo XII; era la puerta de entrada de los peregrinos de la Vía de la Plata.',
-    'El 26 de enero de 1626 la riada de San Policarpo arrasó la ribera: murieron 142 personas, más de 1.500 viviendas sufrieron daños y se hundieron cuatro arcos del Puente Romano.'
+    'El 26 de enero de 1626 la riada de San Policarpo arrasó la ribera: murieron 142 personas, más de 1.500 viviendas sufrieron daños y se hundieron cuatro arcos del Puente Romano.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/asi-cambio-el-entorno-del-puente-romano-de-salamanca-AD5050552
+    'En 1914 el curtidor Félix Herrera compró terrenos municipales para levantar su fábrica. Ese edificio es hoy la Casa-Escuela Santiago Uno de los Escolapios.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/viejo-barrio-ribera-20250628064500-nt.html
+    'Las viejas tenerías del paseo de San Gregorio cayeron en la primavera de 1976. Al cerrar las fábricas, muchos vecinos se fueron a Vidal, San Bernardo, San José o La Vega.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/viejo-barrio-ribera-20250628064500-nt.html
+    'El derribo del barrio empezó el 17 de febrero de 1978: cayeron 31 viviendas y locales y se borraron calles como Pradillo, Torrente o la plaza de Calatrava. Solo se salvaron las casas pegadas a la muralla.'
   ],
   ursulas: [
     // Fuentes: https://es.wikipedia.org/wiki/Convento_de_las_%C3%9Arsulas_(Salamanca) y https://www.spain.info/es/lugares-interes/convento-las-ursulas/
@@ -332,7 +338,11 @@ export const CURIOSIDADES = {
     // Fuente: https://noticiascyl.elespanol.com/t/1751829/vistahermosa-mirador-salamanca-barrio-dormitorio
     'El pueblo vivió años de esplendor gracias a la fábrica de un empresario catalán, con cine a diario, biblioteca y regalos de Reyes para los hijos de los obreros.',
     // Fuente: https://www.lagacetadesalamanca.es/salamanca/el-poblado-de-vistahermosa-una-decada-despues-de-su-desalojo-ED2140745
-    'Al sur estaba el poblado de una granja, con iglesia, Correos y escuela. Sus últimas casas se derribaron el 28 de mayo de 2013; solo quedó en pie la iglesia.'
+    'Al sur estaba el poblado de una granja, con iglesia, Correos y escuela. Sus últimas casas se derribaron el 28 de mayo de 2013; solo quedó en pie la iglesia.',
+    // Fuente: https://salamancartvaldia.es/noticia/2021-07-21-guijo-de-avila-y-vistahermosa-cuentan-su-historia-en-libros-editados-por-la-diputacion-91
+    'Su historia está en un libro de Javier Barragués que editó la Diputación en 2021: el pueblo vivió del curtido entre 1871 y 1986, con dos sagas de industriales, los Charro y los Ferrán.',
+    // Fuente: https://www.elespanol.com/castilla-y-leon/region/20180408/vistahermosa-mirador-salamanca-barrio-dormitorio/298221057_0.html
+    'Los vecinos trabajaban en la granja y en las fábricas de curtidos y de cerámica. Cuando la empresa pasó a manos de los obreros, la cooperativa acabó en quiebra.'
   ],
   vega: [
     'Su nombre honra a la Virgen de la Vega, patrona de Salamanca. Se inauguró el 7 de mayo de 1954 con unas 650 viviendas sociales.',
@@ -587,7 +597,11 @@ export const CURIOSIDADES = {
     // Fuente: https://www.lagacetadesalamanca.es/salamanca/el-unico-barrio-de-salamanca-que-no-perdio-poblacion-en-2020-CX7132026
     'En 2020, el año de la pandemia, fue el único sector de Salamanca que no perdió habitantes: ganó cinco.',
     // Fuente: https://www.elespanol.com/castilla-y-leon/region/salamanca/20220317/salamanca-transforma-ribera-salas-bajas-marin-corredor/657934362_0.html
-    'El proyecto de la ribera le reserva un circuito de running de 1,4 km y arboledas que tapen el ruido de la autovía A-62.'
+    'El proyecto de la ribera le reserva un circuito de running de 1,4 km y arboledas que tapen el ruido de la autovía A-62.',
+    // Fuente: https://www.lagacetadesalamanca.es/salamanca/medio-millar-pisos-toman-forma-cuentagotas-capital-20260516182524-nt.html
+    'Sigue creciendo: en mayo de 2026 tenía cuatro promociones con 114 pisos y licencia para el último bloque de la zona, de 31. Se construye rápido porque la urbanización ya está hecha.',
+    // Fuente: https://www.aytosalamanca.es/documents/d/guest/b24_c_informacion_complementaria_itinerario4
+    'Por sus corredores verdes pasa la Ruta del Tejares Histórico del Ayuntamiento: 4,15 km a los dos lados del Tormes, el 91 % se puede hacer en bici.'
   ],
   montalvos: [
     // Fuente: https://poligonoelmontalvo.com/quienes-somos/
