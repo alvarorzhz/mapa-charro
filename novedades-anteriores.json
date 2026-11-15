@@ -1,5 +1,17 @@
 [
   {
+    "version": "2.20.2",
+    "fecha": "2026-10-29",
+    "titulo": "Fichas de barrio sin repeticiones",
+    "usuario": [
+      "Repasamos los barrios con más curiosidades y juntamos las que contaban lo mismo dos veces: Esteban Corral y la avenida en El Rollo, la iglesia y el puente en Puente Ladrillo, el Pryca en Capuchinos, las fases de obra en El Carmen y el sanatorio en Carrascal.",
+      "Quitamos cinco datos menores o que se iban a quedar viejos: el presupuesto de las fiestas de Capuchinos, las señales antiguas de la N-620, la plaza proyectada en Vistahermosa, la línea 12 del bus en Los Montalvos y los bloques de Nicar. La tormenta del Corpus de 1976 se queda en Los Alambres y Chamberí."
+    ],
+    "tecnico": [
+      "contenido.js: curiosidades fusionadas o quitadas en rollo, puenteladrillo, prosperidad, carmen, capuchinos, carrascal, vistahermosa y montalvos. Las que se juntan conservan sus fuentes (en Carrascal, «// Fuentes: … y …»)."
+    ]
+  },
+  {
     "version": "2.20.1",
     "fecha": "2026-10-29",
     "titulo": "Más leyendas del Arrabal y más pueblos de las Arribes",

@@ -292,14 +292,14 @@ export const PUEBLOS = {
   Sequeros: {
     foto: [
       'img/pueblo-sequeros.jpg',
-      'Calle de Sequeros. Foto: Luis Rogelio HM · CC BY-SA 2.0 · Wikimedia Commons',
-      'Desde 1213 fue del alfoz de Miranda del Castañar, que creó Alfonso IX de León.',
-      'El camino del Asentadero y el Bosque de los Espejos, de unos 9 km, lo une con San Martín del Castañar y Las Casas del Conde, con obras de arte por el camino.'
+      'Calle de Sequeros. Foto: Luis Rogelio HM · CC BY-SA 2.0 · Wikimedia Commons'
     ],
     cur: [
       'Fue cabeza de partido judicial hasta 1968.',
       'Fernando VI le concedió el título de villa en 1756.',
-      'En la iglesia de Santa María del Robledo reposan los restos de Juana Hernández, la «moza santa».'
+      'En la iglesia de Santa María del Robledo reposan los restos de Juana Hernández, la «moza santa».',
+      'Desde 1213 fue del alfoz de Miranda del Castañar, que creó Alfonso IX de León.',
+      'El camino del Asentadero y el Bosque de los Espejos, de unos 9 km, lo une con San Martín del Castañar y Las Casas del Conde, con obras de arte por el camino.'
     ],
     mon: {
       n: 'Santa María del Robledo',
@@ -375,14 +375,14 @@ export const PUEBLOS = {
   Vitigudino: {
     foto: [
       'img/pueblo-vitigudino.jpg',
-      'Torre de la iglesia de San Nicolás de Bari. Foto: Rastrojo · CC BY-SA 4.0 · Wikimedia Commons',
-      'Su nombre vendría de Alvito Godino, un hombre de la corte de Ramiro II de León en el siglo X.',
-      'Aquí nació Nicolás de Ribera «el Mozo», tesorero de Pizarro en la conquista del Perú. Por la Virgen del Socorro, el 15 de agosto, hay feria, y el 16 mercado de ganado.'
+      'Torre de la iglesia de San Nicolás de Bari. Foto: Rastrojo · CC BY-SA 4.0 · Wikimedia Commons'
     ],
     cur: [
       'Hacia 1752, según el Catastro de Ensenada, tenía 180 vecinos y 181 casas.',
       'En 1844 consiguió ayuntamiento propio como cabeza de partido judicial.',
-      'La cruz de su escudo, de 1870, recuerda una batalla del 17 de enero de 1477.'
+      'La cruz de su escudo, de 1870, recuerda una batalla del 17 de enero de 1477.',
+      'Su nombre vendría de Alvito Godino, un hombre de la corte de Ramiro II de León en el siglo X.',
+      'Aquí nació Nicolás de Ribera «el Mozo», tesorero de Pizarro en la conquista del Perú. Por la Virgen del Socorro, el 15 de agosto, hay feria, y el 16 mercado de ganado.'
     ],
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Vitigudino']],
     comer: [
@@ -460,17 +460,16 @@ export const PUEBLOS = {
   'Linares de Riofrío': {
     foto: [
       'img/pueblo-linares.jpg',
-      'Linares de Riofrío. Foto: Mikelzubi · CC BY-SA 3.0 · Wikimedia Commons',
-      'Su «cal morena» se usó en la argamasa de la Plaza Mayor de Salamanca.',
-      'Cultiva fresas y a principios de junio celebra su fiesta de la fresa.',
-      'En tiempos de Madoz tenía cinco molinos harineros. A sus vecinos se les llama linarejos.',
-      'Madoz contaba en 1847 casi mil vecinos, cinco molinos de harina y mercado los sábados.',
-      'Su Fiesta de la Fresa es normalmente el primer fin de semana de junio.'
+      'Linares de Riofrío. Foto: Mikelzubi · CC BY-SA 3.0 · Wikimedia Commons'
     ],
     cur: [
       'En 1959 todavía funcionaban 15 hornos de cal.',
       'En 1248 desapareció el concejo de Monleón y Linares pasó al de Salamanca.',
-      'En su término se han encontrado seis lagares excavados en la roca.'
+      'En su término se han encontrado seis lagares excavados en la roca.',
+      'Su «cal morena» se usó en la argamasa de la Plaza Mayor de Salamanca.',
+      'A sus vecinos se les llama linarejos.',
+      'Madoz contaba en 1847 casi mil vecinos, cinco molinos de harina y mercado los sábados.',
+      'Su Fiesta de la Fresa es normalmente el primer fin de semana de junio.'
     ],
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Linares_de_Riofrío']],
     comer: [
@@ -763,14 +762,14 @@ export const PUEBLOS = {
   'Fuentes de Oñoro': {
     foto: [
       'img/pueblo-fuentes.jpg',
-      'Estación de Fuentes de Oñoro. Foto: Antero Pires · CC BY-SA 2.0 · Wikimedia Commons',
-      'Su escudo, de 1955, lleva una cruz de Santa Bárbara, un león, un castillo por la victoria sobre Napoleón y tres árboles donde, según se cuenta, fusilaron a enemigos.',
-      'Es el principal paso fronterizo entre España y Portugal y tuvo una aduana importante.'
+      'Estación de Fuentes de Oñoro. Foto: Antero Pires · CC BY-SA 2.0 · Wikimedia Commons'
     ],
     cur: [
       'Del 3 al 5 de mayo de 1811, Wellington frenó aquí al mariscal Masséna, que intentaba socorrer a la guarnición francesa cercada en Almeida.',
       'El 3 de mayo de 1811, con la iglesia en llamas, el párroco Luis Silva cruzó entre los disparos para salvar el copón; lo recuerda el escudo del pueblo.',
-      'La estación abrió el 25 de mayo de 1886 y a su lado nació la Colonia de la Estación. En 2018 el pueblo viejo tenía 215 vecinos; la Colonia, 385, y Nuevo Poblado, 588.'
+      'La estación abrió el 25 de mayo de 1886 y a su lado nació la Colonia de la Estación. En 2018 el pueblo viejo tenía 215 vecinos; la Colonia, 385, y Nuevo Poblado, 588.',
+      'Su escudo, de 1955, lleva una cruz de Santa Bárbara, un león, un castillo por la victoria sobre Napoleón y tres árboles donde, según se cuenta, fusilaron a enemigos.',
+      'Es el principal paso fronterizo entre España y Portugal y tuvo una aduana importante.'
     ],
     fuente: [
       ['Wikipedia', 'https://es.wikipedia.org/wiki/Fuentes_de_O%C3%B1oro'],
@@ -903,15 +902,15 @@ export const PUEBLOS = {
   Villoria: {
     foto: [
       'img/pueblo-villoria.jpg',
-      'Ayuntamiento de Villoria. Foto: Villavillavilla123456 · CC BY-SA 4.0 · Wikimedia Commons',
-      'Su nombre podría venir del latín «Villa Aurea», villa de oro, o de una propietaria llamada Oria.',
-      'En junio de 1812 los franceses le prendieron fuego, según recoge Madoz.',
-      'Su iglesia de San Pedro, de los siglos XIII al XV, conserva el ábside románico y es Bien de Interés Cultural desde 1993.'
+      'Ayuntamiento de Villoria. Foto: Villavillavilla123456 · CC BY-SA 4.0 · Wikimedia Commons'
     ],
     cur: [
       'Fue cabeza del cuarto de Villoria, una de las divisiones de la tierra de Salamanca en el Reino de León.',
       'Al oeste del pueblo hay una villa romana, Bien de Interés Cultural desde el 23 de diciembre de 1992.',
-      'El Club de Pelota Las Villas nació en 1993 junto con el Centro de Tecnificación de pelota de Castilla y León.'
+      'El Club de Pelota Las Villas nació en 1993 junto con el Centro de Tecnificación de pelota de Castilla y León.',
+      'Su nombre podría venir del latín «Villa Aurea», villa de oro, o de una propietaria llamada Oria.',
+      'En junio de 1812 los franceses le prendieron fuego, según recoge Madoz.',
+      'Su iglesia de San Pedro, de los siglos XIII al XV, conserva el ábside románico y es Bien de Interés Cultural desde 1993.'
     ],
     mon: {
       n: 'Iglesia de San Pedro',
@@ -934,14 +933,14 @@ export const PUEBLOS = {
   Babilafuente: {
     foto: [
       'img/pueblo-babilafuente.jpg',
-      'Plaza Mayor, ayuntamiento e iglesia. Foto: Malopez 21 · CC BY-SA 4.0 · Wikimedia Commons',
-      'En 1523 Carlos V vendió la villa a Alonso de Acevedo y Zúñiga.',
-      'Desde 2006 tiene una planta de bioetanol. Celebra San Blas el 3 de febrero, los quintos el 1 de mayo y San Roque el 16 de agosto.'
+      'Plaza Mayor, ayuntamiento e iglesia. Foto: Malopez 21 · CC BY-SA 4.0 · Wikimedia Commons'
     ],
     cur: [
       'Aparece por primera vez el 3 de mayo de 1215, cuando Sancha Gómez vendió la heredad de «Vaguilafointe» al deán de Salamanca.',
       'En 1752 Torres Villarroel escribió sobre las virtudes del agua de su fuente, rica en litina; en 1955 se declaró de utilidad pública.',
-      'El 21 de junio de 1812, en la retirada de Marmont, los franceses incendiaron el pueblo y dañaron la iglesia.'
+      'El 21 de junio de 1812, en la retirada de Marmont, los franceses incendiaron el pueblo y dañaron la iglesia.',
+      'En 1523 Carlos V vendió la villa a Alonso de Acevedo y Zúñiga.',
+      'Desde 2006 tiene una planta de bioetanol. Celebra San Blas el 3 de febrero, los quintos el 1 de mayo y San Roque el 16 de agosto.'
     ],
     fuente: [
       ['Wikipedia', 'https://es.wikipedia.org/wiki/Babilafuente'],
@@ -951,14 +950,14 @@ export const PUEBLOS = {
   Cantalapiedra: {
     foto: [
       'img/pueblo-cantalapiedra.jpg',
-      'Ayuntamiento de Cantalapiedra. Foto: Cruccone · CC BY 3.0 · Wikimedia Commons',
-      'Madoz contaba en 1846 ocho fábricas de tinajas.',
-      'El monasterio del Sagrado Corazón lo fundó en 1920 la madre Amparo, que había nacido en la villa.'
+      'Ayuntamiento de Cantalapiedra. Foto: Cruccone · CC BY 3.0 · Wikimedia Commons'
     ],
     cur: [
       'En 1136 el rey la donó al obispo de Salamanca. Los documentos la llaman Campum de Petra (1136) y Candelapiedra (1251) antes de Cantalapiedra (1265).',
       'De su muralla, levantada en la frontera entre León y Castilla, solo queda el Torreón del Deán, que debe el nombre a los deanes de la catedral de Salamanca.',
-      'En 1877 abrió su estación, en la línea de tren de Salamanca a Medina del Campo.'
+      'En 1877 abrió su estación, en la línea de tren de Salamanca a Medina del Campo.',
+      'Madoz contaba en 1846 ocho fábricas de tinajas.',
+      'El monasterio del Sagrado Corazón lo fundó en 1920 la madre Amparo, que había nacido en la villa.'
     ],
     mon: {
       n: 'Iglesia de Santa María del Castillo',
@@ -1080,15 +1079,15 @@ export const PUEBLOS = {
   Monleón: {
     foto: [
       'img/pueblo-monleon.jpg',
-      'Castillo de Monleón. Foto: Hovallef · CC BY-SA 4.0 · Wikimedia Commons',
-      'El alcalde Rodrigo Maldonado fue apresado por Fernando el Católico por acuñar moneda sin permiso; su mujer resistió en el castillo hasta rendirse, y se les perdonó la vida.',
-      'El romance «Los mozos de Monleón», recogido por Dámaso Ledesma en 1907, lo arregló García Lorca para canto y piano y lo grabó con La Argentinita.',
-      'Por San Blas, el 3 de febrero, se bendicen las gargantillas, y por San Jorge, el 23 de abril, el santo sube a las eras a bendecir los campos.'
+      'Castillo de Monleón. Foto: Hovallef · CC BY-SA 4.0 · Wikimedia Commons'
     ],
     cur: [
       'En 1199 Alfonso IX lo hizo villa con concejo propio; en 1248 Fernando III se lo quitó y lo sumó al de Salamanca.',
       'Estuvo amurallado desde su repoblación, a finales del siglo XII, y aún quedan restos de la muralla.',
-      'En 1330 sus vecinos se quejaron a Alfonso XI de que Salamanca no respetaba el fuero que les habían dado al repoblarlo.'
+      'En 1330 sus vecinos se quejaron a Alfonso XI de que Salamanca no respetaba el fuero que les habían dado al repoblarlo.',
+      'El alcalde Rodrigo Maldonado fue apresado por Fernando el Católico por acuñar moneda sin permiso; su mujer resistió en el castillo hasta rendirse, y se les perdonó la vida.',
+      'El romance «Los mozos de Monleón», recogido por Dámaso Ledesma en 1907, lo arregló García Lorca para canto y piano y lo grabó con La Argentinita.',
+      'Por San Blas, el 3 de febrero, se bendicen las gargantillas, y por San Jorge, el 23 de abril, el santo sube a las eras a bendecir los campos.'
     ],
     mon: {
       n: 'Castillo de Monleón',
@@ -1104,15 +1103,15 @@ export const PUEBLOS = {
   'Puente del Congosto': {
     foto: [
       'img/pueblo-congosto.jpg',
-      'Castillo y puente viejo de Puente del Congosto. Foto: David Perez · CC BY 3.0 · Wikimedia Commons',
-      'En 1539 Carlos V dio la villa al duque de Alba para ayudar a pagar sus campañas contra los otomanos.',
-      'Pedro de la Gasca, que pacificó el Perú para Carlos V, se crio en su castillo; lo recuerda una placa en la muralla.',
-      'Su verraco vetón está en la plaza de los Dados, frente al Ayuntamiento. A sus vecinos se les llama chapuceros.'
+      'Castillo y puente viejo de Puente del Congosto. Foto: David Perez · CC BY 3.0 · Wikimedia Commons'
     ],
     cur: [
       'Enrique III lo donó a Gil González Dávila el 2 de noviembre de 1393.',
       'Según la tradición, Isabel la Católica estaba en su castillo en 1497 cuando supo de la muerte de su hijo; el historiador Carlos Sánchez cree que quienes se alojaron fueron Margarita de Austria y la infanta Isabel.',
-      'Su puente sobre el Tormes es probablemente de los siglos XII o XIII y guardaba el camino de Ávila a Ciudad Rodrigo. En 1809 las tropas francesas ocuparon el castillo durante dos años.'
+      'Su puente sobre el Tormes es probablemente de los siglos XII o XIII y guardaba el camino de Ávila a Ciudad Rodrigo. En 1809 las tropas francesas ocuparon el castillo durante dos años.',
+      'En 1539 Carlos V dio la villa al duque de Alba para ayudar a pagar sus campañas contra los otomanos.',
+      'Pedro de la Gasca, que pacificó el Perú para Carlos V, se crio en su castillo; lo recuerda una placa en la muralla.',
+      'Su verraco vetón está en la plaza de los Dados, frente al Ayuntamiento. A sus vecinos se les llama chapuceros.'
     ],
     mon: {
       n: 'Iglesia de Nuestra Señora de la Asunción',
@@ -1124,6 +1123,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Puente_del_Congosto']]
   },
   Fuenteguinaldo: {
+    // https://commons.wikimedia.org/wiki/File:Fuenteguinaldo,_Wellington's_headquarter.jpg
+    foto: [
+      'img/pueblo-fuenteguinaldo.jpg',
+      'Casa del cuartel general de Wellington (1811-1812). Foto: Alta Falisa · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Entre noviembre de 1807 y mayo de 1813, en plena Guerra de la Independencia, por sus calles no dejaron de pasar tropas francesas, españolas, portuguesas y británicas.',
       'Wellington tuvo aquí su cuartel general en tres ocasiones. Una placa de bronce de Ricardo Flecha recuerda sus estancias, y un portal señala la casa donde vivió.',
@@ -1138,6 +1142,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Fuenteguinaldo']]
   },
   'Yecla de Yeltes': {
+    // https://commons.wikimedia.org/wiki/File:Yecla_la_Vieja_Castro_278.JPG
+    foto: [
+      'img/pueblo-yecla-de-yeltes.jpg',
+      'Muralla del castro de Yecla la Vieja. Foto: GFreihalter · CC BY-SA 3.0 · Wikimedia Commons'
+    ],
     cur: [
       'A un kilómetro del pueblo está el castro vetón de Yecla la Vieja, que conserva entera su muralla, tres puertas y un campo de piedras hincadas para frenar a los atacantes.',
       'Su escudo, aprobado en 2006, lleva una escena de caza grabada en uno de los sillares del castro.',
@@ -1155,6 +1164,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Yecla_de_Yeltes']]
   },
   'Villavieja de Yeltes': {
+    // https://commons.wikimedia.org/wiki/File:Soportales_(elcordon.es)_-_panoramio.jpg
+    foto: [
+      'img/pueblo-villavieja-de-yeltes.jpg',
+      'Soportales de Villavieja de Yeltes. Foto: Adolfo Andrés · CC BY-SA 3.0 · Wikimedia Commons'
+    ],
     cur: [
       'El 8 de septiembre de 1650, durante la fiesta de la Virgen de la Peña de Francia, la atacaron tropas portuguesas. Los vecinos que se quedaron resistieron en la iglesia y les causaron más de cien muertos y heridos.',
       'Fue un pueblo de curtidores y zapateros: hacia 1909 había unos 50 talleres de calzado y 18 tenerías.',
@@ -1173,6 +1187,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Villavieja_de_Yeltes']]
   },
   Cepeda: {
+    // https://commons.wikimedia.org/wiki/File:Cepeda,_Salamanca_-_vista_xeral_2.jpg
+    foto: [
+      'img/pueblo-cepeda.jpg',
+      'Vista general de Cepeda. Foto: Estevoaei · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'A mediados del siglo XVII se hizo villa independiente pagando 3.500 ducados.',
       'Ya aparece en el «Repertorio de todos los caminos de España» de Juan de Villuga, de 1546.',
@@ -1188,6 +1207,8 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Cepeda_(Salamanca)']]
   },
   Valero: {
+    // https://commons.wikimedia.org/wiki/File:View_of_Valero.jpg
+    foto: ['img/pueblo-valero.jpg', 'Vista de Valero. Foto: Mikelzubi · CC BY-SA 3.0 · Wikimedia Commons'],
     cur: [
       'El 19 de septiembre de 1636 Felipe IV creó el marquesado de Valero para el duque de Béjar, con Valero, El Endrinal, San Miguel, Los Santos, Frades y Tornadizo.',
       'Su piscina natural en el río Quilamas, de 1985, aprovecha la presa de una central eléctrica de 1920 que daba luz también a Frades de la Sierra. Antes se llamaba «Charco el Pozo».',
@@ -1197,6 +1218,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Valero_(Salamanca)']]
   },
   'San Esteban de la Sierra': {
+    // https://commons.wikimedia.org/wiki/File:San_Esteban_de_la_Sierra_1.jpg
+    foto: [
+      'img/pueblo-san-esteban-de-la-sierra.jpg',
+      'Vista de San Esteban de la Sierra hacia el oeste. Foto: Mikelzubi · CC BY-SA 3.0 · Wikimedia Commons'
+    ],
     cur: [
       'Los documentos más antiguos, del siglo XV, hablan de una comunidad judía con su propio barrio; entonces el pueblo se llamaba Santisteban.',
       'Su vino, que lleva el nombre de la sierra del Tiriñuelo, ganó la Espiga de Plata en 1997. Los dulces del pueblo son las perronillas y los sacatrapos.',
@@ -1229,6 +1255,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Fuenterroble_de_Salvatierra']]
   },
   'Villanueva del Conde': {
+    // https://commons.wikimedia.org/wiki/File:Villanueva_del_Conde_-_001_(32464911404).jpg
+    foto: [
+      'img/pueblo-villanueva-del-conde.jpg',
+      'Plaza de Villanueva del Conde. Foto: Luis Rogelio HM · CC BY-SA 2.0 · Wikimedia Commons'
+    ],
     cur: [
       'Primero se llamó Aldea el Conde; lo de «Villanueva» llegó al hacerse villa, y «del Conde» recuerda a los condes de Miranda.',
       'Sus casas forman un núcleo cerrado, como una muralla, terminado en el siglo XVIII. Dentro quedan las «huertitas», a las que se entra por tres pasadizos bajo las casas y por «callejinas» entre muros de piedra de un metro.',
@@ -1237,6 +1268,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Villanueva_del_Conde']]
   },
   'Herguijuela de la Sierra': {
+    // https://commons.wikimedia.org/wiki/File:SDFHDS02.jpg
+    foto: [
+      'img/pueblo-herguijuela-de-la-sierra.jpg',
+      'Vista de Herguijuela de la Sierra. Foto: Sotos · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Su nombre viene del latín «ecclesiola», iglesita: en 1188 aparece como «Ecclesiola», y nada tiene que ver con Guijuelo.',
       'Ese mismo año de 1188 Alfonso IX de León lo donó al arzobispado de Santiago de Compostela.',
@@ -1263,6 +1299,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Alaraz']]
   },
   Barruecopardo: {
+    // https://commons.wikimedia.org/wiki/File:Ayuntamiento_de_Barruecopardo.JPG
+    foto: [
+      'img/pueblo-barruecopardo.jpg',
+      'Ayuntamiento de Barruecopardo. Foto: Antonio GarMi · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Su nombre junta «barrueco», una roca suelta, con el color pardo del lugar.',
       'En 1157 Fernando II de León creó el señorío de Barruecopardo para Armengol VII, conde de Urgel, según se cuenta como regalo de boda. Desde 1195 fue de la Orden de Santiago.',
@@ -1271,6 +1312,8 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Barruecopardo']]
   },
   Monsagro: {
+    // https://commons.wikimedia.org/wiki/File:Monsagro_(Salamanca).jpg
+    foto: ['img/pueblo-monsagro.jpg', 'Vista de Monsagro. Foto: Toprural · CC BY-SA 2.0 · Wikimedia Commons'],
     cur: [
       'En las fachadas de algunas casas se ven fósiles marinos de más de 400 millones de años, del Ordovícico: rastros de trilobites (cruzianas) y galerías de gusanos.',
       'El Museo de los Mares Antiguos enseña fósiles de distintas épocas.',
@@ -1314,6 +1357,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Salvatierra_de_Tormes']]
   },
   Navasfrías: {
+    // https://commons.wikimedia.org/wiki/File:Ayuntamiento_de_Navasfrías.jpg
+    foto: [
+      'img/pueblo-navasfrias.jpg',
+      'Casa consistorial de Navasfrías. Foto: Rodelar · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Se nombra por primera vez en 1219, en una donación de Alfonso IX de León; en 1226 el rey lo dio a la Orden de Alcántara.',
       'En los ríos Águeda, Roladrón y Rubiós se pueden encontrar pepitas de oro con la batea, y siempre han sido ricos en truchas.',
@@ -1328,6 +1376,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Navasfr%C3%ADas']]
   },
   'Aldea del Obispo': {
+    // https://commons.wikimedia.org/wiki/File:Aldea_del_Obispo_05_by-dpc.jpg
+    foto: [
+      'img/pueblo-aldea-del-obispo.jpg',
+      'Ayuntamiento de Aldea del Obispo. Foto: David Perez · CC BY 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Debe su apellido a Fernando II de León, que en el siglo XII se la dio como señorío al obispo de Ciudad Rodrigo; así siguió hasta el siglo XIX.',
       'Con el Tratado de Alcañices, en 1297, León perdió el Riba-Coa y el pueblo quedó en plena frontera con Portugal.',
@@ -1349,6 +1402,11 @@ export const PUEBLOS = {
     ]
   },
   'Castillejo de Martín Viejo': {
+    // https://commons.wikimedia.org/wiki/File:Castillejo_de_Martin_Viejo_03_by-dpc.jpg
+    foto: [
+      'img/pueblo-castillejo-de-martin-viejo.jpg',
+      'Iglesia de San Juan Evangelista. Foto: David Perez · CC BY 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Comparte con Villar de la Yegua y Villar de Argañán los grabados de Siega Verde, hechos entre el 20.000 y el 11.000 antes de Cristo.',
       'Fue anejo de la parroquia de Villar del Rey hasta 1718, cuando la Guerra de Sucesión dejó aquel pueblo arrasado y el cura se mudó a Castillejo. Villar del Rey quedó deshabitado del todo el 25 de abril de 1810.',
@@ -1357,6 +1415,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Castillejo_de_Martín_Viejo']]
   },
   Cerralbo: {
+    // https://commons.wikimedia.org/wiki/File:Panorámica_de_Cerralbo.JPG
+    foto: [
+      'img/pueblo-cerralbo.jpg',
+      'Cerralbo desde el castillo. Foto: Ramajero · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'En el siglo XII Fernando II de León lo puso en manos de la Orden del Temple, que lo tuvo hasta que el papa disolvió la orden en 1311.',
       'El señorío de los Pacheco, de 1372, se convirtió en marquesado en 1533 por orden de Carlos I.',
@@ -1371,6 +1434,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Cerralbo']]
   },
   Sobradillo: {
+    // https://commons.wikimedia.org/wiki/File:Casa_del_Parque_"Torreón_de_Sobradillo",_Sobradillo_(Salamanca).jpg
+    foto: [
+      'img/pueblo-sobradillo.jpg',
+      'Torreón de Sobradillo, hoy Casa del Parque de Arribes del Duero. Foto: megustasobradillo · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Su escudo, de 1965, lleva la cruz potenzada negra de los Templarios.',
       'Hacia la Inmaculada, en diciembre, se celebra la capachera: se mueven en círculo capachos ardiendo que iluminan la plaza. Se recuperó en 2019, después de 65 años sin celebrarse.',
@@ -1393,6 +1461,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/El_Bodón']]
   },
   'Puerto de Béjar': {
+    // https://commons.wikimedia.org/wiki/File:La_Vía_de_la_Plata_en_Puerto_de_Béjar_-_panoramio.jpg
+    foto: [
+      'img/pueblo-puerto-de-bejar.jpg',
+      'La Vía de la Plata en Puerto de Béjar. Foto: pacorro39 · CC BY-SA 3.0 · Wikimedia Commons'
+    ],
     cur: [
       'En 1812 los franceses quemaron el pueblo y se llevaron la lámpara de la iglesia porque no les pagaron 14.000 reales.',
       'Para compensarlo, los vecinos entregaron a la Iglesia un castañar de 44 castaños valorado en 6.000 reales, y desde entonces aquel paraje se llama La Lámpara.',
@@ -1426,6 +1499,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Santiago_de_la_Puebla']]
   },
   Galisancho: {
+    // https://commons.wikimedia.org/wiki/File:Ayuntamiento_de_Galisancho.jpg
+    foto: [
+      'img/pueblo-galisancho.jpg',
+      'Ayuntamiento de Galisancho. Foto: Hovallef · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Su primera fecha documentada es el 9 de junio de 1220, cuando aparece como «Galinsancho» en un intercambio de bienes entre el obispo de Salamanca y el cabildo de la catedral.',
       'Lo fundaron los repobladores leoneses con el nombre de «Galind Sancholo», en el cuarto de Cantalberque, tierra de Alba de Tormes.',
@@ -1434,6 +1512,8 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Galisancho']]
   },
   Robleda: {
+    // https://commons.wikimedia.org/wiki/File:Robleda_(Salamanca).jpg
+    foto: ['img/pueblo-robleda.jpg', 'Vista de Robleda. Foto: Javi · CC BY-SA 2.0 · Wikimedia Commons'],
     cur: [
       'Es el único pueblo de la provincia con los nombres de las calles en dos lenguas: leonés y castellano.',
       'Cuando Fernando II de León creó la diócesis de Ciudad Rodrigo, en el siglo XII, se llamaba «Robreda».',
@@ -1442,6 +1522,8 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Robleda_(Salamanca)']]
   },
   Martiago: {
+    // https://commons.wikimedia.org/wiki/File:Martiago,_plaza_Constitucional.jpg
+    foto: ['img/pueblo-martiago.jpg', 'Plaza de Martiago. Foto: Rodelar · CC BY-SA 4.0 · Wikimedia Commons'],
     cur: [
       'Según el filólogo Antonio Llorente Maldonado, es el único nombre de lugar de la provincia que lleva con seguridad el sufijo celtorromano «-ago».',
       'En 1950, en unas obras de la iglesia, apareció una piedra votiva romana.',
@@ -1450,6 +1532,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Martiago']]
   },
   Garcibuey: {
+    // https://commons.wikimedia.org/wiki/File:Garcibuey.jpg
+    foto: [
+      'img/pueblo-garcibuey.jpg',
+      'Vista de Garcibuey. Foto: Garcibuey · CC BY-SA 3.0 · Wikimedia Commons'
+    ],
     cur: [
       'Cuenta la leyenda que en las Peñas las Palomas hay escondidas dos palomas de oro del tesoro de Muza y Don Rodrigo, y que la Cueva la Mora comunica con el castillo de las Quilamas.',
       'En los años cuarenta los vecinos levantaron con su trabajo el estanque de la Palla, un depósito de riego de 3.000 m³. En los sesenta crearon la cooperativa San Andrés, que hizo y vendió vino durante 25 años.',
@@ -1458,6 +1545,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Garcibuey']]
   },
   'Cereceda de la Sierra': {
+    // https://commons.wikimedia.org/wiki/File:Cerecedavista.jpg
+    foto: [
+      'img/pueblo-cereceda-de-la-sierra.jpg',
+      'Vista de Cereceda de la Sierra. Foto: Calpisa · CC BY-SA 3.0 · Wikimedia Commons'
+    ],
     cur: [
       'A sus vecinos los llaman «gatos»: puede venir del dicho «arreguñan las bardas» o de la Peña del Gato, junto a la entrada norte del pueblo.',
       'Su puente Cantería, de piedra y con dos pequeños ojos, puede ser romano o medieval.',
@@ -1466,6 +1558,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Cereceda_de_la_Sierra']]
   },
   Juzbado: {
+    // https://commons.wikimedia.org/wiki/File:Juzbado_wikipedia_1.jpg
+    foto: [
+      'img/pueblo-juzbado.jpg',
+      'Juzbado desde Los Berrocales. Foto: Centro codel · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Un verraco vetón hallado en su término muestra que estaba habitado al menos desde el siglo V antes de Cristo.',
       'Lo fundó Ramiro II de León en el siglo X con el nombre de Iusvado, y en 1173 Fernando II se lo dio al obispo de Salamanca como señorío.',
@@ -1535,6 +1632,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Villaverde_de_Guareña']]
   },
   'Ahigal de los Aceiteros': {
+    // https://commons.wikimedia.org/wiki/File:Ayuntamiento_de_Ahigal_de_Aceiteros.jpg
+    foto: [
+      'img/pueblo-ahigal-de-los-aceiteros.jpg',
+      'Ayuntamiento de Ahigal de los Aceiteros. Foto: Hovallef · CC BY 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Su nombre vendría de «la Figal», la higuera: a finales del siglo XV todavía se llamaba Figal.',
       'Según contaban sus vecinos a Madoz, el primero que se asentó aquí fue un colmenero con su familia.',
@@ -1552,6 +1654,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Ahigal_de_los_Aceiteros']]
   },
   'Gallegos de Argañán': {
+    // https://commons.wikimedia.org/wiki/File:Verraco_(Gallegos_de_Argañán)_en_el_Museo_de_Salamanca1.jpg
+    foto: [
+      'img/pueblo-gallegos-de-arganan.jpg',
+      'Verraco vetón de Gallegos de Argañán, hoy en el Museo de Salamanca. Foto: A. Laguna · CC0 · Wikimedia Commons'
+    ],
     cur: [
       'Su nombre viene de la repoblación de Fernando II de León hacia 1157, con gentes traídas de Galicia.',
       'En un contrafuerte de la iglesia, a unos 2,5 metros de altura, hay una piedra romana con un voto a Júpiter: «Vitulo, hijo de Arreino, cumplió de buen grado el voto».',
@@ -1567,6 +1674,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Gallegos_de_Argañán']]
   },
   'Colmenar de Montemayor': {
+    // https://commons.wikimedia.org/wiki/File:Casa_palaciega_en_Colmenar_de_Montemayor.jpg
+    foto: [
+      'img/pueblo-colmenar-de-montemayor.jpg',
+      'Casa palaciega de Colmenar de Montemayor. Foto: Hovallef · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Nació hacia 1227, cuando Alfonso IX creó el concejo de Montemayor del Río, del que le viene el apellido.',
       'Una placa de 2012 recuerda al maestro Melquiades Rodríguez Tocino, secuestrado y fusilado el 8 de agosto de 1936.',
@@ -1584,6 +1696,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Colmenar_de_Montemayor']]
   },
   Golpejas: {
+    // https://commons.wikimedia.org/wiki/File:Iglesia_de_Golpejas.JPG
+    foto: [
+      'img/pueblo-golpejas.jpg',
+      'Iglesia de Golpejas. Foto: Rastrojo · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Aparece en el fuero de Ledesma de 1161 como «Golpeyas de la Torre».',
       'Desde los años sesenta tuvo una mina de estaño de 80 hectáreas. Cerró en 1988 y dejó un lago de unas tres hectáreas en el que no viven peces ni insectos.',
@@ -1601,6 +1718,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Golpejas']]
   },
   'Saelices el Chico': {
+    // https://commons.wikimedia.org/wiki/File:Saelices_el_Chico_03_by-dpc.jpg
+    foto: [
+      'img/pueblo-saelices-el-chico.jpg',
+      'Puente medieval e iglesia de San Benito. Foto: David Perez · CC BY 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Bajo restos medievales apareció una villa romana del siglo IV, con un pasillo de suelo de mosaico.',
       'En 1169 Fernando II de León dio la aldea de «Sancti Felicis» a los monjes benedictinos de Santa Águeda, en Ciudad Rodrigo.',
@@ -1610,6 +1732,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Saelices_el_Chico']]
   },
   'Nava de Francia': {
+    // https://commons.wikimedia.org/wiki/File:SDFNDF31.jpg
+    foto: [
+      'img/pueblo-nava-de-francia.jpg',
+      'Ayuntamiento de Nava de Francia. Foto: Sotos · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Guarda un documento firmado por el rey en Ciudad Rodrigo el 19 de noviembre de 1213, escrito en bajo latín vulgar.',
       'El 13 de octubre de 1296, en Tordesillas, el monasterio que era su dueño renunció al lugar a cambio de 200 maravedíes que pagó Miranda.',
@@ -1618,6 +1745,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Nava_de_Francia']]
   },
   Villasbuenas: {
+    // https://commons.wikimedia.org/wiki/File:Panorámica_de_Villasbuenas_al_atardecer.jpg
+    foto: [
+      'img/pueblo-villasbuenas.jpg',
+      'Villasbuenas al atardecer. Foto: Ramajero · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'En el siglo XIII se llamaba Villabonos, y así aparece en un documento de la catedral de Salamanca de 1265.',
       'Se conserva una estela romana dedicada a Ciliborcae, una diosa prerromana de las fuentes cuyo nombre podría significar «portadora de salud».',
@@ -1627,6 +1759,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Villasbuenas']]
   },
   Sorihuela: {
+    // https://commons.wikimedia.org/wiki/File:Panorama_Sorihuela.jpg
+    foto: [
+      'img/pueblo-sorihuela.jpg',
+      'Vista de Sorihuela. Foto: Xemenendura · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Su nombre podría significar «Soria pequeña», por los repobladores que llegaron en la segunda mitad del siglo XII.',
       'Sus hombres lucharon en las Navas de Tolosa, en las mesnadas del obispo de Plasencia junto a Alfonso VIII.',
@@ -1636,6 +1773,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Sorihuela']]
   },
   Agallas: {
+    // https://commons.wikimedia.org/wiki/File:Agallas_01.jpg
+    foto: [
+      'img/pueblo-agallas.jpg',
+      'Vista general de Agallas. Foto: Rodelar · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'El Ídolo de Agallas, de la Edad del Bronce, es una figura humana tallada en pizarra de más de un metro de alto.',
       'En 1985 apareció un ara romana del siglo I con una dedicatoria en latín.',
@@ -1645,6 +1787,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Agallas']]
   },
   Bermellar: {
+    // https://commons.wikimedia.org/wiki/File:Ayuntamiento_de_Bermellar.jpg
+    foto: [
+      'img/pueblo-bermellar.jpg',
+      'Ayuntamiento de Bermellar. Foto: Hovallef · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Sobre el río Huebra está el castro de Saldañuela, una fortaleza de la Edad del Hierro.',
       'En el siglo XII Fernando II de León lo puso en manos de la Orden del Temple. Cuando el papa disolvió la orden, en 1311, pasó al obispo de Ciudad Rodrigo.',
@@ -1653,6 +1800,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Bermellar']]
   },
   'Cerezal de Peñahorcada': {
+    // https://commons.wikimedia.org/wiki/File:Cerezal_de_Peñahorcada.jpg
+    foto: [
+      'img/pueblo-cerezal-de-penahorcada.jpg',
+      'Casas de Cerezal de Peñahorcada. Foto: Vanbasten 23 · CC BY-SA 3.0 · Wikimedia Commons'
+    ],
     cur: [
       'Su apellido viene de dos peñascos casi inaccesibles que forman una «horcada». El teso de Peñahorcada mide 836 metros.',
       'Fue de la Orden de Santiago desde el siglo XII hasta 1873, cuando pasó a la diócesis de Ciudad Rodrigo.',
@@ -1673,6 +1825,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Cerezal_de_Pe%C3%B1ahorcada']]
   },
   Gajates: {
+    // https://commons.wikimedia.org/wiki/File:Ayuntamiento_de_Gajates.jpg
+    foto: [
+      'img/pueblo-gajates.jpg',
+      'Ayuntamiento de Gajates. Foto: Hovallef · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Se fundó con la repoblación de Ramiro II de León, en el siglo X. En el XIII se escribía «Gayates».',
       'En 1196 su pedanía, Galleguillos, entonces «Galegos de Alfaraz», fue saqueada por tropas castellanas: la frontera estaba muy cerca.',
@@ -1691,6 +1848,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Gajates']]
   },
   Rágama: {
+    // https://commons.wikimedia.org/wiki/File:20210907_105303_Rágama.jpg
+    foto: [
+      'img/pueblo-ragama.jpg',
+      'Iglesia y casas de ladrillo de Rágama. Foto: FLAVIVSAETIVS · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Fue de la Comunidad de Villa y Tierra de Arévalo desde la repoblación de los siglos XI y XII hasta 1833, cuando pasó a Salamanca.',
       'Aquí nació en 1464 Francisco de Carvajal, conquistador en México y Perú al que llamaron «el demonio de los Andes». Murió ejecutado en 1548.',
@@ -1708,6 +1870,8 @@ export const PUEBLOS = {
     ]
   },
   Retortillo: {
+    // https://commons.wikimedia.org/wiki/File:Vista_de_Retortillo_(Salamanca).jpg
+    foto: ['img/pueblo-retortillo.jpg', 'Vista de Retortillo. Foto: Mscs · CC BY-SA 4.0 · Wikimedia Commons'],
     cur: [
       'Su balneario aprovecha un manantial que brota en el mismo lecho del río Yeltes a 48,5 °C, con unos 212 litros por minuto. Sus aguas se declararon de utilidad pública el 14 de julio de 1905.',
       'Los romanos ya lo usaban: se halló un ara dedicada a las aguas del Yeltes, «Aquis Eletesibus».',
@@ -1723,6 +1887,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Retortillo_(Salamanca)']]
   },
   'Sancti-Spíritus': {
+    // https://commons.wikimedia.org/wiki/File:Sancti-Spiritus_02_by-dpc.jpg
+    foto: [
+      'img/pueblo-sancti-spiritus.jpg',
+      'Entrada a Sancti-Spíritus. Foto: David Perez · CC BY 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Con 141,90 km² es el tercer municipio más grande de la provincia.',
       'El abrigo de Camaces, un asentamiento neolítico, es bien de interés cultural desde 1983.',
@@ -1741,6 +1910,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Sancti-Sp%C3%ADritus_(Salamanca)']]
   },
   'Martín de Yeltes': {
+    // https://commons.wikimedia.org/wiki/File:Martín_de_Yeltes-Récolte_du_blé-1967_08_07.jpg
+    foto: [
+      'img/pueblo-martin-de-yeltes.jpg',
+      'Trilla en las eras de Martín de Yeltes en 1967. Foto: Daniel Villafruela · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Se llamó Martín del Río hasta 1910, cuando tomó el nombre del río Yeltes. Un real decreto de 1916 lo confirmó.',
       'En el siglo XIX era lugar de paso de pastores, carruajes y caballerías que subían de Extremadura a León, con posadas y ventorros.',
@@ -1750,6 +1924,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Mart%C3%ADn_de_Yeltes']]
   },
   Villasrubias: {
+    // https://commons.wikimedia.org/wiki/File:Ayuntamiento_de_Villasrubias.jpg
+    foto: [
+      'img/pueblo-villasrubias.jpg',
+      'Casa consistorial de Villasrubias. Foto: Rodelar · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'En 1191 Alfonso IX de León lo donó a la Orden de Santiago.',
       'Su torre de las campanas era en 1700 una torre de defensa que también servía de horca. Los arcos se le añadieron hacia 1945.',
@@ -1768,6 +1947,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Frades_de_la_Sierra']]
   },
   'Santibáñez de la Sierra': {
+    // https://commons.wikimedia.org/wiki/File:Panoramicasantibanezsierra.jpg
+    foto: [
+      'img/pueblo-santibanez-de-la-sierra.jpg',
+      'Vista de Santibáñez de la Sierra. Foto: P nx · CC BY-SA 3.0 · Wikimedia Commons'
+    ],
     cur: [
       'Una inscripción de la antigua ermita de San Juan recuerda su fundación en el año 583.',
       'Por aquí pasaba una calzada romana que se partía en dos: hacia Coria y hacia las minas de oro de Las Cavenes, en El Cabaco.',
@@ -1821,6 +2005,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/La_Zarza_de_Pumareda']]
   },
   'Encinasola de los Comendadores': {
+    // https://commons.wikimedia.org/wiki/File:Iglesia_de_Picones.JPG
+    foto: [
+      'img/pueblo-encinasola-de-los-comendadores.jpg',
+      'Iglesia de Picones, pedanía de Encinasola. Foto: Ramajero · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'En su pedanía de Picones está el castro del Picón de la Mora, de la Segunda Edad del Hierro.',
       'En el siglo XIII se escribía «Erzinasola». En 1185 se cerró el pleito con Zamora y pasó para siempre a la diócesis de Salamanca.',
@@ -1829,6 +2018,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Encinasola_de_los_Comendadores']]
   },
   'Zorita de la Frontera': {
+    // https://commons.wikimedia.org/wiki/File:Zorita_de_la_Frontera_02.jpg
+    foto: [
+      'img/pueblo-zorita-de-la-frontera.jpg',
+      'Torre de la iglesia de Zorita de la Frontera. Foto: 19Tarrestnom65 · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Su apellido viene de los siglos XII y XIII, cuando estaba en la frontera entre León y Castilla. «Zorita» podría venir del árabe y significar «paloma azul».',
       'En la Edad Media se escribía «Çurita», y en un mapa de 1700 aparece como «Corita».',
@@ -1847,6 +2041,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Zorita_de_la_Frontera']]
   },
   Montejo: {
+    // https://commons.wikimedia.org/wiki/File:Iglesia_de_San_Pedro_Apóstol_en_Montejo_(Salamanca).jpg
+    foto: [
+      'img/pueblo-montejo.jpg',
+      'Iglesia de San Pedro Apóstol. Foto: Miguel Gallego Angulo · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Lo atraviesa el embalse de Santa Teresa, que recoge las aguas del Tormes.',
       'Aquí nacieron los hermanos Rodríguez Laso: Simón fue rector del Colegio de España en Bolonia desde 1788 hasta su muerte en 1821.',
@@ -1892,6 +2091,8 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Paradinas_de_San_Juan']]
   },
   Puertas: {
+    // https://commons.wikimedia.org/wiki/File:La_Puente.jpg
+    foto: ['img/pueblo-puertas.jpg', 'La puente vieja de Puertas. Foto: Nodras · CC0 · Wikimedia Commons'],
     cur: [
       'En 1265 se llamaba Sancta María de Cabeça de Porcas.',
       'El 13 de mayo de 1597 se juzgó a su cura, Gonzalo Pérez, por decir misa demasiado temprano y jugar a la pelota en las calles. Lo amonestaron y pagó las costas.',
@@ -1909,6 +2110,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Puertas_(Salamanca)']]
   },
   'Guijo de Ávila': {
+    // https://commons.wikimedia.org/wiki/File:Ayuntamiento_de_Guijo_de_Ávila.jpg
+    foto: [
+      'img/pueblo-guijo-de-avila.jpg',
+      'Ayuntamiento de Guijo de Ávila. Foto: Hovallef · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Su apellido viene de Ávila: tras la repoblación del siglo XII quedó ligado a esa tierra.',
       'En el siglo XV, cuando la Tierra de Béjar pasó a León, quedó como el pedazo de Castilla más al oeste, rodeado de tierras leonesas por tres de sus cuatro lados.',
@@ -1917,6 +2123,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Guijo_de_%C3%81vila']]
   },
   'Valverde de Valdelacasa': {
+    // https://commons.wikimedia.org/wiki/File:Iglesia_parroquial_Santiago_El_Mayor_en_Valverde_de_Valdelacasa_lateral.jpg
+    foto: [
+      'img/pueblo-valverde-de-valdelacasa.jpg',
+      'Iglesia de Santiago el Mayor. Foto: Hovallef · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Fue pueblo de frontera: el límite entre León y Castilla iba por la Vía de la Plata.',
       'En 1209 entró en la Comunidad de Villa y Tierra de Béjar, y en 1396 pasó con ella a los Zúñiga.',
@@ -1925,6 +2136,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Valverde_de_Valdelacasa']]
   },
   'Mancera de Abajo': {
+    // https://commons.wikimedia.org/wiki/File:Mancera_de_Abajo.jpg
+    foto: [
+      'img/pueblo-mancera-de-abajo.jpg',
+      'Vista de Mancera de Abajo. Foto: Xemenendura · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Fue villa del señorío del marqués de Malpica y la cabeza de las siete villas que lo formaban.',
       'Madoz contaba en 1848 un palacio del marqués ya inhabitable y las ruinas de un convento de los Mínimos.',
@@ -1938,6 +2154,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Mancera_de_Abajo']]
   },
   'Villar de Ciervo': {
+    // https://commons.wikimedia.org/wiki/File:Villar_de_Ciervo_06_by-dpc.jpg
+    foto: [
+      'img/pueblo-villar-de-ciervo.jpg',
+      'Ayuntamiento de Villar de Ciervo. Foto: David Perez · CC BY 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Su nombre podría venir de los muchos ciervos que había cuando se fundó, entre los siglos XII y XIII.',
       'A mediados del siglo XIX tenía 957 vecinos y 240 casas, según Madoz.',
@@ -1946,6 +2167,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Villar_de_Ciervo']]
   },
   Larrodrigo: {
+    // https://commons.wikimedia.org/wiki/File:Larrodrigo_02.jpg
+    foto: [
+      'img/pueblo-larrodrigo.jpg',
+      'Vista de Larrodrigo. Foto: 19Tarrestnom65 · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'En el siglo XIII se llamaba Pela Rodrigo, en el XV Felarrodrigo y en el censo de 1842 La Rodrigo.',
       'Por él pasaba la calzada de Alba de Tormes a Valladolid.',
@@ -1954,6 +2180,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Larrodrigo']]
   },
   'Tarazona de Guareña': {
+    // https://commons.wikimedia.org/wiki/File:Ayuntamiento_de_Tarazona_de_Guareña.jpg
+    foto: [
+      'img/pueblo-tarazona-de-guarena.jpg',
+      'Ayuntamiento de Tarazona de Guareña. Foto: Hovallef · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'En el siglo XIII se escribía «Taraçona»: quizá la poblaron gentes de Tarazona, en Aragón.',
       'Tomó el apellido del río Guareña el 2 de julio de 1916.',
@@ -1962,6 +2193,11 @@ export const PUEBLOS = {
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Tarazona_de_Guare%C3%B1a']]
   },
   Huerta: {
+    // https://commons.wikimedia.org/wiki/File:Huerta,_vista_población.jpg
+    foto: [
+      'img/pueblo-huerta.jpg',
+      'Huerta desde la carretera de Babilafuente. Foto: Malopez 21 · CC BY-SA 4.0 · Wikimedia Commons'
+    ],
     cur: [
       'Su nombre aparece hacia 1163, en el testamento de don Vela, canónigo de la catedral de Salamanca.',
       'Pedro Maldonado Pimentel, nieto del dueño de la heredad de Huerta, fue ejecutado en 1522 por luchar con los comuneros.',
