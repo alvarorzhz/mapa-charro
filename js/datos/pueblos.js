@@ -1208,10 +1208,7 @@ export const PUEBLOS = {
   },
   Valero: {
     // https://commons.wikimedia.org/wiki/File:View_of_Valero.jpg
-    foto: [
-      'img/pueblo-valero.jpg',
-      'Vista de Valero. Foto: Mikelzubi · CC BY-SA 3.0 · Wikimedia Commons'
-    ],
+    foto: ['img/pueblo-valero.jpg', 'Vista de Valero. Foto: Mikelzubi · CC BY-SA 3.0 · Wikimedia Commons'],
     cur: [
       'El 19 de septiembre de 1636 Felipe IV creó el marquesado de Valero para el duque de Béjar, con Valero, El Endrinal, San Miguel, Los Santos, Frades y Tornadizo.',
       'Su piscina natural en el río Quilamas, de 1985, aprovecha la presa de una central eléctrica de 1920 que daba luz también a Frades de la Sierra. Antes se llamaba «Charco el Pozo».',
@@ -1316,10 +1313,7 @@ export const PUEBLOS = {
   },
   Monsagro: {
     // https://commons.wikimedia.org/wiki/File:Monsagro_(Salamanca).jpg
-    foto: [
-      'img/pueblo-monsagro.jpg',
-      'Vista de Monsagro. Foto: Toprural · CC BY-SA 2.0 · Wikimedia Commons'
-    ],
+    foto: ['img/pueblo-monsagro.jpg', 'Vista de Monsagro. Foto: Toprural · CC BY-SA 2.0 · Wikimedia Commons'],
     cur: [
       'En las fachadas de algunas casas se ven fósiles marinos de más de 400 millones de años, del Ordovícico: rastros de trilobites (cruzianas) y galerías de gusanos.',
       'El Museo de los Mares Antiguos enseña fósiles de distintas épocas.',
@@ -1519,10 +1513,7 @@ export const PUEBLOS = {
   },
   Robleda: {
     // https://commons.wikimedia.org/wiki/File:Robleda_(Salamanca).jpg
-    foto: [
-      'img/pueblo-robleda.jpg',
-      'Vista de Robleda. Foto: Javi · CC BY-SA 2.0 · Wikimedia Commons'
-    ],
+    foto: ['img/pueblo-robleda.jpg', 'Vista de Robleda. Foto: Javi · CC BY-SA 2.0 · Wikimedia Commons'],
     cur: [
       'Es el único pueblo de la provincia con los nombres de las calles en dos lenguas: leonés y castellano.',
       'Cuando Fernando II de León creó la diócesis de Ciudad Rodrigo, en el siglo XII, se llamaba «Robreda».',
@@ -1532,10 +1523,7 @@ export const PUEBLOS = {
   },
   Martiago: {
     // https://commons.wikimedia.org/wiki/File:Martiago,_plaza_Constitucional.jpg
-    foto: [
-      'img/pueblo-martiago.jpg',
-      'Plaza de Martiago. Foto: Rodelar · CC BY-SA 4.0 · Wikimedia Commons'
-    ],
+    foto: ['img/pueblo-martiago.jpg', 'Plaza de Martiago. Foto: Rodelar · CC BY-SA 4.0 · Wikimedia Commons'],
     cur: [
       'Según el filólogo Antonio Llorente Maldonado, es el único nombre de lugar de la provincia que lleva con seguridad el sufijo celtorromano «-ago».',
       'En 1950, en unas obras de la iglesia, apareció una piedra votiva romana.',
@@ -1883,10 +1871,7 @@ export const PUEBLOS = {
   },
   Retortillo: {
     // https://commons.wikimedia.org/wiki/File:Vista_de_Retortillo_(Salamanca).jpg
-    foto: [
-      'img/pueblo-retortillo.jpg',
-      'Vista de Retortillo. Foto: Mscs · CC BY-SA 4.0 · Wikimedia Commons'
-    ],
+    foto: ['img/pueblo-retortillo.jpg', 'Vista de Retortillo. Foto: Mscs · CC BY-SA 4.0 · Wikimedia Commons'],
     cur: [
       'Su balneario aprovecha un manantial que brota en el mismo lecho del río Yeltes a 48,5 °C, con unos 212 litros por minuto. Sus aguas se declararon de utilidad pública el 14 de julio de 1905.',
       'Los romanos ya lo usaban: se halló un ara dedicada a las aguas del Yeltes, «Aquis Eletesibus».',
@@ -2107,10 +2092,7 @@ export const PUEBLOS = {
   },
   Puertas: {
     // https://commons.wikimedia.org/wiki/File:La_Puente.jpg
-    foto: [
-      'img/pueblo-puertas.jpg',
-      'La puente vieja de Puertas. Foto: Nodras · CC0 · Wikimedia Commons'
-    ],
+    foto: ['img/pueblo-puertas.jpg', 'La puente vieja de Puertas. Foto: Nodras · CC0 · Wikimedia Commons'],
     cur: [
       'En 1265 se llamaba Sancta María de Cabeça de Porcas.',
       'El 13 de mayo de 1597 se juzgó a su cura, Gonzalo Pérez, por decir misa demasiado temprano y jugar a la pelota en las calles. Lo amonestaron y pagó las costas.',

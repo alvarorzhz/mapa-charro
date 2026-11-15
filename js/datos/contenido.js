@@ -664,6 +664,20 @@ export const LEYENDAS = {
   ],
   fontana: [
     'Cuenta la leyenda que la talla de la Virgen de la Vega, patrona de Salamanca, llegó desde Constantinopla. Era la titular del monasterio de Santa María de la Vega, cuyas ruinas están en este barrio; hoy preside el altar mayor de la Catedral Vieja.'
+  ],
+  sancti: [
+    // Fuente: https://es.wikipedia.org/wiki/Iglesia_de_Sancti_Spiritus_(Salamanca)
+    'Sobre la puerta de la iglesia, una pizarra cuenta una leyenda apócrifa sobre la fundación del templo y los privilegios que consiguió. Encima, en el frontón, Santiago cabalga en la legendaria batalla de Clavijo.'
+  ],
+  sancristobal: [
+    // Fuente: https://www.salamancaenelayer.com/2012/08/plaza-de-san-cristobal.html
+    'Cuentan las crónicas que en 1412 san Vicente Ferrer vino a predicar a San Cristóbal y acudió tanta gente que tuvo que hacerlo en la plazuela, porque en la iglesia no cabían. En 1910 todavía había allí una cruz que lo recordaba.'
+  ],
+  santamarta: [
+    // Fuente: https://salamancartvaldia.es/noticia/2026-06-04-santa-marta-revive-su-historia-con-la-semana-de-las-carbajalas-391864
+    'La leyenda de la Tarasca: la patrona, santa Marta, amansó a este monstruo solo con la oración y el cordón de su vestido. En 2026 el pueblo la representó en su Semana Cultural de Las Carbajalas.',
+    // Fuente: https://www.lagacetadesalamanca.es/provincia/leyenda-quinciano-cobra-vida-santa-marta-tormes-20240202110008-ga.html
+    'Quinciano, cuenta la leyenda, se enamoró de santa Águeda y, cuando ella lo rechazó, mandó cortarle un pecho y torturarla hasta la muerte. Cada año las Águedas del pueblo hacen un muñeco suyo y lo queman la víspera de la santa, una costumbre que viene al menos de finales del siglo XIX.'
   ]
 };
 // Fotos: { idZona: [ruta en img/, pie con autor y licencia] }. El texto hasta «. Foto» se usa como texto alternativo.
@@ -1355,6 +1369,56 @@ export const DONDE_COMER = {
       a: 'Avenida de los Agustinos Recoletos, 99',
       p: 'Mesón de barrio con terraza: 6,7 sobre 10 en Gastroranking con unas 420 opiniones. Destacan sus pinchos, sobre todo el de tortilla, y los desayunos.',
       s: 'Gastroranking, oct. 2026'
+    }
+  ],
+  puenteladrillo: [
+    {
+      // https://gastroranking.es/r/bar-casa-pato_271504/
+      n: 'Bar Casa Pato',
+      t: 'Bar',
+      a: 'Calle Jesús Arambarri, 202',
+      p: 'El mejor valorado del barrio en Gastroranking: 9 sobre 10 con unas 490 opiniones.',
+      s: 'Gastroranking, nov. 2026'
+    }
+  ],
+  vega: [
+    {
+      // https://gastroranking.es/r/bar-madronal_275166/
+      n: 'Bar Madroñal',
+      t: 'Bar',
+      a: 'Plaza Virgen de la Vega, 9',
+      p: 'En la plaza del barrio. 8,8 sobre 10 en Gastroranking con unas 150 opiniones.',
+      s: 'Gastroranking, nov. 2026'
+    }
+  ],
+  huertaotea: [
+    {
+      // https://gastroranking.es/r/pituca_297674/
+      n: 'Pituca',
+      t: 'Bar',
+      a: 'Avenida Tinamar, 14',
+      p: '8,4 sobre 10 en Gastroranking con unas 55 opiniones.',
+      s: 'Gastroranking, nov. 2026'
+    }
+  ],
+  salasbajas: [
+    {
+      // https://gastroranking.es/r/bar-lorenzo-3_274909/
+      n: 'Bar Lorenzo',
+      t: 'Bar',
+      a: 'Paseo Luis Cortés, 28',
+      p: '8,2 sobre 10 en Gastroranking con unas 200 opiniones.',
+      s: 'Gastroranking, nov. 2026'
+    }
+  ],
+  zurguen: [
+    {
+      // https://gastroranking.es/r/fenix_12800/
+      n: 'Fenix',
+      t: 'Restaurante',
+      a: 'Calle Saavedra y Fajardo, 96',
+      p: 'El mejor valorado del barrio en Gastroranking: 7 sobre 10 con unas 790 opiniones.',
+      s: 'Gastroranking, nov. 2026'
     }
   ]
 };
