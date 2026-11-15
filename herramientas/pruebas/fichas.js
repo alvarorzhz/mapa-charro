@@ -316,10 +316,37 @@ prueba('Fichas: para seguir explorando', async (p, url) => {
   cierto((await texto(p, '#nb')).includes('Ver Barrio del Oeste'), 'el mural lleva a su barrio');
 });
 
+prueba('Horario y precio de los monumentos («Visitar»)', async (p, url) => {
+  await p.goto(url + '#monumento/catedrales');
+  await p.waitForSelector('#sh.o');
+  const visita = await texto(p, '#info .visita');
+  cierto(visita.includes('Horario') && visita.includes('Entrada'), 'las Catedrales, con horario y entrada');
+  cierto(visita.includes('10 €') && visita.includes('Gratis:'), 'con precio y cuándo es gratis');
+  cierto(
+    await p.$eval('#info .visita .fte a', a => a.href == FUENTE_VISITAS.url && a.target == '_blank'),
+    'y la fuente oficial, en otra pestaña'
+  );
+  // Un espacio abierto, uno cerrado y uno sin datos de visita
+  await p.evaluate(() => abrirMonumento('plazamayor'));
+  cierto((await texto(p, '#info .visita')).includes('Espacio abierto'), 'la Plaza Mayor, siempre abierta');
+  await p.evaluate(() => abrirMonumento('museo-salamanca'));
+  cierto(
+    (await texto(p, '#info .visita')).includes('Cerrado temporalmente'),
+    'el Museo de Salamanca, cerrado'
+  );
+  await p.evaluate(() => abrirMonumento('helmantico'));
+  igual(await p.$$eval('#info .visita', l => l.length), 0, 'el Helmántico no lleva «Visitar»');
+  // Cada monumento nuevo con su ficha, su foto y su horario
+  await p.evaluate(() => abrirMonumento('sanmartin'));
+  cierto((await texto(p, '#info .visita')).includes('3 €'), 'San Martín, con su entrada');
+  cierto(await p.isVisible('#ph'), 'y su foto');
+});
+
 prueba('Fotos de monumentos y pueblos, y sitios de la ciudad de hoy', async (p, url) => {
-  // Todos los monumentos tienen foto con autor y licencia, salvo los que no la tienen libre
+  // Todos los monumentos tienen foto con autor y licencia, salvo los que no la tienen libre en Commons
+  // (hoy: La Aldehuela, el Museo Taurino y los cines Van Dyck)
   const sinFoto = await p.evaluate(() => MONUMENTOS.filter(m => !fotoDeMonumento(m)).map(m => m.id));
-  cierto(sinFoto.length <= 2, 'casi todos los monumentos con foto (faltan: ' + sinFoto.join(', ') + ')');
+  cierto(sinFoto.length <= 3, 'casi todos los monumentos con foto (faltan: ' + sinFoto.join(', ') + ')');
   await p.goto(url + '#monumento/catedrales');
   await p.waitForSelector('#sh.o');
   cierto(await p.isVisible('#ph'), 'las Catedrales, con su foto');

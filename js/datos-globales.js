@@ -4,7 +4,8 @@
 // este módulo se ejecutan después de él y en su orden. El ?v=N de cada import lo pone
 // herramientas/version.js (no lo toques a mano).
 import * as zonas from './datos/zonas.js?v=93312c76ad';
-import * as monumentos from './datos/monumentos.js?v=685b27a0c9';
+import * as monumentos from './datos/monumentos.js?v=16073b4e01';
+import * as visitas from './datos/visitas.js?v=c8fc2773a9';
 import * as rutasProvincia from './datos/rutas-provincia.js?v=35e5630e8b';
 import * as tramosProvincia from './datos/tramos-provincia.js?v=6362361a74';
 import * as rutas from './datos/rutas.js?v=809a14cd59';
@@ -34,6 +35,7 @@ Object.assign(
   globalThis,
   zonas,
   monumentos,
+  visitas,
   rutasProvincia,
   tramosProvincia,
   rutas,

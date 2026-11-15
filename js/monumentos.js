@@ -172,6 +172,8 @@ function pintarInfografia(m) {
       )
     )
   );
+  const visita = bloqueVisita(VISITAS[m.id]);
+  if (visita) caja.appendChild(visita);
   m.curiosidades.forEach((t, i) => caja.appendChild(crear('p', i ? 'curio mas' : 'curio', t)));
   const fuentes = crear('p', 'fte', 'Fuente: ');
   m.fuente.forEach(([nombre, url], i) => {
@@ -192,6 +194,50 @@ function pintarInfografia(m) {
   llegar.target = '_blank';
   llegar.rel = 'noopener';
   nb.append(barrio, llegar);
+}
+
+// Enlace que se abre en otra pestaña
+function enlaceFuera(texto, url) {
+  const a = crear('a', '', texto);
+  a.href = url;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  return a;
+}
+
+// «Visitar»: horario, precio y cuándo es gratis (datos/visitas.js), o null si no hay datos de visita
+function bloqueVisita(v) {
+  if (!v) return null;
+  const caja = crear('div', 'visita', crear('h3', '', 'Visitar'));
+  if (v.libre) {
+    caja.appendChild(crear('p', 'vis-libre', 'Espacio abierto: se puede ver a cualquier hora y gratis.'));
+    return caja;
+  }
+  if (v.cerrado) caja.appendChild(crear('p', 'vis-cerrado', v.cerrado));
+  const filas = (titulo, lista) =>
+    lista &&
+    lista.length &&
+    caja.appendChild(
+      crear(
+        'div',
+        'vis-filas',
+        crear('small', '', titulo),
+        ...lista.map(([que, cuanto]) => crear('p', '', crear('span', '', que + ': '), crear('b', '', cuanto)))
+      )
+    );
+  filas('Horario', v.horario);
+  filas('Entrada', v.precio);
+  if (v.gratis) caja.appendChild(crear('p', 'vis-gratis', crear('b', '', 'Gratis: '), v.gratis));
+  if (v.nota) caja.appendChild(crear('p', 'vis-nota', v.nota));
+  const f = FUENTE_VISITAS,
+    pie = crear('p', 'fte', v.horario ? 'Horario ' + f.vigente + ', según ' : 'Según ');
+  pie.append(
+    enlaceFuera('Turismo de Salamanca', f.url),
+    '. Puede cambiar en festivos y con la temporada: confírmalo antes de ir.'
+  );
+  if (v.web) pie.append(' ', enlaceFuera('Web del monumento', v.web));
+  caja.appendChild(pie);
+  return caja;
 }
 
 // parada: índice en la ruta a pie elegida (ruta.js) si se abre como parada de la ruta

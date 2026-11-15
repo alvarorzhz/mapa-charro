@@ -4257,6 +4257,42 @@ button.ms-grupo:hover {
   color: var(--texto-suave);
   opacity: 1;
 }
+/* «Visitar» en la ficha de un monumento: horario y precio */
+.info .visita {
+  margin: 12px 0;
+  padding: 10px 12px;
+  background: var(--superficie-2);
+  border: 1px solid var(--borde-suave);
+  border-radius: var(--radio-control);
+}
+#info .visita h3 {
+  margin: 0 0 6px;
+  padding-top: 0;
+  border-top: 0;
+}
+.info .vis-filas {
+  margin: 6px 0;
+}
+.info .vis-filas small {
+  display: block;
+  font-size: var(--letra-mini);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--texto-suave);
+}
+.sh .info .visita p {
+  margin: 3px 0;
+  line-height: 1.4;
+}
+.info .vis-filas span {
+  color: var(--texto-suave);
+}
+.info .vis-cerrado {
+  font-weight: 700;
+}
+.sh .info .visita p.fte {
+  margin-top: 8px;
+}
 /* Cifras y notas */
 .info .datos {
   gap: 8px;
