@@ -1,13 +1,13 @@
 // Service worker: deja la app guardada en el móvil para que funcione sin conexión.
 // No edites VERSION ni ARCHIVOS a mano: los actualiza `node herramientas/version.js`.
-const VERSION = 275;
+const VERSION = 276;
 const CACHE = 'mapa-charro-v' + VERSION;
 // <archivos>
 const ARCHIVOS = [
   './',
   'index.html',
   'manifest.webmanifest',
-  'novedades.json?v=3a55eb4a67',
+  'novedades.json?v=6df7700add',
   'icons/icon-180.png',
   'icons/icon-192.png',
   'fuentes/alfa-slab-one.woff2',

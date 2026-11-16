@@ -7,7 +7,8 @@
       "El mapa de calles reales del fondo usa una versión más nueva de su librería (MapLibre 5), con un año de arreglos de rendimiento y de compatibilidad con móviles. Por fuera se ve igual."
     ],
     "tecnico": [
-      "js/mapa-real.js: MapLibre GL JS 4.7.1 → 5.24.1 desde cdnjs, con su huella SRI nueva. La 6 no se usa porque solo se publica como módulo ES (dist/maplibre-gl.mjs) y cdnjs no tiene su .js: no se puede cargar como script clásico con SRI."
+      "js/mapa-real.js: MapLibre GL JS 4.7.1 → 5.24.1 desde cdnjs, con su huella SRI nueva. La 6 no se usa porque solo se publica como módulo ES (dist/maplibre-gl.mjs) y cdnjs no tiene su .js: no se puede cargar como script clásico con SRI.",
+      "package.json: Playwright 1.56.0 → 1.65.1. GitHub Actions pasó ubuntu-latest a Ubuntu 26.04 y la 1.56 no sabe instalar Chromium allí, así que las pruebas del navegador fallaban en CI antes de empezar."
     ]
   },
   {
