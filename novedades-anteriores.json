@@ -1,5 +1,20 @@
 [
   {
+    "version": "2.21.1",
+    "fecha": "2026-11-01",
+    "titulo": "Más curiosidades en cuatro barrios",
+    "usuario": [
+      "San Vicente: el primer poblado del siglo VII antes de Cristo, el amuleto egipcio de Hathor hallado en 2021, el barrio de Los Milagros y el parque botánico de las laderas.",
+      "Teso de la Feria: lo que contaba Covarrubias del sitio y qué quiere decir «teso».",
+      "El Tormes: el Matadero de 1891 y el antiguo «barrio del Matadero».",
+      "El Montalvo: sus tres fases, sus más de 600 empresas y la inauguración del Montalvo II en 1991.",
+      "Corregido: el castro que asedió Aníbal no estaba en San Vicente; para entonces sus vecinos ya se habían mudado al teso de las Catedrales."
+    ],
+    "tecnico": [
+      "contenido.js: curiosidades nuevas en sanvicente (+4), teso (+2), tormes (+2) y montalvos (+2), con su fuente. En sanvicente se corrige la de Aníbal y la del «Barrio de los Caídos», que no tenían fuente, con Wikipedia y salamanca.es."
+    ]
+  },
+  {
     "version": "2.21.0",
     "fecha": "2026-10-29",
     "titulo": "110 pueblos con ficha, y más fáciles de abrir",

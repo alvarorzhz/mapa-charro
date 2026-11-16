@@ -1,5 +1,16 @@
 [
   {
+    "version": "2.26.1",
+    "fecha": "2026-11-16",
+    "titulo": "Mapa de calles reales al día",
+    "usuario": [
+      "El mapa de calles reales del fondo usa una versión más nueva de su librería (MapLibre 5), con un año de arreglos de rendimiento y de compatibilidad con móviles. Por fuera se ve igual."
+    ],
+    "tecnico": [
+      "js/mapa-real.js: MapLibre GL JS 4.7.1 → 5.24.1 desde cdnjs, con su huella SRI nueva. La 6 no se usa porque solo se publica como módulo ES (dist/maplibre-gl.mjs) y cdnjs no tiene su .js: no se puede cargar como script clásico con SRI."
+    ]
+  },
+  {
     "version": "2.26.0",
     "fecha": "2026-11-15",
     "titulo": "Horario y precio de cada monumento",
@@ -134,21 +145,6 @@
       "herramientas/dependencias.js: lee los scripts de index.html en su orden y, con eslint-scope, separa lo que cada uno usa al cargarse (código suelto, funciones llamadas en el momento aunque sean de otro archivo, callbacks de forEach/map/filter…) de lo que usa después; falla si algo se usa al cargarse antes de su archivo (lo protegido con typeof no cuenta).",
       "docs/notas/dependencias.md, generada: reglas para ampliar y tabla de cada script con lo que necesita ya cargado, lo que usa después y cuántos lo usan.",
       "Va en antes-del-commit (rehace la nota) y en GitHub Actions con --comprobar (falla si la nota no está al día); prueba en pruebas-logica.js con estado.js movido detrás de mapa.js."
-    ]
-  },
-  {
-    "version": "2.21.1",
-    "fecha": "2026-11-01",
-    "titulo": "Más curiosidades en cuatro barrios",
-    "usuario": [
-      "San Vicente: el primer poblado del siglo VII antes de Cristo, el amuleto egipcio de Hathor hallado en 2021, el barrio de Los Milagros y el parque botánico de las laderas.",
-      "Teso de la Feria: lo que contaba Covarrubias del sitio y qué quiere decir «teso».",
-      "El Tormes: el Matadero de 1891 y el antiguo «barrio del Matadero».",
-      "El Montalvo: sus tres fases, sus más de 600 empresas y la inauguración del Montalvo II en 1991.",
-      "Corregido: el castro que asedió Aníbal no estaba en San Vicente; para entonces sus vecinos ya se habían mudado al teso de las Catedrales."
-    ],
-    "tecnico": [
-      "contenido.js: curiosidades nuevas en sanvicente (+4), teso (+2), tormes (+2) y montalvos (+2), con su fuente. En sanvicente se corrige la de Aníbal y la del «Barrio de los Caídos», que no tenían fuente, con Wikipedia y salamanca.es."
     ]
   }
 ]
