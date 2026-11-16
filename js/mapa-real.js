@@ -6,9 +6,9 @@
 // interruptor: el visor no deja pedir mapas a otras webs. Va después de ubicacion.js (EN_MARCO).
 
 const CLAVE_FONDO_REAL = 'charro-fondo-real';
-const MAPLIBRE_URL = 'https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.js',
+const MAPLIBRE_URL = 'https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/5.24.1/maplibre-gl.min.js',
   // Huella del archivo (SRI): si se cambia la versión, hay que poner la del archivo nuevo
-  MAPLIBRE_SRI = 'sha384-KKgyz2mG25bKJ1O2PyqTJPlAF8Kw2BpDmsLTNBXslICOBvhTAyF5F0XhLWF2ZovY';
+  MAPLIBRE_SRI = 'sha384-I6Q87++ws3qiBLyL8YFRsoR3jNzxtn/yHxvP4sszVuUr+z7k0zCAsxIDV7omolzw';
 const fondoReal = { encendido: false, mapa: null, capa: null, cargando: null };
 
 // Inversa de proyectar (util.js): punto del mapa → [latitud, longitud]
