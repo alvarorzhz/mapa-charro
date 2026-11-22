@@ -1,13 +1,13 @@
 // Service worker: deja la app guardada en el móvil para que funcione sin conexión.
 // No edites VERSION ni ARCHIVOS a mano: los actualiza `node herramientas/version.js`.
-const VERSION = 276;
+const VERSION = 277;
 const CACHE = 'mapa-charro-v' + VERSION;
 // <archivos>
 const ARCHIVOS = [
   './',
   'index.html',
   'manifest.webmanifest',
-  'novedades.json?v=6df7700add',
+  'novedades.json?v=395bfaac5e',
   'icons/icon-180.png',
   'icons/icon-192.png',
   'fuentes/alfa-slab-one.woff2',
@@ -15,7 +15,7 @@ const ARCHIVOS = [
   'css/estilos.css?v=08e0f540f6',
   'js/util.js?v=fba9dacc16',
   'js/medicion.js?v=4da82b4f68',
-  'js/datos-globales.js?v=d4e7d4e2dd',
+  'js/datos-globales.js?v=e8526390fb',
   'js/estado.js?v=3e2cb46ff4',
   'js/guardado.js?v=f0f4e4ca28',
   'js/mapa.js?v=ff092c1482',
@@ -75,7 +75,7 @@ const ARCHIVOS = [
   'js/datos/fachadas.js?v=57a82798d6',
   'js/datos/orientacion-fachadas.js?v=1924a819a6',
   'js/datos/desaparecida.js?v=70d1d65043',
-  'js/datos/contenido.js?v=33cdf56e54',
+  'js/datos/contenido.js?v=25b1f22931',
   'js/datos/geometria.js?v=049169f6eb',
   'js/datos/alfoz.js?v=e86a83f1e9',
   'js/datos/tiempo.js?v=54f5f3632b',

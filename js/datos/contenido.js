@@ -99,7 +99,13 @@ export const CURIOSIDADES = {
     // Fuente: https://salamancartvaldia.es/noticia/2023-12-10-garrido-y-bermejo-el-nacimiento-del-barrio-garrido-335932
     'Manuel Garrido, que da nombre al barrio, fue elegido concejal en 1917 por el mismo distrito que Miguel de Unamuno, y con más votos: 318 frente a 205.',
     // Fuente: https://www.lagacetadesalamanca.es/hemeroteca/garrido-pizarrales-vidal-procede-nombre-KTGS258615
-    'Manuel Garrido era albañil y Santiago Bermejo, confitero. En 2009 una calle del barrio pasó a llamarse de Garrido y Bermejo, en recuerdo de los dos.'
+    'Manuel Garrido era albañil y Santiago Bermejo, confitero. En 2009 una calle del barrio pasó a llamarse de Garrido y Bermejo, en recuerdo de los dos.',
+    // Fuente: https://www.salamancaenelayer.com/2021/12/el-cinema-taramona.html
+    'El cine Taramona abrió el 12 de septiembre de 1933 con «Carne de cabaret», una película de Hollywood hablada en español. Tenía unas 700 butacas y se podía convertir en salón de baile. Lo levantó el contratista Juan de Taramona, que vivía en el barrio.',
+    // Fuente: https://www.salamancaenelayer.com/2021/12/el-cinema-taramona.html
+    'El Taramona cerró en 1982, tras casi 50 años, cuando proyectaba «Emmanuelle». Para entonces era un cine de reestrenos y programas dobles, y en su solar se levantó un bloque de pisos.',
+    // Fuente: https://www.elespanol.com/castilla-y-leon/region/salamanca/20211226/garrido-sur-barrio-llego-acoger-demografico-capital/636686383_0.html
+    'Aún quedan algunas casas bajas de las de antes, como en las calles El Greco o Cabeza de Vaca. Muchos bajos de los edificios de los sesenta se pensaron para tiendas, pero acabaron siendo garajes.'
   ],
   garridonorte: [
     'Es el barrio con más vecinos de la capital: dicen que quien no gana Garrido no gana el Ayuntamiento.',
@@ -185,6 +191,8 @@ export const CURIOSIDADES = {
     'Sus vecinos trabajaban en el ferrocarril y en las fábricas del Alto del Rollo. El mercado de la plaza de Trujillo se convirtió a principios de este siglo en un centro cultural.',
     // Fuente: https://www.salamancaenelayer.com/2019/11/el-asilo-de-san-rafael.html
     'La residencia de San Rafael viene del asilo que fundó en 1874 el médico salmantino Rafael Pérez Piñuela; en 1908 se trasladó a una finca del paseo del Rollo, frente a las Esclavas.',
+    // Fuente: https://www.elespanol.com/castilla-y-leon/region/salamanca/20220422/san-isidro-antiguo-hospicio-rafael-barrio-obrero/666433740_0.html
+    'Tras la guerra, aquí solo había huertas alrededor del colegio de las Esclavas, que fue solo de chicas hasta los años noventa. Los vecinos recuerdan unas verbenas de verano en las que se juntaba toda la familia.',
     // Fuente: https://lacronicadesalamanca.com/326020-el-barrio-humilde-que-florecio-la-prosperidad/
     'En «La Prospe» las primeras casas eran de planta baja, con corrales de vacas, cerdos, gallinas y patos, y a veces dos o tres familias compartían vivienda. Las parcelas costaban una peseta el metro en lo más caro, y entre 60 y 80 céntimos cerca del río.'
   ],
@@ -421,7 +429,11 @@ export const CURIOSIDADES = {
     // Fuente: https://es.wikipedia.org/wiki/Do%C3%B1inos_de_Salamanca
     'En la Edad Media era parte del cuarto de Baños, en la tierra de Salamanca. Hasta el siglo XVII dependía de Carrascal de Barregas para la iglesia; al crecer se hizo municipio y se quedó con Santibáñez del Río y El Pegollo.',
     // Fuentes: https://www.turismocastillayleon.com/es/patrimonio-cultura/museo-angel-mateos y https://www.terranostrum.es/turismo/salamanca/el-campo-charro/doninos-de-salamanca/museo-angel-mateos-escultura-hormigon
-    'El Museo Ángel Mateos guarda más de 170 obras en hormigón que el escultor hizo entre los años setenta y los noventa. El propio edificio es una «escultura habitable»: él decía que era una escultura que contiene muchas esculturas.'
+    'El Museo Ángel Mateos guarda más de 170 obras en hormigón que el escultor hizo entre los años setenta y los noventa. El propio edificio es una «escultura habitable»: él decía que era una escultura que contiene muchas esculturas.',
+    // Fuente: https://www.leonoticias.com/castillayleon/doninos-salamanca-folclore-20210510125700-nt.html
+    'Cada 6 de mayo había romería a Santibáñez del Río, a 1,2 km, por San Juan ante Portam Latinam. Su iglesia románica, Bien de Interés Cultural desde 1983, está en ruinas, y alguna vez se dijo misa de campaña entre sus restos.',
+    // Fuente: https://www.leonoticias.com/castillayleon/doninos-salamanca-folclore-20210510125700-nt.html
+    'Tiene dos patrones: San Marcos, el 25 de abril, del pueblo, y Santo Domingo de Guzmán, el 8 de agosto, de la iglesia. Su grupo de folclore, San Marcos, baila con traje típico y va de los 6 a los 70 años.'
   ],
   carrascal: [
     'Su término, de casi 77 km², es de los más grandes de la provincia, y la mayoría de sus vecinos vive en la urbanización Peñasolana, junto a Los Montalvos.',
@@ -440,7 +452,11 @@ export const CURIOSIDADES = {
     // Fuentes: https://es.wikipedia.org/wiki/Pelabravo y https://www.lagacetadesalamanca.es/provincia/junta-abre-expediente-infraccion-vecino-derribo-ruinas-20251105134123-nt.html
     'En Naharros del Río estaban las ruinas del castillo de la Torre Mocha, de los siglos XII y XIII y Bien de Interés Cultural. En octubre de 2025 el dueño de la finca las derribó y tiró las piedras a una laguna; la Junta abrió un expediente y llevó el caso a la Fiscalía.',
     // Fuente: https://es.wikipedia.org/wiki/Pelabravo
-    'La mayoría de sus vecinos vive en Nuevo Naharros. La iglesia de San Juan Bautista se rehízo a finales del siglo XVIII y su espadaña quedó suelta, apartada del templo, porque la obra nunca se terminó.'
+    'La mayoría de sus vecinos vive en Nuevo Naharros. La iglesia de San Juan Bautista se rehízo a finales del siglo XVIII y su espadaña quedó suelta, apartada del templo, porque la obra nunca se terminó.',
+    // Fuente: https://pelabravo.es/el-municipio/historia/
+    'La iglesia se derribó en buena parte en 1785 y se rehízo hasta 1793. La torre quedó separada del templo, y de ahí la copla: «En Pelabravo la torre / ha reñido con la iglesia».',
+    // Fuente: https://pelabravo.es/el-municipio/historia/
+    'El nombre «Pelai Bravo» aparece escrito por primera vez en 1213. Naharros del Río tuvo parroquia y concejo propios hasta el siglo XVI, cuando la compraron los Solís, luego duques de Montellano, y acabó despoblada.'
   ],
   castmoriscos: [
     'En el siglo XIII ya se llamaba «Castellanos de Morisco», porque lo repoblaron colonos de Castilla. Su iglesia de San Esteban es Bien de Interés Cultural desde 1999.',
