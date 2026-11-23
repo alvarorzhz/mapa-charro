@@ -58,11 +58,22 @@ const pulsarPestana = async (p, s) => {
   await p.evaluate(() => transicionActual && transicionActual.updateCallbackDone);
 };
 
-// MapLibre falso (sin red): apunta el encuadre que le pide la app y cuántas veces se pide
+// MapLibre falso (sin red): apunta el encuadre que le pide la app y cuántas veces se pide. El del mapa en 3D
+// (mapa-3d.js) deja su estilo en window.estilo3d, sus vuelos en window.vuelo3d y los municipios que se le
+// mandan al repintar en window.municipios3d
 const MAPLIBRE_FALSO = `window.maplibregl = { Map: class {
-  constructor(o) { window.estiloFondo = o.style; }
-  jumpTo(c) { window.camaraFondo = c; }
+  constructor(o) {
+    this.es3d = o.container.classList.contains('m3d-mapa');
+    if (this.es3d) { window.estilo3d = o.style; window.mapas3d = (window.mapas3d || 0) + 1; }
+    else window.estiloFondo = o.style;
+  }
+  jumpTo(c) { if (!this.es3d) window.camaraFondo = c; }
   resize() {} setStyle(s) { window.estiloFondo = s; }
+  on() {} once() {} setFilter() {} isMoving() { return false; }
+  getSource() { return { setData: d => (window.municipios3d = d) }; }
+  flyTo(c) { window.vuelo3d = c; } fitBounds(b, o) { window.vuelo3d = { bounds: b, ...o }; }
+  queryTerrainElevation() { return null; }
+  remove() { window.mapas3d--; }
 } };`;
 const huellaSri = texto => 'sha384-' + require('crypto').createHash('sha384').update(texto).digest('base64');
 const servirMapLibreFalso = p =>

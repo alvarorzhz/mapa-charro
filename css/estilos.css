@@ -4860,6 +4860,124 @@ a.llegar.principal {
 .credito-fondo-real a {
   color: inherit;
 }
+/* Mapa en 3D de la provincia (mapa-3d.js): capa a pantalla completa con el mapa, los vuelos y el pueblo pulsado */
+.zb .b3d {
+  font-size: var(--letra-media);
+  font-weight: 700;
+}
+.m3d {
+  position: fixed;
+  inset: 0;
+  z-index: var(--capa-ventana);
+  background: var(--fondo);
+}
+.m3d-caja {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: max(8px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right))
+    max(8px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  gap: 8px;
+}
+.m3d-cab {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.m3d-cab h2 {
+  margin: 0;
+  font-size: var(--letra-titulo-pequeno);
+}
+.m3d-cab .cerrar {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  font-size: var(--letra-titulo-pequeno);
+  background: var(--tarjeta);
+}
+.m3d-mapa {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  border: 2px solid var(--linea);
+  border-radius: var(--radio-tarjeta);
+  background: var(--campo);
+  touch-action: none;
+}
+/* Lo imprescindible de la hoja de estilos de MapLibre (no se carga: solo se admiten estilos propios) */
+.m3d-mapa .maplibregl-canvas-container,
+.m3d-mapa .maplibregl-canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.m3d-mapa .maplibregl-canvas:focus {
+  outline: none;
+}
+.m3d-vuelos {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.m3d-vuelos button {
+  flex: none;
+  padding: 7px 10px;
+  font-size: var(--letra-media);
+  background: var(--tarjeta);
+  white-space: nowrap;
+}
+.m3d-info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  min-height: 34px;
+}
+.m3d-info small {
+  margin-right: auto;
+}
+.m3d-leyenda {
+  display: flex;
+  gap: 12px;
+  font-size: var(--letra-pequena);
+}
+.m3d-leyenda span::before {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 4px;
+  border-radius: 2px;
+  vertical-align: -1px;
+}
+.m3d-leyenda .v::before {
+  background: var(--vitor);
+}
+.m3d-leyenda .w::before {
+  background: var(--ronda);
+}
+.m3d-leyenda .cargando {
+  display: none;
+  margin-left: auto;
+  animation: pulse 1s infinite;
+}
+.m3d-leyenda .cargando::before {
+  display: none;
+}
+.m3d.cargando .m3d-leyenda .cargando {
+  display: inline;
+}
+.m3d-credito {
+  margin: 0;
+  font-size: var(--letra-diminuta);
+  opacity: 0.85;
+}
+.m3d-credito a {
+  color: inherit;
+}
 .nota-fondo-real {
   font-size: var(--letra-nota);
   margin: -4px 0 4px;

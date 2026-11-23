@@ -1,6 +1,16 @@
 // Pruebas · Pestaña Provincia, fichas de pueblos, población y rutas en coche.
 // Se pasan desde herramientas/pruebas.js (PRUEBAS_ZONA=provincia pasa solo estas).
-const { prueba, igual, cierto, texto, fichaAbierta, llegaA, hastaQue, pulsarPestana } = require('./comun');
+const {
+  prueba,
+  igual,
+  cierto,
+  texto,
+  fichaAbierta,
+  llegaA,
+  hastaQue,
+  pulsarPestana,
+  mapLibreFalso
+} = require('./comun');
 
 prueba('Término de Salamanca y municipios vecinos', async p => {
   cierto(
@@ -393,4 +403,52 @@ prueba(
     igual(await p.$$eval('#pm .pmp circle', a => a.length), 0, 'sin punto fuera de la provincia');
   },
   { geolocation: { latitude: 40.4889, longitude: -6.1103 }, permissions: ['geolocation'] }
+);
+
+prueba(
+  'Provincia en 3D: se abre desde el minimapa, pinta los pueblos marcados y vuela',
+  async p => {
+    const relieve = [];
+    p.on('request', r => /\/relieve\//.test(r.url()) && relieve.push(r.url()));
+    await pulsarPestana(p, '#vprov');
+    igual(p.pedidasMapLibre, 0, 'el 3D no carga nada hasta abrirlo');
+    await p.click('.pmw .b3d');
+    await p.waitForFunction(() => window.estilo3d);
+    cierto(await p.$eval('.m3d', e => !e.hidden), 'se abre a pantalla completa');
+    igual(await p.$eval('.m3d-caja', e => e.getAttribute('role')), 'dialog', 'como un diálogo');
+    const estilo = await p.evaluate(() => window.estilo3d);
+    igual(estilo.terrain.source, 'relieve', 'con el relieve');
+    cierto(
+      /\/relieve\/\{z\}\/\{x\}\/\{y\}\.png$/.test(estilo.sources.relieve.tiles[0]),
+      'que sale de las teselas de la propia web'
+    );
+    igual(estilo.sources.municipios.data.features.length, 362, 'y los municipios encima');
+    igual(relieve.length, 0, 'sin pedir teselas sueltas (las pide MapLibre)');
+    // Marcar un pueblo desde la barra del 3D lo repinta en el relieve
+    await p.evaluate(() => mostrarMunicipio3d(PROVINCIA.m.find(m => m.n == 'La Alberca')));
+    igual(await texto(p, '.m3d-info strong'), 'La Alberca', 'el pueblo pulsado, abajo');
+    await p.click('.m3d-info .q[data-s="v"]');
+    igual(
+      await p.evaluate(
+        () => window.municipios3d.features.find(f => f.properties.n == 'La Alberca').properties.marca
+      ),
+      'v',
+      'He estado se pinta en el relieve'
+    );
+    igual(
+      await p.evaluate(() => estadoApp.progreso.p[PROVINCIA.m.find(m => m.n == 'La Alberca').k]),
+      'v',
+      'y se guarda como siempre'
+    );
+    // Vuelos preparados
+    igual(await p.$$eval('.m3d-vuelos button', a => a.length), 4, 'tres vuelos y la provincia entera');
+    await p.click('.m3d-vuelos button:has-text("Arribes")');
+    igual(await p.evaluate(() => window.vuelo3d.center), [-6.69, 41.2], 'vuela al cañón de las Arribes');
+    // Escape cierra, suelta el mapa y devuelve el foco
+    await p.keyboard.press('Escape');
+    cierto(await p.$eval('.m3d', e => e.hidden), 'Escape lo cierra');
+    igual(await p.evaluate(() => window.mapas3d), 0, 'y suelta el mapa (memoria del iPhone)');
+    cierto(await p.$eval('.pmw .b3d', b => b == document.activeElement), 'el foco vuelve al botón');
+  },
+  { rutas: mapLibreFalso }
 );

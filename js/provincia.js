@@ -4,6 +4,12 @@
 const estadoMunicipio = m => (m.z ? estadoApp.progreso.z[m.z] : (estadoApp.progreso.p || {})[m.k]);
 const estadoClave = k => (estadoApp.progreso.p || {})[k];
 const tienePedaniaPisada = m => m.P.some(p => estadoClave(p.k) == 'v');
+// Color de un municipio en los mapas: v (He estado), w (Quiero ir), pv (alguna pedanía pisada) o ''.
+// La capital cuenta como pisada si se ha estado en alguna zona del centro (capitalPisada).
+const marcaDeMunicipio = (m, capitalPisada) => {
+  const marca = m.cap ? (capitalPisada ? 'v' : '') : estadoMunicipio(m);
+  return marca == 'v' || marca == 'w' ? marca : tienePedaniaPisada(m) ? 'pv' : '';
+};
 
 let puebloSeleccionado = null;
 // Se construye la primera vez que se abre la pestaña:
@@ -169,6 +175,8 @@ function construirMinimapa(contenedor) {
   localizar.append(...[...$('#zl').childNodes].map(n => n.cloneNode(true)));
   localizar.onclick = () => pedirUbicacion(localizar, alLocalizarEnProvincia, mensajeUbicacionProvincia);
   zb.appendChild(localizar);
+  const tresD = botonMapa3d(); // mapa-3d.js; fuera de Claude
+  if (tresD) zb.appendChild(tresD);
   caja.appendChild(zb);
   const mensaje = crear('p', 'gm');
   mensaje.id = 'pgm';
@@ -584,9 +592,8 @@ function actualizarProvincia() {
   if (vistaProvincia.botonesSeleccion) pintarBotonesMarcar(vistaProvincia.botonesSeleccion);
   const capitalPisada = zonas.some(z => z.g < 5 && estadoApp.progreso.z[z.id] == 'v');
   vistaProvincia.caminos.forEach((p, m) => {
-    const marca = m.cap ? (capitalPisada ? 'v' : '') : estadoMunicipio(m);
-    const color = marca == 'v' ? ' v' : marca == 'w' ? ' w' : tienePedaniaPisada(m) ? ' pv' : '';
-    p.setAttribute('class', 'pmm' + color + (m == puebloSeleccionado ? ' sel' : ''));
+    const marca = marcaDeMunicipio(m, capitalPisada);
+    p.setAttribute('class', 'pmm' + (marca ? ' ' + marca : '') + (m == puebloSeleccionado ? ' sel' : ''));
   });
   const pueblosPisados = pueblos.filter(m => estadoMunicipio(m) == 'v').length,
     pedaniasPisadas = pedanias.filter(p => estadoClave(p.k) == 'v').length,
@@ -611,6 +618,7 @@ function actualizarProvincia() {
   });
   aplicarFiltroProvincia();
   if ($('#pq').value) buscarEnProvincia();
+  repintarMapa3d();
 }
 
 function buscarEnProvincia() {
