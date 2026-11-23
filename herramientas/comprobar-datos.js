@@ -38,12 +38,14 @@ const datos = [
   'fachadas',
   'orientacion-fachadas',
   'desaparecida',
-  'noche'
+  'noche',
+  'relieve',
+  'vuelos-3d'
 ];
 const codigo =
   sinExport(datos.map(d => leer('js/datos/' + d + '.js')).join('\n;\n')) +
   '\n;({ NOMBRES_GRUPOS, ZONAS_GRANDES, ZONAS, OTROS_NOMBRES, SEMILLAS_REPARTO, MONUMENTOS, VISITAS, FUENTE_VISITAS, RUTAS, TRAMOS_RUTAS, PERFIL_RUTAS, PUEBLOS, CURIOSIDADES, LEYENDAS, FOTOS, DONDE_COMER,' +
-  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA, RELACIONES_ETAPA, RANGOS_ETAPA, PALABRAS_CHARRAS, FUENTES_PALABRAS, DIAS_ESPECIALES, ESTACIONES, RUTAS_PROVINCIA, SALIDA_PROVINCIA, TRAMOS_PROVINCIA, CARRETERAS_PROVINCIA, HABITANTES, CENSOS, PARQUES, CULTURA, CATEGORIAS_CULTURA, TIPOS_TEXTO_CULTURA, DETALLES, FACHADAS, ORIENTACION_FACHADAS, DESAPARECIDOS, LEYENDAS_NOCHE })';
+  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA, RELACIONES_ETAPA, RANGOS_ETAPA, PALABRAS_CHARRAS, FUENTES_PALABRAS, DIAS_ESPECIALES, ESTACIONES, RUTAS_PROVINCIA, SALIDA_PROVINCIA, TRAMOS_PROVINCIA, CARRETERAS_PROVINCIA, HABITANTES, CENSOS, PARQUES, CULTURA, CATEGORIAS_CULTURA, TIPOS_TEXTO_CULTURA, DETALLES, FACHADAS, ORIENTACION_FACHADAS, DESAPARECIDOS, LEYENDAS_NOCHE, RELIEVE, VUELOS_3D })';
 const D = vm.runInNewContext(codigo, {});
 
 const WEB_PUBLICA = 'https://alvarorzhz.github.io/mapa-charro/';
@@ -379,6 +381,43 @@ D.CARRETERAS_PROVINCIA.forEach(c => {
     comprobar(dentro, `Carretera ${c.ref}: una línea se sale de la provincia`);
   });
 });
+
+// --- Mapa en 3D: teselas de relieve (las genera herramientas/relieve.js) y vuelos preparados ----------------
+{
+  const R = D.RELIEVE,
+    [oeste, sur, este, norte] = R.limites,
+    teselaX = (lon, z) => Math.floor(((lon + 180) / 360) * 2 ** z),
+    teselaY = (lat, z) => {
+      const r = (lat * Math.PI) / 180;
+      return Math.floor(((1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2) * 2 ** z);
+    };
+  let esperadas = 0;
+  for (let z = R.zoomMin; z <= R.zoomMax; z++)
+    for (let x = teselaX(oeste, z); x <= teselaX(este, z); x++)
+      for (let y = teselaY(norte, z); y <= teselaY(sur, z); y++) {
+        esperadas++;
+        comprobar(existe(`relieve/${z}/${x}/${y}.png`), `Relieve: falta la tesela ${z}/${x}/${y}`);
+      }
+  comprobar(
+    esperadas == R.teselas,
+    `Relieve: ${esperadas} teselas por los límites y RELIEVE dice ${R.teselas}`
+  );
+  const ids3d = new Set();
+  D.VUELOS_3D.forEach(v => {
+    comprobar(!ids3d.has(v.id), `Vuelo 3D ${v.id}: id repetido`);
+    ids3d.add(v.id);
+    comprobar(v.n && v.texto, `Vuelo 3D ${v.id}: sin nombre o sin texto`);
+    comprobar(
+      v.la > sur && v.la < norte && v.lo > oeste && v.lo < este,
+      `Vuelo 3D ${v.id}: fuera del relieve`
+    );
+    comprobar(
+      v.zoom >= R.zoomMin && v.zoom <= 15 && v.pitch >= 0 && v.pitch <= 75 && v.rumbo >= 0 && v.rumbo < 360,
+      `Vuelo 3D ${v.id}: zoom, inclinación o rumbo raros`
+    );
+    comprobar((v.fuente || []).every(enlaceValido) && v.fuente.length, `Vuelo 3D ${v.id}: sin fuente`);
+  });
+}
 
 D.RUTAS_PROVINCIA.forEach(r => {
   comprobar(/^[a-z0-9-]+$/.test(r.id), `Ruta de la provincia «${r.id}»: id no válido`);

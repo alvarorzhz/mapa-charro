@@ -29,7 +29,7 @@ Lógica en `js/`, datos en `js/datos/`, nota en `docs/notas/` entre paréntesis.
 - **Mapa de la capital**: `mapa.js` → `mapa-fondo.js` → `mapa-vias.js` → `mapa-vista.js`, `mapa-real.js`, `mapa-teclado.js`; datos: `zonas.js`, `geometria.js`, `carreteras.js`, `alfoz.js`, `parques.js` (mapa)
 - **Pestañas, lista, capas, filtros**: `vistas.js`, `escritorio.js`, `enlaces.js` (mapa)
 - **Fichas de zona y relacionados**: `ficha.js`, `monumentos.js`; datos: `contenido.js`, `monumentos.js` (interfaz, contenido)
-- **Provincia y pueblos**: `provincia.js`, `pueblos.js`, `ubicacion.js`; datos: `provincia.js`, `pueblos.js`, `habitantes.js`, `carreteras-provincia.js` (provincia)
+- **Provincia y pueblos, mapa en 3D**: `provincia.js`, `pueblos.js`, `ubicacion.js`, `mapa-3d.js`; datos: `provincia.js`, `pueblos.js`, `habitantes.js`, `carreteras-provincia.js`, `relieve.js` + `relieve/` (teselas PNG generadas), `vuelos-3d.js` (provincia)
 - **Rutas**: `ruta.js`, `ruta-provincia.js`; datos: `rutas.js`, `tramos.js`, `rutas-provincia.js`, `tramos-provincia.js` (rutas)
 - **Explora: monumentos, comer**: `explorar.js`, `buscador.js`; datos: `contenido.js`, `monumentos.js` (interfaz)
 - **¿Qué puedo descubrir hoy?**: `hoy.js` (interfaz)
