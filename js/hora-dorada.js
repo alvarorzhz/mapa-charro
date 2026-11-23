@@ -106,6 +106,16 @@ function horaDorada(dia = diaEnSalamanca()) {
   };
   return (cacheHoraDorada[dia] = r);
 }
+
+// ¿Es de noche en Salamanca? (Salamanca de noche, noche.js) De la puesta de sol al amanecer.
+// { noche: true, hasta: cuándo amanece } o { noche: false, abre: cuándo se pone hoy el sol }
+function estadoNoche(ahora = new Date()) {
+  const dia = diaEnSalamanca(ahora),
+    hoy = horaDorada(dia);
+  if (hoy.salida && ahora < hoy.salida) return { noche: true, hasta: hoy.salida };
+  if (hoy.puesta && ahora > hoy.puesta) return { noche: true, hasta: horaDorada(sumarDias(dia, 1)).salida };
+  return { noche: false, abre: hoy.puesta };
+}
 const comoLeDa = x => (x.frente < SOL_DE_FRENTE ? 'de frente' : 'de lado');
 // Para una frase: «el Pabellón Real de la Plaza Mayor», «la fachada de San Esteban»
 const nombreFachada = f =>

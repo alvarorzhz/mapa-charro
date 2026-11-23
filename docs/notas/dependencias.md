@@ -17,36 +17,36 @@ Reglas para ampliar la app:
 
 | # | Script | Necesita ya cargados (al cargarse) | Usa después (en funciones) | Lo usan |
 | - | ------ | ---------------------------------- | -------------------------- | ------- |
-| 1 | `util.js` | — | — | 43 |
+| 1 | `util.js` | — | — | 44 |
 | 2 | `medicion.js` | — | `util.js`, `datos-globales.js`, `estado.js`, `ficha.js`, `imagen.js`, `paseo.js`, `cuenta.js`, `avisar.js` | 10 |
-| 3 | `datos-globales.js` | — | — | 34 |
-| 4 | `estado.js` | `util.js`, `datos-globales.js` | `guardado.js` | 38 |
-| 5 | `guardado.js` | — | `util.js`, `datos-globales.js`, `estado.js`, `mapa.js`, `vistas.js`, `perfil.js`, `mi-salamanca.js`, `cuenta.js` | 11 |
+| 3 | `datos-globales.js` | — | — | 35 |
+| 4 | `estado.js` | `util.js`, `datos-globales.js` | `guardado.js` | 39 |
+| 5 | `guardado.js` | — | `util.js`, `datos-globales.js`, `estado.js`, `mapa.js`, `vistas.js`, `perfil.js`, `mi-salamanca.js`, `cuenta.js` | 12 |
 | 6 | `mapa.js` | `util.js`, `datos-globales.js`, `estado.js` | `mapa-fondo.js`, `mapa-vista.js`, `ficha.js`, `juego.js` | 9 |
 | 7 | `mapa-fondo.js` | `util.js`, `datos-globales.js`, `estado.js`, `mapa.js` | `mapa-vista.js`, `juego.js` | 7 |
 | 8 | `mapa-vias.js` | `util.js`, `datos-globales.js` | `estado.js`, `mapa-vista.js`, `ficha.js` | 7 |
-| 9 | `mapa-vista.js` | `util.js` | `estado.js`, `mapa.js`, `mapa-fondo.js`, `mapa-vias.js`, `monumentos.js`, `ubicacion.js`, `mapa-real.js`, `tiempo.js`, `desaparecida.js` | 13 |
-| 10 | `ficha.js` | `util.js` | `medicion.js`, `datos-globales.js`, `estado.js`, `guardado.js`, `mapa.js`, `mapa-vias.js`, `mapa-vista.js`, `monumentos.js`, `ruta.js`, `logros.js`, `palabras.js`, `vistas.js`, `ubicacion.js`, `provincia.js`, `pueblos.js`, `cultura.js`, `juego.js`, `tiempo.js`, `desaparecida.js`, `enlaces.js` | 27 |
-| 11 | `monumentos.js` | `util.js`, `datos-globales.js` | `estado.js`, `mapa-vias.js`, `mapa-vista.js`, `ficha.js`, `ruta-contexto.js`, `ruta.js`, `logros.js`, `cultura.js`, `detalles.js`, `hora-dorada.js`, `tiempo.js`, `desaparecida.js`, `enlaces.js` | 17 |
+| 9 | `mapa-vista.js` | `util.js` | `estado.js`, `mapa.js`, `mapa-fondo.js`, `mapa-vias.js`, `monumentos.js`, `ubicacion.js`, `mapa-real.js`, `tiempo.js`, `desaparecida.js`, `noche.js` | 14 |
+| 10 | `ficha.js` | `util.js` | `medicion.js`, `datos-globales.js`, `estado.js`, `guardado.js`, `mapa.js`, `mapa-vias.js`, `mapa-vista.js`, `monumentos.js`, `ruta.js`, `logros.js`, `palabras.js`, `vistas.js`, `ubicacion.js`, `provincia.js`, `pueblos.js`, `cultura.js`, `juego.js`, `tiempo.js`, `desaparecida.js`, `enlaces.js` | 28 |
+| 11 | `monumentos.js` | `util.js`, `datos-globales.js` | `estado.js`, `mapa-vias.js`, `mapa-vista.js`, `ficha.js`, `ruta-contexto.js`, `ruta.js`, `logros.js`, `cultura.js`, `detalles.js`, `hora-dorada.js`, `tiempo.js`, `desaparecida.js`, `noche.js`, `enlaces.js` | 18 |
 | 12 | `ruta-contexto.js` | — | `datos-globales.js` | 5 |
-| 13 | `ruta.js` | `util.js`, `datos-globales.js`, `monumentos.js` | `medicion.js`, `estado.js`, `guardado.js`, `mapa.js`, `mapa-vias.js`, `mapa-vista.js`, `ficha.js`, `ruta-contexto.js`, `ruta-provincia.js`, `logros.js`, `vistas.js`, `ubicacion.js`, `cultura.js`, `enlaces.js` | 18 |
+| 13 | `ruta.js` | `util.js`, `datos-globales.js`, `monumentos.js` | `medicion.js`, `estado.js`, `guardado.js`, `mapa.js`, `mapa-vias.js`, `mapa-vista.js`, `ficha.js`, `ruta-contexto.js`, `ruta-provincia.js`, `logros.js`, `vistas.js`, `ubicacion.js`, `cultura.js`, `enlaces.js` | 19 |
 | 14 | `ruta-provincia.js` | — | `util.js`, `datos-globales.js`, `estado.js`, `ficha.js`, `ruta-contexto.js`, `ruta.js`, `provincia.js`, `pueblos.js`, `enlaces.js` | 7 |
-| 15 | `logros.js` | `util.js` | `medicion.js`, `datos-globales.js`, `estado.js`, `guardado.js`, `ficha.js`, `monumentos.js`, `ruta.js`, `vistas.js`, `provincia.js`, `detalles.js`, `mi-salamanca.js` | 19 |
+| 15 | `logros.js` | `util.js` | `medicion.js`, `datos-globales.js`, `estado.js`, `guardado.js`, `ficha.js`, `monumentos.js`, `ruta.js`, `vistas.js`, `provincia.js`, `detalles.js`, `mi-salamanca.js` | 20 |
 | 16 | `palabras.js` | — | `util.js`, `datos-globales.js`, `estado.js`, `logros.js`, `juego.js` | 2 |
-| 17 | `vistas.js` | `util.js`, `estado.js` | `datos-globales.js`, `mapa.js`, `mapa-vista.js`, `ficha.js`, `logros.js`, `provincia.js`, `mi-salamanca.js`, `juego.js`, `enlaces.js`, `cuenta.js` | 18 |
+| 17 | `vistas.js` | `util.js`, `estado.js` | `datos-globales.js`, `mapa.js`, `mapa-vista.js`, `ficha.js`, `logros.js`, `provincia.js`, `mi-salamanca.js`, `juego.js`, `enlaces.js`, `cuenta.js` | 19 |
 | 18 | `ubicacion.js` | `util.js` | `datos-globales.js`, `estado.js`, `mapa.js`, `mapa-vista.js`, `ficha.js`, `vistas.js`, `provincia.js` | 9 |
 | 19 | `mapa-real.js` | `util.js`, `estado.js`, `ubicacion.js` | — | 2 |
 | 20 | `provincia.js` | — | `util.js`, `medicion.js`, `datos-globales.js`, `estado.js`, `guardado.js`, `mapa.js`, `ficha.js`, `logros.js`, `vistas.js`, `ubicacion.js`, `pueblos.js`, `cultura.js`, `enlaces.js` | 12 |
 | 21 | `pueblos.js` | — | `util.js`, `datos-globales.js`, `estado.js`, `mapa-vias.js`, `ficha.js`, `monumentos.js`, `ruta.js`, `ruta-provincia.js`, `logros.js`, `vistas.js`, `ubicacion.js`, `provincia.js`, `cultura.js`, `tiempo.js`, `enlaces.js` | 10 |
 | 22 | `perfil.js` | — | `util.js`, `datos-globales.js`, `estado.js`, `guardado.js`, `monumentos.js`, `ruta.js`, `logros.js`, `detalles.js`, `cuenta.js` | 5 |
 | 23 | `imagen.js` | — | `util.js`, `estado.js`, `logros.js`, `enlaces.js` | 10 |
-| 24 | `explorar.js` | `util.js` | `medicion.js`, `datos-globales.js`, `estado.js`, `ficha.js`, `monumentos.js`, `ruta.js`, `logros.js`, `pueblos.js`, `detalles.js`, `hora-dorada.js`, `desaparecida.js`, `enlaces.js` | 7 |
+| 24 | `explorar.js` | `util.js` | `medicion.js`, `datos-globales.js`, `estado.js`, `ficha.js`, `monumentos.js`, `ruta.js`, `logros.js`, `pueblos.js`, `detalles.js`, `hora-dorada.js`, `desaparecida.js`, `noche.js`, `enlaces.js` | 8 |
 | 25 | `cultura.js` | `util.js` | `datos-globales.js`, `estado.js`, `ficha.js`, `monumentos.js`, `ruta.js`, `ruta-provincia.js`, `vistas.js`, `provincia.js`, `pueblos.js`, `agenda.js`, `tiempo.js`, `enlaces.js` | 13 |
 | 26 | `agenda.js` | — | `util.js`, `datos-globales.js`, `ficha.js`, `ruta.js`, `imagen.js`, `cultura.js`, `enlaces.js` | 7 |
 | 27 | `detalles.js` | — | `util.js`, `datos-globales.js`, `estado.js`, `guardado.js`, `ficha.js`, `monumentos.js`, `ruta.js`, `logros.js`, `vistas.js`, `explorar.js`, `enlaces.js` | 7 |
-| 28 | `hora-dorada.js` | — | `util.js`, `datos-globales.js`, `estado.js`, `ficha.js`, `monumentos.js`, `ruta.js`, `explorar.js`, `agenda.js`, `enlaces.js` | 5 |
+| 28 | `hora-dorada.js` | — | `util.js`, `datos-globales.js`, `estado.js`, `ficha.js`, `monumentos.js`, `ruta.js`, `explorar.js`, `agenda.js`, `enlaces.js` | 6 |
 | 29 | `copia.js` | `util.js` | `estado.js`, `guardado.js`, `imagen.js` | 0 |
-| 30 | `hoy.js` | `util.js` | `datos-globales.js`, `estado.js`, `ficha.js`, `monumentos.js`, `ruta.js`, `ruta-provincia.js`, `logros.js`, `vistas.js`, `ubicacion.js`, `provincia.js`, `pueblos.js`, `perfil.js`, `cultura.js`, `agenda.js`, `hora-dorada.js`, `tiempo.js`, `enlaces.js` | 5 |
+| 30 | `hoy.js` | `util.js` | `datos-globales.js`, `estado.js`, `ficha.js`, `monumentos.js`, `ruta.js`, `ruta-provincia.js`, `logros.js`, `vistas.js`, `ubicacion.js`, `provincia.js`, `pueblos.js`, `perfil.js`, `cultura.js`, `agenda.js`, `hora-dorada.js`, `tiempo.js`, `noche.js`, `enlaces.js` | 5 |
 | 31 | `mi-salamanca-calculos.js` | — | `util.js`, `datos-globales.js`, `estado.js`, `monumentos.js`, `ruta.js`, `logros.js`, `vistas.js`, `explorar.js`, `cultura.js`, `detalles.js` | 3 |
 | 32 | `mi-salamanca-piezas.js` | — | `util.js`, `estado.js`, `ficha.js`, `logros.js`, `vistas.js`, `perfil.js`, `explorar.js`, `hoy.js`, `mi-salamanca-calculos.js`, `mi-salamanca.js` | 2 |
 | 33 | `mi-salamanca.js` | `util.js` | `medicion.js`, `estado.js`, `ficha.js`, `ruta.js`, `logros.js`, `vistas.js`, `provincia.js`, `perfil.js`, `imagen.js`, `hoy.js`, `mi-salamanca-calculos.js`, `mi-salamanca-piezas.js`, `enlaces.js` | 6 |
@@ -57,11 +57,12 @@ Reglas para ampliar la app:
 | 38 | `paseo.js` | `util.js` | `medicion.js`, `ficha.js`, `imagen.js`, `hoy.js`, `bienvenida.js` | 2 |
 | 39 | `tiempo.js` | `util.js`, `datos-globales.js` | `estado.js`, `mapa-fondo.js`, `mapa-vias.js`, `mapa-vista.js`, `ficha.js`, `monumentos.js`, `logros.js`, `vistas.js`, `pueblos.js`, `cultura.js`, `desaparecida.js`, `enlaces.js` | 10 |
 | 40 | `desaparecida.js` | `util.js`, `datos-globales.js`, `monumentos.js` | `estado.js`, `mapa-vista.js`, `ficha.js`, `ruta-contexto.js`, `ruta.js`, `explorar.js`, `agenda.js`, `tiempo.js`, `enlaces.js` | 7 |
-| 41 | `buscador.js` | `util.js` | `medicion.js`, `datos-globales.js`, `estado.js`, `ficha.js`, `monumentos.js`, `ruta.js`, `ruta-provincia.js`, `vistas.js`, `provincia.js`, `pueblos.js`, `cultura.js`, `tiempo.js` | 0 |
-| 42 | `enlaces.js` | — | `util.js`, `medicion.js`, `datos-globales.js`, `estado.js`, `ficha.js`, `monumentos.js`, `ruta.js`, `ruta-provincia.js`, `logros.js`, `vistas.js`, `provincia.js`, `pueblos.js`, `explorar.js`, `cultura.js`, `agenda.js`, `detalles.js`, `hora-dorada.js`, `hoy.js`, `mi-salamanca.js`, `tiempo.js`, `desaparecida.js` | 20 |
-| 43 | `cuenta.js` | `util.js` | `datos-globales.js`, `estado.js`, `guardado.js`, `ubicacion.js`, `imagen.js` | 5 |
-| 44 | `fiestas.js` | — | `util.js`, `datos-globales.js`, `cultura.js`, `agenda.js` | 1 |
-| 45 | `inicio.js` | `util.js`, `medicion.js`, `datos-globales.js`, `estado.js`, `guardado.js`, `mapa.js`, `mapa-fondo.js`, `mapa-vias.js`, `mapa-vista.js`, `ficha.js`, `monumentos.js`, `ruta-contexto.js`, `ruta.js`, `ruta-provincia.js`, `logros.js`, `palabras.js`, `vistas.js`, `ubicacion.js`, `provincia.js`, `pueblos.js`, `perfil.js`, `explorar.js`, `cultura.js`, `agenda.js`, `detalles.js`, `hora-dorada.js`, `hoy.js`, `mi-salamanca-calculos.js`, `mi-salamanca-piezas.js`, `mi-salamanca.js`, `juego.js`, `bienvenida.js`, `tiempo.js`, `desaparecida.js`, `enlaces.js`, `cuenta.js`, `fiestas.js` | `mapa-real.js`, `imagen.js`, `paseo.js` | 0 |
-| 46 | `avisar.js` | `util.js` | `estado.js`, `imagen.js`, `enlaces.js` | 1 |
+| 41 | `noche.js` | `util.js`, `datos-globales.js`, `monumentos.js` | `estado.js`, `guardado.js`, `mapa-vista.js`, `ficha.js`, `ruta.js`, `logros.js`, `vistas.js`, `explorar.js`, `hora-dorada.js`, `enlaces.js` | 6 |
+| 42 | `buscador.js` | `util.js` | `medicion.js`, `datos-globales.js`, `estado.js`, `ficha.js`, `monumentos.js`, `ruta.js`, `ruta-provincia.js`, `vistas.js`, `provincia.js`, `pueblos.js`, `cultura.js`, `tiempo.js` | 0 |
+| 43 | `enlaces.js` | — | `util.js`, `medicion.js`, `datos-globales.js`, `estado.js`, `ficha.js`, `monumentos.js`, `ruta.js`, `ruta-provincia.js`, `logros.js`, `vistas.js`, `provincia.js`, `pueblos.js`, `explorar.js`, `cultura.js`, `agenda.js`, `detalles.js`, `hora-dorada.js`, `hoy.js`, `mi-salamanca.js`, `tiempo.js`, `desaparecida.js`, `noche.js` | 21 |
+| 44 | `cuenta.js` | `util.js` | `datos-globales.js`, `estado.js`, `guardado.js`, `ubicacion.js`, `imagen.js` | 5 |
+| 45 | `fiestas.js` | — | `util.js`, `datos-globales.js`, `cultura.js`, `agenda.js` | 1 |
+| 46 | `inicio.js` | `util.js`, `medicion.js`, `datos-globales.js`, `estado.js`, `guardado.js`, `mapa.js`, `mapa-fondo.js`, `mapa-vias.js`, `mapa-vista.js`, `ficha.js`, `monumentos.js`, `ruta-contexto.js`, `ruta.js`, `ruta-provincia.js`, `logros.js`, `palabras.js`, `vistas.js`, `ubicacion.js`, `provincia.js`, `pueblos.js`, `perfil.js`, `explorar.js`, `cultura.js`, `agenda.js`, `detalles.js`, `hora-dorada.js`, `hoy.js`, `mi-salamanca-calculos.js`, `mi-salamanca-piezas.js`, `mi-salamanca.js`, `juego.js`, `bienvenida.js`, `tiempo.js`, `desaparecida.js`, `noche.js`, `enlaces.js`, `cuenta.js`, `fiestas.js` | `mapa-real.js`, `imagen.js`, `paseo.js` | 0 |
+| 47 | `avisar.js` | `util.js` | `estado.js`, `imagen.js`, `enlaces.js` | 1 |
 
 «Lo usan» es cuántos scripts usan algo suyo (al cargarse o después): cuanto más alto, más cuidado al cambiarle nombres. El análisis es solo leyendo el código: una función guardada para luego (un `addEventListener`, un `setTimeout`) cuenta como «después», y las que van a `forEach`, `map`, `filter`… o se llaman ahí mismo cuentan como «al cargarse».

@@ -154,7 +154,7 @@ const tieneProgreso = p => {
     j.n ||
     j.ms ||
     j.cp ||
-    ['h', 'mo', 'fl', 'et', 'pv', 'de'].some(k => (j[k] || []).length) ||
+    ['h', 'mo', 'fl', 'et', 'pv', 'de', 'ln'].some(k => (j[k] || []).length) ||
     Object.keys(j.r || {}).length ||
     Object.keys(j.rs || {}).length
   );
@@ -185,6 +185,7 @@ function juntarProgresos(a, b) {
       et: [...(ja.et || []), ...(jb.et || [])],
       pv: [...(ja.pv || []), ...(jb.pv || [])],
       de: [...(ja.de || []), ...(jb.de || [])],
+      ln: [...(ja.ln || []), ...(jb.ln || [])],
       hi: juntarHistoriales(ja.hi, jb.hi),
       rs: juntar(ja.rs, jb.rs), // «la he hecho» gana a «la quiero hacer»
       n: Math.max(ja.n || 0, jb.n || 0),

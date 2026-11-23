@@ -818,3 +818,41 @@ prueba(
   },
   { geolocation: { latitude: 40.9651, longitude: -5.6641 }, permissions: ['geolocation'] }
 );
+
+prueba('Salamanca de noche: cerrada de día, entera de noche, con velas y logro', async (p, url) => {
+  // De día (las 13:00 en Salamanca): la lista dice a qué hora se abre y cada ficha deja solo un vistazo
+  await p.clock.install({ time: new Date('2026-11-23T12:00:00Z') });
+  await p.goto(url);
+  await p.click('#mns');
+  cierto((await texto(p, '#irnoche')).includes('Se abren hoy a las'), 'Monumentos dice cuándo se abre');
+  await p.click('#irnoche');
+  igual(await texto(p, '#nm'), 'Salamanca de noche', 'abre la lista desde Monumentos');
+  igual(await p.evaluate(() => location.hash), '#noche', 'con su enlace');
+  igual(
+    await p.$$eval('#info .lista-explora .fila-explora', a => a.length),
+    await p.evaluate(() => LEYENDAS_NOCHE.length),
+    'una fila por cada leyenda'
+  );
+  cierto(await p.$eval('#velas', e => e.style.display != 'none'), 'las velas se ven en el mapa');
+  await p.evaluate(() => abrirLeyendaNoche('cueva'));
+  cierto((await texto(p, '#info')).includes('El resto se lee de noche'), 'de día, solo el principio');
+  cierto(!(await texto(p, '#info')).includes('marqués de Villena'), 'sin el final');
+  igual(await p.evaluate(() => leyendasNocheLeidas().length), 0, 'y no cuenta como leída');
+  // De noche (las 22:00): se lee entera y cuenta para el logro
+  await p.clock.setSystemTime(new Date('2026-11-23T21:00:00Z'));
+  await p.evaluate(() => abrirLeyendaNoche('cueva'));
+  cierto((await texto(p, '#info')).includes('marqués de Villena'), 'de noche, entera');
+  cierto((await texto(p, '#ap')).startsWith('Fuentes:'), 'con sus fuentes');
+  cierto(await p.$eval('#velas .vela.sel', e => !!e), 'y su vela, marcada en el mapa');
+  igual(await p.evaluate(() => leyendasNocheLeidas()), ['cueva'], 'se apunta como leída');
+  cierto(
+    await p.evaluate(() => calcularLogros().some(a => a.id == 'no1' && conseguido(a))),
+    'y da el logro Noctámbulo'
+  );
+  // Al cerrar, las velas se van
+  await p.click('#x');
+  cierto(
+    await p.$eval('#velas', e => e.style.display == 'none'),
+    'al cerrar, el mapa vuelve a ser el de siempre'
+  );
+});

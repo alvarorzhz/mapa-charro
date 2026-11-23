@@ -186,6 +186,7 @@ function recolocarSegunZoom(siempre) {
   if (typeof colocarMonumentos == 'function') colocarMonumentos(u);
   if (typeof colocarTiempo == 'function') colocarTiempo(u); // tiempo.js: puertas de la muralla
   if (typeof colocarDesaparecidos == 'function') colocarDesaparecidos(u); // desaparecida.js: fantasmas
+  if (typeof colocarVelas == 'function') colocarVelas(u); // noche.js: velas de las leyendas
   // marcaPosicion se declara en ubicacion.js, que carga después: aquí puede no existir aún
   if (typeof marcaPosicion != 'undefined' && marcaPosicion)
     marcaPosicion.m.setAttribute('transform', escalaFija(marcaPosicion.x, marcaPosicion.y, u));

@@ -114,6 +114,7 @@ function limpiarProgreso(o) {
       cp: contador(j.cp),
       pv: Array.isArray(j.pv) ? [...new Set(j.pv.filter(id => idsPalabras.has(id)))] : [],
       de: Array.isArray(j.de) ? [...new Set(j.de.filter(id => idsDetalles.has(id)))] : [],
+      ln: Array.isArray(j.ln) ? [...new Set(j.ln.filter(id => idsLeyendasNoche.has(id)))] : [],
       hi: limpiarHistorial(j.hi),
       rm: contador(j.rm),
       lg: limpiarLogrosApuntados(j.lg)
@@ -156,6 +157,7 @@ const esFecha = x => typeof x == 'string' && /^\d{4}-\d\d-\d\d$/.test(x);
 const idsMonumentos = new Set(MONUMENTOS.map(m => m.id));
 const idsPalabras = new Set(PALABRAS_CHARRAS.map(w => w.id));
 const idsDetalles = new Set(DETALLES.map(d => d.id));
+const idsLeyendasNoche = new Set(LEYENDAS_NOCHE.map(l => l.id));
 // Paradas propias (no monumentos) de cada ruta que existan
 function limpiarParadas(r) {
   const limpio = {};
@@ -189,6 +191,7 @@ const CLAVES_J = [
   'pv',
   'hi',
   'de',
+  'ln',
   'rm',
   'lg'
 ];

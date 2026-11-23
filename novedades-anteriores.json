@@ -1,5 +1,19 @@
 [
   {
+    "version": "2.22.0",
+    "fecha": "2026-11-02",
+    "titulo": "Rutas con dificultad, desnivel y escaleras",
+    "usuario": [
+      "Cada ruta a pie dice ahora su dificultad, cuánto se sube y se baja, si es circular o dónde acaba, y si hay escaleras por el camino (y en qué tramos), para saber si se puede hacer con silla de ruedas o carrito.",
+      "En la lista de rutas se ve de un vistazo cuáles son fáciles y cuáles llevan escaleras; las de la provincia en coche indican que salen y vuelven a Salamanca.",
+      "Todo sale de datos reales: alturas del modelo EU-DEM de Copernicus y escaleras de OpenStreetMap. Si falta un dato, no se muestra."
+    ],
+    "tecnico": [
+      "herramientas/perfil-rutas.js genera js/datos/perfil-rutas.js (PERFIL_RUTAS): subida y bajada con EU-DEM 25 m vía OpenTopoData (un punto cada 25 m, umbral de 3 m) y tramos con highway=steps (nodos del enrutador a pie de OSM cruzados con la API 0.6). Lleva la firma de los tramos; comprobar-datos avisa si no coincide.",
+      "js/ruta-contexto.js (nuevo, antes de ruta.js): dificultadRuta, textoDesnivel, textoRecorrido, tieneEscaleras y esCircularProvincia, con pruebas en pruebas-logica.js y en pruebas/mapa.js y provincia.js. textoDistancia pasa de ruta.js a este archivo."
+    ]
+  },
+  {
     "version": "2.21.2",
     "fecha": "2026-11-02",
     "titulo": "Orden de los scripts, documentado y vigilado",

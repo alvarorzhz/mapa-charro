@@ -221,6 +221,37 @@ prueba('Sol: altura a mediodía en Salamanca en los solsticios', app => {
   cierto(Math.abs(verano.acimut - 180) < 3, 'mirando al sur');
 });
 
+prueba('Salamanca de noche: las leyendas leídas se guardan en j.ln, sin repetir ni ids raros', app => {
+  const limpio = app('limpiarProgreso')({
+    z: {},
+    p: {},
+    j: { ln: ['cueva', 'cueva', 'no-existe', 'calisto'] }
+  });
+  igual(limpio.j.ln, ['cueva', 'calisto'], 'se quedan las que existen, una vez');
+  igual(app('limpiarProgreso')({ z: {}, p: {}, j: {} }).j.ln, [], 'sin leídas, una lista vacía');
+});
+
+prueba('Salamanca de noche: de la puesta de sol al amanecer', app => {
+  const noche = app('estadoNoche'),
+    hora = t => app('horaSalamanca')(t),
+    tarde = noche(new Date('2026-11-23T14:00:00Z')), // las 15:00 en Salamanca
+    cena = noche(new Date('2026-11-23T21:00:00Z')),
+    madrugada = noche(new Date('2026-11-24T03:00:00Z'));
+  igual(tarde.noche, false, 'a media tarde no es de noche');
+  cierto(
+    /^1[78]:\d\d$/.test(hora(tarde.abre)),
+    'en noviembre se abre hacia las seis (' + hora(tarde.abre) + ')'
+  );
+  igual(cena.noche, true, 'a las diez de la noche sí');
+  cierto(
+    /^0[78]:\d\d$/.test(hora(cena.hasta)),
+    'y dura hasta que amanece al día siguiente (' + hora(cena.hasta) + ')'
+  );
+  igual(madrugada.noche, true, 'de madrugada, también');
+  igual(+madrugada.hasta, +cena.hasta, 'hasta el mismo amanecer');
+  igual(noche(new Date('2026-06-21T19:30:00Z')).noche, false, 'en junio, a las 21:30 aún hay sol');
+});
+
 // --- Tu Salamanca (mi-salamanca-calculos.js) --------------------------------------
 prueba('Tu Salamanca: inicio de cada periodo', app => {
   const inicio = app('inicioPeriodo'),

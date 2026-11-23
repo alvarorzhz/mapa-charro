@@ -19,6 +19,7 @@ import * as detalles from './datos/detalles.js?v=2570fdde20';
 import * as fachadas from './datos/fachadas.js?v=57a82798d6';
 import * as orientacionFachadas from './datos/orientacion-fachadas.js?v=1924a819a6';
 import * as desaparecida from './datos/desaparecida.js?v=70d1d65043';
+import * as noche from './datos/noche.js?v=e8282e3f65';
 import * as contenido from './datos/contenido.js?v=25b1f22931';
 import * as geometria from './datos/geometria.js?v=049169f6eb';
 import * as alfoz from './datos/alfoz.js?v=e86a83f1e9';
@@ -49,6 +50,7 @@ Object.assign(
   fachadas,
   orientacionFachadas,
   desaparecida,
+  noche,
   contenido,
   geometria,
   alfoz,

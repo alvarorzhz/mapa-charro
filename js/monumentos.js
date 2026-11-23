@@ -322,6 +322,7 @@ function olvidarMonumento() {
   if (typeof estadoApp.rutaSeguida != 'undefined') estadoApp.rutaSeguida = null;
   if (typeof salirTiempo == 'function') salirTiempo(); // tiempo.js: el mapa vuelve a ser el de hoy
   if (typeof olvidarDesaparecido == 'function') olvidarDesaparecido(); // desaparecida.js: fuera los fantasmas
+  if (typeof olvidarNoche == 'function') olvidarNoche(); // noche.js: fuera las velas
   if (typeof estadoApp.puebloAbierto != 'undefined') estadoApp.puebloAbierto = null;
   if (typeof estadoApp.paradaActual != 'undefined') estadoApp.paradaActual = -1;
   $('#info').hidden = true;
