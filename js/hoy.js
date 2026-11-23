@@ -467,6 +467,19 @@ function abrirHoy() {
   dorada.onclick = desdeHoy(() => abrirHoraDorada());
   caja.appendChild(apartadoHoy('🌇 La hora dorada', crear('p', '', resumenHoraDorada()), dorada));
 
+  // Salamanca de noche: solo cuando ya se pueden leer (noche.js)
+  if (estadoNoche().noche) {
+    const noche = crear('button', 'boton-hoy', 'Leer las leyendas');
+    noche.onclick = desdeHoy(abrirSalamancaDeNoche);
+    caja.appendChild(
+      apartadoHoy(
+        '🕯️ Salamanca de noche',
+        crear('p', '', 'Ya se ha puesto el sol. ' + resumenNoche() + '.'),
+        noche
+      )
+    );
+  }
+
   // 3. Continúa explorando
   const medias = crear('div', 'lista-explora');
   continua.slice(0, 3).forEach(c => {

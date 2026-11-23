@@ -166,6 +166,11 @@
   --actividad-2: #c9655a;
   --actividad-3: #b33a2e;
   --desap-viva: #e9cf9a;
+  --noche-velo: #0b0a14;
+  --noche-halo: #ffcf6b;
+  --noche-cirio: #f4ead5;
+  --noche-cirio-borde: #6b5a3a;
+  --noche-llama: #ffb43b;
 }
 /* Escalas del tema «Piedra de Villamayor» (docs/notas/tema.md): letra, radios y capas. Usa estas y no números sueltos */
 :root {
@@ -6169,4 +6174,65 @@ label,
   main > h1 {
     position: static;
   }
+}
+/* Salamanca de noche (noche.js): velo oscuro y velas en el mapa */
+#velas .velo-noche {
+  fill: var(--noche-velo);
+  opacity: 0.55;
+  pointer-events: none;
+}
+#velas.de-dia .velo-noche {
+  opacity: 0.25;
+}
+#velas .vela {
+  cursor: pointer;
+}
+#velas .vela .halo {
+  fill: var(--noche-halo);
+  opacity: 0.28;
+}
+#velas .vela .cirio {
+  fill: var(--noche-cirio);
+  stroke: var(--noche-cirio-borde);
+  stroke-width: 0.8;
+}
+#velas .vela .llama {
+  fill: var(--noche-llama);
+  transform-origin: 0 -3px;
+  animation: llama-vela 1.6s ease-in-out infinite alternate;
+}
+#velas.de-dia .vela .llama,
+#velas.de-dia .vela .halo {
+  display: none;
+}
+#velas .vela.leida .halo {
+  opacity: 0.12;
+}
+#velas .vela.sel .halo {
+  opacity: 0.55;
+  r: 15;
+}
+@keyframes llama-vela {
+  from {
+    transform: scale(1, 1);
+  }
+  to {
+    transform: scale(0.85, 1.12);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #velas .vela .llama {
+    animation: none;
+  }
+}
+.noche-estado {
+  font-weight: 600;
+  margin: 8px 0;
+}
+.noche-estado.abierta {
+  color: var(--vitor);
+}
+.cul-t.vistazo {
+  font-style: italic;
+  opacity: 0.8;
 }

@@ -177,6 +177,7 @@ const NOMBRES_TAREAS = {
   detalle: 'Un detalle escondido',
   'hora-dorada': 'La hora dorada',
   desaparecida: 'Salamanca desaparecida',
+  noche: 'Salamanca de noche',
   resumen: 'Tu Salamanca: resumen',
   diario: 'Tu Salamanca: diario',
   logros: 'Tu Salamanca: logros',

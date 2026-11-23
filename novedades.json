@@ -1,5 +1,22 @@
 [
   {
+    "version": "2.27.0",
+    "fecha": "2026-11-23",
+    "titulo": "Salamanca de noche",
+    "usuario": [
+      "Nueva en Monumentos: «Salamanca de noche», ocho leyendas oscuras de la ciudad (la Cueva de Salamanca, la Casa de las Muertes, las cabezas de María la Brava, la mujer del Pabellón Real…), cada una con su fuente.",
+      "Solo se leen enteras de noche, de la puesta de sol al amanecer. De día ves el principio y a qué hora se abren.",
+      "Con la lista o una leyenda abiertas, el mapa se oscurece y una vela marca dónde pasó cada una.",
+      "Dos logros nuevos, «Noctámbulo» y «Alma en pena», por leerlas de noche. De noche también salen en «¿Qué puedo descubrir hoy?»."
+    ],
+    "tecnico": [
+      "js/datos/noche.js (LEYENDAS_NOCHE) y js/noche.js, después de desaparecida.js: lista #noche (#irnoche en Monumentos), ficha #noche/<id> y capa #velas en el mapa (velo oscuro y una vela por leyenda, como los fantasmas de #desap).",
+      "js/hora-dorada.js: estadoNoche(ahora) dice si es de noche en Salamanca (entre la puesta y la salida del sol de horaDorada) y hasta cuándo, o a qué hora se abre.",
+      "Progreso: las leídas de noche van en j.ln (limpiarProgreso, CLAVES_J y juntarProgresos); logros no1 y noall, categoría «De noche».",
+      "comprobar-datos valida las leyendas de noche (monumento o punto, textos con tipo, fuentes y revisado); pruebas nuevas en pruebas-logica.js y en pruebas/explora.js con el reloj de Playwright."
+    ]
+  },
+  {
     "version": "2.26.2",
     "fecha": "2026-11-22",
     "titulo": "Más curiosidades",
@@ -133,20 +150,6 @@
     "tecnico": [
       "herramientas/censos.js genera js/datos/censos.js (CENSOS) de «Alteraciones de los municipios en los Censos de Población desde 1842» del INE (una página por municipio, por código): población de hecho y de derecho de los 19 censos (1842–2021) y las notas del INE con los censos de su llamada. Quita las columnas repetidas del INE (dos de 1857 o de 1910) si tienen las mismas cifras.",
       "pintarCensos (pueblos.js), debajo de la evolución del Padrón en #demo: gráfico de la población de derecho (graficoHabitantes admite marcas y título), máximo, notas (textoNotaCenso, sin los códigos) y tabla plegada. Comprobación en comprobar-datos y prueba en pruebas/provincia.js. Sin CSS nuevo."
-    ]
-  },
-  {
-    "version": "2.22.0",
-    "fecha": "2026-11-02",
-    "titulo": "Rutas con dificultad, desnivel y escaleras",
-    "usuario": [
-      "Cada ruta a pie dice ahora su dificultad, cuánto se sube y se baja, si es circular o dónde acaba, y si hay escaleras por el camino (y en qué tramos), para saber si se puede hacer con silla de ruedas o carrito.",
-      "En la lista de rutas se ve de un vistazo cuáles son fáciles y cuáles llevan escaleras; las de la provincia en coche indican que salen y vuelven a Salamanca.",
-      "Todo sale de datos reales: alturas del modelo EU-DEM de Copernicus y escaleras de OpenStreetMap. Si falta un dato, no se muestra."
-    ],
-    "tecnico": [
-      "herramientas/perfil-rutas.js genera js/datos/perfil-rutas.js (PERFIL_RUTAS): subida y bajada con EU-DEM 25 m vía OpenTopoData (un punto cada 25 m, umbral de 3 m) y tramos con highway=steps (nodos del enrutador a pie de OSM cruzados con la API 0.6). Lleva la firma de los tramos; comprobar-datos avisa si no coincide.",
-      "js/ruta-contexto.js (nuevo, antes de ruta.js): dificultadRuta, textoDesnivel, textoRecorrido, tieneEscaleras y esCircularProvincia, con pruebas en pruebas-logica.js y en pruebas/mapa.js y provincia.js. textoDistancia pasa de ruta.js a este archivo."
     ]
   }
 ]

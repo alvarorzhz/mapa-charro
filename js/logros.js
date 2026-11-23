@@ -253,6 +253,16 @@ function calcularLogros() {
       ['de5', 5, 'Buen ojo', 'Encuentra {m} detalles escondidos'],
       ['deall', 'todo', 'Ojo de lince', 'Encuentra los {m} detalles escondidos']
     ]),
+    // Salamanca de noche (noche.js): leyendas leídas de noche, en j.ln
+    ...escalones(
+      'noche',
+      datoJ('ln', []).filter(id => LEYENDAS_NOCHE.some(l => l.id == id)).length,
+      LEYENDAS_NOCHE.length,
+      [
+        ['no1', 1, 'Noctámbulo', 'Lee una leyenda de Salamanca de noche'],
+        ['noall', 'todo', 'Alma en pena', 'Lee de noche las {m} leyendas de Salamanca de noche']
+      ]
+    ),
     ...escalones('palabras', datoJ('pv', []).length, PALABRAS_CHARRAS.length, [
       ['pa1', 1, 'Hablas charro', 'Descubre tu primera palabra charra'],
       ['pam', 'mitad', 'Pejilguero', 'Descubre {m} palabras charras'],
@@ -376,6 +386,7 @@ const MEDALLAS = {
   deseo: '⭐',
   rana: '🐸',
   detalle: '🔍',
+  noche: '🕯️',
   gps: '🥾',
   provincia: '🗺️',
   comarca: '🌾',
@@ -544,6 +555,7 @@ const CATEGORIAS_LOGRO = [
   ['Palabras charras', '🗣️', ['palabras']],
   ['Compartir', '📣', ['compartir']],
   ['Detalles escondidos', '🔍', ['detalle']],
+  ['De noche', '🕯️', ['noche']],
   ['Sorpresas', '🐸', ['leyendas', 'rio', 'deseo', 'rana']]
 ];
 const categoriasAbiertas = new Set(); // las que se han abierto, para que sigan abiertas al repintar

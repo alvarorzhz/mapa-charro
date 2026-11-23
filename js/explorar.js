@@ -70,7 +70,16 @@ function abrirMonumentos() {
   );
   desaparecida.id = 'irdes';
   desaparecida.onclick = abrirSalamancaDesaparecida;
-  caja.appendChild(crear('div', 'lista-explora', detalles, dorada, desaparecida));
+  // Salamanca de noche: leyendas que se leen de la puesta de sol al amanecer (noche.js)
+  const deNoche = crear(
+    'button',
+    'fila-explora fila-destacada',
+    crear('span', 'ico-det', estadoNoche().noche ? '🕯️' : '🔒'),
+    crear('span', 'texto', crear('b', '', 'Salamanca de noche'), crear('small', '', resumenNoche()))
+  );
+  deNoche.id = 'irnoche';
+  deNoche.onclick = abrirSalamancaDeNoche;
+  caja.appendChild(crear('div', 'lista-explora', detalles, dorada, desaparecida, deNoche));
   const filtros = crear('div', 'fl');
   filtros.setAttribute('role', 'group');
   filtros.setAttribute('aria-label', 'Mostrar');

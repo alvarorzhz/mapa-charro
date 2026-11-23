@@ -37,12 +37,13 @@ const datos = [
   'detalles',
   'fachadas',
   'orientacion-fachadas',
-  'desaparecida'
+  'desaparecida',
+  'noche'
 ];
 const codigo =
   sinExport(datos.map(d => leer('js/datos/' + d + '.js')).join('\n;\n')) +
   '\n;({ NOMBRES_GRUPOS, ZONAS_GRANDES, ZONAS, OTROS_NOMBRES, SEMILLAS_REPARTO, MONUMENTOS, VISITAS, FUENTE_VISITAS, RUTAS, TRAMOS_RUTAS, PERFIL_RUTAS, PUEBLOS, CURIOSIDADES, LEYENDAS, FOTOS, DONDE_COMER,' +
-  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA, RELACIONES_ETAPA, RANGOS_ETAPA, PALABRAS_CHARRAS, FUENTES_PALABRAS, DIAS_ESPECIALES, ESTACIONES, RUTAS_PROVINCIA, SALIDA_PROVINCIA, TRAMOS_PROVINCIA, CARRETERAS_PROVINCIA, HABITANTES, CENSOS, PARQUES, CULTURA, CATEGORIAS_CULTURA, TIPOS_TEXTO_CULTURA, DETALLES, FACHADAS, ORIENTACION_FACHADAS, DESAPARECIDOS })';
+  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA, RELACIONES_ETAPA, RANGOS_ETAPA, PALABRAS_CHARRAS, FUENTES_PALABRAS, DIAS_ESPECIALES, ESTACIONES, RUTAS_PROVINCIA, SALIDA_PROVINCIA, TRAMOS_PROVINCIA, CARRETERAS_PROVINCIA, HABITANTES, CENSOS, PARQUES, CULTURA, CATEGORIAS_CULTURA, TIPOS_TEXTO_CULTURA, DETALLES, FACHADAS, ORIENTACION_FACHADAS, DESAPARECIDOS, LEYENDAS_NOCHE })';
 const D = vm.runInNewContext(codigo, {});
 
 const WEB_PUBLICA = 'https://alvarorzhz.github.io/mapa-charro/';
@@ -916,6 +917,43 @@ for (const f of fs.readdirSync(path.join(RAIZ, 'js/datos')).filter(f => f.endsWi
     );
     comprobar(
       /^\d{4}-\d\d-\d\d$/.test(d.revisado || '') && d.revisado <= hoy,
+      `${que}: «revisado» tiene que ser una fecha (AAAA-MM-DD) que no sea futura`
+    );
+  });
+}
+
+// --- Salamanca de noche ---------------------------------------------------------------------------
+{
+  const vistos = new Set(),
+    hoy = new Date().toISOString().slice(0, 10);
+  comprobar(Array.isArray(D.LEYENDAS_NOCHE) && D.LEYENDAS_NOCHE.length, 'LEYENDAS_NOCHE está vacío');
+  D.LEYENDAS_NOCHE.forEach(l => {
+    const que = `Leyenda de noche «${l.id}»`;
+    comprobar(/^[a-z0-9-]{1,60}$/.test(l.id || '') && !vistos.has(l.id), `${que}: id vacío, raro o repetido`);
+    vistos.add(l.id);
+    for (const campo of ['n', 'icono', 'donde'])
+      comprobar(typeof l[campo] == 'string' && l[campo].trim(), `${que}: falta «${campo}»`);
+    if (l.monumento) {
+      comprobar(idsMonumento.has(l.monumento), `${que}: el monumento «${l.monumento}» no existe`);
+      comprobar(l.la == null && l.lo == null, `${que}: con monumento, el punto es el suyo (sin la ni lo)`);
+    } else
+      comprobar(
+        l.la > 40.9 && l.la < 41.05 && l.lo > -5.75 && l.lo < -5.6,
+        `${que}: sin monumento necesita un punto (la, lo) dentro de la capital`
+      );
+    comprobar(Array.isArray(l.textos) && l.textos.length, `${que}: sin textos`);
+    (l.textos || []).forEach(([tipo, texto], i) =>
+      comprobar(
+        D.TIPOS_TEXTO_CULTURA[tipo] && typeof texto == 'string' && texto.length > 20,
+        `${que}: el texto ${i + 1} está vacío o tiene un tipo desconocido`
+      )
+    );
+    comprobar(
+      Array.isArray(l.fuentes) && l.fuentes.length && l.fuentes.every(enlaceValido),
+      `${que}: sin fuentes o con una mal escrita`
+    );
+    comprobar(
+      /^\d{4}-\d\d-\d\d$/.test(l.revisado || '') && l.revisado <= hoy,
       `${que}: «revisado» tiene que ser una fecha (AAAA-MM-DD) que no sea futura`
     );
   });

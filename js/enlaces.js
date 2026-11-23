@@ -11,6 +11,7 @@
 //   #detalles  #detalle/rana  detalles escondidos: la lista y cada uno
 //   #hora-dorada              la hora dorada: a qué fachadas les da el sol bajo hoy
 //   #desaparecida  #desaparecida/san-adrian  Salamanca desaparecida: la lista y cada sitio
+//   #noche  #noche/cueva      Salamanca de noche: las leyendas y cada una
 //   #lista  #provincia        pestañas
 //   #provincia/alba-de-tormes pueblo seleccionado en la pestaña Provincia
 // Abrir una ficha añade una entrada al historial, así el botón «atrás» del móvil la cierra.
@@ -49,6 +50,8 @@ const esHashDeFicha = h =>
   h == 'hora-dorada' ||
   h == 'desaparecida' ||
   h.startsWith('desaparecida/') ||
+  h == 'noche' ||
+  h.startsWith('noche/') ||
   h.startsWith('detalle/') ||
   todasLasZonas.some(z => z.id == h);
 
@@ -125,6 +128,11 @@ function aplicarEnlace() {
       if (!d) {
         if (!fichaAbierta || estadoApp.nombreFicha != 'Salamanca desaparecida') abrirSalamancaDesaparecida();
       } else if (!fichaAbierta || estadoApp.nombreFicha != d.n) abrirDesaparecido(d.id);
+    } else if (a == 'noche') {
+      const l = buscarLeyendaNoche(b);
+      if (!l) {
+        if (!fichaAbierta || estadoApp.nombreFicha != 'Salamanca de noche') abrirSalamancaDeNoche();
+      } else if (!fichaAbierta || estadoApp.nombreFicha != l.n) abrirLeyendaNoche(l.id);
     } else if (a == 'hora-dorada') {
       if (!fichaAbierta || estadoApp.nombreFicha != 'La hora dorada') abrirHoraDorada();
     } else if (a == 'detalles') {
