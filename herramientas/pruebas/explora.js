@@ -822,6 +822,9 @@ prueba(
 prueba('Salamanca de noche: cerrada de día, entera de noche, con velas y logro', async (p, url) => {
   // De día (las 13:00 en Salamanca): la lista dice a qué hora se abre y cada ficha deja solo un vistazo
   await p.clock.install({ time: new Date('2026-11-23T12:00:00Z') });
+  // «¿Qué puedo descubrir hoy?» se da por visto el día del reloj de la prueba, no el de verdad: si no, sale
+  // encima y tapa Monumentos
+  await p.addInitScript(() => localStorage.setItem('charro-hoy', '2026-11-23'));
   await p.goto(url);
   await p.click('#mns');
   cierto((await texto(p, '#irnoche')).includes('Se abren hoy a las'), 'Monumentos dice cuándo se abre');

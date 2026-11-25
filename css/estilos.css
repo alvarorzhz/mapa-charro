@@ -4959,6 +4959,15 @@ a.llegar.principal {
 .m3d-leyenda .w::before {
   background: var(--ronda);
 }
+.m3d-leyenda .mo::before {
+  background: var(--vitor);
+  border-radius: 50%;
+}
+.m3d-info button {
+  padding: 5px 10px;
+  font-size: var(--letra-media);
+  background: var(--tarjeta);
+}
 .m3d-leyenda .cargando {
   display: none;
   margin-left: auto;

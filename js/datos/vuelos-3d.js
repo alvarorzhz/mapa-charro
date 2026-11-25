@@ -31,8 +31,8 @@ export const VUELOS_3D = [
     texto: 'La capital sobre su teso, con el Tormes a los pies',
     la: 40.9606,
     lo: -5.66636,
-    zoom: 14.2,
-    pitch: 65,
+    zoom: 15.8,
+    pitch: 68,
     rumbo: 345,
     fuente: [['Wikipedia', 'https://es.wikipedia.org/wiki/Catedral_Nueva_de_Salamanca']]
   }
