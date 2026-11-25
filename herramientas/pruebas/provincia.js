@@ -430,7 +430,7 @@ prueba(
     await p.click('.m3d-info .q[data-s="v"]');
     igual(
       await p.evaluate(
-        () => window.municipios3d.features.find(f => f.properties.n == 'La Alberca').properties.marca
+        () => window.datos3d.municipios.features.find(f => f.properties.n == 'La Alberca').properties.marca
       ),
       'v',
       'He estado se pinta en el relieve'
@@ -449,6 +449,62 @@ prueba(
     cierto(await p.$eval('.m3d', e => e.hidden), 'Escape lo cierra');
     igual(await p.evaluate(() => window.mapas3d), 0, 'y suelta el mapa (memoria del iPhone)');
     cierto(await p.$eval('.pmw .b3d', b => b == document.activeElement), 'el foco vuelve al botón');
+  },
+  { rutas: mapLibreFalso }
+);
+
+prueba(
+  'Capital en 3D: abre donde se mira, con edificios, monumentos y zonas marcables',
+  async p => {
+    await p.evaluate(() => {
+      vistaMapa.w = 60;
+      vistaMapa.h = 72;
+      centrarMapaEn(...proyectar(40.9606, -5.66636), 60);
+      ajustarVista();
+    });
+    await p.click('#z3d');
+    await p.waitForFunction(() => window.estilo3d);
+    igual(await texto(p, '#t3d'), 'Salamanca en 3D', 'con su título');
+    const camara = await p.evaluate(() => window.camara3d);
+    cierto(
+      Math.abs(camara.center[0] + 5.6664) < 0.01 && Math.abs(camara.center[1] - 40.9606) < 0.01,
+      'centrado donde se miraba el mapa'
+    );
+    cierto(camara.zoom >= 14 && camara.pitch > 45, 'de cerca e inclinado, para ver los edificios');
+    const estilo = await p.evaluate(() => window.estilo3d);
+    const capa = id => estilo.layers.find(l => l.id == id);
+    igual(capa('edificios').type, 'fill-extrusion', 'edificios con altura');
+    igual(capa('monumentos-edificios').type, 'fill-extrusion', 'y los de los monumentos, aparte');
+    igual(
+      estilo.sources.monumentos.data.features.length,
+      await p.evaluate(() => MONUMENTOS.length),
+      'todos los monumentos rotulados'
+    );
+    cierto(
+      estilo.sources['edificios-monumentos'].data.features.some(f => f.properties.id == 'catedrales'),
+      'la catedral tiene su edificio'
+    );
+    igual(
+      estilo.sources.zonas.data.features.length,
+      await p.evaluate(() => zonas.length),
+      'las zonas de la capital'
+    );
+    // Una zona pulsada se marca desde el 3D
+    await p.evaluate(() => mostrarZona3d(zonas.find(z => z.id == 'univ')));
+    await p.click('.m3d-info .q[data-s="w"]');
+    igual(await p.evaluate(() => estadoApp.progreso.z.univ), 'w', 'Quiero ir se guarda');
+    igual(
+      await p.evaluate(
+        () => window.datos3d.zonas.features.find(f => f.properties.id == 'univ').properties.marca
+      ),
+      'w',
+      'y se pinta en el 3D'
+    );
+    // Un monumento pulsado abre su ficha y cierra el 3D
+    await p.evaluate(() => mostrarMonumento3d(MONUMENTOS.find(m => m.id == 'catedrales')));
+    await p.click('.m3d-info button:has-text("Ver ficha")');
+    cierto(await p.$eval('.m3d', e => e.hidden), 'se cierra el 3D');
+    await llegaA(() => texto(p, '#nm'), 'Catedrales Nueva y Vieja', 'y se abre la ficha del monumento');
   },
   { rutas: mapLibreFalso }
 );

@@ -9,3 +9,5 @@ js/datos/habitantes.js
 js/datos/parques.js
 js/datos/orientacion-fachadas.js
 js/datos/perfil-rutas.js
+js/datos/edificios-monumentos.js
+js/datos/relieve.js

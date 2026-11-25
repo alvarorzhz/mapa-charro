@@ -1,5 +1,21 @@
 [
   {
+    "version": "2.29.0",
+    "fecha": "2026-11-25",
+    "titulo": "La capital en 3D",
+    "usuario": [
+      "Nuevo botón «3D» en el mapa de la capital: se abre justo donde estabas mirando, con los edificios levantados a su altura.",
+      "Los monumentos salen en dorado (la catedral con sus torres, la Clerecía, San Esteban, las Conchas…) y con su nombre. Pulsa uno para abrir su ficha.",
+      "Las zonas donde has estado o quieres ir se colorean en el suelo, y puedes marcarlas desde el 3D.",
+      "El vuelo al teso de las catedrales ahora baja hasta los tejados."
+    ],
+    "tecnico": [
+      "js/mapa-3d.js: modo capital (abrirMapa3d(boton, 'capital'), botón #z3d), fill-extrusion de los edificios de OpenFreeMap desde el zoom 14, zonas (z.P con desproyectar) y monumentos como GeoJSON; un toque elige monumento, zona o municipio.",
+      "herramientas/edificios-monumentos.js (Overpass) genera js/datos/edificios-monumentos.js: planta, patios, partes y altura del edificio de 35 monumentos, ensanchados 0,7 m para tapar el de OpenFreeMap.",
+      "comprobar-datos mira los edificios de los monumentos; prueba nueva en pruebas/provincia.js y el MapLibre falso guarda la cámara y los datos de cada fuente."
+    ]
+  },
+  {
     "version": "2.28.0",
     "fecha": "2026-11-23",
     "titulo": "La provincia en 3D",
@@ -134,25 +150,6 @@
     "tecnico": [
       "js/datos/contenido.js: 8 curiosidades nuevas con fuente en garridonorte, estacion, hospitales y alcaldes.",
       "alcaldes: la asociación vecinal no «nació» en julio de 2025 (es la fecha de su registro); ya actuaba en 2022 con Román García al frente (SALAMANCArtv)."
-    ]
-  },
-  {
-    "version": "2.24.0",
-    "fecha": "2026-11-03",
-    "titulo": "Un acabado más de iPhone",
-    "usuario": [
-      "Los botones que flotan sobre el mapa, la ficha, el buscador y el aviso de logro son ahora de cristal: dejan ver el mapa difuminado por detrás.",
-      "Los paneles y botones se mueven con un pequeño muelle, y lo que pulsas se encoge un poco al tocarlo.",
-      "Al bajar por la página, el título «Mapa charro» se hace pequeño y se queda arriba.",
-      "El tema oscuro es más oscuro y cálido, con capas que se aclaran cuanto más arriba están.",
-      "En el iPhone, con la app instalada, el mapa pasa por debajo de la hora y la batería, y la barra del navegador toma el color de la piedra."
-    ],
-    "tecnico": [
-      "Tokens nuevos en estilos.css: --material, --material-denso, --material-canto, --material-filtro, --barra-estado, --muelle, --muelle-tiempo, --rebote y --capa-titulo; apartado «Acabado iOS» al final y nota en docs/notas/tema.md. Los bordes de 2 px se quedan.",
-      "Oscuro: --fondo #14110b, --tarjeta #221c13 y --superficie-elevada #2e2619.",
-      "Título que encoge con animation-timeline: scroll() (mejora progresiva, alto fijo para no mover la página); body::before pone la franja bajo la barra de estado black-translucent; mostrarFicha y el juego dejan el mapa bajo esa franja.",
-      "conTransicion() (util.js) usa View Transitions en los botones de pestaña; mostrarFicha anima el contenido al pasar de una ficha a otra; pintarColorBarra() (inicio.js) iguala los theme-color al tema elegido.",
-      "Pruebas: pulsarPestana() en comun.js espera a la transición y sinTransiciones no espera las animaciones ligadas al desplazamiento; nuevas pruebas del color de barra y de las transiciones."
     ]
   }
 ]

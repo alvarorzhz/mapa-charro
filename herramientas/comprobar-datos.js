@@ -40,12 +40,13 @@ const datos = [
   'desaparecida',
   'noche',
   'relieve',
-  'vuelos-3d'
+  'vuelos-3d',
+  'edificios-monumentos'
 ];
 const codigo =
   sinExport(datos.map(d => leer('js/datos/' + d + '.js')).join('\n;\n')) +
   '\n;({ NOMBRES_GRUPOS, ZONAS_GRANDES, ZONAS, OTROS_NOMBRES, SEMILLAS_REPARTO, MONUMENTOS, VISITAS, FUENTE_VISITAS, RUTAS, TRAMOS_RUTAS, PERFIL_RUTAS, PUEBLOS, CURIOSIDADES, LEYENDAS, FOTOS, DONDE_COMER,' +
-  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA, RELACIONES_ETAPA, RANGOS_ETAPA, PALABRAS_CHARRAS, FUENTES_PALABRAS, DIAS_ESPECIALES, ESTACIONES, RUTAS_PROVINCIA, SALIDA_PROVINCIA, TRAMOS_PROVINCIA, CARRETERAS_PROVINCIA, HABITANTES, CENSOS, PARQUES, CULTURA, CATEGORIAS_CULTURA, TIPOS_TEXTO_CULTURA, DETALLES, FACHADAS, ORIENTACION_FACHADAS, DESAPARECIDOS, LEYENDAS_NOCHE, RELIEVE, VUELOS_3D })';
+  ' POSICION_EXACTA, LIMITES_BARRIOS, ZONAS_NO_OFICIALES, CARRETERAS, ESCUDOS, AVENIDAS, INFO_VIAS, INFO_AVENIDAS, PROVINCIA, ALFOZ, LIMITES_ALFOZ, LIMITES_VECINOS, CONFIG_FIREBASE, ETAPAS, EPOCA_ZONA, MURALLA, RELACIONES_ETAPA, RANGOS_ETAPA, PALABRAS_CHARRAS, FUENTES_PALABRAS, DIAS_ESPECIALES, ESTACIONES, RUTAS_PROVINCIA, SALIDA_PROVINCIA, TRAMOS_PROVINCIA, CARRETERAS_PROVINCIA, HABITANTES, CENSOS, PARQUES, CULTURA, CATEGORIAS_CULTURA, TIPOS_TEXTO_CULTURA, DETALLES, FACHADAS, ORIENTACION_FACHADAS, DESAPARECIDOS, LEYENDAS_NOCHE, RELIEVE, VUELOS_3D, EDIFICIOS_MONUMENTOS })';
 const D = vm.runInNewContext(codigo, {});
 
 const WEB_PUBLICA = 'https://alvarorzhz.github.io/mapa-charro/';
@@ -412,10 +413,27 @@ D.CARRETERAS_PROVINCIA.forEach(c => {
       `Vuelo 3D ${v.id}: fuera del relieve`
     );
     comprobar(
-      v.zoom >= R.zoomMin && v.zoom <= 15 && v.pitch >= 0 && v.pitch <= 75 && v.rumbo >= 0 && v.rumbo < 360,
+      v.zoom >= R.zoomMin && v.zoom <= 17.5 && v.pitch >= 0 && v.pitch <= 75 && v.rumbo >= 0 && v.rumbo < 360,
       `Vuelo 3D ${v.id}: zoom, inclinación o rumbo raros`
     );
     comprobar((v.fuente || []).every(enlaceValido) && v.fuente.length, `Vuelo 3D ${v.id}: sin fuente`);
+  });
+  // Edificios de los monumentos (los genera herramientas/edificios-monumentos.js)
+  const idsMon = new Set(D.MONUMENTOS.map(m => m.id));
+  D.EDIFICIOS_MONUMENTOS.forEach(e => {
+    comprobar(idsMon.has(e.m), `Edificio de monumento: «${e.m}» no está en MONUMENTOS`);
+    comprobar(
+      e.piezas.length &&
+        e.piezas.every(
+          p =>
+            p.h >= p.b &&
+            p.r.length &&
+            p.r.every(
+              a => a.length >= 4 && a.every(([lo, la]) => la > 40.9 && la < 41.05 && lo > -5.75 && lo < -5.55)
+            )
+        ),
+      `Edificio del monumento ${e.m}: alturas o plantas raras`
+    );
   });
 }
 

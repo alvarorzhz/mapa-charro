@@ -1,11 +1,14 @@
-// Mapa en 3D de la provincia (botón «3D» del minimapa de Provincia): el relieve de verdad, con los pueblos
-// coloreados según «He estado» / «Quiero ir» encima, y vuelos preparados (VUELOS_3D). Usa MapLibre
+// Mapa en 3D de la provincia y de la capital (botones «3D» del minimapa de Provincia y del mapa de la capital):
+// el relieve de verdad, con los pueblos y las zonas de la capital coloreados según «He estado» / «Quiero ir»
+// encima, los edificios con su altura (OpenFreeMap), los monumentos rotulados y vuelos preparados
+// (VUELOS_3D). Usa MapLibre
 // (cargarMapLibre, mapa-real.js) y las teselas de relieve de la propia web (relieve/, RELIEVE), que se
 // piden solo al abrirlo: el mapa normal y la primera visita no bajan nada de esto. Calles, ríos y nombres
 // de OpenFreeMap. Dentro de Claude no hay botón (EN_MARCO): el visor no deja pedir mapas a otras webs.
 
 const mapa3d = { capa: null, mapa: null, info: null, seleccionado: null, volverA: null };
 const DUREZA_RELIEVE = 1.6; // el relieve se exagera un poco: la meseta es casi llana a esta escala
+const ZOOM_EDIFICIOS = 14; // desde aquí, los edificios con altura (antes serían demasiados para el iPhone)
 
 // Colores y estado de cada municipio para pintarlos encima del relieve (mismo criterio que el minimapa)
 function municipiosEnGeojson() {
@@ -24,6 +27,44 @@ function municipiosEnGeojson() {
     }))
   };
 }
+
+// Zonas de la capital (con su polígono del mapa, pasado a latitud y longitud) y su marca
+function zonasEnGeojson() {
+  return {
+    type: 'FeatureCollection',
+    features: zonas
+      .filter(z => z.P)
+      .map(z => ({
+        type: 'Feature',
+        properties: { id: z.id, n: z.n, marca: estadoApp.progreso.z[z.id] || '' },
+        geometry: {
+          type: 'Polygon',
+          coordinates: [[...z.P, z.P[0]].map(([x, y]) => desproyectar(x, y).reverse())]
+        }
+      }))
+  };
+}
+
+const monumentosEnGeojson = () => ({
+  type: 'FeatureCollection',
+  features: MONUMENTOS.map(m => ({
+    type: 'Feature',
+    properties: { id: m.id, n: m.n, top: m.top ? 1 : 0 },
+    geometry: { type: 'Point', coordinates: [m.lo, m.la] }
+  }))
+});
+
+// Edificios de los monumentos (EDIFICIOS_MONUMENTOS): cada pieza, con su altura y su monumento
+const edificiosMonumentosEnGeojson = () => ({
+  type: 'FeatureCollection',
+  features: EDIFICIOS_MONUMENTOS.flatMap(e =>
+    e.piezas.map(p => ({
+      type: 'Feature',
+      properties: { id: e.m, h: p.h, b: p.b },
+      geometry: { type: 'Polygon', coordinates: p.r }
+    }))
+  )
+});
 
 function estiloMapa3d() {
   const css = getComputedStyle(document.documentElement),
@@ -45,7 +86,10 @@ function estiloMapa3d() {
       osm: { type: 'vector', url: 'https://tiles.openfreemap.org/planet' },
       relieve,
       sombras: { ...relieve },
-      municipios: { type: 'geojson', data: municipiosEnGeojson() }
+      municipios: { type: 'geojson', data: municipiosEnGeojson() },
+      zonas: { type: 'geojson', data: zonasEnGeojson() },
+      monumentos: { type: 'geojson', data: monumentosEnGeojson() },
+      'edificios-monumentos': { type: 'geojson', data: edificiosMonumentosEnGeojson() }
     },
     terrain: { source: 'relieve', exaggeration: DUREZA_RELIEVE },
     sky: {
@@ -74,7 +118,26 @@ function estiloMapa3d() {
             color('--ronda'),
             color('--zona-1')
           ],
-          'fill-opacity': ['match', ['get', 'marca'], 'v', 0.6, 'w', 0.55, 'pv', 0.3, 0.25]
+          // De cerca se apagan: en la capital mandan sus zonas
+          'fill-opacity': [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            11,
+            ['match', ['get', 'marca'], 'v', 0.6, 'w', 0.55, 'pv', 0.3, 0.25],
+            13,
+            0.08
+          ]
+        }
+      },
+      {
+        id: 'zonas',
+        type: 'fill',
+        source: 'zonas',
+        minzoom: 11,
+        paint: {
+          'fill-color': ['match', ['get', 'marca'], 'v', color('--vitor'), color('--ronda')],
+          'fill-opacity': ['match', ['get', 'marca'], 'v', 0.4, 'w', 0.45, 0]
         }
       },
       {
@@ -95,14 +158,6 @@ function estiloMapa3d() {
         'source-layer': 'landuse',
         filter: clase(['residential', 'commercial', 'industrial', 'retail']),
         paint: { 'fill-color': color('--zona-3'), 'fill-opacity': 0.7 }
-      },
-      {
-        id: 'casas',
-        type: 'fill',
-        source: 'osm',
-        'source-layer': 'building',
-        minzoom: 13,
-        paint: { 'fill-color': color('--zona-4'), 'fill-opacity': 0.9 }
       },
       {
         id: 'agua',
@@ -140,6 +195,64 @@ function estiloMapa3d() {
           'line-color': color('--linea'),
           'line-width': ['interpolate', ['linear'], ['zoom'], 8, 0.3, 12, 1.2],
           'line-opacity': 0.6
+        }
+      },
+      {
+        id: 'lindes-zonas',
+        type: 'line',
+        source: 'zonas',
+        minzoom: 12,
+        paint: {
+          'line-color': color('--linea'),
+          'line-width': 1,
+          'line-dasharray': [3, 2],
+          'line-opacity': 0.7
+        }
+      },
+      // Edificios con su altura (render_height de OpenStreetMap; si no la tienen, una planta y poco), con la
+      // misma exageración que el relieve para que no queden aplastados contra él
+      {
+        id: 'edificios',
+        type: 'fill-extrusion',
+        source: 'osm',
+        'source-layer': 'building',
+        minzoom: ZOOM_EDIFICIOS,
+        paint: {
+          'fill-extrusion-color': color('--zona-4'),
+          'fill-extrusion-height': ['*', DUREZA_RELIEVE, ['coalesce', ['get', 'render_height'], 6]],
+          'fill-extrusion-base': ['*', DUREZA_RELIEVE, ['coalesce', ['get', 'render_min_height'], 0]],
+          'fill-extrusion-opacity': [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            ZOOM_EDIFICIOS,
+            0,
+            ZOOM_EDIFICIOS + 0.5,
+            0.9
+          ],
+          'fill-extrusion-vertical-gradient': true
+        }
+      },
+      // Los monumentos, en otro color y un poco más altos y anchos que su edificio de OpenFreeMap, que tapan
+      {
+        id: 'monumentos-edificios',
+        type: 'fill-extrusion',
+        source: 'edificios-monumentos',
+        minzoom: ZOOM_EDIFICIOS,
+        paint: {
+          'fill-extrusion-color': color('--oro'),
+          'fill-extrusion-height': ['*', DUREZA_RELIEVE, ['+', 0.6, ['get', 'h']]],
+          'fill-extrusion-base': ['*', DUREZA_RELIEVE, ['get', 'b']],
+          'fill-extrusion-opacity': [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            ZOOM_EDIFICIOS,
+            0,
+            ZOOM_EDIFICIOS + 0.5,
+            0.95
+          ],
+          'fill-extrusion-vertical-gradient': true
         }
       },
       {
@@ -183,6 +296,38 @@ function estiloMapa3d() {
           'text-color': color('--linea'),
           'text-halo-color': color('--tarjeta'),
           'text-halo-width': 1.2
+        }
+      },
+      {
+        id: 'monumentos-punto',
+        type: 'circle',
+        source: 'monumentos',
+        minzoom: 12.5,
+        paint: {
+          'circle-color': color('--vitor'),
+          'circle-radius': ['match', ['get', 'top'], 1, 6, 4.5],
+          'circle-stroke-color': color('--tarjeta'),
+          'circle-stroke-width': 1.5
+        }
+      },
+      {
+        id: 'monumentos',
+        type: 'symbol',
+        source: 'monumentos',
+        minzoom: 12.5,
+        layout: {
+          'text-field': ['get', 'n'],
+          'text-font': ['Noto Sans Regular'],
+          'text-size': ['match', ['get', 'top'], 1, 13, 11],
+          'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
+          'text-radial-offset': 0.8,
+          'text-max-width': 9,
+          'symbol-sort-key': ['-', 1, ['get', 'top']]
+        },
+        paint: {
+          'text-color': color('--vitor-texto'),
+          'text-halo-color': color('--tarjeta'),
+          'text-halo-width': 1.6
         }
       }
     ]
@@ -244,7 +389,7 @@ function mostrarMunicipio3d(m) {
   const info = mapa3d.info;
   info.textContent = '';
   if (!m) {
-    info.appendChild(crear('span', 'mu', 'Pulsa un pueblo para marcarlo.'));
+    info.appendChild(crear('span', 'mu', 'Pulsa un pueblo, una zona o un monumento.'));
     return;
   }
   const botones = m.cap ? null : botonesMunicipio(m);
@@ -255,12 +400,44 @@ function mostrarMunicipio3d(m) {
   }
 }
 
+// Una zona de la capital pulsada: nombre y botones He estado / Quiero ir
+function mostrarZona3d(z) {
+  mostrarMunicipio3d(null);
+  const info = mapa3d.info,
+    botones = crearBotonesMarcar(
+      () => estadoApp.progreso.z[z.id],
+      marca => {
+        marcarZona(z.id, marca);
+        actualizarProvincia(); // la capital cuenta en Provincia; desde ahí se repinta el 3D
+        repintarMapa3d();
+      },
+      z.n
+    );
+  info.textContent = '';
+  info.append(crear('strong', '', z.n), crear('small', 'mu', 'Zona de la capital'), botones);
+  pintarBotonesMarcar(botones);
+}
+
+// Un monumento pulsado: su nombre y un botón para abrir su ficha (cierra el 3D)
+function mostrarMonumento3d(mon) {
+  mostrarMunicipio3d(null);
+  const ficha = crear('button', '', '📖 Ver ficha');
+  ficha.onclick = () => {
+    cerrarMapa3d();
+    abrirMonumento(mon.id);
+  };
+  mapa3d.info.textContent = '';
+  mapa3d.info.append(crear('strong', '', mon.n), crear('small', 'mu', 'Monumento'), ficha);
+}
+
 // Cuando cambia el progreso (marcar desde el 3D o desde otro sitio), los colores del relieve también
 function repintarMapa3d() {
   const m = mapa3d.mapa;
   if (!m || !mapa3d.capa || mapa3d.capa.hidden) return;
-  const fuente = m.getSource('municipios');
-  if (fuente) fuente.setData(municipiosEnGeojson());
+  const municipios = m.getSource('municipios'),
+    zonasCapital = m.getSource('zonas');
+  if (municipios) municipios.setData(municipiosEnGeojson());
+  if (zonasCapital) zonasCapital.setData(zonasEnGeojson());
   const botones = mapa3d.info && mapa3d.info.querySelector('.qb');
   if (botones) pintarBotonesMarcar(botones);
 }
@@ -279,8 +456,9 @@ function construirCapa3d() {
   const cerrar = crear('button', 'cerrar', '×');
   cerrar.setAttribute('aria-label', 'Cerrar el mapa en 3D');
   cerrar.onclick = cerrarMapa3d;
-  const titulo = crear('h2', '', 'La provincia en 3D');
+  const titulo = crear('h2');
   titulo.id = 't3d';
+  mapa3d.titulo = titulo;
   const lienzo = crear('div', 'm3d-mapa');
   lienzo.setAttribute('aria-hidden', 'true'); // el mapa es para mirar; lo mismo está en la lista de Provincia
   const vuelos = crear(
@@ -303,6 +481,7 @@ function construirCapa3d() {
     'm3d-leyenda',
     crear('span', 'v', 'He estado'),
     crear('span', 'w', 'Quiero ir'),
+    crear('span', 'mo', 'Monumento'),
     crear('span', 'cargando', 'Cargando el relieve…')
   );
   const enlace = (texto, href) =>
@@ -341,8 +520,24 @@ function construirCapa3d() {
   mapa3d.lienzo = lienzo;
 }
 
-async function abrirMapa3d(boton = document.activeElement) {
+// Cámara para abrir la capital donde se está mirando en su mapa (como sincronizarFondoReal, mapa-real.js),
+// inclinada y lo bastante cerca para ver los edificios
+function camaraCapital3d() {
+  const v = vistaMapa,
+    [la, lo] = desproyectar(v.x + v.w / 2, v.y + v.h / 2),
+    zoom = tamMapa.w ? Math.log2(((tamMapa.w / v.w) * 1850.2 * 360) / 512) : 15;
+  return {
+    center: [lo, la],
+    zoom: Math.min(16.5, Math.max(ZOOM_EDIFICIOS + 0.8, zoom)),
+    pitch: 60,
+    bearing: 0
+  };
+}
+
+// donde: 'provincia' (toda la provincia) o 'capital' (lo que se ve del mapa de la capital)
+async function abrirMapa3d(boton = document.activeElement, donde = 'provincia') {
   if (!mapa3d.capa) construirCapa3d();
+  mapa3d.titulo.textContent = donde == 'capital' ? 'Salamanca en 3D' : 'La provincia en 3D';
   mapa3d.volverA = boton;
   mapa3d.capa.hidden = false;
   mapa3d.capa.classList.add('cargando');
@@ -359,16 +554,16 @@ async function abrirMapa3d(boton = document.activeElement) {
     return;
   }
   if (mapa3d.capa.hidden || mapa3d.mapa) return;
-  const { bounds, pitch, bearing } = encuadreProvincia3d(),
+  const camara =
+      donde == 'capital'
+        ? camaraCapital3d()
+        : { ...encuadreProvincia3d(), fitBoundsOptions: { padding: 10 } },
     m = new window.maplibregl.Map({
       container: mapa3d.lienzo,
       style: estiloMapa3d(),
-      bounds,
-      fitBoundsOptions: { padding: 10 },
-      pitch,
-      bearing,
+      ...camara,
       minZoom: RELIEVE.zoomMin,
-      maxZoom: 15,
+      maxZoom: 17.5,
       maxPitch: 75,
       maxBounds: [
         [RELIEVE.limites[0] - 0.3, RELIEVE.limites[1] - 0.3],
@@ -394,18 +589,33 @@ async function abrirMapa3d(boton = document.activeElement) {
   m.on('moveend', alLlegarRelieve);
   m.on('sourcedata', e => (e.sourceId == 'relieve' || e.sourceId == 'sombras') && alLlegarRelieve());
   m.on('idle', () => mapa3d.capa.classList.remove('cargando'));
-  m.on('click', 'municipios', e => {
-    const f = e.features && e.features[0];
-    if (f) mostrarMunicipio3d(PROVINCIA.m[f.properties.i]);
+  // Un toque: lo de más arriba manda (monumento, luego zona de la capital, luego municipio)
+  m.on('click', e => {
+    const tocado = capa => m.queryRenderedFeatures(e.point, { layers: [capa] })[0],
+      mon = tocado('monumentos') || tocado('monumentos-punto') || tocado('monumentos-edificios'),
+      zona = !mon && m.getZoom() >= 11 && tocado('zonas'),
+      municipio = !mon && !zona && tocado('municipios');
+    if (mon) mostrarMonumento3d(MONUMENTOS.find(x => x.id == mon.properties.id));
+    else if (zona) mostrarZona3d(zonas.find(z => z.id == zona.properties.id));
+    else if (municipio) mostrarMunicipio3d(PROVINCIA.m[municipio.properties.i]);
   });
 }
 
-// Botón «3D» para el minimapa de Provincia (provincia.js lo pone si se puede: fuera de Claude)
-function botonMapa3d() {
+// Botón «3D» para el minimapa de Provincia (provincia.js lo pone si se puede: fuera de Claude) y para el
+// mapa de la capital (se pone aquí, debajo de «Estoy aquí»)
+function botonMapa3d(donde = 'provincia') {
   if (EN_MARCO) return null;
-  const b = crear('button', 'b3d', '3D');
-  b.setAttribute('aria-label', 'Ver la provincia en 3D');
-  b.title = 'Ver la provincia en 3D';
-  b.onclick = () => abrirMapa3d(b);
+  const b = crear('button', 'b3d', '3D'),
+    texto = donde == 'capital' ? 'Ver la capital en 3D' : 'Ver la provincia en 3D';
+  b.setAttribute('aria-label', texto);
+  b.title = texto;
+  b.onclick = () => abrirMapa3d(b, donde);
   return b;
+}
+{
+  const capital = botonMapa3d('capital');
+  if (capital) {
+    capital.id = 'z3d';
+    $('.mw .zb').appendChild(capital);
+  }
 }

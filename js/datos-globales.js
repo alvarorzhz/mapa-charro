@@ -32,7 +32,8 @@ import * as datosFirebase from './datos/firebase.js?v=dace485241';
 import * as fiestas from './datos/fiestas.js?v=dbf7617b39';
 import * as palabras from './datos/palabras.js?v=507b85b1cf';
 import * as relieve from './datos/relieve.js?v=061bf54899';
-import * as vuelos3d from './datos/vuelos-3d.js?v=5f234e4b77';
+import * as edificiosMonumentos from './datos/edificios-monumentos.js?v=90d3421405';
+import * as vuelos3d from './datos/vuelos-3d.js?v=9bc5bd03aa';
 
 Object.assign(
   globalThis,
@@ -65,5 +66,6 @@ Object.assign(
   palabras,
   fiestas,
   relieve,
-  vuelos3d
+  vuelos3d,
+  edificiosMonumentos
 );
