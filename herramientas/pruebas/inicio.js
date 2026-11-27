@@ -203,7 +203,11 @@ prueba(
     // Abrir otra página de la web no cambia la copia de la app (la guardada como index.html)
     await ctx.setOffline(false);
     await p.goto(url + 'privacidad.html');
-    await p.waitForTimeout(500);
+    // El service worker la guarda después de servirla: se espera a que esté (con un tiempo fijo, en GitHub
+    // Actions a veces aún no estaba)
+    await p.waitForFunction(() =>
+      caches.match(new URL('privacidad.html', location.href).href).then(r => !!r)
+    );
     const copias = await p.evaluate(async () => {
       const r = await caches.match('index.html');
       const q = await caches.match(new URL('privacidad.html', location.href).href);
