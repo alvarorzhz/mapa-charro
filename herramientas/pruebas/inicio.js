@@ -202,11 +202,22 @@ prueba(
     cierto(await p.$eval('#ph', e => e.complete && e.naturalWidth > 0), 'carga la foto sin red');
     // Abrir otra página de la web no cambia la copia de la app (la guardada como index.html)
     await ctx.setOffline(false);
-    await p.goto(url + 'privacidad.html');
-    // El service worker la guarda después de servirla: se espera a que esté (con un tiempo fijo, en GitHub
-    // Actions a veces aún no estaba)
+    // Recién vuelta la red, el service worker a veces aún no la ve y sirve la copia de la app: se repite
+    // hasta que llega la página de verdad
+    await llegaA(
+      async () => {
+        await p.goto(url + 'privacidad.html');
+        return texto(p, 'h1');
+      },
+      'Privacidad',
+      'con red, la página de privacidad'
+    );
+    // El service worker la guarda después de servirla: se espera a que esté guardada entera
     await p.waitForFunction(() =>
-      caches.match(new URL('privacidad.html', location.href).href).then(r => !!r)
+      caches
+        .match(new URL('privacidad.html', location.href).href)
+        .then(r => r && r.text())
+        .then(t => !!t && t.includes('<h1>Privacidad</h1>'))
     );
     const copias = await p.evaluate(async () => {
       const r = await caches.match('index.html');

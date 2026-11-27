@@ -11,7 +11,8 @@
     "tecnico": [
       "herramientas/edificios-3d.js genera datos-3d/edificios.json (GeoJSON, ~540 KB, ~80 KB comprimido): los edificios de OpenStreetMap cuyo centro cae en el centro histórico (cascoEnGeojson, sacado de la app con Playwright), simplificados y ensanchados 0,5 m, y los de PARADAS_CON_EDIFICIO de RUTAS_PROVINCIA con un punto para el nombre.",
       "js/mapa-3d.js: fuente edificios-3d (se pide al abrir el 3D) con las capas casco (--piedra-villamayor), provincia-edificios (--oro) y provincia-nombres; mostrarParada3d abre la ficha con abrirParadaProvincia. Los edificios de OpenFreeMap pasan a --edificio-neutro. (La expresión within de MapLibre no sirve con polígonos: por eso se dibujan aparte.)",
-      "herramientas/edificios-osm.js: los ayudantes de Overpass y geometría que ya usaba edificios-monumentos.js, compartidos (y simplificar, Douglas-Peucker). comprobar-datos mira datos-3d/edificios.json; prueba en pruebas/provincia.js."
+      "herramientas/edificios-osm.js: los ayudantes de Overpass y geometría que ya usaba edificios-monumentos.js, compartidos (y simplificar, Douglas-Peucker). comprobar-datos mira datos-3d/edificios.json; prueba en pruebas/provincia.js.",
+      "pruebas/inicio.js: «Funciona sin conexión» repite la visita a privacidad.html hasta que llega la página de verdad (recién vuelta la red, el service worker a veces servía la copia de la app) y espera a que la copia guardada sea la privacidad entera."
     ]
   },
   {
