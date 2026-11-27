@@ -49,6 +49,9 @@ const SIN_EDIFICIO = {
   cueva: 'es una cripta bajo una plaza',
   helmantico: 'el punto cae en el hotel de al lado del estadio'
 };
+// Monumentos que son más de un edificio de OSM: el punto cae en uno y los demás se añaden aquí (la torre de
+// las campanas de la Catedral Nueva está dibujada dentro de la planta de la Catedral Vieja)
+const MAS_EDIFICIOS = { catedrales: ['way/59010501'] };
 
 const resultado = [];
 let sinEdificio = [];
@@ -59,8 +62,26 @@ for (const m of MONUMENTOS.filter(m => !SIN_EDIFICIO[m.id])) {
     continue;
   }
   const { ed, cercano } = hallado;
-  resultado.push({ m: m.id, osm: ed.id, piezas: piezasDeEdificio(ed, partes, ENSANCHE, true) });
-  console.log(`${m.id} → ${ed.id} ${ed.n}${cercano ? ' (cercano)' : ''}`);
+  const mas = (MAS_EDIFICIOS[m.id] || []).map(id => {
+    const otro = edificios.find(e => e.id == id);
+    if (!otro) throw new Error(`${m.id}: no está el edificio ${id} en OSM`);
+    return otro;
+  });
+  // Cada parte va solo con el primer edificio que la contiene, para no dibujarla dos veces
+  const usadas = new Set();
+  const piezas = [ed, ...mas].flatMap(e =>
+    piezasDeEdificio(
+      e,
+      partes.filter(p => !usadas.has(p.id)),
+      ENSANCHE,
+      true,
+      usadas
+    )
+  );
+  resultado.push({ m: m.id, osm: ed.id, ...(mas.length ? { mas: mas.map(e => e.id) } : {}), piezas });
+  console.log(
+    `${m.id} → ${[ed, ...mas].map(e => e.id + ' ' + e.n).join(' + ')}${cercano ? ' (cercano)' : ''}`
+  );
 }
 
 // La lista (qué monumento tiene edificio) va con la app; las piezas, aparte, en datos-3d/monumentos.json, que
@@ -70,7 +91,7 @@ fs.writeFileSync(
   '// Monumentos con su edificio de OpenStreetMap en el mapa en 3D (las piezas, en datos-3d/monumentos.json).\n' +
     '// Generado por herramientas/edificios-monumentos.js: no editar a mano.\n' +
     'export const EDIFICIOS_MONUMENTOS = ' +
-    JSON.stringify(resultado.map(({ m, osm }) => ({ m, osm }))) +
+    JSON.stringify(resultado.map(({ piezas, ...e }) => e)) +
     ';\n'
 );
 const recortar = r => r.map(a => a.map(([x, y]) => [+x.toFixed(5), +y.toFixed(5)]));

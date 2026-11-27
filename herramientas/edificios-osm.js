@@ -268,8 +268,10 @@ function piezasConTejado(r, t, h, b, ensanche) {
 
 // Las piezas de un edificio para el 3D: su planta (y la de sus partes) ensanchada, sus patios y su altura;
 // con tejados, los que tienen forma en OSM se hacen en rodajas (piezasConTejado)
-function piezasDeEdificio(ed, partes, ensanche, tejados = false) {
+// usadas: si se pasa, se apuntan en él los ids de las partes que se han tomado
+function piezasDeEdificio(ed, partes, ensanche, tejados = false, usadas = null) {
   const suyas = partes.filter(p => ed.anillos.some(r => dentroDe(centro(p.anillos[0]), r)));
+  if (usadas) suyas.forEach(p => usadas.add(p.id));
   const piezas = [ed, ...suyas].flatMap(p =>
     p.anillos.flatMap(r => {
       const h = altura(p.t),

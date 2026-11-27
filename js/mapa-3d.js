@@ -14,7 +14,8 @@ const mapa3d = {
   volverA: null,
   recorrido: 0,
   tejados: null, // [lon, lat, base] del centro de cada rodaja de tejado de los monumentos
-  ocultos: new Set() // ids de los edificios de OpenFreeMap que asomaban por esos tejados
+  ocultos: new Set(), // ids de los edificios de OpenFreeMap escondidos (ocultarEdificiosTapados3d)
+  casco: null // polígonos [lat, lon] del centro histórico
 };
 const DUREZA_RELIEVE = 1.6; // el relieve se exagera un poco: la meseta es casi llana a esta escala
 const ZOOM_MONUMENTOS_MENORES = 16; // desde aquí, el nombre de los monumentos que no son de los principales
@@ -542,10 +543,13 @@ async function recorrerMisPueblos3d() {
   );
 }
 
-// Los tejados de los monumentos (cúpulas, chapiteles) son más estrechos que su planta, y por ellos asomaban
-// los edificios de OpenFreeMap de debajo, que llegan planos hasta arriba: los que, en el centro de una
-// rodaja, suben más que ella, se esconden (por su id). Se repasa cada vez que el mapa se queda quieto
-async function ocultarBajoTejados3d() {
+// Los edificios de OpenFreeMap que ya van dibujados de otra forma se esconden (por su id), y se repasa cada vez
+// que el mapa se queda quieto:
+//  - los del centro histórico, que van en piedra (capa «casco») casi a la misma altura: las dos capas juntas
+//    parpadeaban al moverse;
+//  - los que asoman por los tejados de los monumentos (cúpulas, chapiteles), más estrechos que su planta,
+//    porque llegan planos hasta arriba: los que, en el centro de una rodaja, suben más que ella.
+async function ocultarEdificiosTapados3d() {
   const m = mapa3d.mapa;
   if (!m || m.getZoom() < ZOOM_EDIFICIOS) return;
   if (!mapa3d.tejados) {
@@ -564,12 +568,25 @@ async function ocultarBajoTejados3d() {
       });
   }
   const ocultos = new Set(mapa3d.ocultos);
+  for (const f of m.queryRenderedFeatures({ layers: ['edificios'] }))
+    if (f.id != null && !ocultos.has(f.id) && enCasco3d(f.geometry)) ocultos.add(f.id);
   for (const [lo, la, b] of mapa3d.tejados)
     for (const f of m.queryRenderedFeatures(m.project([lo, la]), { layers: ['edificios'] }))
       if (f.id != null && f.properties.render_height > b + 0.5) ocultos.add(f.id);
   if (ocultos.size == mapa3d.ocultos.size) return;
   mapa3d.ocultos = ocultos;
   m.setFilter('edificios', ['!', ['in', ['id'], ['literal', [...ocultos]]]]);
+}
+
+// ¿Cae el centro de la planta de un edificio (GeoJSON) dentro del centro histórico?
+function enCasco3d(geometria) {
+  if (!mapa3d.casco)
+    mapa3d.casco = zonas.filter(z => z.g == 0 && z.P).map(z => z.P.map(([x, y]) => desproyectar(x, y)));
+  const anillo = (geometria.type == 'MultiPolygon' ? geometria.coordinates[0] : geometria.coordinates)[0];
+  if (!anillo || !anillo.length) return false;
+  const lo = anillo.reduce((s, q) => s + q[0], 0) / anillo.length,
+    la = anillo.reduce((s, q) => s + q[1], 0) / anillo.length;
+  return mapa3d.casco.some(P => dentroDePoligono(P, la, lo));
 }
 
 // MapLibre no recalcula la altura del centro cuando llega el relieve después de moverse (se queda apuntando
@@ -826,7 +843,7 @@ async function abrirMapa3d(boton = document.activeElement, donde = 'provincia') 
   m.on('sourcedata', e => (e.sourceId == 'relieve' || e.sourceId == 'sombras') && alLlegarRelieve());
   m.on('idle', () => {
     mapa3d.capa.classList.remove('cargando');
-    ocultarBajoTejados3d();
+    ocultarEdificiosTapados3d();
   });
   // Un toque: lo de más arriba manda (monumento, luego zona de la capital, luego municipio)
   m.on('click', e => {

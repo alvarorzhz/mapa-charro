@@ -1,5 +1,18 @@
 [
   {
+    "version": "2.32.1",
+    "fecha": "2026-11-27",
+    "titulo": "Torre de la catedral entera y centro histórico sin parpadeos en 3D",
+    "usuario": [
+      "La torre de las campanas de la Catedral Nueva sale ya en dorado y entera en el 3D, con su cúpula y su linterna, y la Catedral Vieja con la torre del Gallo también va en dorado.",
+      "Los edificios del centro histórico en piedra de Villamayor ya no parpadean al acercarte o moverte."
+    ],
+    "tecnico": [
+      "edificios-monumentos.js: MAS_EDIFICIOS añade a un monumento otros edificios de OSM (catedrales: la Catedral Vieja, way/59010501, en cuya planta están las partes de la torre); EDIFICIOS_MONUMENTOS lleva «mas». Cada parte va con un solo edificio (piezasDeEdificio apunta las usadas). 1083 piezas.",
+      "El parpadeo era z-fighting: la capa «casco» y los edificios de OpenFreeMap casi a la misma altura, y en los monumentos también la piedra con el dorado. edificios-3d.js ya no pone en piedra los edificios de los monumentos (1467), y ocultarEdificiosTapados3d (antes ocultarBajoTejados3d) esconde por id, en idle, los de OpenFreeMap cuyo centro cae en el centro histórico (enCasco3d)."
+    ]
+  },
+  {
     "version": "2.32.0",
     "fecha": "2026-11-27",
     "titulo": "Catedrales y Clerecía con sus tejados en 3D",
@@ -132,22 +145,6 @@
     "tecnico": [
       "js/mapa-real.js: MapLibre GL JS 4.7.1 → 5.24.1 desde cdnjs, con su huella SRI nueva. La 6 no se usa porque solo se publica como módulo ES (dist/maplibre-gl.mjs) y cdnjs no tiene su .js: no se puede cargar como script clásico con SRI.",
       "package.json: Playwright 1.56.0 → 1.65.1. GitHub Actions pasó ubuntu-latest a Ubuntu 26.04 y la 1.56 no sabe instalar Chromium allí, así que las pruebas del navegador fallaban en CI antes de empezar."
-    ]
-  },
-  {
-    "version": "2.26.0",
-    "fecha": "2026-11-15",
-    "titulo": "Horario y precio de cada monumento",
-    "usuario": [
-      "Las fichas de los monumentos que se visitan tienen un apartado «Visitar» con el horario, el precio de la entrada y cuándo es gratis, según el folleto oficial de Turismo de Salamanca (horario de invierno, desde el 9 de noviembre).",
-      "16 fichas nuevas: la iglesia de San Martín, la Casa-Museo de Unamuno, el Museo de Salamanca, el convento de Santa Clara, la Purísima, la Vera Cruz, los museos de la Automoción, Taurino y del Comercio, el DA2, la Logia masónica, la Filmoteca, Monumenta Salmanticae, Santa María de la Vega, el Parque Arqueológico del Botánico y el Museo del Cerro de San Vicente.",
-      "En las Catedrales sale también cómo subir a sus torres (Ieronimus), y en la Clerecía, las de Scala Coeli."
-    ],
-    "tecnico": [
-      "js/datos/visitas.js (nuevo): VISITAS por id de monumento (libre, cerrado, horario, precio, gratis, nota, web) y FUENTE_VISITAS con el PDF de Turismo, la temporada (`vigente`) y la fecha de revisión. Se importa en datos-globales.js.",
-      "js/monumentos.js: bloqueVisita() pinta «Visitar» en la mini infografía; enlaceFuera() para los enlaces a otra pestaña. Estilos .visita en css/estilos.css.",
-      "js/datos/monumentos.js: 16 monumentos nuevos con coordenadas de OpenStreetMap, textos de salamanca.es y 15 fotos de Wikimedia Commons (img/mon-*.jpg); el Museo Taurino no tiene foto libre.",
-      "comprobar-datos.js valida VISITAS y FUENTE_VISITAS; prueba nueva «Horario y precio de los monumentos» en pruebas/fichas.js. La de fotos admite ahora 3 monumentos sin foto (La Aldehuela, Museo Taurino, cines Van Dyck)."
     ]
   }
 ]
