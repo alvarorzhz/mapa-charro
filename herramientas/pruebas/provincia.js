@@ -524,6 +524,42 @@ prueba(
       ),
       'la catedral tiene su edificio, con sus torres y cúpulas en piezas'
     );
+    cierto(
+      await p.evaluate(
+        async a =>
+          Math.max(
+            ...(await (await fetch(a)).json()).features
+              .filter(f => f.properties.id == 'catedrales')
+              .map(f => f.properties.h)
+          ) > 90,
+        estilo.sources['edificios-monumentos'].data
+      ),
+      'con la torre de las campanas entera (está en la planta de la Catedral Vieja)'
+    );
+    // Los edificios de OpenFreeMap del centro histórico se esconden: van en piedra y parpadeaban juntos
+    const cuadrado = (lo, la) => ({
+      type: 'Polygon',
+      coordinates: [
+        [
+          [lo, la],
+          [lo + 0.0001, la],
+          [lo + 0.0001, la + 0.0001],
+          [lo, la + 0.0001],
+          [lo, la]
+        ]
+      ]
+    });
+    cierto(
+      await p.evaluate(g => enCasco3d(g), cuadrado(-5.6645, 40.965)),
+      'un edificio junto a la Plaza Mayor está en el centro histórico'
+    );
+    cierto(
+      !(await p.evaluate(
+        g => enCasco3d({ type: 'MultiPolygon', coordinates: [g.coordinates] }),
+        cuadrado(-5.64, 40.975)
+      )),
+      'uno de Garrido, no'
+    );
     // Sin un punto por monumento: el que tiene edificio dorado ya se ve, y los secundarios se rotulan de cerca
     igual(
       JSON.stringify(capa('monumentos-punto').filter),

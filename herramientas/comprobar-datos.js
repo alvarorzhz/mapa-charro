@@ -420,9 +420,12 @@ D.CARRETERAS_PROVINCIA.forEach(c => {
   });
   // Edificios de los monumentos (los genera herramientas/edificios-monumentos.js)
   const idsMon = new Set(D.MONUMENTOS.map(m => m.id));
-  D.EDIFICIOS_MONUMENTOS.forEach(e =>
-    comprobar(idsMon.has(e.m), `Edificio de monumento: «${e.m}» no está en MONUMENTOS`)
-  );
+  D.EDIFICIOS_MONUMENTOS.forEach(e => {
+    comprobar(idsMon.has(e.m), `Edificio de monumento: «${e.m}» no está en MONUMENTOS`);
+    [e.osm, ...(e.mas || [])].forEach(id =>
+      comprobar(/^(way|relation)\/\d+$/.test(id), `Edificio de monumento «${e.m}»: id de OSM raro «${id}»`)
+    );
+  });
   if (
     comprobar(
       existe('datos-3d/monumentos.json'),

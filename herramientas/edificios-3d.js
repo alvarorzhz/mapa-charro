@@ -84,7 +84,15 @@ async function poligonoCasco() {
       ';this.R = RUTAS_PROVINCIA;',
     contexto
   );
+  vm.runInNewContext(
+    sinExport(fs.readFileSync(path.join(RAIZ, 'js/datos/edificios-monumentos.js'), 'utf8')) +
+      ';this.E = EDIFICIOS_MONUMENTOS;',
+    contexto
+  );
   const paradas = contexto.R.flatMap(r => r.paradas).filter(p => PARADAS_CON_EDIFICIO.includes(p.id));
+  // Los edificios de los monumentos ya van en dorado (datos-3d/monumentos.json): si también fueran en piedra,
+  // las dos capas casi a la misma altura parpadearían al moverse
+  const deMonumentos = new Set(contexto.E.flatMap(e => [e.osm, ...(e.mas || [])]));
   const puntos = casco.flat(),
     caja = [
       Math.min(...puntos.map(p => p[1])),
@@ -106,9 +114,10 @@ out body geom;`;
   const { edificios, partes } = edificiosYPartes(datos);
   const features = [];
 
-  // Centro histórico: cada edificio cuyo centro cae dentro (sin sus partes: basta la planta y la altura)
+  // Centro histórico: cada edificio cuyo centro cae dentro (sin sus partes: basta la planta y la altura),
+  // menos los de los monumentos
   let enCasco = 0;
-  for (const ed of edificios)
+  for (const ed of edificios.filter(e => !deMonumentos.has(e.id)))
     for (const r of ed.anillos) {
       if (!casco.some(c => dentroDe(centro(r), c))) continue;
       enCasco++;

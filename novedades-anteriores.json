@@ -1,5 +1,21 @@
 [
   {
+    "version": "2.26.0",
+    "fecha": "2026-11-15",
+    "titulo": "Horario y precio de cada monumento",
+    "usuario": [
+      "Las fichas de los monumentos que se visitan tienen un apartado «Visitar» con el horario, el precio de la entrada y cuándo es gratis, según el folleto oficial de Turismo de Salamanca (horario de invierno, desde el 9 de noviembre).",
+      "16 fichas nuevas: la iglesia de San Martín, la Casa-Museo de Unamuno, el Museo de Salamanca, el convento de Santa Clara, la Purísima, la Vera Cruz, los museos de la Automoción, Taurino y del Comercio, el DA2, la Logia masónica, la Filmoteca, Monumenta Salmanticae, Santa María de la Vega, el Parque Arqueológico del Botánico y el Museo del Cerro de San Vicente.",
+      "En las Catedrales sale también cómo subir a sus torres (Ieronimus), y en la Clerecía, las de Scala Coeli."
+    ],
+    "tecnico": [
+      "js/datos/visitas.js (nuevo): VISITAS por id de monumento (libre, cerrado, horario, precio, gratis, nota, web) y FUENTE_VISITAS con el PDF de Turismo, la temporada (`vigente`) y la fecha de revisión. Se importa en datos-globales.js.",
+      "js/monumentos.js: bloqueVisita() pinta «Visitar» en la mini infografía; enlaceFuera() para los enlaces a otra pestaña. Estilos .visita en css/estilos.css.",
+      "js/datos/monumentos.js: 16 monumentos nuevos con coordenadas de OpenStreetMap, textos de salamanca.es y 15 fotos de Wikimedia Commons (img/mon-*.jpg); el Museo Taurino no tiene foto libre.",
+      "comprobar-datos.js valida VISITAS y FUENTE_VISITAS; prueba nueva «Horario y precio de los monumentos» en pruebas/fichas.js. La de fotos admite ahora 3 monumentos sin foto (La Aldehuela, Museo Taurino, cines Van Dyck)."
+    ]
+  },
+  {
     "version": "2.25.2",
     "fecha": "2026-11-15",
     "titulo": "Fotos para todos los barrios",
