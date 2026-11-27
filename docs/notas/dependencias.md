@@ -30,13 +30,13 @@ Reglas para ampliar la app:
 | 11 | `monumentos.js` | `util.js`, `datos-globales.js` | `estado.js`, `mapa-vias.js`, `mapa-vista.js`, `ficha.js`, `ruta-contexto.js`, `ruta.js`, `logros.js`, `cultura.js`, `detalles.js`, `hora-dorada.js`, `tiempo.js`, `desaparecida.js`, `noche.js`, `enlaces.js` | 19 |
 | 12 | `ruta-contexto.js` | — | `datos-globales.js` | 5 |
 | 13 | `ruta.js` | `util.js`, `datos-globales.js`, `monumentos.js` | `medicion.js`, `estado.js`, `guardado.js`, `mapa.js`, `mapa-vias.js`, `mapa-vista.js`, `ficha.js`, `ruta-contexto.js`, `ruta-provincia.js`, `logros.js`, `vistas.js`, `ubicacion.js`, `cultura.js`, `enlaces.js` | 19 |
-| 14 | `ruta-provincia.js` | — | `util.js`, `datos-globales.js`, `estado.js`, `ficha.js`, `ruta-contexto.js`, `ruta.js`, `provincia.js`, `pueblos.js`, `enlaces.js` | 7 |
+| 14 | `ruta-provincia.js` | — | `util.js`, `datos-globales.js`, `estado.js`, `ficha.js`, `ruta-contexto.js`, `ruta.js`, `provincia.js`, `pueblos.js`, `enlaces.js` | 8 |
 | 15 | `logros.js` | `util.js` | `medicion.js`, `datos-globales.js`, `estado.js`, `guardado.js`, `ficha.js`, `monumentos.js`, `ruta.js`, `vistas.js`, `provincia.js`, `detalles.js`, `mi-salamanca.js` | 20 |
 | 16 | `palabras.js` | — | `util.js`, `datos-globales.js`, `estado.js`, `logros.js`, `juego.js` | 2 |
 | 17 | `vistas.js` | `util.js`, `estado.js` | `datos-globales.js`, `mapa.js`, `mapa-vista.js`, `ficha.js`, `logros.js`, `provincia.js`, `mi-salamanca.js`, `juego.js`, `enlaces.js`, `cuenta.js` | 19 |
 | 18 | `ubicacion.js` | `util.js` | `datos-globales.js`, `estado.js`, `mapa.js`, `mapa-vista.js`, `ficha.js`, `vistas.js`, `provincia.js` | 10 |
 | 19 | `mapa-real.js` | `util.js`, `estado.js`, `ubicacion.js` | — | 3 |
-| 20 | `mapa-3d.js` | `util.js`, `ubicacion.js` | `datos-globales.js`, `estado.js`, `ficha.js`, `monumentos.js`, `mapa-real.js`, `provincia.js`, `pueblos.js` | 2 |
+| 20 | `mapa-3d.js` | `util.js`, `ubicacion.js` | `datos-globales.js`, `estado.js`, `ficha.js`, `monumentos.js`, `ruta-provincia.js`, `mapa-real.js`, `provincia.js`, `pueblos.js` | 2 |
 | 21 | `provincia.js` | — | `util.js`, `medicion.js`, `datos-globales.js`, `estado.js`, `guardado.js`, `mapa.js`, `ficha.js`, `logros.js`, `vistas.js`, `ubicacion.js`, `mapa-3d.js`, `pueblos.js`, `cultura.js`, `enlaces.js` | 13 |
 | 22 | `pueblos.js` | — | `util.js`, `datos-globales.js`, `estado.js`, `mapa-vias.js`, `ficha.js`, `monumentos.js`, `ruta.js`, `ruta-provincia.js`, `logros.js`, `vistas.js`, `ubicacion.js`, `provincia.js`, `cultura.js`, `tiempo.js`, `enlaces.js` | 11 |
 | 23 | `perfil.js` | — | `util.js`, `datos-globales.js`, `estado.js`, `guardado.js`, `monumentos.js`, `ruta.js`, `logros.js`, `detalles.js`, `cuenta.js` | 5 |

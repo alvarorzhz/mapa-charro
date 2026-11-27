@@ -1,5 +1,20 @@
 [
   {
+    "version": "2.31.0",
+    "fecha": "2026-11-27",
+    "titulo": "Centro histórico en piedra y monumentos de la provincia en 3D",
+    "usuario": [
+      "En el 3D de la capital, los edificios del centro histórico salen del color dorado de la piedra de Villamayor, y el resto de la ciudad en un tono más neutro: se ve de un vistazo dónde está la ciudad vieja.",
+      "En la provincia, los edificios importantes de las rutas salen en dorado y con su nombre: la catedral, el castillo y el ayuntamiento de Ciudad Rodrigo, la torre de los duques y las iglesias de Alba de Tormes, Santa María la Mayor de Ledesma, el castillo de San Felices y más. Pulsa uno para abrir su ficha.",
+      "Estos edificios solo se descargan al abrir el 3D."
+    ],
+    "tecnico": [
+      "herramientas/edificios-3d.js genera datos-3d/edificios.json (GeoJSON, ~540 KB, ~80 KB comprimido): los edificios de OpenStreetMap cuyo centro cae en el centro histórico (cascoEnGeojson, sacado de la app con Playwright), simplificados y ensanchados 0,5 m, y los de PARADAS_CON_EDIFICIO de RUTAS_PROVINCIA con un punto para el nombre.",
+      "js/mapa-3d.js: fuente edificios-3d (se pide al abrir el 3D) con las capas casco (--piedra-villamayor), provincia-edificios (--oro) y provincia-nombres; mostrarParada3d abre la ficha con abrirParadaProvincia. Los edificios de OpenFreeMap pasan a --edificio-neutro. (La expresión within de MapLibre no sirve con polígonos: por eso se dibujan aparte.)",
+      "herramientas/edificios-osm.js: los ayudantes de Overpass y geometría que ya usaba edificios-monumentos.js, compartidos (y simplificar, Douglas-Peucker). comprobar-datos mira datos-3d/edificios.json; prueba en pruebas/provincia.js."
+    ]
+  },
+  {
     "version": "2.30.0",
     "fecha": "2026-11-27",
     "titulo": "Más vuelos en 3D y «Mis pueblos»",
@@ -135,20 +150,6 @@
       "js/datos/contenido.js: FOTOS de vidal (Commons) y de capuchinos, huertaotea, buenosaires, vega, marin y alcaldes (ortofoto PNOA del IGN, CC BY 4.0, recortada a LIMITES_BARRIOS); LEYENDAS de sancti, sancristobal y santamarta; DONDE_COMER de puenteladrillo, vega, huertaotea, salasbajas y zurguen (bares de OpenStreetMap dentro del barrio, valoración de Gastroranking).",
       "js/datos/pueblos.js: foto de Commons en 51 pueblos (img/pueblo-*.jpg, 640×430, con la página de Commons en un comentario). En 9 pueblos (desde 2.6.0) las últimas curiosidades estaban dentro del array foto y no se veían: pasan a cur; en Linares de Riofrío se quitan dos repetidas.",
       "index.html: «Sobre los datos» cita las ortofotos del PNOA. docs/notas/contenido.md: cuándo se usa la vista aérea."
-    ]
-  },
-  {
-    "version": "2.25.1",
-    "fecha": "2026-11-15",
-    "titulo": "Más curiosidades",
-    "usuario": [
-      "Tenerías: la fábrica de curtidos de 1914 que hoy es Santiago Uno y el derribo del barrio en 1978.",
-      "Vistahermosa: el libro sobre el pueblo del curtido (1871-1986) y sus fábricas.",
-      "Marín: los pisos nuevos de 2026 y la Ruta del Tejares Histórico por sus corredores verdes."
-    ],
-    "tecnico": [
-      "js/datos/contenido.js: 7 curiosidades nuevas con fuente en tenerias (3), vistahermosa (2) y marin (2).",
-      "Prueba «Salamanca en el tiempo» (pruebas/explora.js): espera a que el relleno de la zona cambie (hasta 3 s) en vez de 400 ms fijos, que fallaban a veces en GitHub Actions con el ordenador cargado."
     ]
   }
 ]

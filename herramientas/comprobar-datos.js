@@ -435,6 +435,31 @@ D.CARRETERAS_PROVINCIA.forEach(c => {
       `Edificio del monumento ${e.m}: alturas o plantas raras`
     );
   });
+  // Edificios del centro histórico y de las paradas de la provincia (herramientas/edificios-3d.js), que el 3D
+  // pide al abrirse
+  if (
+    comprobar(
+      existe('datos-3d/edificios.json'),
+      'Falta datos-3d/edificios.json (herramientas/edificios-3d.js)'
+    )
+  ) {
+    const { features } = JSON.parse(leer('datos-3d/edificios.json')),
+      idsParadas = new Set(D.RUTAS_PROVINCIA.flatMap(r => r.paradas.map(p => p.id))),
+      casco = features.filter(f => f.properties.c);
+    comprobar(casco.length > 500, `Edificios 3D: solo ${casco.length} en el centro histórico`);
+    features.forEach(f => {
+      const { c, p, h, b } = f.properties;
+      comprobar(c || idsParadas.has(p), `Edificio 3D: la parada «${p}» no está en RUTAS_PROVINCIA`);
+      if (f.geometry.type == 'Point') return;
+      comprobar(
+        h >= b &&
+          f.geometry.coordinates.every(
+            a => a.length >= 4 && a.every(([lo, la]) => la > 40.1 && la < 41.5 && lo > -7.1 && lo < -4.9)
+          ),
+        `Edificio 3D ${c ? 'del centro histórico' : p}: alturas o plantas raras`
+      );
+    });
+  }
 }
 
 D.RUTAS_PROVINCIA.forEach(r => {
