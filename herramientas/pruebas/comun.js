@@ -60,6 +60,7 @@ const pulsarPestana = async (p, s) => {
 
 // MapLibre falso (sin red): apunta el encuadre que le pide la app y cuántas veces se pide. El del mapa en 3D
 // (mapa-3d.js) deja su estilo y su cámara en window.estilo3d y window.camara3d, sus vuelos en window.vuelo3d
+// (todos los flyTo, en window.vuelos3d; llegan enseguida)
 // y lo que se le manda al repintar en window.datos3d[fuente]
 const MAPLIBRE_FALSO = `window.maplibregl = { Map: class {
   constructor(o) {
@@ -74,9 +75,14 @@ const MAPLIBRE_FALSO = `window.maplibregl = { Map: class {
   }
   jumpTo(c) { if (!this.es3d) window.camaraFondo = c; }
   resize() {} setStyle(s) { window.estiloFondo = s; }
-  on() {} once() {} setFilter() {} isMoving() { return false; }
+  on() {} setFilter() {} isMoving() { return false; }
+  once(e, f) { if (this.es3d && e == 'moveend') this.alParar = f; }
   getSource(id) { return { setData: d => (window.datos3d[id] = d) }; }
-  flyTo(c) { window.vuelo3d = c; } fitBounds(b, o) { window.vuelo3d = { bounds: b, ...o }; }
+  flyTo(c) {
+    window.vuelo3d = c;
+    if (this.es3d) (window.vuelos3d = window.vuelos3d || []).push(c);
+    const f = this.alParar; this.alParar = null; if (f) setTimeout(f);
+  } fitBounds(b, o) { window.vuelo3d = { bounds: b, ...o }; }
   queryTerrainElevation() { return null; }
   remove() { window.mapas3d--; }
 } };`;

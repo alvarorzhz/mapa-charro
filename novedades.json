@@ -1,5 +1,20 @@
 [
   {
+    "version": "2.30.0",
+    "fecha": "2026-11-27",
+    "titulo": "Más vuelos en 3D y «Mis pueblos»",
+    "usuario": [
+      "Cuatro vuelos nuevos en el 3D: Béjar con su sierra detrás, La Alberca mirando a la Peña de Francia, Ciudad Rodrigo dentro de su muralla y Ledesma sobre el Tormes.",
+      "Nuevo vuelo «★ Mis pueblos»: la cámara va de pueblo en pueblo por los que has marcado con «He estado» o «Quiero ir», del más cercano a la capital al más lejano, y al final te los enseña todos juntos.",
+      "Si mueves el mapa con el dedo durante el vuelo, se para y te deja seguir a ti."
+    ],
+    "tecnico": [
+      "js/datos/vuelos-3d.js: vuelos bejar, la-alberca, ciudad-rodrigo y ledesma (centro, zoom, pitch y rumbo comprobados con el relieve y capturas reales).",
+      "js/mapa-3d.js: recorrerMisPueblos3d (flyTo encadenados con once('moveend'), PAUSA_RECORRIDO, hasta MAX_RECORRIDO pueblos, fitBounds final; con menos movimiento solo el encuadre), ordenarRecorrido (vecino más cercano desde la capital) y pararRecorrido3d (al mover el mapa a mano, otro vuelo o cerrar).",
+      "El MapLibre falso de las pruebas guarda todos los flyTo (window.vuelos3d) y avisa de moveend; prueba de «Mis pueblos» en pruebas/provincia.js."
+    ]
+  },
+  {
     "version": "2.29.1",
     "fecha": "2026-11-27",
     "titulo": "Capital en 3D más despejada",
@@ -134,21 +149,6 @@
     "tecnico": [
       "js/datos/contenido.js: 7 curiosidades nuevas con fuente en tenerias (3), vistahermosa (2) y marin (2).",
       "Prueba «Salamanca en el tiempo» (pruebas/explora.js): espera a que el relleno de la zona cambie (hasta 3 s) en vez de 400 ms fijos, que fallaban a veces en GitHub Actions con el ordenador cargado."
-    ]
-  },
-  {
-    "version": "2.25.0",
-    "fecha": "2026-11-12",
-    "titulo": "Animaciones en días especiales",
-    "usuario": [
-      "En los días especiales, al abrir el mapa cae una pequeña animación y sale un aviso arriba: nieve en Navidad, fuegos artificiales en Nochevieja, Año Nuevo y la Virgen de la Vega, estrellas en Reyes, confeti en Carnaval y San Juan de Sahagún, luces en Semana Santa, agua y flores el Lunes de Aguas y la Mariseca el 25 de julio.",
-      "También el primer día de cada estación (flores, sol, hojas o nieve), con la hora del equinoccio o del solsticio en Salamanca.",
-      "Sale una vez al día y el aviso se cierra con ×. Si prefieres no verlas, al pie está «Quitar animaciones de fiesta»; con «menos movimiento» en el móvil solo sale el aviso."
-    ],
-    "tecnico": [
-      "js/fiestas.js y js/datos/fiestas.js (DIAS_ESPECIALES, ESTACIONES): fechas fijas o desde la Pascua (fechaDeAgenda) y equinoccios y solsticios con Meeus cap. 27 (momentoEstacion). Animaciones con CSS (caer, subir, estallar) en #fiesta-capa, sin pointer-events y aria-hidden; aviso #fiesta con ×, «Saber más» y cierre solo a los 15 s.",
-      "localStorage: charro-fiesta (día e id del último visto) y charro-fiestas = '0' (apagadas desde el pie). ?fiesta=<id> lo enseña cualquier día.",
-      "Pruebas: lógica (fechas y hora de las estaciones de 2026) y navegador (aviso, Saber más, menos movimiento, una vez al día y apagado); en el resto van apagadas salvo { conFiestas: true }. comprobar-datos revisa los días especiales."
     ]
   }
 ]
