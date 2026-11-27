@@ -1,5 +1,22 @@
 [
   {
+    "version": "2.25.2",
+    "fecha": "2026-11-15",
+    "titulo": "Fotos para todos los barrios",
+    "usuario": [
+      "Ya no queda ningún barrio sin foto: Vidal estrena la de su biblioteca, y Capuchinos, Huerta Otea, Buenos Aires, La Vega, Marín y Los Alcaldes, una vista aérea, porque no hay fotos libres de ellos.",
+      "51 pueblos más tienen foto en su ficha, de Valero y Monsagro a Larrodrigo y Tarazona de Guareña.",
+      "Leyendas nuevas en Sancti-Spíritus, San Cristóbal y Santa Marta de Tormes (la Tarasca y Quinciano).",
+      "Dónde comer en La Vega, Puente Ladrillo, Huerta Otea, Salas Bajas y El Zurguén.",
+      "Vuelven a salir curiosidades de 9 pueblos que se habían quedado escondidas, como Sequeros, Vitigudino o Monleón."
+    ],
+    "tecnico": [
+      "js/datos/contenido.js: FOTOS de vidal (Commons) y de capuchinos, huertaotea, buenosaires, vega, marin y alcaldes (ortofoto PNOA del IGN, CC BY 4.0, recortada a LIMITES_BARRIOS); LEYENDAS de sancti, sancristobal y santamarta; DONDE_COMER de puenteladrillo, vega, huertaotea, salasbajas y zurguen (bares de OpenStreetMap dentro del barrio, valoración de Gastroranking).",
+      "js/datos/pueblos.js: foto de Commons en 51 pueblos (img/pueblo-*.jpg, 640×430, con la página de Commons en un comentario). En 9 pueblos (desde 2.6.0) las últimas curiosidades estaban dentro del array foto y no se veían: pasan a cur; en Linares de Riofrío se quitan dos repetidas.",
+      "index.html: «Sobre los datos» cita las ortofotos del PNOA. docs/notas/contenido.md: cuándo se usa la vista aérea."
+    ]
+  },
+  {
     "version": "2.25.1",
     "fecha": "2026-11-15",
     "titulo": "Más curiosidades",

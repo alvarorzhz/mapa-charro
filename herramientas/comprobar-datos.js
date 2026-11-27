@@ -420,21 +420,34 @@ D.CARRETERAS_PROVINCIA.forEach(c => {
   });
   // Edificios de los monumentos (los genera herramientas/edificios-monumentos.js)
   const idsMon = new Set(D.MONUMENTOS.map(m => m.id));
-  D.EDIFICIOS_MONUMENTOS.forEach(e => {
-    comprobar(idsMon.has(e.m), `Edificio de monumento: «${e.m}» no está en MONUMENTOS`);
+  D.EDIFICIOS_MONUMENTOS.forEach(e =>
+    comprobar(idsMon.has(e.m), `Edificio de monumento: «${e.m}» no está en MONUMENTOS`)
+  );
+  if (
     comprobar(
-      e.piezas.length &&
-        e.piezas.every(
-          p =>
-            p.h >= p.b &&
-            p.r.length &&
-            p.r.every(
-              a => a.length >= 4 && a.every(([lo, la]) => la > 40.9 && la < 41.05 && lo > -5.75 && lo < -5.55)
-            )
-        ),
-      `Edificio del monumento ${e.m}: alturas o plantas raras`
+      existe('datos-3d/monumentos.json'),
+      'Falta datos-3d/monumentos.json (herramientas/edificios-monumentos.js)'
+    )
+  ) {
+    const piezas = JSON.parse(leer('datos-3d/monumentos.json')).features,
+      conEdificio = new Set(D.EDIFICIOS_MONUMENTOS.map(e => e.m));
+    conEdificio.forEach(m =>
+      comprobar(
+        piezas.some(f => f.properties.id == m),
+        `Edificio del monumento ${m}: sin piezas en datos-3d`
+      )
     );
-  });
+    piezas.forEach(({ properties: { id, h, b }, geometry: g }) =>
+      comprobar(
+        conEdificio.has(id) &&
+          h >= b &&
+          g.coordinates.every(
+            a => a.length >= 4 && a.every(([lo, la]) => la > 40.9 && la < 41.05 && lo > -5.75 && lo < -5.55)
+          ),
+        `Edificio del monumento ${id}: alturas o plantas raras`
+      )
+    );
+  }
   // Edificios del centro histórico y de las paradas de la provincia (herramientas/edificios-3d.js), que el 3D
   // pide al abrirse
   if (

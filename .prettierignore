@@ -12,3 +12,4 @@ js/datos/perfil-rutas.js
 js/datos/edificios-monumentos.js
 js/datos/relieve.js
 datos-3d/edificios.json
+datos-3d/monumentos.json

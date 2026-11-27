@@ -202,18 +202,92 @@ function edificioDePunto(punto, edificios, cerca = 30) {
   return ed && { ed, cercano: true };
 }
 
-// Las piezas de un edificio para el 3D: su planta (y la de sus partes) ensanchada, sus patios y su altura
-function piezasDeEdificio(ed, partes, ensanche) {
+// --- Tejados ---------------------------------------------------------------------------------------
+// MapLibre solo levanta prismas: un tejado (roof:shape y roof:height de OSM) se hace con rodajas cada vez
+// más estrechas. Cúpula: perfil de círculo; chapitel o pirámide: recto; a dos aguas: solo se estrecha de
+// lado (hacia la cumbrera, a lo largo del lado más largo o de roof:orientation)
+const FORMA_TEJADO = {
+  dome: t => Math.sqrt(Math.max(0, 1 - t * t)),
+  onion: t => Math.sqrt(Math.max(0, 1 - t * t)),
+  pyramidal: t => 1 - t,
+  cone: t => 1 - t,
+  hipped: t => 1 - t,
+  gabled: t => 1 - t
+};
+const RODAJAS = 5;
+// Escala un anillo hacia su centro: f en todas direcciones o, con eje (vector unitario en metros), solo en
+// la dirección perpendicular a él
+function escalar(r, f, eje, decimales = 6) {
+  const [cx, cy] = centro(r),
+    k = 111320 * Math.cos((cy * Math.PI) / 180);
+  return r.map(([x, y]) => {
+    let dx = (x - cx) * k,
+      dy = (y - cy) * 111320;
+    if (eje) {
+      const a = dx * eje[0] + dy * eje[1]; // a lo largo de la cumbrera, se queda
+      [dx, dy] = [eje[0] * a + (dx - eje[0] * a) * f, eje[1] * a + (dy - eje[1] * a) * f];
+    } else [dx, dy] = [dx * f, dy * f];
+    return [+(cx + dx / k).toFixed(decimales), +(cy + dy / 111320).toFixed(decimales)];
+  });
+}
+// Dirección del lado más largo (la cumbrera de un tejado a dos aguas); con roof:orientation=across, la otra
+function ejeCumbrera(r, orientacion) {
+  const k = 111320 * Math.cos((r[0][1] * Math.PI) / 180);
+  let mejor = [1, 0],
+    largo = 0;
+  for (let i = 1; i < r.length; i++) {
+    const dx = (r[i][0] - r[i - 1][0]) * k,
+      dy = (r[i][1] - r[i - 1][1]) * 111320,
+      l = Math.hypot(dx, dy);
+    if (l > largo) [mejor, largo] = [[dx / l, dy / l], l];
+  }
+  return orientacion == 'across' ? [-mejor[1], mejor[0]] : mejor;
+}
+// Las piezas de una parte con tejado: las paredes hasta donde empieza y el tejado en rodajas
+function piezasConTejado(r, t, h, b, ensanche) {
+  const forma = FORMA_TEJADO[t['roof:shape']],
+    alto =
+      metros(t['roof:height']) ?? (t['roof:shape'] == 'dome' || t['roof:shape'] == 'onion' ? (h - b) / 3 : 0);
+  if (!forma || !(alto > 0.5) || alto >= h - b) return null;
+  const planta = ensanchar(r, ensanche),
+    paredes = h - alto,
+    eje = t['roof:shape'] == 'gabled' ? ejeCumbrera(r, t['roof:orientation']) : null,
+    piezas = [{ h: +paredes.toFixed(1), b: +b.toFixed(1), r: [planta] }];
+  for (let i = 0; i < RODAJAS; i++) {
+    const f = forma((i + 0.5) / RODAJAS);
+    if (f < 0.05) break;
+    piezas.push({
+      h: +(paredes + (alto * (i + 1)) / RODAJAS).toFixed(1),
+      b: +(paredes + (alto * i) / RODAJAS).toFixed(1),
+      t: 1, // rodaja de tejado: el 3D esconde los edificios de OpenFreeMap que asoman por ella
+      r: [escalar(planta, f, eje)]
+    });
+  }
+  return piezas;
+}
+
+// Las piezas de un edificio para el 3D: su planta (y la de sus partes) ensanchada, sus patios y su altura;
+// con tejados, los que tienen forma en OSM se hacen en rodajas (piezasConTejado)
+function piezasDeEdificio(ed, partes, ensanche, tejados = false) {
   const suyas = partes.filter(p => ed.anillos.some(r => dentroDe(centro(p.anillos[0]), r)));
   const piezas = [ed, ...suyas].flatMap(p =>
-    p.anillos.map(r => ({
-      h: +altura(p.t).toFixed(1),
-      b: +base(p.t).toFixed(1),
-      r: [
-        ensanchar(r, ensanche),
-        ...p.patios.filter(q => dentroDe(centro(q), r)).map(q => ensanchar(q, ensanche, -1))
-      ]
-    }))
+    p.anillos.flatMap(r => {
+      const h = altura(p.t),
+        b = base(p.t),
+        conTejado = tejados && !p.patios.length && piezasConTejado(r, p.t, h, b, ensanche);
+      return (
+        conTejado || [
+          {
+            h: +h.toFixed(1),
+            b: +b.toFixed(1),
+            r: [
+              ensanchar(r, ensanche),
+              ...p.patios.filter(q => dentroDe(centro(q), r)).map(q => ensanchar(q, ensanche, -1))
+            ]
+          }
+        ]
+      );
+    })
   );
   // La planta del edificio llega hasta la más alta de sus partes si no tiene altura propia
   if (suyas.length && piezas[0].h <= 5) piezas[0].h = Math.min(...suyas.map(p => altura(p.t)), 15);
