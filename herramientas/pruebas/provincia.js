@@ -441,9 +441,45 @@ prueba(
       'y se guarda como siempre'
     );
     // Vuelos preparados
-    igual(await p.$$eval('.m3d-vuelos button', a => a.length), 4, 'tres vuelos y la provincia entera');
+    igual(
+      await p.$$eval('.m3d-vuelos button', a => a.length),
+      await p.evaluate(() => VUELOS_3D.length + 2),
+      'los vuelos, «Mis pueblos» y la provincia entera'
+    );
     await p.click('.m3d-vuelos button:has-text("Arribes")');
     igual(await p.evaluate(() => window.vuelo3d.center), [-6.69, 41.2], 'vuela al cañón de las Arribes');
+    // «Mis pueblos»: de pueblo en pueblo de los marcados, empezando por el más cercano a la capital
+    igual(
+      await p.evaluate(() =>
+        ordenarRecorrido(
+          [
+            { n: 'lejos', p: [40.6, -6.5] },
+            { n: 'cerca', p: [41, -5.7] },
+            { n: 'medio', p: [40.8, -6] }
+          ],
+          [40.965, -5.664]
+        ).map(x => x.n)
+      ),
+      ['cerca', 'medio', 'lejos'],
+      'el orden del vuelo va de cercano en cercano'
+    );
+    await p.evaluate(() => {
+      marcarMunicipio(
+        PROVINCIA.m.find(m => m.n == 'Ledesma'),
+        'w'
+      );
+      window.vuelos3d = [];
+    });
+    await p.click('.m3d-vuelos button:has-text("Mis pueblos")');
+    await llegaA(() => texto(p, '.m3d-info'), '2 pueblos marcados', 'acaba con todos a la vista');
+    igual(
+      await p.evaluate(() =>
+        window.vuelos3d.map(v => PROVINCIA.m.find(m => centroDeMunicipio(m)[1] == v.center[0]).n)
+      ),
+      ['Ledesma', 'La Alberca'],
+      'pasando por cada pueblo marcado, el más cercano primero'
+    );
+    cierto(await p.evaluate(() => !!window.vuelo3d.bounds), 'y al final los encuadra');
     // Escape cierra, suelta el mapa y devuelve el foco
     await p.keyboard.press('Escape');
     cierto(await p.$eval('.m3d', e => e.hidden), 'Escape lo cierra');

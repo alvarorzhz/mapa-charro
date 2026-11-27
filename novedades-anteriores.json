@@ -1,5 +1,20 @@
 [
   {
+    "version": "2.25.0",
+    "fecha": "2026-11-12",
+    "titulo": "Animaciones en días especiales",
+    "usuario": [
+      "En los días especiales, al abrir el mapa cae una pequeña animación y sale un aviso arriba: nieve en Navidad, fuegos artificiales en Nochevieja, Año Nuevo y la Virgen de la Vega, estrellas en Reyes, confeti en Carnaval y San Juan de Sahagún, luces en Semana Santa, agua y flores el Lunes de Aguas y la Mariseca el 25 de julio.",
+      "También el primer día de cada estación (flores, sol, hojas o nieve), con la hora del equinoccio o del solsticio en Salamanca.",
+      "Sale una vez al día y el aviso se cierra con ×. Si prefieres no verlas, al pie está «Quitar animaciones de fiesta»; con «menos movimiento» en el móvil solo sale el aviso."
+    ],
+    "tecnico": [
+      "js/fiestas.js y js/datos/fiestas.js (DIAS_ESPECIALES, ESTACIONES): fechas fijas o desde la Pascua (fechaDeAgenda) y equinoccios y solsticios con Meeus cap. 27 (momentoEstacion). Animaciones con CSS (caer, subir, estallar) en #fiesta-capa, sin pointer-events y aria-hidden; aviso #fiesta con ×, «Saber más» y cierre solo a los 15 s.",
+      "localStorage: charro-fiesta (día e id del último visto) y charro-fiestas = '0' (apagadas desde el pie). ?fiesta=<id> lo enseña cualquier día.",
+      "Pruebas: lógica (fechas y hora de las estaciones de 2026) y navegador (aviso, Saber más, menos movimiento, una vez al día y apagado); en el resto van apagadas salvo { conFiestas: true }. comprobar-datos revisa los días especiales."
+    ]
+  },
+  {
     "version": "2.24.1",
     "fecha": "2026-11-08",
     "titulo": "Más curiosidades",

@@ -6,9 +6,11 @@
 // piden solo al abrirlo: el mapa normal y la primera visita no bajan nada de esto. Calles, ríos y nombres
 // de OpenFreeMap. Dentro de Claude no hay botón (EN_MARCO): el visor no deja pedir mapas a otras webs.
 
-const mapa3d = { capa: null, mapa: null, info: null, seleccionado: null, volverA: null };
+const mapa3d = { capa: null, mapa: null, info: null, seleccionado: null, volverA: null, recorrido: 0 };
 const DUREZA_RELIEVE = 1.6; // el relieve se exagera un poco: la meseta es casi llana a esta escala
 const ZOOM_MONUMENTOS_MENORES = 16; // desde aquí, el nombre de los monumentos que no son de los principales
+const MAX_RECORRIDO = 12; // pueblos como mucho en el vuelo «Mis pueblos» (cada uno lleva unos 5 s)
+const PAUSA_RECORRIDO = 1800; // ms quieto sobre cada pueblo
 const ZOOM_EDIFICIOS = 14; // desde aquí, los edificios con altura (antes serían demasiados para el iPhone)
 
 // Colores y estado de cada municipio para pintarlos encima del relieve (mismo criterio que el minimapa)
@@ -377,6 +379,7 @@ const encuadreProvincia3d = () => ({
 function volar3d(v) {
   const m = mapa3d.mapa;
   if (!m) return;
+  pararRecorrido3d();
   if (!v) {
     const { bounds, pitch, bearing } = encuadreProvincia3d();
     m.fitBounds(bounds, { pitch, bearing, padding: 10, duration: comoDesplazar() == 'smooth' ? 2500 : 0 });
@@ -390,6 +393,81 @@ function volar3d(v) {
     duration: comoDesplazar() == 'smooth' ? 5000 : 0,
     essential: false
   });
+}
+
+// Orden del vuelo «Mis pueblos»: de cada pueblo al más cercano que falta, empezando por el más cercano a
+// desde ([lat, lon]). puntos: [{ p: [lat, lon], … }]; la longitud se encoge con la latitud, como en el mapa
+function ordenarRecorrido(puntos, desde) {
+  const k = Math.cos((desde[0] * Math.PI) / 180),
+    d2 = (a, b) => (a[0] - b[0]) ** 2 + ((a[1] - b[1]) * k) ** 2,
+    faltan = [...puntos],
+    orden = [];
+  let aqui = desde;
+  while (faltan.length) {
+    let mejor = 0;
+    faltan.forEach((x, i) => d2(x.p, aqui) < d2(faltan[mejor].p, aqui) && (mejor = i));
+    const [siguiente] = faltan.splice(mejor, 1);
+    orden.push(siguiente);
+    aqui = siguiente.p;
+  }
+  return orden;
+}
+
+const pararRecorrido3d = () => mapa3d.recorrido++;
+
+// Vuelo «Mis pueblos»: de pueblo en pueblo de los marcados (He estado, Quiero ir), desde la capital, y al
+// final todos a la vista. Se para si la persona mueve el mapa o pide otro vuelo. Con menos movimiento, solo
+// el encuadre final
+async function recorrerMisPueblos3d() {
+  const m = mapa3d.mapa;
+  if (!m) return;
+  const vuelta = pararRecorrido3d() + 1,
+    sigue = () => mapa3d.mapa == m && mapa3d.recorrido == vuelta,
+    capitalPisada = zonas.some(z => z.g < 5 && estadoApp.progreso.z[z.id] == 'v'),
+    marcados = PROVINCIA.m
+      .filter(x => !x.cap && marcaDeMunicipio(x, capitalPisada))
+      .map(x => ({ m: x, p: centroDeMunicipio(x) }));
+  if (!marcados.length) {
+    mostrarMunicipio3d(null);
+    mapa3d.info.textContent = '';
+    mapa3d.info.appendChild(
+      crear('span', 'mu', 'Marca pueblos con «He estado» o «Quiero ir» y aquí te los enseño volando.')
+    );
+    return;
+  }
+  const orden = ordenarRecorrido(marcados, [40.965, -5.664]).slice(0, MAX_RECORRIDO),
+    suave = comoDesplazar() == 'smooth';
+  if (suave)
+    for (const [i, x] of orden.entries()) {
+      const llega = new Promise(r => m.once('moveend', r));
+      mostrarMunicipio3d(x.m);
+      m.flyTo({
+        center: [x.p[1], x.p[0]],
+        zoom: 12.2,
+        pitch: 62,
+        bearing: (i * 50) % 360,
+        duration: 3500,
+        essential: false
+      });
+      await llega;
+      if (!sigue()) return;
+      await new Promise(r => setTimeout(r, PAUSA_RECORRIDO));
+      if (!sigue()) return;
+    }
+  const las = marcados.map(x => x.p[0]),
+    los = marcados.map(x => x.p[1]);
+  m.fitBounds(
+    [
+      [Math.min(...los) - 0.08, Math.min(...las) - 0.08],
+      [Math.max(...los) + 0.08, Math.max(...las) + 0.08]
+    ],
+    { pitch: 50, bearing: 0, padding: 20, maxZoom: 12, duration: suave ? 3000 : 0 }
+  );
+  mostrarMunicipio3d(null);
+  mapa3d.info.textContent = '';
+  mapa3d.info.appendChild(
+    crear('span', 'mu', marcados.length + (marcados.length == 1 ? ' pueblo marcado' : ' pueblos marcados'))
+  );
 }
 
 // MapLibre no recalcula la altura del centro cuando llega el relieve después de moverse (se queda apuntando
@@ -475,6 +553,7 @@ function repintarMapa3d() {
 function cerrarMapa3d() {
   if (!mapa3d.capa || mapa3d.capa.hidden) return;
   mapa3d.capa.hidden = true;
+  pararRecorrido3d();
   document.documentElement.classList.remove('con-ventana');
   // Se suelta el mapa: en el iPhone, un mapa 3D escondido sigue gastando memoria
   if (mapa3d.mapa) mapa3d.mapa.remove();
@@ -501,6 +580,10 @@ function construirCapa3d() {
       return b;
     })
   );
+  const mios = crear('button', '', '★ Mis pueblos');
+  mios.title = 'Un vuelo por los pueblos que has marcado';
+  mios.onclick = recorrerMisPueblos3d;
+  vuelos.prepend(mios);
   const todo = crear('button', '', '⌂ Toda la provincia');
   todo.onclick = () => volar3d(null);
   vuelos.appendChild(todo);
@@ -617,6 +700,8 @@ async function abrirMapa3d(boton = document.activeElement, donde = 'provincia') 
     }
   };
   m.on('moveend', alLlegarRelieve);
+  // Si la persona mueve el mapa con el dedo o el ratón, el vuelo «Mis pueblos» se para
+  m.on('movestart', e => e.originalEvent && pararRecorrido3d());
   m.on('sourcedata', e => (e.sourceId == 'relieve' || e.sourceId == 'sombras') && alLlegarRelieve());
   m.on('idle', () => mapa3d.capa.classList.remove('cargando'));
   // Un toque: lo de más arriba manda (monumento, luego zona de la capital, luego municipio)
