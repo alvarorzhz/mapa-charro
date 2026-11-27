@@ -63,6 +63,15 @@ const monumentosEnGeojson = () => ({
   }))
 });
 
+// El centro histórico (las zonas del grupo 0, «Centro histórico», con su polígono pasado a latitud y
+// longitud). herramientas/edificios-3d.js lo usa para elegir los edificios que van en piedra de Villamayor
+const cascoEnGeojson = () => ({
+  type: 'MultiPolygon',
+  coordinates: zonas
+    .filter(z => z.g == 0 && z.P)
+    .map(z => [[...z.P, z.P[0]].map(([x, y]) => desproyectar(x, y).reverse())])
+});
+
 // Edificios de los monumentos (EDIFICIOS_MONUMENTOS): cada pieza, con su altura y su monumento
 const edificiosMonumentosEnGeojson = () => ({
   type: 'FeatureCollection',
@@ -98,7 +107,10 @@ function estiloMapa3d() {
       municipios: { type: 'geojson', data: municipiosEnGeojson() },
       zonas: { type: 'geojson', data: zonasEnGeojson() },
       monumentos: { type: 'geojson', data: monumentosEnGeojson() },
-      'edificios-monumentos': { type: 'geojson', data: edificiosMonumentosEnGeojson() }
+      'edificios-monumentos': { type: 'geojson', data: edificiosMonumentosEnGeojson() },
+      // Edificios del centro histórico y de las paradas de la provincia (herramientas/edificios-3d.js): se
+      // piden solo al abrir el 3D
+      'edificios-3d': { type: 'geojson', data: new URL('datos-3d/edificios.json', document.baseURI).href }
     },
     terrain: { source: 'relieve', exaggeration: DUREZA_RELIEVE },
     sky: {
@@ -227,7 +239,7 @@ function estiloMapa3d() {
         'source-layer': 'building',
         minzoom: ZOOM_EDIFICIOS,
         paint: {
-          'fill-extrusion-color': color('--zona-4'),
+          'fill-extrusion-color': color('--edificio-neutro'),
           'fill-extrusion-height': ['*', DUREZA_RELIEVE, ['coalesce', ['get', 'render_height'], 6]],
           'fill-extrusion-base': ['*', DUREZA_RELIEVE, ['coalesce', ['get', 'render_min_height'], 0]],
           'fill-extrusion-opacity': [
@@ -239,6 +251,45 @@ function estiloMapa3d() {
             ZOOM_EDIFICIOS + 0.5,
             0.9
           ],
+          'fill-extrusion-vertical-gradient': true
+        }
+      },
+      // El centro histórico, en la piedra dorada de Villamayor, tapando los edificios de OpenFreeMap
+      {
+        id: 'casco',
+        type: 'fill-extrusion',
+        source: 'edificios-3d',
+        minzoom: ZOOM_EDIFICIOS,
+        filter: ['==', ['get', 'c'], 1],
+        paint: {
+          'fill-extrusion-color': color('--piedra-villamayor'),
+          'fill-extrusion-height': ['*', DUREZA_RELIEVE, ['+', 0.4, ['get', 'h']]],
+          'fill-extrusion-base': ['*', DUREZA_RELIEVE, ['get', 'b']],
+          'fill-extrusion-opacity': [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            ZOOM_EDIFICIOS,
+            0,
+            ZOOM_EDIFICIOS + 0.5,
+            1
+          ],
+          'fill-extrusion-vertical-gradient': true
+        }
+      },
+      // Los edificios de las paradas de las rutas por la provincia (catedral y castillo de Ciudad Rodrigo,
+      // Alba de Tormes, Ledesma…), en dorado como los monumentos de la capital
+      {
+        id: 'provincia-edificios',
+        type: 'fill-extrusion',
+        source: 'edificios-3d',
+        minzoom: 12.5,
+        filter: ['all', ['has', 'p'], ['==', ['geometry-type'], 'Polygon']],
+        paint: {
+          'fill-extrusion-color': color('--oro'),
+          'fill-extrusion-height': ['*', DUREZA_RELIEVE, ['+', 0.6, ['get', 'h']]],
+          'fill-extrusion-base': ['*', DUREZA_RELIEVE, ['get', 'b']],
+          'fill-extrusion-opacity': 0.95,
           'fill-extrusion-vertical-gradient': true
         }
       },
@@ -332,6 +383,26 @@ function estiloMapa3d() {
           'text-field': ['get', 'n'],
           'text-font': ['Noto Sans Regular'],
           'text-size': 13,
+          'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
+          'text-radial-offset': 0.8,
+          'text-max-width': 9
+        },
+        paint: {
+          'text-color': color('--oro-texto'),
+          'text-halo-color': color('--tarjeta'),
+          'text-halo-width': 1.6
+        }
+      },
+      {
+        id: 'provincia-nombres',
+        type: 'symbol',
+        source: 'edificios-3d',
+        minzoom: 12.5,
+        filter: ['==', ['geometry-type'], 'Point'],
+        layout: {
+          'text-field': ['get', 'n'],
+          'text-font': ['Noto Sans Regular'],
+          'text-size': 12,
           'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
           'text-radial-offset': 0.8,
           'text-max-width': 9
@@ -538,6 +609,22 @@ function mostrarMonumento3d(mon) {
   mapa3d.info.append(crear('strong', '', mon.n), crear('small', 'mu', 'Monumento'), ficha);
 }
 
+// Una parada de las rutas por la provincia pulsada (su edificio dorado): nombre, pueblo y su ficha
+function mostrarParada3d(id) {
+  const k = RUTAS_PROVINCIA.findIndex(r => r.paradas.some(p => p.id == id));
+  if (k < 0) return;
+  const i = RUTAS_PROVINCIA[k].paradas.findIndex(p => p.id == id),
+    p = RUTAS_PROVINCIA[k].paradas[i],
+    ficha = crear('button', '', '📖 Ver ficha');
+  mostrarMunicipio3d(null);
+  ficha.onclick = () => {
+    cerrarMapa3d();
+    abrirParadaProvincia(i, k);
+  };
+  mapa3d.info.textContent = '';
+  mapa3d.info.append(crear('strong', '', p.n), crear('small', 'mu', p.municipio), ficha);
+}
+
 // Cuando cambia el progreso (marcar desde el 3D o desde otro sitio), los colores del relieve también
 function repintarMapa3d() {
   const m = mapa3d.mapa;
@@ -595,6 +682,7 @@ function construirCapa3d() {
     crear('span', 'v', 'He estado'),
     crear('span', 'w', 'Quiero ir'),
     crear('span', 'mo', 'Monumento'),
+    crear('span', 'ca', 'Centro histórico'),
     crear('span', 'cargando', 'Cargando el relieve…')
   );
   const enlace = (texto, href) =>
@@ -712,9 +800,11 @@ async function abrirMapa3d(boton = document.activeElement, donde = 'provincia') 
         tocado('monumentos-menores') ||
         tocado('monumentos-punto') ||
         tocado('monumentos-edificios'),
-      zona = !mon && m.getZoom() >= 11 && tocado('zonas'),
-      municipio = !mon && !zona && tocado('municipios');
+      parada = !mon && (tocado('provincia-nombres') || tocado('provincia-edificios')),
+      zona = !mon && !parada && m.getZoom() >= 11 && tocado('zonas'),
+      municipio = !mon && !parada && !zona && tocado('municipios');
     if (mon) mostrarMonumento3d(MONUMENTOS.find(x => x.id == mon.properties.id));
+    else if (parada) mostrarParada3d(parada.properties.p);
     else if (zona) mostrarZona3d(zonas.find(z => z.id == zona.properties.id));
     else if (municipio) mostrarMunicipio3d(PROVINCIA.m[municipio.properties.i]);
   });

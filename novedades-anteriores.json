@@ -1,5 +1,19 @@
 [
   {
+    "version": "2.25.1",
+    "fecha": "2026-11-15",
+    "titulo": "Más curiosidades",
+    "usuario": [
+      "Tenerías: la fábrica de curtidos de 1914 que hoy es Santiago Uno y el derribo del barrio en 1978.",
+      "Vistahermosa: el libro sobre el pueblo del curtido (1871-1986) y sus fábricas.",
+      "Marín: los pisos nuevos de 2026 y la Ruta del Tejares Histórico por sus corredores verdes."
+    ],
+    "tecnico": [
+      "js/datos/contenido.js: 7 curiosidades nuevas con fuente en tenerias (3), vistahermosa (2) y marin (2).",
+      "Prueba «Salamanca en el tiempo» (pruebas/explora.js): espera a que el relleno de la zona cambie (hasta 3 s) en vez de 400 ms fijos, que fallaban a veces en GitHub Actions con el ordenador cargado."
+    ]
+  },
+  {
     "version": "2.25.0",
     "fecha": "2026-11-12",
     "titulo": "Animaciones en días especiales",

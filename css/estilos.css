@@ -57,6 +57,9 @@
   --zona-2: #e2cfa0;
   --zona-3: #efe0b8;
   --zona-4: #dcc795;
+  /* Mapa en 3D: la piedra dorada de Villamayor del centro histórico y el resto de edificios, más neutros */
+  --piedra-villamayor: #d6a85c;
+  --edificio-neutro: #cfc8b6;
   --zona-5: #b9bb7c;
   --zona-6: #c4a15a;
   --lim-fuerte: #33230d;
@@ -96,6 +99,8 @@
     --zona-2: #5f4f2e;
     --zona-3: #735d36;
     --zona-4: #55472a;
+    --piedra-villamayor: #9a7136;
+    --edificio-neutro: #4a463d;
     --zona-5: #4f5333;
     --zona-6: #3a3020;
     --lim-fuerte: #f0e2b8;
@@ -137,6 +142,8 @@
   --zona-2: #5f4f2e;
   --zona-3: #735d36;
   --zona-4: #55472a;
+  --piedra-villamayor: #9a7136;
+  --edificio-neutro: #4a463d;
   --zona-5: #4f5333;
   --zona-6: #3a3020;
   --lim-fuerte: #f0e2b8;
@@ -4958,6 +4965,9 @@ a.llegar.principal {
 }
 .m3d-leyenda .w::before {
   background: var(--ronda);
+}
+.m3d-leyenda .ca::before {
+  background: var(--piedra-villamayor);
 }
 .m3d-leyenda .mo::before {
   background: var(--oro);

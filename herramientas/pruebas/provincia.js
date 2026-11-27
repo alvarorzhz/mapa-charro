@@ -548,6 +548,20 @@ prueba(
       'w',
       'y se pinta en el 3D'
     );
+    // El centro histórico en piedra y los edificios de la provincia vienen de un archivo que solo se pide aquí
+    igual(capa('casco').source, 'edificios-3d', 'el centro histórico, aparte');
+    const archivo = estilo.sources['edificios-3d'].data;
+    cierto(/\/datos-3d\/edificios\.json$/.test(archivo), 'de un archivo de la propia web');
+    cierto(
+      await p.evaluate(
+        async a => (await (await fetch(a)).json()).features.some(f => f.properties.p == 'crcatedral'),
+        archivo
+      ),
+      'con la catedral de Ciudad Rodrigo'
+    );
+    // Un edificio de la provincia pulsado: su nombre, su pueblo y su ficha
+    await p.evaluate(() => mostrarParada3d('crcatedral'));
+    igual(await texto(p, '.m3d-info small'), 'Ciudad Rodrigo', 'la parada pulsada, con su pueblo');
     // Un monumento pulsado abre su ficha y cierra el 3D
     await p.evaluate(() => mostrarMonumento3d(MONUMENTOS.find(m => m.id == 'catedrales')));
     await p.click('.m3d-info button:has-text("Ver ficha")');
