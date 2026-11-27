@@ -8,6 +8,7 @@
 
 const mapa3d = { capa: null, mapa: null, info: null, seleccionado: null, volverA: null };
 const DUREZA_RELIEVE = 1.6; // el relieve se exagera un poco: la meseta es casi llana a esta escala
+const ZOOM_MONUMENTOS_MENORES = 16; // desde aquí, el nombre de los monumentos que no son de los principales
 const ZOOM_EDIFICIOS = 14; // desde aquí, los edificios con altura (antes serían demasiados para el iPhone)
 
 // Colores y estado de cada municipio para pintarlos encima del relieve (mismo criterio que el minimapa)
@@ -45,11 +46,17 @@ function zonasEnGeojson() {
   };
 }
 
+// ed: 1 si tiene su edificio en dorado (EDIFICIOS_MONUMENTOS), que ya lo señala y no necesita punto
 const monumentosEnGeojson = () => ({
   type: 'FeatureCollection',
   features: MONUMENTOS.map(m => ({
     type: 'Feature',
-    properties: { id: m.id, n: m.n, top: m.top ? 1 : 0 },
+    properties: {
+      id: m.id,
+      n: m.n,
+      top: m.top ? 1 : 0,
+      ed: EDIFICIOS_MONUMENTOS.some(e => e.m == m.id) ? 1 : 0
+    },
     geometry: { type: 'Point', coordinates: [m.lo, m.la] }
   }))
 });
@@ -303,9 +310,11 @@ function estiloMapa3d() {
         type: 'circle',
         source: 'monumentos',
         minzoom: 12.5,
+        // Solo los que no tienen edificio dorado (puentes, plazas, jardines): los otros ya los señala su edificio
+        filter: ['==', ['get', 'ed'], 0],
         paint: {
-          'circle-color': color('--vitor'),
-          'circle-radius': ['match', ['get', 'top'], 1, 6, 4.5],
+          'circle-color': color('--oro'),
+          'circle-radius': ['match', ['get', 'top'], 1, 5, 3.5],
           'circle-stroke-color': color('--tarjeta'),
           'circle-stroke-width': 1.5
         }
@@ -315,17 +324,38 @@ function estiloMapa3d() {
         type: 'symbol',
         source: 'monumentos',
         minzoom: 12.5,
+        // Los principales desde lejos; los demás, solo de cerca (monumentos-menores), para no llenar la ciudad
+        filter: ['==', ['get', 'top'], 1],
         layout: {
           'text-field': ['get', 'n'],
           'text-font': ['Noto Sans Regular'],
-          'text-size': ['match', ['get', 'top'], 1, 13, 11],
+          'text-size': 13,
           'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
           'text-radial-offset': 0.8,
-          'text-max-width': 9,
-          'symbol-sort-key': ['-', 1, ['get', 'top']]
+          'text-max-width': 9
         },
         paint: {
-          'text-color': color('--vitor-texto'),
+          'text-color': color('--oro-texto'),
+          'text-halo-color': color('--tarjeta'),
+          'text-halo-width': 1.6
+        }
+      },
+      {
+        id: 'monumentos-menores',
+        type: 'symbol',
+        source: 'monumentos',
+        minzoom: ZOOM_MONUMENTOS_MENORES,
+        filter: ['==', ['get', 'top'], 0],
+        layout: {
+          'text-field': ['get', 'n'],
+          'text-font': ['Noto Sans Regular'],
+          'text-size': 11,
+          'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
+          'text-radial-offset': 0.8,
+          'text-max-width': 9
+        },
+        paint: {
+          'text-color': color('--oro-texto'),
           'text-halo-color': color('--tarjeta'),
           'text-halo-width': 1.6
         }
@@ -592,7 +622,11 @@ async function abrirMapa3d(boton = document.activeElement, donde = 'provincia') 
   // Un toque: lo de más arriba manda (monumento, luego zona de la capital, luego municipio)
   m.on('click', e => {
     const tocado = capa => m.queryRenderedFeatures(e.point, { layers: [capa] })[0],
-      mon = tocado('monumentos') || tocado('monumentos-punto') || tocado('monumentos-edificios'),
+      mon =
+        tocado('monumentos') ||
+        tocado('monumentos-menores') ||
+        tocado('monumentos-punto') ||
+        tocado('monumentos-edificios'),
       zona = !mon && m.getZoom() >= 11 && tocado('zonas'),
       municipio = !mon && !zona && tocado('municipios');
     if (mon) mostrarMonumento3d(MONUMENTOS.find(x => x.id == mon.properties.id));

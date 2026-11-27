@@ -1,5 +1,19 @@
 [
   {
+    "version": "2.29.1",
+    "fecha": "2026-11-27",
+    "titulo": "Capital en 3D más despejada",
+    "usuario": [
+      "En el 3D de la capital ya no hay un punto por cada monumento: los que tienen su edificio en dorado no lo necesitan, y solo llevan punto los que no son un edificio (el Puente Romano, plazas, jardines).",
+      "Desde lejos solo se rotulan los monumentos principales; el resto aparece al acercarte.",
+      "Los monumentos van en dorado también en el nombre y la leyenda, para no confundirlos con el rojo de «He estado»."
+    ],
+    "tecnico": [
+      "js/mapa-3d.js: propiedad ed en monumentosEnGeojson (tiene edificio en EDIFICIOS_MONUMENTOS); monumentos-punto filtra ed == 0 y va en --oro; rótulos en dos capas, monumentos (top) y monumentos-menores (desde ZOOM_MONUMENTOS_MENORES = 16), en --oro-texto.",
+      "pruebas/inicio.js: «Funciona sin conexión» espera a que privacidad.html esté en la caché en vez de 500 ms fijos (fallaba a veces en GitHub Actions y frenó la publicación de la 2.29.0)."
+    ]
+  },
+  {
     "version": "2.29.0",
     "fecha": "2026-11-25",
     "titulo": "La capital en 3D",
@@ -135,21 +149,6 @@
       "js/fiestas.js y js/datos/fiestas.js (DIAS_ESPECIALES, ESTACIONES): fechas fijas o desde la Pascua (fechaDeAgenda) y equinoccios y solsticios con Meeus cap. 27 (momentoEstacion). Animaciones con CSS (caer, subir, estallar) en #fiesta-capa, sin pointer-events y aria-hidden; aviso #fiesta con ×, «Saber más» y cierre solo a los 15 s.",
       "localStorage: charro-fiesta (día e id del último visto) y charro-fiestas = '0' (apagadas desde el pie). ?fiesta=<id> lo enseña cualquier día.",
       "Pruebas: lógica (fechas y hora de las estaciones de 2026) y navegador (aviso, Saber más, menos movimiento, una vez al día y apagado); en el resto van apagadas salvo { conFiestas: true }. comprobar-datos revisa los días especiales."
-    ]
-  },
-  {
-    "version": "2.24.1",
-    "fecha": "2026-11-08",
-    "titulo": "Más curiosidades",
-    "usuario": [
-      "Garrido Norte: la «Operación Asfalto» de 1982 y la asociación Navega.",
-      "Estación: la primera estación de 1877, a la que la prensa llamó «barracón asqueroso e inmundo», y la fuente de Martín Chirino.",
-      "Hospital: el derribo del viejo Clínico en 2023 y los 22 edificios del Campus Unamuno.",
-      "Los Alcaldes: su única línea de autobús, el colectivo Uniendo Barrios y una fecha corregida de su asociación vecinal."
-    ],
-    "tecnico": [
-      "js/datos/contenido.js: 8 curiosidades nuevas con fuente en garridonorte, estacion, hospitales y alcaldes.",
-      "alcaldes: la asociación vecinal no «nació» en julio de 2025 (es la fecha de su registro); ya actuaba en 2022 con Román García al frente (SALAMANCArtv)."
     ]
   }
 ]

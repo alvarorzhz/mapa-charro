@@ -1,5 +1,20 @@
 [
   {
+    "version": "2.24.1",
+    "fecha": "2026-11-08",
+    "titulo": "Más curiosidades",
+    "usuario": [
+      "Garrido Norte: la «Operación Asfalto» de 1982 y la asociación Navega.",
+      "Estación: la primera estación de 1877, a la que la prensa llamó «barracón asqueroso e inmundo», y la fuente de Martín Chirino.",
+      "Hospital: el derribo del viejo Clínico en 2023 y los 22 edificios del Campus Unamuno.",
+      "Los Alcaldes: su única línea de autobús, el colectivo Uniendo Barrios y una fecha corregida de su asociación vecinal."
+    ],
+    "tecnico": [
+      "js/datos/contenido.js: 8 curiosidades nuevas con fuente en garridonorte, estacion, hospitales y alcaldes.",
+      "alcaldes: la asociación vecinal no «nació» en julio de 2025 (es la fecha de su registro); ya actuaba en 2022 con Román García al frente (SALAMANCArtv)."
+    ]
+  },
+  {
     "version": "2.24.0",
     "fecha": "2026-11-03",
     "titulo": "Un acabado más de iPhone",

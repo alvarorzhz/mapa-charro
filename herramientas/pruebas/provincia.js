@@ -484,6 +484,18 @@ prueba(
       estilo.sources['edificios-monumentos'].data.features.some(f => f.properties.id == 'catedrales'),
       'la catedral tiene su edificio'
     );
+    // Sin un punto por monumento: el que tiene edificio dorado ya se ve, y los secundarios se rotulan de cerca
+    igual(
+      JSON.stringify(capa('monumentos-punto').filter),
+      JSON.stringify(['==', ['get', 'ed'], 0]),
+      'punto solo en los monumentos sin edificio'
+    );
+    igual(
+      estilo.sources.monumentos.data.features.find(f => f.properties.id == 'catedrales').properties.ed,
+      1,
+      'la catedral no lleva punto'
+    );
+    cierto(capa('monumentos-menores').minzoom > capa('monumentos').minzoom, 'los secundarios, de más cerca');
     igual(
       estilo.sources.zonas.data.features.length,
       await p.evaluate(() => zonas.length),
