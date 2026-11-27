@@ -1,5 +1,19 @@
 [
   {
+    "version": "2.32.0",
+    "fecha": "2026-11-27",
+    "titulo": "Catedrales y Clerecía con sus tejados en 3D",
+    "usuario": [
+      "Los monumentos de la capital tienen ahora tejados de verdad en el 3D: las cúpulas y los chapiteles de las catedrales y de la Clerecía, y los tejados a dos aguas de sus naves, en vez de bloques planos.",
+      "El 3D pesa menos al abrir la app: los edificios de los monumentos solo se descargan al entrar en el 3D."
+    ],
+    "tecnico": [
+      "herramientas/edificios-osm.js: piezasConTejado hace los tejados con roof:shape y roof:height de OSM (dome, onion, pyramidal, cone, hipped, gabled) en 5 rodajas cada vez más estrechas (las de dos aguas, solo de lado, según el lado más largo o roof:orientation). edificios-monumentos.js lo usa: 962 piezas.",
+      "Las piezas van a datos-3d/monumentos.json (~320 KB, ~25 KB comprimido), que el 3D pide al abrirse; js/datos/edificios-monumentos.js solo dice qué monumento tiene edificio (de 91 KB a 1,7 KB al arrancar).",
+      "js/mapa-3d.js: ocultarBajoTejados3d esconde por id, al quedarse quieto el mapa, los edificios de OpenFreeMap que suben más que una rodaja de tejado en su centro (asomaban por las cúpulas)."
+    ]
+  },
+  {
     "version": "2.31.0",
     "fecha": "2026-11-27",
     "titulo": "Centro histórico en piedra y monumentos de la provincia en 3D",
@@ -134,23 +148,6 @@
       "js/monumentos.js: bloqueVisita() pinta «Visitar» en la mini infografía; enlaceFuera() para los enlaces a otra pestaña. Estilos .visita en css/estilos.css.",
       "js/datos/monumentos.js: 16 monumentos nuevos con coordenadas de OpenStreetMap, textos de salamanca.es y 15 fotos de Wikimedia Commons (img/mon-*.jpg); el Museo Taurino no tiene foto libre.",
       "comprobar-datos.js valida VISITAS y FUENTE_VISITAS; prueba nueva «Horario y precio de los monumentos» en pruebas/fichas.js. La de fotos admite ahora 3 monumentos sin foto (La Aldehuela, Museo Taurino, cines Van Dyck)."
-    ]
-  },
-  {
-    "version": "2.25.2",
-    "fecha": "2026-11-15",
-    "titulo": "Fotos para todos los barrios",
-    "usuario": [
-      "Ya no queda ningún barrio sin foto: Vidal estrena la de su biblioteca, y Capuchinos, Huerta Otea, Buenos Aires, La Vega, Marín y Los Alcaldes, una vista aérea, porque no hay fotos libres de ellos.",
-      "51 pueblos más tienen foto en su ficha, de Valero y Monsagro a Larrodrigo y Tarazona de Guareña.",
-      "Leyendas nuevas en Sancti-Spíritus, San Cristóbal y Santa Marta de Tormes (la Tarasca y Quinciano).",
-      "Dónde comer en La Vega, Puente Ladrillo, Huerta Otea, Salas Bajas y El Zurguén.",
-      "Vuelven a salir curiosidades de 9 pueblos que se habían quedado escondidas, como Sequeros, Vitigudino o Monleón."
-    ],
-    "tecnico": [
-      "js/datos/contenido.js: FOTOS de vidal (Commons) y de capuchinos, huertaotea, buenosaires, vega, marin y alcaldes (ortofoto PNOA del IGN, CC BY 4.0, recortada a LIMITES_BARRIOS); LEYENDAS de sancti, sancristobal y santamarta; DONDE_COMER de puenteladrillo, vega, huertaotea, salasbajas y zurguen (bares de OpenStreetMap dentro del barrio, valoración de Gastroranking).",
-      "js/datos/pueblos.js: foto de Commons en 51 pueblos (img/pueblo-*.jpg, 640×430, con la página de Commons en un comentario). En 9 pueblos (desde 2.6.0) las últimas curiosidades estaban dentro del array foto y no se veían: pasan a cur; en Linares de Riofrío se quitan dos repetidas.",
-      "index.html: «Sobre los datos» cita las ortofotos del PNOA. docs/notas/contenido.md: cuándo se usa la vista aérea."
     ]
   }
 ]

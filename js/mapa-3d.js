@@ -6,7 +6,16 @@
 // piden solo al abrirlo: el mapa normal y la primera visita no bajan nada de esto. Calles, ríos y nombres
 // de OpenFreeMap. Dentro de Claude no hay botón (EN_MARCO): el visor no deja pedir mapas a otras webs.
 
-const mapa3d = { capa: null, mapa: null, info: null, seleccionado: null, volverA: null, recorrido: 0 };
+const mapa3d = {
+  capa: null,
+  mapa: null,
+  info: null,
+  seleccionado: null,
+  volverA: null,
+  recorrido: 0,
+  tejados: null, // [lon, lat, base] del centro de cada rodaja de tejado de los monumentos
+  ocultos: new Set() // ids de los edificios de OpenFreeMap que asomaban por esos tejados
+};
 const DUREZA_RELIEVE = 1.6; // el relieve se exagera un poco: la meseta es casi llana a esta escala
 const ZOOM_MONUMENTOS_MENORES = 16; // desde aquí, el nombre de los monumentos que no son de los principales
 const MAX_RECORRIDO = 12; // pueblos como mucho en el vuelo «Mis pueblos» (cada uno lleva unos 5 s)
@@ -72,18 +81,6 @@ const cascoEnGeojson = () => ({
     .map(z => [[...z.P, z.P[0]].map(([x, y]) => desproyectar(x, y).reverse())])
 });
 
-// Edificios de los monumentos (EDIFICIOS_MONUMENTOS): cada pieza, con su altura y su monumento
-const edificiosMonumentosEnGeojson = () => ({
-  type: 'FeatureCollection',
-  features: EDIFICIOS_MONUMENTOS.flatMap(e =>
-    e.piezas.map(p => ({
-      type: 'Feature',
-      properties: { id: e.m, h: p.h, b: p.b },
-      geometry: { type: 'Polygon', coordinates: p.r }
-    }))
-  )
-});
-
 function estiloMapa3d() {
   const css = getComputedStyle(document.documentElement),
     color = v => css.getPropertyValue(v).trim(),
@@ -107,7 +104,11 @@ function estiloMapa3d() {
       municipios: { type: 'geojson', data: municipiosEnGeojson() },
       zonas: { type: 'geojson', data: zonasEnGeojson() },
       monumentos: { type: 'geojson', data: monumentosEnGeojson() },
-      'edificios-monumentos': { type: 'geojson', data: edificiosMonumentosEnGeojson() },
+      // Las piezas de los edificios de los monumentos, con sus tejados (herramientas/edificios-monumentos.js)
+      'edificios-monumentos': {
+        type: 'geojson',
+        data: new URL('datos-3d/monumentos.json', document.baseURI).href
+      },
       // Edificios del centro histórico y de las paradas de la provincia (herramientas/edificios-3d.js): se
       // piden solo al abrir el 3D
       'edificios-3d': { type: 'geojson', data: new URL('datos-3d/edificios.json', document.baseURI).href }
@@ -541,6 +542,36 @@ async function recorrerMisPueblos3d() {
   );
 }
 
+// Los tejados de los monumentos (cúpulas, chapiteles) son más estrechos que su planta, y por ellos asomaban
+// los edificios de OpenFreeMap de debajo, que llegan planos hasta arriba: los que, en el centro de una
+// rodaja, suben más que ella, se esconden (por su id). Se repasa cada vez que el mapa se queda quieto
+async function ocultarBajoTejados3d() {
+  const m = mapa3d.mapa;
+  if (!m || m.getZoom() < ZOOM_EDIFICIOS) return;
+  if (!mapa3d.tejados) {
+    const fuente = m.getSource('edificios-monumentos'),
+      datos = fuente && fuente.getData ? await fuente.getData() : null;
+    if (!datos || mapa3d.mapa != m) return;
+    mapa3d.tejados = datos.features
+      .filter(f => f.properties.t)
+      .map(f => {
+        const r = f.geometry.coordinates[0].slice(0, -1);
+        return [
+          r.reduce((s, q) => s + q[0], 0) / r.length,
+          r.reduce((s, q) => s + q[1], 0) / r.length,
+          f.properties.b
+        ];
+      });
+  }
+  const ocultos = new Set(mapa3d.ocultos);
+  for (const [lo, la, b] of mapa3d.tejados)
+    for (const f of m.queryRenderedFeatures(m.project([lo, la]), { layers: ['edificios'] }))
+      if (f.id != null && f.properties.render_height > b + 0.5) ocultos.add(f.id);
+  if (ocultos.size == mapa3d.ocultos.size) return;
+  mapa3d.ocultos = ocultos;
+  m.setFilter('edificios', ['!', ['in', ['id'], ['literal', [...ocultos]]]]);
+}
+
 // MapLibre no recalcula la altura del centro cuando llega el relieve después de moverse (se queda apuntando
 // al nivel del mar y la cumbre sale por arriba): se ajusta poco a poco (easeTo no mueve la altura)
 function ajustarAltura3d() {
@@ -645,6 +676,8 @@ function cerrarMapa3d() {
   // Se suelta el mapa: en el iPhone, un mapa 3D escondido sigue gastando memoria
   if (mapa3d.mapa) mapa3d.mapa.remove();
   mapa3d.mapa = null;
+  mapa3d.tejados = null;
+  mapa3d.ocultos = new Set();
   if (mapa3d.volverA && mapa3d.volverA.isConnected) mapa3d.volverA.focus({ preventScroll: true });
 }
 
@@ -791,7 +824,10 @@ async function abrirMapa3d(boton = document.activeElement, donde = 'provincia') 
   // Si la persona mueve el mapa con el dedo o el ratón, el vuelo «Mis pueblos» se para
   m.on('movestart', e => e.originalEvent && pararRecorrido3d());
   m.on('sourcedata', e => (e.sourceId == 'relieve' || e.sourceId == 'sombras') && alLlegarRelieve());
-  m.on('idle', () => mapa3d.capa.classList.remove('cargando'));
+  m.on('idle', () => {
+    mapa3d.capa.classList.remove('cargando');
+    ocultarBajoTejados3d();
+  });
   // Un toque: lo de más arriba manda (monumento, luego zona de la capital, luego municipio)
   m.on('click', e => {
     const tocado = capa => m.queryRenderedFeatures(e.point, { layers: [capa] })[0],

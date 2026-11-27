@@ -517,8 +517,12 @@ prueba(
       'todos los monumentos rotulados'
     );
     cierto(
-      estilo.sources['edificios-monumentos'].data.features.some(f => f.properties.id == 'catedrales'),
-      'la catedral tiene su edificio'
+      await p.evaluate(
+        async a =>
+          (await (await fetch(a)).json()).features.filter(f => f.properties.id == 'catedrales').length > 100,
+        estilo.sources['edificios-monumentos'].data
+      ),
+      'la catedral tiene su edificio, con sus torres y cúpulas en piezas'
     );
     // Sin un punto por monumento: el que tiene edificio dorado ya se ve, y los secundarios se rotulan de cerca
     igual(
