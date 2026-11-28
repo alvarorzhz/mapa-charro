@@ -1,5 +1,16 @@
 [
   {
+    "version": "2.32.2",
+    "fecha": "2026-11-28",
+    "titulo": "Los edificios del 3D se actualizan siempre",
+    "usuario": [
+      "Cuando cambian los edificios del mapa en 3D (como la torre de la catedral), el móvil baja los nuevos en cuanto se actualiza la app, en vez de seguir un rato con los de antes."
+    ],
+    "tecnico": [
+      "datos-3d/monumentos.json y edificios.json se piden con la huella de su contenido (?v=), que pone herramientas/version.js en js/mapa-3d.js y revisa comprobar-datos. sw.js guarda cada archivo de la web la primera vez y luego lo sirve de la copia, y GitHub Pages deja 10 minutos de caché: sin huella, un móvil podía quedarse con los edificios anteriores."
+    ]
+  },
+  {
     "version": "2.32.1",
     "fecha": "2026-11-27",
     "titulo": "Torre de la catedral entera y centro histórico sin parpadeos en 3D",
@@ -133,18 +144,6 @@
     ],
     "tecnico": [
       "js/datos/contenido.js: 8 curiosidades nuevas con fuente (garridosur +3, sanisidro +1, doninos +2, pelabravo +2), de salamancaenelayer.com, El Español, leonoticias y pelabravo.es."
-    ]
-  },
-  {
-    "version": "2.26.1",
-    "fecha": "2026-11-16",
-    "titulo": "Mapa de calles reales al día",
-    "usuario": [
-      "El mapa de calles reales del fondo usa una versión más nueva de su librería (MapLibre 5), con un año de arreglos de rendimiento y de compatibilidad con móviles. Por fuera se ve igual."
-    ],
-    "tecnico": [
-      "js/mapa-real.js: MapLibre GL JS 4.7.1 → 5.24.1 desde cdnjs, con su huella SRI nueva. La 6 no se usa porque solo se publica como módulo ES (dist/maplibre-gl.mjs) y cdnjs no tiene su .js: no se puede cargar como script clásico con SRI.",
-      "package.json: Playwright 1.56.0 → 1.65.1. GitHub Actions pasó ubuntu-latest a Ubuntu 26.04 y la 1.56 no sabe instalar Chromium allí, así que las pruebas del navegador fallaban en CI antes de empezar."
     ]
   }
 ]

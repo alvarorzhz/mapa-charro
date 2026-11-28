@@ -47,6 +47,15 @@ const puente = leer(PUENTE).replace(
 );
 escribir(PUENTE, puente);
 
+// 1b. Los datos del mapa en 3D (datos-3d/) no se guardan al instalar, pero sw.js guarda cada archivo de la
+//     app la primera vez que se pide y luego lo sirve siempre de la copia: sin huella, el móvil se quedaba
+//     con los edificios de la primera vez que abrió el 3D. js/mapa-3d.js los pide con la de su contenido
+const MAPA_3D = 'js/mapa-3d.js';
+escribir(
+  MAPA_3D,
+  leer(MAPA_3D).replace(/'(datos-3d\/[^'?]+)(\?v=[^']*)?'/g, (_, f) => `'${f}?v=${huella(f)}'`)
+);
+
 // 2. index.html: la versión «humana» de package.json (1.4.0: la primera cifra para cambios grandes, la segunda
 //    para funciones nuevas y la tercera para arreglos; se sube a mano en package.json, este script solo la
 //    copia), el número interno y la huella de cada archivo enlazado con ?v= (después del puente, que acaba
