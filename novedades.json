@@ -1,5 +1,20 @@
 [
   {
+    "version": "2.33.0",
+    "fecha": "2026-11-28",
+    "titulo": "Plaza Mayor y puentes en 3D",
+    "usuario": [
+      "La Plaza Mayor sale en dorado en el mapa en 3D, con todos los edificios que la cierran y sus soportales huecos por debajo.",
+      "El Puente Romano y el de Enrique Estevan salen en dorado sobre el Tormes, y los demás puentes de la capital, en gris.",
+      "Se acabaron los edificios grises que asomaban entre la piedra del centro histórico y la hacían parpadear al acercarte."
+    ],
+    "tecnico": [
+      "edificios-monumentos.js: PLAZAS (los edificios que tocan el place=square de OSM, a menos de 1,5 m) y PUENTES (el man_made=bridge, 3 m sobre el suelo, porque en OSM no tienen altura). piezasDeEdificio(…, vaciar) dibuja la planta sin lo que ocupan sus partes (polygon-clipping), y así quedan los soportales (partes con building:min_level=1). 1145 piezas.",
+      "edificios-3d.js: los demás puentes sobre el Tormes (pu: 1, capa «puentes») y las casas a menos de 150 m del centro histórico (c: 2, capa «alrededor», del color de OpenFreeMap).",
+      "OpenFreeMap junta varias casas seguidas en un solo edificio (MultiPolygon). enCasco3d mira ahora todas, no solo la primera, y ocultarEdificiosTapados3d usa querySourceFeatures (muy inclinado, queryRenderedFeatures no devolvía nada) y repasa cada tesela al llegar (sourcedata). Los edificios a medias que se escapaban eran los grises que asomaban por la piedra y parpadeaban."
+    ]
+  },
+  {
     "version": "2.32.2",
     "fecha": "2026-11-28",
     "titulo": "Los edificios del 3D se actualizan siempre",
@@ -130,20 +145,6 @@
       "js/hora-dorada.js: estadoNoche(ahora) dice si es de noche en Salamanca (entre la puesta y la salida del sol de horaDorada) y hasta cuándo, o a qué hora se abre.",
       "Progreso: las leídas de noche van en j.ln (limpiarProgreso, CLAVES_J y juntarProgresos); logros no1 y noall, categoría «De noche».",
       "comprobar-datos valida las leyendas de noche (monumento o punto, textos con tipo, fuentes y revisado); pruebas nuevas en pruebas-logica.js y en pruebas/explora.js con el reloj de Playwright."
-    ]
-  },
-  {
-    "version": "2.26.2",
-    "fecha": "2026-11-22",
-    "titulo": "Más curiosidades",
-    "usuario": [
-      "Garrido Sur: la historia del cine Taramona, de su estreno en 1933 a su cierre en 1982, y las casas bajas que aún quedan.",
-      "San Isidro: cómo era el barrio tras la guerra, entre huertas y verbenas.",
-      "Doñinos de Salamanca: la romería a Santibáñez del Río y sus dos patrones.",
-      "Pelabravo: la copla de la torre que «ha reñido con la iglesia» y cómo se despobló Naharros del Río."
-    ],
-    "tecnico": [
-      "js/datos/contenido.js: 8 curiosidades nuevas con fuente (garridosur +3, sanisidro +1, doninos +2, pelabravo +2), de salamancaenelayer.com, El Español, leonoticias y pelabravo.es."
     ]
   }
 ]

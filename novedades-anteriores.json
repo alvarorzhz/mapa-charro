@@ -1,5 +1,19 @@
 [
   {
+    "version": "2.26.2",
+    "fecha": "2026-11-22",
+    "titulo": "Más curiosidades",
+    "usuario": [
+      "Garrido Sur: la historia del cine Taramona, de su estreno en 1933 a su cierre en 1982, y las casas bajas que aún quedan.",
+      "San Isidro: cómo era el barrio tras la guerra, entre huertas y verbenas.",
+      "Doñinos de Salamanca: la romería a Santibáñez del Río y sus dos patrones.",
+      "Pelabravo: la copla de la torre que «ha reñido con la iglesia» y cómo se despobló Naharros del Río."
+    ],
+    "tecnico": [
+      "js/datos/contenido.js: 8 curiosidades nuevas con fuente (garridosur +3, sanisidro +1, doninos +2, pelabravo +2), de salamancaenelayer.com, El Español, leonoticias y pelabravo.es."
+    ]
+  },
+  {
     "version": "2.26.1",
     "fecha": "2026-11-16",
     "titulo": "Mapa de calles reales al día",

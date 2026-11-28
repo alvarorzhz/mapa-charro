@@ -21,7 +21,8 @@ const {
   base,
   edificiosYPartes,
   edificioDePunto,
-  piezasDeEdificio
+  piezasDeEdificio,
+  distanciaM
 } = require('./edificios-osm');
 
 const RAIZ = path.join(__dirname, '..');
@@ -29,6 +30,12 @@ const ENSANCHE_CASCO = 0.5; // metros: tapa el edificio de OpenFreeMap sin comer
 const ENSANCHE_PROVINCIA = 0.7;
 const DECIMALES = 5; // ~1 m: basta para un edificio y el archivo pesa menos
 const SIMPLIFICAR = 0.4; // metros: puntos de las plantas del centro histórico que no cambian su forma
+// OpenFreeMap junta varias casas seguidas en un solo edificio, y el 3D esconde entero el que tiene alguna dentro
+// del centro histórico: las de alrededor (a menos de MARGEN metros) se dibujan aparte, como las de OpenFreeMap,
+// para que no quede un hueco
+const MARGEN = 150;
+const PUENTES_CAJA = '40.950,-5.700,40.962,-5.630'; // el Tormes por la capital
+const ALTURA_PUENTE = 3; // metros sobre el suelo (en OSM no tienen altura)
 // Paradas de RUTAS_PROVINCIA que son un edificio (las demás son miradores, pueblos enteros o paisajes)
 const PARADAS_CON_EDIFICIO = [
   'pena-francia',
@@ -95,10 +102,10 @@ async function poligonoCasco() {
   const deMonumentos = new Set(contexto.E.flatMap(e => [e.osm, ...(e.mas || [])]));
   const puntos = casco.flat(),
     caja = [
-      Math.min(...puntos.map(p => p[1])),
-      Math.min(...puntos.map(p => p[0])),
-      Math.max(...puntos.map(p => p[1])),
-      Math.max(...puntos.map(p => p[0]))
+      Math.min(...puntos.map(p => p[1])) - MARGEN / 111320,
+      Math.min(...puntos.map(p => p[0])) - MARGEN / 84000,
+      Math.max(...puntos.map(p => p[1])) + MARGEN / 111320,
+      Math.max(...puntos.map(p => p[0])) + MARGEN / 84000
     ]
       .map(v => v.toFixed(4))
       .join(',');
@@ -108,22 +115,33 @@ async function poligonoCasco() {
  way["building"](${caja});
  relation["building"]["type"="multipolygon"](${caja});
 ${cerca.map(c => ` way["building"]${c};\n relation["building"]["type"="multipolygon"]${c};\n way["building:part"]${c};`).join('\n')}
+ way["man_made"="bridge"](${PUENTES_CAJA});
 );
 out body geom;`;
   const datos = process.argv[2] ? JSON.parse(fs.readFileSync(process.argv[2], 'utf8')) : descargar(consulta);
-  const { edificios, partes } = edificiosYPartes(datos);
+  const todos = edificiosYPartes(datos),
+    partes = todos.partes,
+    edificios = todos.edificios.filter(e => e.t.building),
+    puentes = todos.edificios.filter(e => e.t.man_made == 'bridge' && !deMonumentos.has(e.id));
   const features = [];
 
   // Centro histórico: cada edificio cuyo centro cae dentro (sin sus partes: basta la planta y la altura),
-  // menos los de los monumentos
-  let enCasco = 0;
+  // menos los de los monumentos (c: 1); los de alrededor, c: 2
+  let enCasco = 0,
+    alrededor = 0;
   for (const ed of edificios.filter(e => !deMonumentos.has(e.id)))
     for (const r of ed.anillos) {
-      if (!casco.some(c => dentroDe(centro(r), c))) continue;
-      enCasco++;
+      const c = casco.some(p => dentroDe(centro(r), p))
+        ? 1
+        : Math.min(...casco.map(p => distanciaM(centro(r), p))) < MARGEN
+          ? 2
+          : 0;
+      if (!c) continue;
+      if (c == 1) enCasco++;
+      else alrededor++;
       features.push({
         type: 'Feature',
-        properties: { c: 1, h: +altura(ed.t).toFixed(1), b: +base(ed.t).toFixed(1) },
+        properties: { c, h: +altura(ed.t).toFixed(1), b: +base(ed.t).toFixed(1) },
         geometry: {
           type: 'Polygon',
           coordinates: [
@@ -159,6 +177,16 @@ out body geom;`;
     console.log(`${p.id} → ${ed.id} ${ed.n}${cercano ? ' (cercano)' : ''}`);
   }
 
+  // Los demás puentes sobre el Tormes en la capital (los que son monumento ya van en dorado): su tablero, un
+  // poco por encima del suelo, como en herramientas/edificios-monumentos.js
+  for (const pu of puentes)
+    for (const r of pu.anillos)
+      features.push({
+        type: 'Feature',
+        properties: { pu: 1, h: ALTURA_PUENTE, b: 0 },
+        geometry: { type: 'Polygon', coordinates: [ensanchar(r, ENSANCHE_CASCO, 1, DECIMALES)] }
+      });
+
   fs.mkdirSync(path.join(RAIZ, 'datos-3d'), { recursive: true });
   fs.writeFileSync(
     path.join(RAIZ, 'datos-3d/edificios.json'),
@@ -169,7 +197,7 @@ out body geom;`;
     })
   );
   console.log(
-    `${enCasco} edificios en el centro histórico; ${paradas.length - sinEdificio.length} paradas con ` +
+    `${enCasco} edificios en el centro histórico y ${alrededor} alrededor; ${puentes.length} puentes; ${paradas.length - sinEdificio.length} paradas con ` +
       `edificio; sin edificio: ${sinEdificio.join(', ') || 'ninguna'}`
   );
 })();

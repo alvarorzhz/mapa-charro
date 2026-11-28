@@ -560,6 +560,31 @@ prueba(
       )),
       'uno de Garrido, no'
     );
+    cierto(
+      await p.evaluate(
+        ([fuera, dentro]) =>
+          enCasco3d({ type: 'MultiPolygon', coordinates: [fuera.coordinates, dentro.coordinates] }),
+        [cuadrado(-5.64, 40.975), cuadrado(-5.6645, 40.965)]
+      ),
+      'varias casas juntas de OpenFreeMap: basta con que una esté dentro'
+    );
+    igual(capa('alrededor').filter[2], 2, 'las casas de alrededor del centro histórico, aparte');
+    cierto(
+      await p.evaluate(async a => {
+        const f = (await (await fetch(a)).json()).features;
+        return ['plazamayor', 'puenteromano', 'puente-estevan'].every(id =>
+          f.some(x => x.properties.id == id)
+        );
+      }, estilo.sources['edificios-monumentos'].data),
+      'la Plaza Mayor y los puentes Romano y de Enrique Estevan, en dorado'
+    );
+    cierto(
+      await p.evaluate(
+        async a => (await (await fetch(a)).json()).features.some(x => x.properties.pu == 1),
+        estilo.sources['edificios-3d'].data
+      ),
+      'y los demás puentes'
+    );
     // Sin un punto por monumento: el que tiene edificio dorado ya se ve, y los secundarios se rotulan de cerca
     igual(
       JSON.stringify(capa('monumentos-punto').filter),
