@@ -11,7 +11,15 @@ const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
 const { sinExport } = require('./datos');
-const { descargar, edificiosYPartes, edificioDePunto, piezasDeEdificio } = require('./edificios-osm');
+const {
+  descargar,
+  edificiosYPartes,
+  edificioDePunto,
+  piezasDeEdificio,
+  distanciaM,
+  ensanchar,
+  altura
+} = require('./edificios-osm');
 
 const RAIZ = path.join(__dirname, '..');
 const ENSANCHE = 0.7; // metros que se ensancha cada planta para tapar las paredes del edificio de debajo
@@ -37,11 +45,17 @@ const CONSULTA = `[out:json][timeout:180];
  way["building"](${caja});
  relation["building"]["type"="multipolygon"](${caja});
  way["building:part"](${caja});
+ way["man_made"="bridge"](${caja});
+ way["place"="square"](${caja});
 );
 out body geom;`;
 
 const datos = process.argv[2] ? JSON.parse(fs.readFileSync(process.argv[2], 'utf8')) : descargar(CONSULTA);
-const { edificios, partes } = edificiosYPartes(datos);
+const todos = edificiosYPartes(datos),
+  partes = todos.partes,
+  edificios = todos.edificios.filter(e => e.t.building),
+  puentes = todos.edificios.filter(e => e.t.man_made == 'bridge'),
+  plazas = todos.edificios.filter(e => e.t.place == 'square');
 
 // Monumentos que no son un edificio, o cuyo punto cae en el edificio de al lado: sin edificio
 const SIN_EDIFICIO = {
@@ -52,10 +66,53 @@ const SIN_EDIFICIO = {
 // Monumentos que son más de un edificio de OSM: el punto cae en uno y los demás se añaden aquí (la torre de
 // las campanas de la Catedral Nueva está dibujada dentro de la planta de la Catedral Vieja)
 const MAS_EDIFICIOS = { catedrales: ['way/59010501'] };
+// Monumentos que son una plaza: los edificios que la cierran (los que tocan su polígono, place=square de OSM),
+// con los soportales (las partes que empiezan por encima del suelo) vaciados por debajo
+const PLAZAS = { plazamayor: 'Plaza Mayor' };
+const TOCA_PLAZA = 1.5; // metros entre la fachada y el borde de la plaza
+// Monumentos que son un puente (man_made=bridge de OSM): su tablero, un poco por encima del suelo. El relieve
+// del IGN ya baja hacia el río, así que el tablero va casi a la altura de las orillas
+const PUENTES = { puenteromano: 'Puente Romano', 'puente-estevan': 'Puente de Enrique Estevan' };
+const ALTURA_PUENTE = 3; // metros sobre el suelo (en OSM no tienen altura)
+
+// Las piezas de un puente: su planta, de una altura
+const piezasDePuente = pu =>
+  pu.anillos.map(r => ({
+    h: +(altura(pu.t) == 5 ? ALTURA_PUENTE : altura(pu.t)).toFixed(1),
+    b: 0,
+    r: [ensanchar(r, ENSANCHE)]
+  }));
 
 const resultado = [];
 let sinEdificio = [];
 for (const m of MONUMENTOS.filter(m => !SIN_EDIFICIO[m.id])) {
+  if (PUENTES[m.id]) {
+    const pu = puentes.find(e => e.n == PUENTES[m.id]);
+    if (!pu) throw new Error(`${m.id}: no está el puente «${PUENTES[m.id]}» en OSM`);
+    resultado.push({ m: m.id, osm: pu.id, piezas: piezasDePuente(pu) });
+    console.log(`${m.id} → ${pu.id} ${pu.n} (puente)`);
+    continue;
+  }
+  if (PLAZAS[m.id]) {
+    const plaza = plazas.find(e => e.n == PLAZAS[m.id]);
+    if (!plaza) throw new Error(`${m.id}: no está la plaza «${PLAZAS[m.id]}» en OSM`);
+    const borde = plaza.anillos[0],
+      cierran = edificios.filter(e => e.anillos[0].some(v => distanciaM(v, borde) < TOCA_PLAZA));
+    const usadas = new Set();
+    const piezas = cierran.flatMap(e =>
+      piezasDeEdificio(
+        e,
+        partes.filter(p => !usadas.has(p.id)),
+        ENSANCHE,
+        true,
+        usadas,
+        true
+      )
+    );
+    resultado.push({ m: m.id, osm: cierran[0].id, mas: cierran.slice(1).map(e => e.id), piezas });
+    console.log(`${m.id} → ${cierran.length} edificios alrededor de ${plaza.id} ${plaza.n}`);
+    continue;
+  }
   const hallado = edificioDePunto([m.lo, m.la], edificios);
   if (!hallado) {
     sinEdificio.push(m.id);

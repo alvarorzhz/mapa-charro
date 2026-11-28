@@ -15,7 +15,8 @@ const mapa3d = {
   recorrido: 0,
   tejados: null, // [lon, lat, base] del centro de cada rodaja de tejado de los monumentos
   ocultos: new Set(), // ids de los edificios de OpenFreeMap escondidos (ocultarEdificiosTapados3d)
-  casco: null // polígonos [lat, lon] del centro histórico
+  casco: null, // polígonos [lat, lon] del centro histórico
+  repasoPendiente: false // ya hay un repaso de edificios tapados para el próximo fotograma
 };
 const DUREZA_RELIEVE = 1.6; // el relieve se exagera un poco: la meseta es casi llana a esta escala
 const ZOOM_MONUMENTOS_MENORES = 16; // desde aquí, el nombre de los monumentos que no son de los principales
@@ -108,13 +109,13 @@ function estiloMapa3d() {
       // Las piezas de los edificios de los monumentos, con sus tejados (herramientas/edificios-monumentos.js)
       'edificios-monumentos': {
         type: 'geojson',
-        data: new URL('datos-3d/monumentos.json?v=77fff36821', document.baseURI).href
+        data: new URL('datos-3d/monumentos.json?v=2232235999', document.baseURI).href
       },
       // Edificios del centro histórico y de las paradas de la provincia (herramientas/edificios-3d.js): se
       // piden solo al abrir el 3D
       'edificios-3d': {
         type: 'geojson',
-        data: new URL('datos-3d/edificios.json?v=41888e182f', document.baseURI).href
+        data: new URL('datos-3d/edificios.json?v=ffbaea25f7', document.baseURI).href
       }
     },
     terrain: { source: 'relieve', exaggeration: DUREZA_RELIEVE },
@@ -280,6 +281,44 @@ function estiloMapa3d() {
             1
           ],
           'fill-extrusion-vertical-gradient': true
+        }
+      },
+      // Las casas de alrededor del centro histórico, como las de OpenFreeMap: OpenFreeMap junta varias casas
+      // seguidas en un solo edificio, y si alguna cae en el centro histórico se esconde entero
+      {
+        id: 'alrededor',
+        type: 'fill-extrusion',
+        source: 'edificios-3d',
+        minzoom: ZOOM_EDIFICIOS,
+        filter: ['==', ['get', 'c'], 2],
+        paint: {
+          'fill-extrusion-color': color('--edificio-neutro'),
+          'fill-extrusion-height': ['*', DUREZA_RELIEVE, ['get', 'h']],
+          'fill-extrusion-base': ['*', DUREZA_RELIEVE, ['get', 'b']],
+          'fill-extrusion-opacity': [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            ZOOM_EDIFICIOS,
+            0,
+            ZOOM_EDIFICIOS + 0.5,
+            0.9
+          ],
+          'fill-extrusion-vertical-gradient': true
+        }
+      },
+      // Los demás puentes sobre el Tormes (el Romano y el de Enrique Estevan van en dorado, como monumentos)
+      {
+        id: 'puentes',
+        type: 'fill-extrusion',
+        source: 'edificios-3d',
+        minzoom: ZOOM_EDIFICIOS,
+        filter: ['==', ['get', 'pu'], 1],
+        paint: {
+          'fill-extrusion-color': color('--edificio-neutro'),
+          'fill-extrusion-height': ['*', DUREZA_RELIEVE, ['get', 'h']],
+          'fill-extrusion-base': 0,
+          'fill-extrusion-opacity': 0.95
         }
       },
       // Los edificios de las paradas de las rutas por la provincia (catedral y castillo de Ciudad Rodrigo,
@@ -571,7 +610,8 @@ async function ocultarEdificiosTapados3d() {
       });
   }
   const ocultos = new Set(mapa3d.ocultos);
-  for (const f of m.queryRenderedFeatures({ layers: ['edificios'] }))
+  // De las teselas ya bajadas, no de lo que se ve: muy inclinado, queryRenderedFeatures no devuelve nada
+  for (const f of m.querySourceFeatures('osm', { sourceLayer: 'building' }))
     if (f.id != null && !ocultos.has(f.id) && enCasco3d(f.geometry)) ocultos.add(f.id);
   for (const [lo, la, b] of mapa3d.tejados)
     for (const f of m.queryRenderedFeatures(m.project([lo, la]), { layers: ['edificios'] }))
@@ -581,15 +621,18 @@ async function ocultarEdificiosTapados3d() {
   m.setFilter('edificios', ['!', ['in', ['id'], ['literal', [...ocultos]]]]);
 }
 
-// ¿Cae el centro de la planta de un edificio (GeoJSON) dentro del centro histórico?
+// ¿Cae dentro del centro histórico el centro de la planta de un edificio (GeoJSON)?
 function enCasco3d(geometria) {
   if (!mapa3d.casco)
     mapa3d.casco = zonas.filter(z => z.g == 0 && z.P).map(z => z.P.map(([x, y]) => desproyectar(x, y)));
-  const anillo = (geometria.type == 'MultiPolygon' ? geometria.coordinates[0] : geometria.coordinates)[0];
-  if (!anillo || !anillo.length) return false;
-  const lo = anillo.reduce((s, q) => s + q[0], 0) / anillo.length,
-    la = anillo.reduce((s, q) => s + q[1], 0) / anillo.length;
-  return mapa3d.casco.some(P => dentroDePoligono(P, la, lo));
+  // OpenFreeMap junta varias casas seguidas en un solo edificio (MultiPolygon): basta con que una caiga dentro
+  const poligonos = geometria.type == 'MultiPolygon' ? geometria.coordinates : [geometria.coordinates];
+  return poligonos.some(([anillo]) => {
+    if (!anillo || !anillo.length) return false;
+    const lo = anillo.reduce((s, q) => s + q[0], 0) / anillo.length,
+      la = anillo.reduce((s, q) => s + q[1], 0) / anillo.length;
+    return mapa3d.casco.some(P => dentroDePoligono(P, la, lo));
+  });
 }
 
 // MapLibre no recalcula la altura del centro cuando llega el relieve después de moverse (se queda apuntando
@@ -847,6 +890,15 @@ async function abrirMapa3d(boton = document.activeElement, donde = 'provincia') 
   m.on('idle', () => {
     mapa3d.capa.classList.remove('cargando');
     ocultarEdificiosTapados3d();
+  });
+  // Cada tesela nueva de edificios se repasa al llegar, sin esperar a que el mapa se quede quieto
+  m.on('sourcedata', e => {
+    if (e.sourceId != 'osm' || !e.tile || mapa3d.repasoPendiente) return;
+    mapa3d.repasoPendiente = true;
+    requestAnimationFrame(() => {
+      mapa3d.repasoPendiente = false;
+      ocultarEdificiosTapados3d();
+    });
   });
   // Un toque: lo de más arriba manda (monumento, luego zona de la capital, luego municipio)
   m.on('click', e => {

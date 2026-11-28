@@ -461,18 +461,24 @@ D.CARRETERAS_PROVINCIA.forEach(c => {
   ) {
     const { features } = JSON.parse(leer('datos-3d/edificios.json')),
       idsParadas = new Set(D.RUTAS_PROVINCIA.flatMap(r => r.paradas.map(p => p.id))),
-      casco = features.filter(f => f.properties.c);
+      casco = features.filter(f => f.properties.c == 1),
+      puentes = features.filter(f => f.properties.pu == 1);
     comprobar(casco.length > 500, `Edificios 3D: solo ${casco.length} en el centro histórico`);
+    comprobar(puentes.length >= 4, `Edificios 3D: solo ${puentes.length} puentes sobre el Tormes`);
     features.forEach(f => {
-      const { c, p, h, b } = f.properties;
-      comprobar(c || idsParadas.has(p), `Edificio 3D: la parada «${p}» no está en RUTAS_PROVINCIA`);
+      const { c, p, pu, h, b } = f.properties;
+      comprobar(
+        c == null || c == 1 || c == 2,
+        `Edificio 3D: c=${c} no es ni 1 (centro histórico) ni 2 (alrededor)`
+      );
+      comprobar(c || pu || idsParadas.has(p), `Edificio 3D: la parada «${p}» no está en RUTAS_PROVINCIA`);
       if (f.geometry.type == 'Point') return;
       comprobar(
         h >= b &&
           f.geometry.coordinates.every(
             a => a.length >= 4 && a.every(([lo, la]) => la > 40.1 && la < 41.5 && lo > -7.1 && lo < -4.9)
           ),
-        `Edificio 3D ${c ? 'del centro histórico' : p}: alturas o plantas raras`
+        `Edificio 3D ${c ? 'del centro histórico' : pu ? 'de un puente' : p}: alturas o plantas raras`
       );
     });
   }

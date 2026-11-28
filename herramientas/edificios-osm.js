@@ -1,6 +1,7 @@
 // Ayudantes para sacar edificios de OpenStreetMap (Overpass) para el mapa en 3D: los usan
 // herramientas/edificios-monumentos.js y herramientas/edificios-3d.js
 const { execFileSync } = require('child_process');
+const recortes = require('polygon-clipping');
 
 const SERVIDORES = [
   'https://overpass-api.de/api/interpreter',
@@ -266,13 +267,27 @@ function piezasConTejado(r, t, h, b, ensanche) {
   return piezas;
 }
 
+// El edificio sin lo que ocupan sus partes (polygon-clipping), con la misma altura y etiquetas
+function sinPartes(ed, partes) {
+  const conPatios = e => e.anillos.map(r => [r, ...e.patios.filter(q => dentroDe(centro(q), r))]);
+  const resto = recortes.difference(conPatios(ed), ...partes.map(conPatios));
+  return {
+    ...ed,
+    anillos: resto.map(poligono => poligono[0]),
+    patios: resto.flatMap(poligono => poligono.slice(1))
+  };
+}
+
 // Las piezas de un edificio para el 3D: su planta (y la de sus partes) ensanchada, sus patios y su altura;
 // con tejados, los que tienen forma en OSM se hacen en rodajas (piezasConTejado)
-// usadas: si se pasa, se apuntan en él los ids de las partes que se han tomado
-function piezasDeEdificio(ed, partes, ensanche, tejados = false, usadas = null) {
+// usadas: si se pasa, se apuntan en él los ids de las partes que se han tomado. vaciar: la planta del edificio
+// se dibuja sin lo que ocupan sus partes, para que se vean los huecos bajo las que empiezan por encima del suelo
+// (los soportales de la Plaza Mayor)
+function piezasDeEdificio(ed, partes, ensanche, tejados = false, usadas = null, vaciar = false) {
   const suyas = partes.filter(p => ed.anillos.some(r => dentroDe(centro(p.anillos[0]), r)));
   if (usadas) suyas.forEach(p => usadas.add(p.id));
-  const piezas = [ed, ...suyas].flatMap(p =>
+  const planta = vaciar && suyas.length ? sinPartes(ed, suyas) : ed;
+  const piezas = [planta, ...suyas].flatMap(p =>
     p.anillos.flatMap(r => {
       const h = altura(p.t),
         b = base(p.t),
@@ -306,5 +321,7 @@ module.exports = {
   base,
   edificiosYPartes,
   edificioDePunto,
-  piezasDeEdificio
+  piezasDeEdificio,
+  distanciaM,
+  areaM2
 };
