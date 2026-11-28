@@ -108,11 +108,14 @@ function estiloMapa3d() {
       // Las piezas de los edificios de los monumentos, con sus tejados (herramientas/edificios-monumentos.js)
       'edificios-monumentos': {
         type: 'geojson',
-        data: new URL('datos-3d/monumentos.json', document.baseURI).href
+        data: new URL('datos-3d/monumentos.json?v=77fff36821', document.baseURI).href
       },
       // Edificios del centro histórico y de las paradas de la provincia (herramientas/edificios-3d.js): se
       // piden solo al abrir el 3D
-      'edificios-3d': { type: 'geojson', data: new URL('datos-3d/edificios.json', document.baseURI).href }
+      'edificios-3d': {
+        type: 'geojson',
+        data: new URL('datos-3d/edificios.json?v=41888e182f', document.baseURI).href
+      }
     },
     terrain: { source: 'relieve', exaggeration: DUREZA_RELIEVE },
     sky: {

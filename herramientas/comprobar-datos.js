@@ -784,6 +784,9 @@ if (imagenOg) {
 
 for (const f of fs.readdirSync(path.join(RAIZ, 'js')).filter(f => f.endsWith('.js')))
   comprobar(html.includes('js/' + f + '?'), `js/${f} no está enlazado en index.html`);
+// Los datos del 3D (datos-3d/), con la huella de su contenido: sw.js sirve siempre la copia guardada
+for (const [, f, v] of leer('js/mapa-3d.js').matchAll(/'(datos-3d\/[^'?]+)(?:\?v=([0-9a-f]+))?'/g))
+  comprobar(v == huella(f), `js/mapa-3d.js: ${f} ha cambiado y su ?v= no` + RECUERDA_VERSION);
 // Los datos son módulos: los importa js/datos-globales.js, cada uno con la huella de su contenido
 const puente = leer('js/datos-globales.js');
 for (const f of fs.readdirSync(path.join(RAIZ, 'js/datos')).filter(f => f.endsWith('.js')))

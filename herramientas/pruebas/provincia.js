@@ -591,7 +591,7 @@ prueba(
     // El centro histórico en piedra y los edificios de la provincia vienen de un archivo que solo se pide aquí
     igual(capa('casco').source, 'edificios-3d', 'el centro histórico, aparte');
     const archivo = estilo.sources['edificios-3d'].data;
-    cierto(/\/datos-3d\/edificios\.json$/.test(archivo), 'de un archivo de la propia web');
+    cierto(/\/datos-3d\/edificios\.json\?v=[0-9a-f]+$/.test(archivo), 'de un archivo de la propia web');
     cierto(
       await p.evaluate(
         async a => (await (await fetch(a)).json()).features.some(f => f.properties.p == 'crcatedral'),
